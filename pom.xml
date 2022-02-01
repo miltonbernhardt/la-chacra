@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.6</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.brikton</groupId>
+    <artifactId>la-chacra</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <h2-database.version>2.1.210</h2-database.version>
+        <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+        <junit-vintage-engine.version>5.8.2</junit-vintage-engine.version>
+        <lombok.version>1.18.22</lombok.version>
+        <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
+        <mockito-junit-jupiter.version>4.2.0</mockito-junit-jupiter.version>
+        <postgresql.version>42.3.1</postgresql.version>
+        <wagon-maven-plugin.version>2.0.2</wagon-maven-plugin.version>
+        <wagon-ssh.version>3.4.3</wagon-ssh.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <!-- DEVTOOL -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- ACTUATOR -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- HIBERNATE VALIDATOR -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+        <!-- LOMBOK -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <!-- DATABASE -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit-vintage-engine.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito-junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2-database.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
+
+    <scm>
+        <url>https://github.com/miltonbernhardt/la-chacra</url>
+        <connection>scm:git:ssh://git@github.com:miltonbernhardt/la-chacra.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:miltonbernhardt/la-chacra.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>${wagon-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>deploy-server</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>upload-single</goal>
+                        </goals>
+                        <configuration>
+                            <fromFile>${project.build.directory}/${project.build.finalName}.jar</fromFile>
+                            <!-- ToDo: ver el directorio y las credenciales donde se haga deploy -->
+                            <url>scp://user:password@IP/deploy/</url>
+                            <toFile>${project.build.finalName}.jar</toFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>${wagon-ssh.version}</version>
+            </extension>
+        </extensions>
+    </build>
+</project>
