@@ -1,0 +1,40 @@
+version: '3.6'
+services:
+  la-chacra-app:
+    restart: always
+    build:
+      context: ../
+      args:
+        VERSION: $VERSION_APP
+    image: la-chacra-app:latest
+    volumes:
+      - ../log/:/log/
+    container_name: la-chacra-app
+    ports:
+      - "80:80"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_USERNAME=$DB_USER
+      - SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD
+    networks:
+      - app
+
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./scripts/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_DB=la-chacra
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
