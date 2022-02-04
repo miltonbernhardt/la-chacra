@@ -12,10 +12,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Lote {
 
-    @Id//ToDo:es generado o lo tienen asignado?
+    @Id // ToDo:es generado o lo tienen asignado?
     @Column(name = "idLote")
     private long id;
 
@@ -35,7 +38,7 @@ public class Lote {
     private int cantHormas;
 
     @NotNull
-    //ToDo: ver que onda stock el lote
+    // ToDo: ver que onda stock el lote
     private int stockLote;
 
     @NotNull
@@ -43,7 +46,7 @@ public class Lote {
     private double peso;
 
     private double rendimiento;
-    private String cultivo; //ToDo:ver
+    private String cultivo; // ToDo:ver
     @ElementCollection
     private List<String> loteCultivo;
     @ElementCollection
