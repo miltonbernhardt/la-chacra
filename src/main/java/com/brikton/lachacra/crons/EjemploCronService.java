@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EjemploCronService {
 
-    @Scheduled(cron = "* * * * *") //ToDo: esto iria en properties
+    @Scheduled(cron = "* 2 * * * *") //ToDo: esto iria en properties
     public void pruebaCron() {
         log.info("Probando cron");
     }

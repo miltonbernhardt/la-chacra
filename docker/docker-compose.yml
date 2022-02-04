@@ -1,23 +1,23 @@
 version: '3.6'
 services:
-  la-chacra-app:
-    restart: always
-    build:
-      context: ../
-      args:
-        VERSION: $VERSION_APP
-    image: la-chacra-app:latest
-    volumes:
-      - ../log/:/log/
-    container_name: la-chacra-app
-    ports:
-      - "80:80"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_USERNAME=$DB_USER
-      - SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD
-    networks:
-      - app
+#  la-chacra-app:
+#    restart: always
+#    build:
+#      context: ../
+#      args:
+#        VERSION: $VERSION_APP
+#    image: la-chacra-app:latest
+#    volumes:
+#      - ../log/:/log/
+#    container_name: la-chacra-app
+#    ports:
+#      - "80:80"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=prod
+#      - SPRING_DATASOURCE_USERNAME=$DB_USER
+#      - SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD
+#    networks:
+#      - app
 
   postgres:
     container_name: postgres
