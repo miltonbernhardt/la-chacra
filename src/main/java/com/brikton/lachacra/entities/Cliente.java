@@ -27,7 +27,7 @@ public class Cliente {
     private String cuit;
 
     private String domicilio;
-    private int codPostal;
+    private String codPostal;
     private String localidad;
     private String provincia;
     private String pais;
