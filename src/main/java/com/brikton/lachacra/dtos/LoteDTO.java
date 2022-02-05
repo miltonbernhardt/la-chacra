@@ -36,6 +36,9 @@ public class LoteDTO {
 
     private String codigoQueso;
 
+    public LoteDTO() {
+    }
+
     public LoteDTO(Lote lote) {
         this.setId(lote.getId());
         this.setFechaElaboracion(lote.getFechaElaboracion());
