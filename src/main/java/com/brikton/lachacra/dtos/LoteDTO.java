@@ -36,9 +36,6 @@ public class LoteDTO {
 
     private String codigoQueso;
 
-    public LoteDTO() {
-    }
-
     public LoteDTO(Lote lote) {
         this.setId(lote.getId());
         this.setFechaElaboracion(lote.getFechaElaboracion());
@@ -52,7 +49,6 @@ public class LoteDTO {
         this.setLoteCultivo(lote.getLoteCultivo());
         this.setLoteColorante(lote.getLoteColorante());
         this.setLoteCalcio(lote.getLoteCalcio());
-        this.setLoteCuajo(lote.getLoteCuajo());
         this.setLoteCuajo(lote.getLoteCuajo());
         this.setCodigoQueso(lote.getQueso().getCodigo());
     }
