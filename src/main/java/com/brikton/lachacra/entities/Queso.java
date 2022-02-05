@@ -12,12 +12,18 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Queso {
 
     @Id
-    @Column(name = "codigoQueso") //ToDo:es generado o lo tienen asignado?
-    private long codigo;
+    @Column(name = "idQueso") // ToDo:es generado o lo tienen asignado?
+    private Integer id;
+
+    @Column(name = "codigoQueso")
+    private String codigo;
 
     @NotBlank
     private String tipoQueso;
@@ -25,12 +31,12 @@ public class Queso {
     @Column(unique = true)
     @NotBlank
     @Length(min = 1, max = 20)
-    private String nomenclatura; //ToDo:unique key
+    private String nomenclatura; // ToDo:unique key
 
     @NotNull
     private int stock;
 
-    @OneToMany// ToDo: ver el cascade
+    @OneToMany // ToDo: ver el cascade
     @JoinColumn(name = "idPrecio")
     private List<Precio> preciosActual;
 }

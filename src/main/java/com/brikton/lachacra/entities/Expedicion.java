@@ -11,7 +11,10 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Expedicion {
 
     @Id
@@ -27,20 +30,13 @@ public class Expedicion {
 
     @NotNull
     @Min(0)
-    private double pesoConBandeja;
-
-    @NotNull
-    @Min(0)
-    private double pesoBandeja;
-
-    @NotNull
-    @Min(0)
-    private double pesoQueso;
+    private double peso;
 
     @NotNull
     @Min(0)
     private double importe;
-    private String comentario;
+
+    private String comentario; // TODO esto creo se puede obviar
 
     @ManyToOne
     @JoinColumn(name = "nroCliente")
