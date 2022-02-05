@@ -18,11 +18,13 @@ import java.util.List;
 @NoArgsConstructor
 public class Queso {
 
-    @Id
-    @Column(name = "idQueso") // ToDo:es generado o lo tienen asignado?
-    private Integer id;
+//    @Id
+//    @Column(name = "id_queso")
+//    private Integer id; //todo si no es autogenerado le ponemos como string?
 
-    @Column(name = "codigoQueso")
+    @Id
+    //todo estamos duplicando esto a menos que lo hagamos pk
+    @Column(name = "codigo_queso")
     private String codigo;
 
     @NotBlank
@@ -31,12 +33,12 @@ public class Queso {
     @Column(unique = true)
     @NotBlank
     @Length(min = 1, max = 20)
-    private String nomenclatura; // ToDo:unique key
+    private String nomenclatura;
 
     @NotNull
     private int stock;
 
     @OneToMany // ToDo: ver el cascade
-    @JoinColumn(name = "idPrecio")
+    @JoinColumn(name = "id_precio")
     private List<Precio> preciosActual;
 }

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Devolucion {
     @Id
-    @Column(name = "idDevolucion")
+    @Column(name = "id_devolucion")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
@@ -36,10 +36,10 @@ public class Devolucion {
     private double temper; //ToDo: ver tipo
 
     @ManyToOne
-    @JoinColumn(name = "nroCliente")
+    @JoinColumn(name = "nro_cliente")
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "idLote")
+    @JoinColumn(name = "id_lote")
     private Lote loteProducto;
 }

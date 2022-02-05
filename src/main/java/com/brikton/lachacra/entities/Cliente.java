@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 public class Cliente {
 
     @Id
-    @Column(name = "nroCliente") // ToDo:es generado o lo tienen asignado?
+    @Column(name = "nro_cliente") // ToDo:es generado o lo tienen asignado?
     private String nroCliente;
 
     @Length(min = 3, max = 100)
@@ -43,7 +43,7 @@ public class Cliente {
     private String senasaUta;
 
     @ManyToOne
-    @JoinColumn(name = "idTipoCliente")
+    @JoinColumn(name = "id_tipo_cliente")
     @NotNull
     private TipoCliente tipoCliente;
 

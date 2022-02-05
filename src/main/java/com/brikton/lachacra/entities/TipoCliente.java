@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class TipoCliente {
     @Id
-    @Column(name = "idTipoCliente")
+    @Column(name = "id_tipo_cliente")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 

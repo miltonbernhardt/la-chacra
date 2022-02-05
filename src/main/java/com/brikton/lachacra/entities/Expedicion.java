@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class Expedicion {
 
     @Id
-    @Column(name = "idExpedicion")
+    @Column(name = "id_expedicion")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @NotNull
@@ -39,10 +39,10 @@ public class Expedicion {
     private String comentario; // TODO esto creo se puede obviar
 
     @ManyToOne
-    @JoinColumn(name = "nroCliente")
+    @JoinColumn(name = "nro_cliente")
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name = "idLote")
+    @JoinColumn(name = "id_lote")
     private Lote lote;
 }

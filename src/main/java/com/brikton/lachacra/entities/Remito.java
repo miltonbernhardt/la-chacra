@@ -19,7 +19,7 @@ import java.util.List;
 public class Remito {
 
     @Id
-    @Column(name = "idRemito")
+    @Column(name = "id_remito")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
@@ -30,7 +30,7 @@ public class Remito {
     @Min(0)
     private double importeTotal;
 
-    @OneToMany // ToDo: ver el fetch y el orphan removal
-    @JoinColumn(name = "idExpedicion")
+    @OneToMany
+    @JoinColumn(name = "id_remito")
     private List<Expedicion> expediciones;
 }

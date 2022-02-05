@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Precio {
     @Id
-    @Column(name = "idPrecio")
+    @Column(name = "id_precio")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
@@ -22,10 +22,10 @@ public class Precio {
     private double precio;
 
     @OneToOne //todo testear sino se borra
-    @JoinColumn(name = "codigoQueso")
+    @JoinColumn(name = "codigo_queso")
     private Queso queso;
 
     @ManyToOne
-    @JoinColumn(name = "idTipoCliente")
+    @JoinColumn(name = "id_tipo_cliente")
     private TipoCliente tipoCliente;
 }

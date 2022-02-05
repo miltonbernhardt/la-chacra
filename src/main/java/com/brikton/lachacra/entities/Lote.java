@@ -19,7 +19,7 @@ import java.util.List;
 public class Lote {
 
     @Id // ToDo:es generado o lo tienen asignado?
-    @Column(name = "idLote")
+    @Column(name = "id_lote")
     private long id;
 
     @NotNull
@@ -57,6 +57,6 @@ public class Lote {
     private List<String> loteCuajo;
 
     @ManyToOne
-    @JoinColumn(name = "codigoQueso")
+    @JoinColumn(name = "codigo_queso")
     private Queso queso;
 }
