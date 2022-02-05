@@ -17,13 +17,12 @@ import javax.validation.constraints.NotNull;
 public class Cliente {
 
     @Id
-    @Column(name = "nro_cliente") // ToDo:es generado o lo tienen asignado?
-    private String nroCliente;
+    @Column(name = "nro_cliente")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
 
     @Length(min = 3, max = 100)
     @NotNull
-    // ToDo:agregar validaciones en los campos
-    // https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-builtin-constraints
     private String razonSocial;
 
     @NotNull
@@ -47,16 +46,11 @@ public class Cliente {
     @NotNull
     private TipoCliente tipoCliente;
 
-    // ToDo: aca esta el tema de que tal vez mejor no cargarlo aca, y si se quieren
-    // las devoluciones y expediciones del cliente, mejor buscarlas por su id en las
-    // tablas de esas entities
-    // @OneToMany(cascade = CascadeType.ALL) // ToDo: ver el fetch y el orphan
-    // removal
+    // @OneToMany
     // @JoinColumn(name = "idDevolucion")
     // private List<Devolucion> devoluciones;
-    //
-    // @OneToMany(cascade = CascadeType.ALL) // ToDo: ver el fetch y el orphan
-    // removal
+
+    // @OneToMany
     // @JoinColumn(name = "idExpedicion")
     // private List<Expedicion> expediciones;
 }

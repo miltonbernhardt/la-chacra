@@ -2,11 +2,14 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
-import com.brikton.lachacra.exceptions.DatabaseException;
-import com.brikton.lachacra.exceptions.LoteNotFoundException;
+import com.brikton.lachacra.entities.Queso;
+import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.LoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Validation;
+import java.util.HashMap;
 
 @Service
 @Slf4j
@@ -25,23 +28,40 @@ public class LoteService {
             var lote = repository.getById(id);
             return new LoteDTO(lote);
         } catch (Exception e) {
-            log.error("", e);
-            throw new LoteNotFoundException();
+            throw new LoteNotFoundException(e.getCause());
         }
     }
 
-    public LoteDTO save(LoteDTO dto) throws DatabaseException {
-        try {
-            var lote = loteFromDTO(dto);
-            var queso = quesoService.getQueso(dto.getCodigoQueso());
+    public LoteDTO save(LoteDTO dto) throws DatabaseException, InvalidLoteException, NotFoundConflictException {
 
+        var factory = Validation.buildDefaultValidatorFactory();
+        var validator = factory.getValidator();
+        var violations = validator.validate(dto);
+
+        var map = new HashMap<String, String>();
+        for (var violation : violations) {
+            log.error(violation.getMessage());
+            map.put(violation.getPropertyPath().toString(), violation.getMessageTemplate());
+        }
+
+        if (violations.size() > 0) {
+            throw new InvalidLoteException(map);
+        }
+
+        var lote = loteFromDTO(dto);
+        Queso queso;
+        try {
+            queso = quesoService.getQueso(dto.getCodigoQueso());
+        } catch (QuesoNotFoundException e) {
+            throw new NotFoundConflictException("Queso no encontrado", e.getCause());
+        }
+
+        try {
             lote.setQueso(queso);
             lote = repository.save(lote);
-
             return new LoteDTO(lote);
         } catch (Exception e) {
-            log.error("", e);
-            throw new DatabaseException();
+            throw new DatabaseException(e.getCause());
         }
     }
 

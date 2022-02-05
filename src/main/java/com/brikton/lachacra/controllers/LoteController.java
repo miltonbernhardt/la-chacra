@@ -2,15 +2,19 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.exceptions.DatabaseException;
+import com.brikton.lachacra.exceptions.InvalidLoteException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.LoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.validation.*;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/lotes")
@@ -31,9 +35,10 @@ public class LoteController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse> save(@Valid @RequestBody LoteDTO dto) throws DatabaseException {
+    public ResponseEntity<SuccessfulResponse> save(@RequestBody LoteDTO dto) throws DatabaseException, InvalidLoteException, NotFoundConflictException {
         log.info("API::save - dto: {}", dto);
-        //todo no estaría validando las anotaciones
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
     }
+
+
 }

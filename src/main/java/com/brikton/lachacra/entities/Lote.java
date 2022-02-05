@@ -18,9 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Lote {
 
-    @Id // ToDo:es generado o lo tienen asignado?
+    @Id
     @Column(name = "id_lote")
-    @GeneratedValue(strategy = GenerationType.AUTO) //todo esto es asi o usamos un string?
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @NotNull

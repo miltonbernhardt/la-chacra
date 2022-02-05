@@ -1,7 +1,7 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.repositories.LoteRepository;
+import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,13 @@ public class QuesoService {
         this.repository = repository;
     }
 
-    public Queso getQueso(String codigoQueso) {
-        return repository.getById(codigoQueso);
+    public Queso getQueso(String codigoQueso) throws QuesoNotFoundException {
+        var queso = repository.findById(codigoQueso);
+
+        if (queso.isPresent()) {
+            return queso.get();
+        }
+
+        throw new QuesoNotFoundException();
     }
 }
