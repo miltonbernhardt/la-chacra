@@ -2,10 +2,9 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
-import com.brikton.lachacra.exceptions.InvalidLoteException;
+import com.brikton.lachacra.exceptions.DatabaseException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
-import com.brikton.lachacra.repositories.QuesoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +12,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class LoteService {
 
-    private final LoteRepository repositoryLote;
-    private final QuesoRepository repositoryQueso;
+    private final LoteRepository repository;
+    private final QuesoService quesoService;
 
-    public LoteService(LoteRepository repositoryLote, QuesoRepository repositoryQueso) {
-        this.repositoryLote = repositoryLote;
-        this.repositoryQueso = repositoryQueso;
+    public LoteService(LoteRepository repository, QuesoService quesoService) {
+        this.repository = repository;
+        this.quesoService = quesoService;
     }
 
     public LoteDTO get(Long id) throws LoteNotFoundException {
         try {
-            var lote = repositoryLote.getById(id);
+            var lote = repository.getById(id);
             return new LoteDTO(lote);
         } catch (Exception e) {
             log.error("", e);
@@ -31,22 +30,19 @@ public class LoteService {
         }
     }
 
-    public LoteDTO save(LoteDTO dto) throws InvalidLoteException {
+    public LoteDTO save(LoteDTO dto) throws DatabaseException {
         try {
             var lote = loteFromDTO(dto);
-
-            //todo esto se debería hacer con el service de queso
-            var queso = repositoryQueso.getById(dto.getCodigoQueso());
+            var queso = quesoService.getQueso(dto.getCodigoQueso());
 
             lote.setQueso(queso);
+            lote = repository.save(lote);
 
-            lote = repositoryLote.save(lote);
             return new LoteDTO(lote);
         } catch (Exception e) {
-//            log.error("tipo de excepcion {}", e.);
-            log.error("error ", e);
+            log.error("", e);
+            throw new DatabaseException();
         }
-        return new LoteDTO();
     }
 
     private Lote loteFromDTO(LoteDTO dto) {

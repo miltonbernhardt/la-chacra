@@ -6,7 +6,15 @@ public class DatabaseException extends Exception {
         super(message);
     }
 
-    public DatabaseException(Throwable cause, String message) {
+    public DatabaseException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public DatabaseException(Throwable cause) {
+        super(cause);
+    }
+
+    public DatabaseException() {
+        super("Error en la base de datos");
     }
 }
