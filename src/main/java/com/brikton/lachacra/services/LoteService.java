@@ -2,11 +2,18 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
+import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.DatabaseException;
-import com.brikton.lachacra.exceptions.InvalidLote;
+import com.brikton.lachacra.exceptions.InvalidLoteException;
 import com.brikton.lachacra.repositories.LoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -18,32 +25,15 @@ public class LoteService {
         this.repository = repository;
     }
 
-    public Lote get(Long id) throws DatabaseException {
-        return repository.getById(id);
+    public LoteDTO get(Long id) throws DatabaseException, Exception {
+        if (id > 10 && id < 100) {
+            throw new DatabaseException("probando este error");
+        }
+        return new LoteDTO(repository.getById(id));
     }
 
-    public LoteDTO save(LoteDTO dto) throws DatabaseException, InvalidLote {
-        validLote();
+    public LoteDTO save(LoteDTO dto) throws DatabaseException, InvalidLoteException {
         var lote = repository.save(new Lote());
-        return loteToDTO(lote);
-    }
-
-    public LoteDTO update(LoteDTO dto) throws DatabaseException {
-        var lote = repository.getById(dto.getId());
-        setUpdatedFields(dto, lote);
-        repository.save(lote); //todo do not return entity
-        return dto;
-    }
-
-    private void setUpdatedFields(LoteDTO dto, Lote lote) {
-
-    }
-
-    private LoteDTO loteToDTO(Lote lote) {
-        return new LoteDTO();
-    }
-
-    private void validLote() throws InvalidLote {
-
+        return new LoteDTO(lote);
     }
 }
