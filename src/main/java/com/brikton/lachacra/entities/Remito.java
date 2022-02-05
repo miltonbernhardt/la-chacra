@@ -22,12 +22,7 @@ public class Remito {
     @Column(name = "id_remito")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @NotNull
     private LocalDate fecha;
-
-    @NotNull
-    @Min(0)
     private double importeTotal;
 
     @OneToMany

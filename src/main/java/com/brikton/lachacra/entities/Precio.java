@@ -16,12 +16,9 @@ public class Precio {
     @Column(name = "id_precio")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @NotNull
-    @Min(0)
     private double precio;
 
-    @OneToOne //todo testear sino se borra
+    @OneToOne
     @JoinColumn(name = "codigo_queso")
     private Queso queso;
 

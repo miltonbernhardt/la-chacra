@@ -21,21 +21,10 @@ public class Expedicion {
     @Column(name = "id_expedicion")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @NotNull
     private LocalDate fechaExpedicion;
-
-    @NotNull
-    @Min(1)
     private int cantidad;
-
-    @NotNull
-    @Min(0)
     private double peso;
-
-    @NotNull
-    @Min(0)
     private double importe;
-
     private String comentario; // TODO esto creo se puede obviar
 
     @ManyToOne

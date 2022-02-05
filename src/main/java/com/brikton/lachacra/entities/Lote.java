@@ -22,30 +22,12 @@ public class Lote {
     @Column(name = "id_lote")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @NotNull
     private LocalDate fechaElaboracion;
-
-    @NotNull
-    @Min(0)
     private int numeroTina;
-
-    @NotNull
-    @Min(0)
     private double litrosLeche;
-
-    @NotNull
-    @Min(0)
     private int cantHormas;
-
-    @NotNull
-    // ToDo: ver que onda stock el lote
     private int stockLote;
-
-    @NotNull
-    @Min(0)
     private double peso;
-
     private double rendimiento;
     private String cultivo; // ToDo:ver
     @ElementCollection

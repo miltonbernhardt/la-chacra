@@ -11,28 +11,19 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Devolucion {
     @Id
     @Column(name = "id_devolucion")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @NotNull
     private LocalDate fecha;
-
     private String motivo;
-
-    @NotNull
-    @Min(1)
     private int cantidad;
-
-    @NotNull
-    @Min(1)
     private double peso; //ToDo: ver tipo
-
-    @NotNull
-    @Min(1)
     private double temper; //ToDo: ver tipo
 
     @ManyToOne

@@ -20,25 +20,15 @@ public class Cliente {
     @Column(name = "nro_cliente")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
-
-    @Length(min = 3, max = 100)
-    @NotNull
     private String razonSocial;
-
-    @NotNull
-    @Column(unique = true)
     private String cuit;
-
     private String domicilio;
     private String codPostal;
     private String localidad;
     private String provincia;
     private String pais;
-
     // ToDo: ver condiciones
     private String transporte;
-
-    @NotNull // ToDo: ver condiciones
     private String senasaUta;
 
     @ManyToOne

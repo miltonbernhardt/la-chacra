@@ -18,27 +18,15 @@ import java.util.List;
 @NoArgsConstructor
 public class Queso {
 
-//    @Id
-//    @Column(name = "id_queso")
-//    private Integer id; //todo si no es autogenerado le ponemos como string?
-
     @Id
-    //todo estamos duplicando esto a menos que lo hagamos pk
     @Column(name = "codigo_queso")
     private String codigo;
-
-    @NotBlank
     private String tipoQueso;
-
     @Column(unique = true)
-    @NotBlank
-    @Length(min = 1, max = 20)
     private String nomenclatura;
-
-    @NotNull
     private int stock;
 
-    @OneToMany // ToDo: ver el cascade
+    @OneToMany
     @JoinColumn(name = "id_precio")
     private List<Precio> preciosActual;
 }
