@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-    private final String msgInternalServerError = "hubo un error interno";
+    private final String msgInternalServerError = "Ocurrió un error interno";
     private final String msgInvalidLote = "Los datos enviados no son correctos";
-    private final String msgLoteNotFound = "No se encontró el lote solicitado";
+    private final String msgLoteNotFound = "Lote no encontrado";
 
     @ExceptionHandler(DatabaseException.class)
     protected ResponseEntity<ErrorResponse> handlerDatabaseException(HttpServletRequest req, DatabaseException ex) {

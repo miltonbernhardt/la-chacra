@@ -20,6 +20,7 @@ public class Lote {
 
     @Id // ToDo:es generado o lo tienen asignado?
     @Column(name = "id_lote")
+    @GeneratedValue(strategy = GenerationType.AUTO) //todo esto es asi o usamos un string?
     private long id;
 
     @NotNull

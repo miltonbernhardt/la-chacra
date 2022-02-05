@@ -35,7 +35,7 @@ public class LoteController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<LoteDTO> save(@Valid @RequestBody LoteDTO dto) throws DatabaseException, InvalidLoteException {
+    public ResponseEntity<LoteDTO> save(@Valid @RequestBody LoteDTO dto) throws InvalidLoteException {
         log.info("API::save - dto: {}", dto);
         //todo no estaria validando las anotaciones
         return ResponseEntity.ok().body(service.save(dto));
