@@ -51,6 +51,7 @@ public class LoteDTO {
     }
 
     public LoteDTO(Lote lote) {
+        this.setId(lote.getId());
         this.setFechaElaboracion(lote.getFechaElaboracion());
         this.setNumeroTina(lote.getNumeroTina());
         this.setLitrosLeche(lote.getLitrosLeche());
