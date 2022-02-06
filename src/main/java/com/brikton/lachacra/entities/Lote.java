@@ -21,14 +21,14 @@ public class Lote {
     @Id
     @Column(name = "id_lote")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private LocalDate fechaElaboracion;
-    private int numeroTina;
-    private double litrosLeche;
-    private int cantHormas;
-    private int stockLote;
-    private double peso;
-    private double rendimiento;
+    private Integer numeroTina;
+    private Double litrosLeche;
+    private Integer cantHormas;
+    private Integer stockLote;
+    private Double peso;
+    private Double rendimiento;
     private String cultivo; // ToDo:ver
     @ElementCollection
     private List<String> loteCultivo;
