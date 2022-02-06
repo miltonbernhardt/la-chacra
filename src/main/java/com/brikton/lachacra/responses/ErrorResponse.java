@@ -1,31 +1,41 @@
 package com.brikton.lachacra.responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Getter
 public class ErrorResponse {
 
     private final String message;
+    private final String path;
+    private final Integer status;
+    private final LocalDateTime timestamp;
 
-    @JsonProperty("invalid_fields")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final Map<String, String> invalidFields;
+    private final Map<String, String> errors;
 
-    private ErrorResponse(String message, Map<String, String> invalidFields) {
+    private ErrorResponse(String message, Map<String, String> errors, String path, Integer status) {
         this.message = message;
-        this.invalidFields = invalidFields;
+        this.errors = errors;
+        this.path = path;
+        this.status = status;
+        this.timestamp = getLocalDateTime();
     }
 
-    public static ErrorResponse set(String message) {
-        return new ErrorResponse(message, null);
+    public static ErrorResponse set(String message, String path, Integer status) {
+        return new ErrorResponse(message, null, path, status);
     }
 
-    public static ErrorResponse set(String message, Map<String, String> invalidFields) {
-        return new ErrorResponse(message, invalidFields);
+    public static ErrorResponse set(String message, Map<String, String> invalidFields, String path, Integer status) {
+        return new ErrorResponse(message, invalidFields, path, status);
+    }
+
+    @JsonIgnore
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.now();
     }
 }

@@ -32,22 +32,7 @@ public class LoteService {
         }
     }
 
-    public LoteDTO save(LoteDTO dto) throws DatabaseException, InvalidLoteException, NotFoundConflictException {
-
-        var factory = Validation.buildDefaultValidatorFactory();
-        var validator = factory.getValidator();
-        var violations = validator.validate(dto);
-
-        var map = new HashMap<String, String>();
-        for (var violation : violations) {
-            log.error(violation.getMessage());
-            map.put(violation.getPropertyPath().toString(), violation.getMessageTemplate());
-        }
-
-        if (violations.size() > 0) {
-            throw new InvalidLoteException(map);
-        }
-
+    public LoteDTO save(LoteDTO dto) throws DatabaseException, NotFoundConflictException {
         var lote = loteFromDTO(dto);
         Queso queso;
         try {
@@ -64,7 +49,6 @@ public class LoteService {
             throw new DatabaseException(e.getCause());
         }
     }
-
     private Lote loteFromDTO(LoteDTO dto) {
         var lote = new Lote();
         lote.setId(dto.getId());
