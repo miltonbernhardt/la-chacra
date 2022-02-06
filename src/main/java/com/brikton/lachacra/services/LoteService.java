@@ -24,11 +24,11 @@ public class LoteService {
     }
 
     public LoteDTO get(Long id) throws LoteNotFoundException {
-        try {
-            var lote = repository.getById(id);
-            return new LoteDTO(lote);
-        } catch (Exception e) {
-            throw new LoteNotFoundException(e.getCause());
+        var lote = repository.findById(id);
+        if (lote.isPresent()) {
+            return new LoteDTO(lote.get());
+        } else {
+            throw new LoteNotFoundException();
         }
     }
 
@@ -49,6 +49,7 @@ public class LoteService {
             throw new DatabaseException(e.getCause());
         }
     }
+
     private Lote loteFromDTO(LoteDTO dto) {
         var lote = new Lote();
         lote.setId(dto.getId());
@@ -63,7 +64,6 @@ public class LoteService {
         lote.setLoteCultivo(dto.getLoteCultivo());
         lote.setLoteColorante(dto.getLoteColorante());
         lote.setLoteCalcio(dto.getLoteCalcio());
-        lote.setLoteCuajo(dto.getLoteCuajo());
         lote.setLoteCuajo(dto.getLoteCuajo());
         return lote;
     }
