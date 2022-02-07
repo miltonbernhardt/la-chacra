@@ -1,6 +1,7 @@
 package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.Lote;
+import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -10,39 +11,39 @@ import java.time.LocalDate;
 @Data
 public class LoteDTO {
 
-    @NotNull(message = "No está presente")
-    @PastOrPresent(message = "No puede ser posterior al día de hoy")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
     private LocalDate fechaElaboracion;
 
-    @NotNull(message = "No está presente")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
     private Integer numeroTina;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double litrosLeche;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Integer cantHormas;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double peso;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Long idQueso;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteColorante;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteCultivo;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteCalcio;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteCuajo;
 
     private Long id;

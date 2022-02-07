@@ -1,6 +1,7 @@
 package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.Cliente;
+import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Mod11Check;
@@ -11,38 +12,38 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ClienteDTO {
 
-    @NotNull(message = "No está presente")
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String razonSocial;
 
-    @NotNull(message = "No está presente")
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
-    @Mod11Check(threshold = 7, message = "probar esto")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    @Mod11Check(threshold = 7, message = ValidationMessages.TEST)
     private String cuit;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String domicilio;
 
-    @Length(max = 6, message = "No debe superar los 6 caracteres")
+    @Length(max = 6, message = ValidationMessages.MUST_NOT_EXCEED_6_CHARACTERS)
     private String codPostal;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String localidad;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String provincia;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String pais;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String transporte;
 
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String senasaUta;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Long idTipoCliente;
 
     private Long id;

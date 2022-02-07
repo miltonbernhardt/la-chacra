@@ -1,6 +1,7 @@
 package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.Expedicion;
+import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.*;
 
 import javax.validation.constraints.Min;
@@ -11,28 +12,28 @@ import java.time.LocalDate;
 @Data
 public class ExpedicionDTO {
 
-    @NotNull(message = "No está presente")
-    @PastOrPresent(message = "No puede ser posterior al día de hoy")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
     private LocalDate fechaExpedicion;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Integer cantidad;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double peso;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double importe;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Long idCliente;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Long idLote;
 
     private Long id;

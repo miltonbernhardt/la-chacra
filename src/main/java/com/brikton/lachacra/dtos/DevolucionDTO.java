@@ -1,6 +1,7 @@
 package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.Devolucion;
+import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -11,27 +12,27 @@ import java.time.LocalDate;
 @Data
 public class DevolucionDTO {
 
-    @NotNull(message = "No está presente")
-    @PastOrPresent(message = "No puede ser posterior al día de hoy")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
     private LocalDate fecha;
 
-    @NotNull(message = "No está presente")
-    @Length(max = 255, message = "No debe superar los 255 caracteres")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String motivo;
 
-    @NotNull(message = "No está presente")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
     private Integer cantidad;
 
-    @NotNull(message = "No está presente")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
     private Double peso;
 
-    @NotNull(message = "No está presente")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
     private Double temperatura;
 
-    @NotNull(message = "No está presente")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
     private Long idCliente;
 
-    @NotNull(message = "No está presente")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
     private Long idLoteProducto;
 
     private Long id;

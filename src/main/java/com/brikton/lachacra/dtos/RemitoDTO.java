@@ -1,6 +1,7 @@
 package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.Remito;
+import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.*;
 
 import javax.validation.constraints.Min;
@@ -11,12 +12,12 @@ import java.time.LocalDate;
 @Data
 public class RemitoDTO {
 
-    @NotNull(message = "No está presente")
-    @PastOrPresent(message = "No puede ser posterior al día de hoy")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
     private LocalDate fecha;
 
-    @NotNull(message = "No está presente")
-    @Min(value = 0, message = "No puede ser menor a 0")
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double importeTotal;
 
 //    private List<ExpedicionDTO> expediciones;
