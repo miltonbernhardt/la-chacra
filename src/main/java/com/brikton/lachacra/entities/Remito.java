@@ -24,7 +24,6 @@ public class Remito {
     private Double importeTotal;
 
     @OneToMany
-    @JoinColumn(name = "id_remito")
     @ToString.Exclude
     private List<Expedicion> expediciones;
 

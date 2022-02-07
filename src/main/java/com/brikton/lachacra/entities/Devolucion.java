@@ -21,8 +21,8 @@ public class Devolucion {
     private LocalDate fecha;
     private String motivo;
     private Integer cantidad;
-    private Double peso; //ToDo: ver tipo
-    private Double temperatura; //ToDo: ver tipo
+    private Double peso;
+    private Double temperatura;
 
     @ManyToOne
     @JoinColumn(name = "nro_cliente")

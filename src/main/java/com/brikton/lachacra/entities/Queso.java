@@ -16,15 +16,21 @@ import java.util.Objects;
 public class Queso {
 
     @Id
-    @Column(name = "codigo_queso")
+    @Column(name = "id_queso")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(unique = true, name = "codigo_queso")
     private String codigo;
+
     private String tipoQueso;
+
     @Column(unique = true)
     private String nomenclatura;
+
     private Integer stock;
 
     @OneToMany
-    @JoinColumn(name = "id_precio")
     @ToString.Exclude
     private List<Precio> preciosActual;
 

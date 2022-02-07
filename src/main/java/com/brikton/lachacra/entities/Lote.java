@@ -5,7 +5,6 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,15 +26,10 @@ public class Lote {
     private Integer stockLote;
     private Double peso;
     private Double rendimiento;
-    private String cultivo; // ToDo:ver
-    @ElementCollection
-    private List<String> loteCultivo;
-    @ElementCollection
-    private List<String> loteColorante;
-    @ElementCollection
-    private List<String> loteCalcio;
-    @ElementCollection
-    private List<String> loteCuajo;
+    private String loteCultivo;
+    private String loteColorante;
+    private String loteCalcio;
+    private String loteCuajo;
 
     @ManyToOne
     @JoinColumn(name = "codigo_queso")

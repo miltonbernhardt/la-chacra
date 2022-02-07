@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,7 +51,7 @@ public class LoteServiceTest {
 
     @Test
     void Save_Lote__OK() throws QuesoNotFoundException, NotFoundConflictException {
-        when(quesoService.get("001")).thenReturn(mockQueso());
+        when(quesoService.get(1L)).thenReturn(mockQueso());
         when(repository.save(any(Lote.class))).thenReturn(mockLote());
         LoteDTO dtoActual = loteService.save(mockLoteDTO());
         LoteDTO dtoExpected = mockLoteDTO();
@@ -61,7 +60,7 @@ public class LoteServiceTest {
 
     @Test
     void Save_Lote__Queso_Not_Found() throws QuesoNotFoundException {
-        when(quesoService.get("001")).thenThrow(QuesoNotFoundException.class);
+        when(quesoService.get(1L)).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
                 NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
         );
@@ -78,11 +77,10 @@ public class LoteServiceTest {
         lote.setStockLote(1);
         lote.setPeso(1D);
         lote.setRendimiento(1D);
-        lote.setCultivo("cultivo");
-        lote.setLoteCultivo(Arrays.asList("cultivo1", "cultivo2"));
-        lote.setLoteColorante(Arrays.asList("colorante1", "colorante2"));
-        lote.setLoteCalcio(Arrays.asList("calcio1", "calcio2"));
-        lote.setLoteCuajo(Arrays.asList("cuajo1", "cuajo2"));
+        lote.setLoteCultivo("cultivo1, cultivo2");
+        lote.setLoteColorante("colorante1, colorante2");
+        lote.setLoteCalcio("calcio1, calcio2");
+        lote.setLoteCuajo("cuajo1, cuajo2");
         lote.setQueso(mockQueso());
         return lote;
     }
@@ -106,12 +104,11 @@ public class LoteServiceTest {
         dto.setStockLote(1);
         dto.setPeso(1D);
         dto.setRendimiento(1D);
-        dto.setCultivo("cultivo");
-        dto.setLoteCultivo(Arrays.asList("cultivo1", "cultivo2"));
-        dto.setLoteColorante(Arrays.asList("colorante1", "colorante2"));
-        dto.setLoteCalcio(Arrays.asList("calcio1", "calcio2"));
-        dto.setLoteCuajo(Arrays.asList("cuajo1", "cuajo2"));
-        dto.setCodigoQueso("001");
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setIdQueso(1L);
         return dto;
     }
 }

@@ -17,10 +17,11 @@ public class Precio {
     @Column(name = "id_precio")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private Double precio;
 
-    @OneToOne
-    @JoinColumn(name = "codigo_queso")
+    @ManyToOne
+    @JoinColumn(name = "id_queso")
     private Queso queso;
 
     @ManyToOne

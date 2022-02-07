@@ -16,7 +16,7 @@ public class QuesoService {
         this.repository = repository;
     }
 
-    public Queso get(String codigoQueso) throws QuesoNotFoundException {
+    public Queso get(Long codigoQueso) throws QuesoNotFoundException {
         var queso = repository.findById(codigoQueso);
 
         if (queso.isPresent()) {

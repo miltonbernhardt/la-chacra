@@ -34,7 +34,7 @@ public class LoteService {
         var lote = loteFromDTO(dto);
         Queso queso;
         try {
-            queso = quesoService.get(dto.getCodigoQueso());
+            queso = quesoService.get(dto.getIdQueso());
         } catch (QuesoNotFoundException e) {
             throw new NotFoundConflictException("Queso no encontrado", e.getCause());
         }
@@ -54,7 +54,6 @@ public class LoteService {
         lote.setStockLote(dto.getStockLote());
         lote.setPeso(dto.getPeso());
         lote.setRendimiento(dto.getRendimiento());
-        lote.setCultivo(dto.getCultivo());
         lote.setLoteCultivo(dto.getLoteCultivo());
         lote.setLoteColorante(dto.getLoteColorante());
         lote.setLoteCalcio(dto.getLoteCalcio());

@@ -18,7 +18,7 @@ public class Cliente {
     @Id
     @Column(name = "nro_cliente")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
     private String razonSocial;
     private String cuit;
     private String domicilio;
@@ -26,7 +26,6 @@ public class Cliente {
     private String localidad;
     private String provincia;
     private String pais;
-    // ToDo: ver condiciones
     private String transporte;
     private String senasaUta;
 
@@ -34,14 +33,6 @@ public class Cliente {
     @JoinColumn(name = "id_tipo_cliente")
     @NotNull
     private TipoCliente tipoCliente;
-
-    // @OneToMany
-    // @JoinColumn(name = "idDevolucion")
-    // private List<Devolucion> devoluciones;
-
-    // @OneToMany
-    // @JoinColumn(name = "idExpedicion")
-    // private List<Expedicion> expediciones;
 
     @Override
     public boolean equals(Object o) {

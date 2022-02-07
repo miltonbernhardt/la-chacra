@@ -3,18 +3,13 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
-import com.brikton.lachacra.exceptions.QuesoNotFoundException;
-import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.services.LoteService;
-import com.brikton.lachacra.services.QuesoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -74,12 +69,11 @@ public class LoteControllerTest {
         dto.setStockLote(1);
         dto.setPeso(1D);
         dto.setRendimiento(1D);
-        dto.setCultivo("cultivo");
-        dto.setLoteCultivo(Arrays.asList("cultivo1", "cultivo2"));
-        dto.setLoteColorante(Arrays.asList("colorante1", "colorante2"));
-        dto.setLoteCalcio(Arrays.asList("calcio1", "calcio2"));
-        dto.setLoteCuajo(Arrays.asList("cuajo1", "cuajo2"));
-        dto.setCodigoQueso("001");
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setIdQueso(1L);
         return dto;
     }
 }

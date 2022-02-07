@@ -28,17 +28,17 @@ public class QuesoServiceTest {
 
     @Test
     void Get_Queso__OK() throws QuesoNotFoundException {
-        when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
-        Queso quesoActual = quesoService.get("001");
+        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso()));
+        Queso quesoActual = quesoService.get(1L);
         Queso quesoExpected = mockQueso();
         assertEquals(quesoActual, quesoExpected);
     }
 
     @Test
     void Get_Queso__Queso_Not_Found() {
-        when(repository.findById("001")).thenReturn(Optional.empty());
+        when(repository.findById(1L)).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.get("001")
+                QuesoNotFoundException.class, () -> quesoService.get(1L)
         );
         assertEquals("Queso no encontrado", thrown.getMessage());
     }
@@ -55,13 +55,13 @@ public class QuesoServiceTest {
 
         Precio p1 = new Precio();
         p1.setId(1L);
-        p1.setQueso(queso);
+//        p1.setQueso(queso); //todo
         p1.setPrecio(1D);
         p1.setTipoCliente(tipoCliente1);
 
         Precio p2 = new Precio();
         p2.setId(2L);
-        p2.setQueso(queso);
+//        p2.setQueso(queso); //todo
         p2.setPrecio(2D);
         p2.setTipoCliente(tipoCliente2);
 
