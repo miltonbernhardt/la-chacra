@@ -1,7 +1,6 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.dtos.LoteDTO;
-import com.brikton.lachacra.exceptions.DatabaseException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
