@@ -1,30 +1,27 @@
 package com.brikton.lachacra.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
+@RequiredArgsConstructor
 public class Expedicion {
 
     @Id
     @Column(name = "id_expedicion")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private LocalDate fechaExpedicion;
-    private int cantidad;
-    private double peso;
-    private double importe;
+    private Integer cantidad;
+    private Double peso;
+    private Double importe;
     private String comentario; // TODO esto creo se puede obviar
 
     @ManyToOne
@@ -34,4 +31,17 @@ public class Expedicion {
     @ManyToOne
     @JoinColumn(name = "id_lote")
     private Lote lote;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Expedicion that = (Expedicion) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

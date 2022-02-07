@@ -1,21 +1,17 @@
 package com.brikton.lachacra.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
+@RequiredArgsConstructor
 public class Queso {
 
     @Id
@@ -24,9 +20,23 @@ public class Queso {
     private String tipoQueso;
     @Column(unique = true)
     private String nomenclatura;
-    private int stock;
+    private Integer stock;
 
     @OneToMany
     @JoinColumn(name = "id_precio")
+    @ToString.Exclude
     private List<Precio> preciosActual;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Queso queso = (Queso) o;
+        return codigo != null && Objects.equals(codigo, queso.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
