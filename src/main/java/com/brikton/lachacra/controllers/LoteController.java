@@ -33,7 +33,7 @@ public class LoteController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse> save(@RequestBody @Valid LoteDTO dto) throws DatabaseException, NotFoundConflictException {
+    public ResponseEntity<SuccessfulResponse> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
         log.info("API::save - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
     }

@@ -32,7 +32,7 @@ public class LoteService {
         }
     }
 
-    public LoteDTO save(LoteDTO dto) throws DatabaseException, NotFoundConflictException {
+    public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
         var lote = loteFromDTO(dto);
         Queso queso;
         try {
@@ -41,13 +41,9 @@ public class LoteService {
             throw new NotFoundConflictException("Queso no encontrado", e.getCause());
         }
 
-        try {
-            lote.setQueso(queso);
-            lote = repository.save(lote);
-            return new LoteDTO(lote);
-        } catch (Exception e) {
-            throw new DatabaseException(e.getCause());
-        }
+        lote.setQueso(queso);
+        lote = repository.save(lote);
+        return new LoteDTO(lote);
     }
 
     private Lote loteFromDTO(LoteDTO dto) {

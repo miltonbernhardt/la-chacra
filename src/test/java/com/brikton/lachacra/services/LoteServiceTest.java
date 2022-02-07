@@ -3,9 +3,11 @@ package com.brikton.lachacra.services;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
+import com.brikton.lachacra.exceptions.DatabaseException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -46,13 +49,25 @@ public class LoteServiceTest {
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteService.get(1L)
         );
-
-        Assertions.assertEquals("Lote no encontrado", thrown.getMessage());
+        assertEquals("Lote no encontrado", thrown.getMessage());
     }
 
     @Test
-    void Save_Lote__OK() {
+    void Save_Lote__OK() throws QuesoNotFoundException, NotFoundConflictException, DatabaseException {
+        when(quesoService.getQueso("001")).thenReturn(mockQueso());
+        when(repository.save(any(Lote.class))).thenReturn(mockLote());
+        LoteDTO dtoActual = loteService.save(mockLoteDTO());
+        LoteDTO dtoExpected = mockLoteDTO();
+        assertEquals(dtoExpected, dtoActual);
+    }
 
+    @Test
+    void Save_Lote__Queso_Not_Found() throws QuesoNotFoundException {
+        when(quesoService.getQueso("001")).thenThrow(QuesoNotFoundException.class);
+        NotFoundConflictException thrown = assertThrows(
+                NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
+        );
+        assertEquals("Queso no encontrado", thrown.getMessage());
     }
 
     Lote mockLote() {
@@ -70,14 +85,17 @@ public class LoteServiceTest {
         lote.setLoteColorante(Arrays.asList("colorante1", "colorante2"));
         lote.setLoteCalcio(Arrays.asList("calcio1", "calcio2"));
         lote.setLoteCuajo(Arrays.asList("cuajo1", "cuajo2"));
+        lote.setQueso(mockQueso());
+        return lote;
+    }
 
+    Queso mockQueso() {
         Queso queso = new Queso();
         queso.setTipoQueso("tipoQueso");
         queso.setCodigo("001");
         queso.setNomenclatura("tip");
         queso.setStock(1);
-        lote.setQueso(queso);
-        return lote;
+        return queso;
     }
 
     LoteDTO mockLoteDTO() {
