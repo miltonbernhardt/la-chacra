@@ -3,7 +3,6 @@ package com.brikton.lachacra.services;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.DatabaseException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
@@ -22,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-
-@SpringBootTest
+@SpringBootTest(classes = LoteService.class)
 public class LoteServiceTest {
 
     @Autowired
@@ -53,8 +51,8 @@ public class LoteServiceTest {
     }
 
     @Test
-    void Save_Lote__OK() throws QuesoNotFoundException, NotFoundConflictException, DatabaseException {
-        when(quesoService.getQueso("001")).thenReturn(mockQueso());
+    void Save_Lote__OK() throws QuesoNotFoundException, NotFoundConflictException {
+        when(quesoService.get("001")).thenReturn(mockQueso());
         when(repository.save(any(Lote.class))).thenReturn(mockLote());
         LoteDTO dtoActual = loteService.save(mockLoteDTO());
         LoteDTO dtoExpected = mockLoteDTO();
@@ -63,7 +61,7 @@ public class LoteServiceTest {
 
     @Test
     void Save_Lote__Queso_Not_Found() throws QuesoNotFoundException {
-        when(quesoService.getQueso("001")).thenThrow(QuesoNotFoundException.class);
+        when(quesoService.get("001")).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
                 NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
         );

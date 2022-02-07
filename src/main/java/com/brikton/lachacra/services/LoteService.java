@@ -8,9 +8,6 @@ import com.brikton.lachacra.repositories.LoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validation;
-import java.util.HashMap;
-
 @Service
 @Slf4j
 public class LoteService {
@@ -23,6 +20,7 @@ public class LoteService {
         this.quesoService = quesoService;
     }
 
+    //todo ver si retronar el dto o la entity (usando json properties para indicar que mostrar y que no)
     public LoteDTO get(Long id) throws LoteNotFoundException {
         var lote = repository.findById(id);
         if (lote.isPresent()) {
@@ -36,7 +34,7 @@ public class LoteService {
         var lote = loteFromDTO(dto);
         Queso queso;
         try {
-            queso = quesoService.getQueso(dto.getCodigoQueso());
+            queso = quesoService.get(dto.getCodigoQueso());
         } catch (QuesoNotFoundException e) {
             throw new NotFoundConflictException("Queso no encontrado", e.getCause());
         }
