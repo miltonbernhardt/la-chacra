@@ -11,6 +11,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class TipoCliente {
     @Id
     @Column(name = "id_tipo_cliente")
