@@ -31,6 +31,12 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
 
+    @GetMapping(value = "/")
+    public ResponseEntity<?> getAll(){
+        log.info("API::getAll"); //TODO logueamos esto? capaz se vuelve muy verboso
+        return ResponseEntity.ok().body(service.getAll());
+    }
+
     @PostMapping(value = "/")
     public ResponseEntity<SuccessfulResponse> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
         log.info("API::save - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso

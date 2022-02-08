@@ -8,6 +8,9 @@ import com.brikton.lachacra.repositories.LoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 public class LoteService {
@@ -44,13 +47,26 @@ public class LoteService {
         return new LoteDTO(lote);
     }
 
+    public List<LoteDTO> getAll() {
+       ArrayList<LoteDTO> lotesDTO = new ArrayList<>();
+       var lotes = repository.findAll();
+       lotes.forEach(l -> lotesDTO.add(new LoteDTO(l)));
+       return lotesDTO;
+    }
+
     private Lote loteFromDTO(LoteDTO dto) {
         var lote = new Lote();
-        if (dto.getId().equals(0)) { //el id es 0 si no existe
-            String id = String.valueOf(dto.getFechaElaboracion().getMonthValue()) +
-                    String.valueOf(dto.getFechaElaboracion().getDayOfMonth()) +
+        if (dto.getId().equals("")) { //el id es cadena vacia si no existe
+            String day,month,year;
+            if (dto.getFechaElaboracion().getMonthValue() < 10){
+                month = "0"+dto.getFechaElaboracion().getMonthValue();
+            } else month = String.valueOf(dto.getFechaElaboracion().getMonthValue());
+            if (dto.getFechaElaboracion().getDayOfMonth() < 10) {
+                day = "0" + dto.getFechaElaboracion().getDayOfMonth();
+            } else day = String.valueOf(dto.getFechaElaboracion().getDayOfMonth());
+            String id = month + day +
                     String.valueOf(dto.getFechaElaboracion().getYear()) +
-                    dto.getIdQueso() + //TODO aca faltarian los 00 que usan ellos, usamos codigo queso o cambiamos a string
+                    dto.getIdQueso() + //TODO aca faltarian los 00 que usan ellos, usamos codigo queso o cambiamos a string, ademas nuestro id es autogenerado y nmo tiene na ke ve
                     dto.getNumeroTina().toString();//TODO esto no deberia ser id queso, porque nos queda mal generado el id
             lote.setId(id);
         } else lote.setId(dto.getId());
@@ -67,4 +83,6 @@ public class LoteService {
         lote.setLoteCuajo(dto.getLoteCuajo());
         return lote;
     }
+
+
 }
