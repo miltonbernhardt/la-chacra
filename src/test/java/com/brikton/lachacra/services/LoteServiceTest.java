@@ -34,17 +34,17 @@ public class LoteServiceTest {
 
     @Test
     void Get_Lote__OK() throws LoteNotFoundException {
-        when(repository.findById(1L)).thenReturn(Optional.of(mockLote()));
-        LoteDTO dtoActual = loteService.get(1L);
+        when(repository.findById("1L")).thenReturn(Optional.of(mockLote()));
+        LoteDTO dtoActual = loteService.get("1L");
         LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(dtoExpected, dtoActual);
     }
 
     @Test
     void Get_Lote__Lote_Not_Found() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.findById("1L")).thenReturn(Optional.empty());
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteService.get(1L)
+                LoteNotFoundException.class, () -> loteService.get("1L")
         );
         assertEquals("Lote no encontrado", thrown.getMessage());
     }
@@ -69,7 +69,7 @@ public class LoteServiceTest {
 
     Lote mockLote() {
         Lote lote = new Lote();
-        lote.setId(1L);
+        lote.setId("1L");
         lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         lote.setNumeroTina(1);
         lote.setLitrosLeche(1D);
@@ -96,7 +96,7 @@ public class LoteServiceTest {
 
     LoteDTO mockLoteDTO() {
         LoteDTO dto = new LoteDTO();
-        dto.setId(1L);
+        dto.setId("1L");
         dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dto.setNumeroTina(1);
         dto.setLitrosLeche(1D);

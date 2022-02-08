@@ -33,8 +33,7 @@ public class ExpedicionDTO {
     private Long idCliente;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
-    private Long idLote;
+    private String idLote;
 
     private Long id;
 

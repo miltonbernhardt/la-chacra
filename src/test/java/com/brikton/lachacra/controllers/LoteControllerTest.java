@@ -27,17 +27,17 @@ public class LoteControllerTest {
 
     @Test
     void Get_Lote__OK() throws LoteNotFoundException {
-        when(loteService.get(1L)).thenReturn(mockLoteDTO());
-        var dtoActual = (LoteDTO) loteController.get(1L).getBody().getData();
+        when(loteService.get("1L")).thenReturn(mockLoteDTO());
+        var dtoActual = (LoteDTO) loteController.get("1L").getBody().getData();
         LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(dtoExpected, dtoActual);
     }
 
     @Test
     void Get_Lote__Lote_Not_Found() throws LoteNotFoundException {
-        when(loteService.get(1L)).thenThrow(new LoteNotFoundException());
+        when(loteService.get("1L")).thenThrow(new LoteNotFoundException());
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteController.get(1L)
+                LoteNotFoundException.class, () -> loteController.get("1L")
         );
         assertEquals("Lote no encontrado", thrown.getMessage());
     }
@@ -52,16 +52,16 @@ public class LoteControllerTest {
 
     @Test
     void Save_Lote__Lote_Not_Found() throws LoteNotFoundException {
-        when(loteService.get(1L)).thenThrow(new LoteNotFoundException());
+        when(loteService.get("1L")).thenThrow(new LoteNotFoundException());
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteController.get(1L)
+                LoteNotFoundException.class, () -> loteController.get("1L")
         );
         assertEquals("Lote no encontrado", thrown.getMessage());
     }
 
     LoteDTO mockLoteDTO() {
         LoteDTO dto = new LoteDTO();
-        dto.setId(1L);
+        dto.setId("1L");
         dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dto.setNumeroTina(1);
         dto.setLitrosLeche(1D);

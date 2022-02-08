@@ -26,7 +26,7 @@ public class LoteController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse> get(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") Long id) throws LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse> get(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
         log.info("API::get - id: {}", id); //TODO logueamos esto? capaz se vuelve muy verboso
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }

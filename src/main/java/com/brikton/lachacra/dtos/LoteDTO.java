@@ -46,7 +46,7 @@ public class LoteDTO {
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteCuajo;
 
-    private Long id;
+    private String id;
     private Double rendimiento;
     private Integer stockLote;
 

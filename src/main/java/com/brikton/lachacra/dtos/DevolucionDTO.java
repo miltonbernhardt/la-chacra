@@ -33,7 +33,7 @@ public class DevolucionDTO {
     private Long idCliente;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    private Long idLoteProducto;
+    private String idLoteProducto;
 
     private Long id;
 

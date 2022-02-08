@@ -17,8 +17,7 @@ public class Lote {
 
     @Id
     @Column(name = "id_lote")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;//TODO este id tiene que ser string y no es autogenerado
     private LocalDate fechaElaboracion;
     private Integer numeroTina;
     private Double litrosLeche;

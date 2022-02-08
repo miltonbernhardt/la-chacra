@@ -21,7 +21,7 @@ public class LoteService {
     }
 
     //todo ver si retronar el dto o la entity (usando json properties para indicar que mostrar y que no)
-    public LoteDTO get(Long id) throws LoteNotFoundException {
+    public LoteDTO get(String id) throws LoteNotFoundException {
         var lote = repository.findById(id);
         if (lote.isPresent()) {
             return new LoteDTO(lote.get());
@@ -46,7 +46,14 @@ public class LoteService {
 
     private Lote loteFromDTO(LoteDTO dto) {
         var lote = new Lote();
-        lote.setId(dto.getId());
+        if (dto.getId().equals(0)) { //el id es 0 si no existe
+            String id = String.valueOf(dto.getFechaElaboracion().getMonthValue()) +
+                    String.valueOf(dto.getFechaElaboracion().getDayOfMonth()) +
+                    String.valueOf(dto.getFechaElaboracion().getYear()) +
+                    dto.getIdQueso() + //TODO aca faltarian los 00 que usan ellos, usamos codigo queso o cambiamos a string
+                    dto.getNumeroTina().toString();//TODO esto no deberia ser id queso, porque nos queda mal generado el id
+            lote.setId(id);
+        } else lote.setId(dto.getId());
         lote.setFechaElaboracion(dto.getFechaElaboracion());
         lote.setNumeroTina(dto.getNumeroTina());
         lote.setLitrosLeche(dto.getLitrosLeche());
