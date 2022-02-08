@@ -18,7 +18,7 @@ public class ClienteDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
-    @Mod11Check(threshold = 7, message = ValidationMessages.TEST)
+    @Mod11Check(threshold = 7, message = ValidationMessages.INVALID_FORMAT)
     private String cuit;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
