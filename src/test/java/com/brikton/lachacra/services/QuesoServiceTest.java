@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,6 +24,15 @@ public class QuesoServiceTest {
 
     @MockBean
     QuesoRepository repository;
+
+    @Test
+    void Get_All_Queso() {
+        List<Queso> listaMock = new ArrayList<Queso>();
+        listaMock.add(mockQueso());
+        listaMock.add(mockQueso());
+        when(repository.findAll()).thenReturn(listaMock);
+        assertEquals(2,quesoService.getAll().size());
+    }
 
     @Test
     void Get_Queso__OK() throws QuesoNotFoundException {

@@ -1,10 +1,14 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,4 +29,12 @@ public class QuesoService {
 
         throw new QuesoNotFoundException();
     }
+
+    public List<QuesoDTO> getAll() {
+        ArrayList<QuesoDTO> listaDTO = new ArrayList<QuesoDTO>();
+        repository.findAll().forEach((q) -> listaDTO.add(new QuesoDTO(q)));
+        return listaDTO;
+    }
+
+
 }
