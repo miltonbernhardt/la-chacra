@@ -43,5 +43,9 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
     }
 
-
+    @PutMapping(value = "/")
+    public ResponseEntity<SuccessfulResponse> update(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
+        log.info("API::update - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.update(dto)));
+    }
 }

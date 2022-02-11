@@ -67,6 +67,19 @@ public class LoteServiceTest {
         assertEquals("Queso no encontrado", thrown.getMessage());
     }
 
+
+    //TODO
+    @Test
+    void Update_Lote() throws QuesoNotFoundException, LoteNotFoundException {
+        Lote mockLoteInicial = mockLote();
+        LoteDTO mockLoteActualizado = mockLoteDTO();
+        mockLoteActualizado.setNumeroTina(4);
+        when(quesoService.get(1L)).thenReturn(mockQueso());
+        when(repository.save(any(Lote.class))).thenReturn(mockLote());
+
+       // loteService.update(mockLoteActualizado);
+    }
+
     Lote mockLote() {
         Lote lote = new Lote();
         lote.setId("1L");
@@ -87,6 +100,7 @@ public class LoteServiceTest {
 
     Queso mockQueso() {
         Queso queso = new Queso();
+        queso.setId(1L);
         queso.setTipoQueso("tipoQueso");
         queso.setCodigo("001");
         queso.setNomenclatura("tip");

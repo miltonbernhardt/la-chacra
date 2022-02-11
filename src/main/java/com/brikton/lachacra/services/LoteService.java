@@ -35,16 +35,22 @@ public class LoteService {
 
     public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
         var lote = loteFromDTO(dto);
-        Queso queso;
-        try {
-            queso = quesoService.get(dto.getIdQueso());
-        } catch (QuesoNotFoundException e) {
-            throw new NotFoundConflictException("Queso no encontrado", e.getCause());
-        }
-
-        lote.setQueso(queso);
         lote = repository.save(lote);
         return new LoteDTO(lote);
+    }
+
+    public LoteDTO update(LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
+        var lote = repository.findById(dto.getId());
+        if (lote.isPresent()){
+            repository.delete(lote.get());
+            var loteUpdated = loteFromDTO(dto);
+            var id = generateID(dto,lote.get().getQueso());
+            loteUpdated.setId(id);
+            loteUpdated = repository.save(loteUpdated);
+            return new LoteDTO(loteUpdated);
+        }else {
+            throw new LoteNotFoundException();
+        }
     }
 
     public List<LoteDTO> getAll() {
@@ -54,21 +60,17 @@ public class LoteService {
        return lotesDTO;
     }
 
-    private Lote loteFromDTO(LoteDTO dto) {
+    private Lote loteFromDTO(LoteDTO dto) throws NotFoundConflictException {
+        Queso queso;
+        try {
+            queso = quesoService.get(dto.getIdQueso());
+        } catch (QuesoNotFoundException e) {
+            throw new NotFoundConflictException("Queso no encontrado", e.getCause());
+        }
         var lote = new Lote();
+        lote.setQueso(queso);
         if (dto.getId().equals("")) { //el id es cadena vacia si no existe
-            String day,month,year;
-            if (dto.getFechaElaboracion().getMonthValue() < 10){
-                month = "0"+dto.getFechaElaboracion().getMonthValue();
-            } else month = String.valueOf(dto.getFechaElaboracion().getMonthValue());
-            if (dto.getFechaElaboracion().getDayOfMonth() < 10) {
-                day = "0" + dto.getFechaElaboracion().getDayOfMonth();
-            } else day = String.valueOf(dto.getFechaElaboracion().getDayOfMonth());
-            String id = month + day +
-                    String.valueOf(dto.getFechaElaboracion().getYear()) +
-                    dto.getIdQueso() + //TODO aca faltarian los 00 que usan ellos, usamos codigo queso o cambiamos a string, ademas nuestro id es autogenerado y nmo tiene na ke ve
-                    dto.getNumeroTina().toString();//TODO esto no deberia ser id queso, porque nos queda mal generado el id
-            lote.setId(id);
+            lote.setId(generateID(dto,queso));
         } else lote.setId(dto.getId());
         lote.setFechaElaboracion(dto.getFechaElaboracion());
         lote.setNumeroTina(dto.getNumeroTina());
@@ -84,5 +86,18 @@ public class LoteService {
         return lote;
     }
 
-
+    private String generateID(LoteDTO dto, Queso queso) {
+        String day,month,year;
+        if (dto.getFechaElaboracion().getMonthValue() < 10){
+            month = "0"+dto.getFechaElaboracion().getMonthValue();
+        } else month = String.valueOf(dto.getFechaElaboracion().getMonthValue());
+        if (dto.getFechaElaboracion().getDayOfMonth() < 10) {
+            day = "0" + dto.getFechaElaboracion().getDayOfMonth();
+        } else day = String.valueOf(dto.getFechaElaboracion().getDayOfMonth());
+        String id = month + day +
+                String.valueOf(dto.getFechaElaboracion().getYear()) +
+                queso.getCodigo() +
+                dto.getNumeroTina().toString();
+       return id;
+    }
 }
