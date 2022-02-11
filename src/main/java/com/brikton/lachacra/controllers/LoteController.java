@@ -48,4 +48,10 @@ public class LoteController {
         log.info("API::update - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.update(dto)));
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse> delete(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
+        log.info("API::delete - id: {}", id); //TODO logueamos esto? capaz se vuelve muy verboso
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.delete(id)));
+    }
 }

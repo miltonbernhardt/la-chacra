@@ -80,6 +80,23 @@ public class LoteServiceTest {
        // loteService.update(mockLoteActualizado);
     }
 
+    @Test
+    void Delete_Lote__OK() throws LoteNotFoundException {
+        Lote l = mockLote();
+        when(repository.findById(any(String.class))).thenReturn(Optional.of(mockLote()));
+        LoteDTO dto = loteService.delete("1L");
+        assertEquals(mockLoteDTO(),dto);
+    }
+//TODO
+    @Test
+    void Delete_Lote__Lote_Not_Found() throws LoteNotFoundException {
+        when(repository.findById("1L")).thenReturn(Optional.empty());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> loteService.delete("1L")
+        );
+        assertEquals("Lote no encontrado", thrown.getMessage());
+    }
+
     Lote mockLote() {
         Lote lote = new Lote();
         lote.setId("1L");

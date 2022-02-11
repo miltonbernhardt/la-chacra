@@ -60,6 +60,16 @@ public class LoteService {
        return lotesDTO;
     }
 
+    public LoteDTO delete(String id) throws LoteNotFoundException{
+        var lote = repository.findById(id);
+        if (lote.isPresent()){
+            repository.delete(lote.get());
+        } else {
+            throw new LoteNotFoundException();
+        }
+        return new LoteDTO(lote.get());
+    }
+
     private Lote loteFromDTO(LoteDTO dto) throws NotFoundConflictException {
         Queso queso;
         try {
@@ -100,4 +110,6 @@ public class LoteService {
                 dto.getNumeroTina().toString();
        return id;
     }
+
+
 }
