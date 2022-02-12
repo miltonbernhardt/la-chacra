@@ -17,6 +17,7 @@ import javax.validation.constraints.Min;
 @RequestMapping("/api/v1/lotes")
 @Slf4j
 @Validated
+@CrossOrigin(origins = "**")
 public class LoteController {
 
     private final LoteService service;

@@ -44,7 +44,7 @@ public class LoteService {
         if (lote.isPresent()){
             repository.delete(lote.get());
             var loteUpdated = loteFromDTO(dto);
-            var id = generateID(dto,lote.get().getQueso());
+            var id = generateID(dto,loteUpdated.getQueso());
             loteUpdated.setId(id);
             loteUpdated = repository.save(loteUpdated);
             return new LoteDTO(loteUpdated);

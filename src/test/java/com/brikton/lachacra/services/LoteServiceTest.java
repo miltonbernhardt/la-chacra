@@ -7,7 +7,10 @@ import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
+import org.aspectj.weaver.ast.Not;
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -68,16 +71,24 @@ public class LoteServiceTest {
     }
 
 
-    //TODO
     @Test
-    void Update_Lote() throws QuesoNotFoundException, LoteNotFoundException {
-        Lote mockLoteInicial = mockLote();
+    void Update_Lote() throws QuesoNotFoundException, LoteNotFoundException, NotFoundConflictException {
         LoteDTO mockLoteActualizado = mockLoteDTO();
         mockLoteActualizado.setNumeroTina(4);
+        mockLoteActualizado.setIdQueso(4L);
+        mockLoteActualizado.setFechaElaboracion(LocalDate.of(2022, 2, 2));
         when(quesoService.get(1L)).thenReturn(mockQueso());
-        when(repository.save(any(Lote.class))).thenReturn(mockLote());
-
-       // loteService.update(mockLoteActualizado);
+        var quesito = mockQueso();
+        quesito.setCodigo("004");
+        when(quesoService.get(4L)).thenReturn(quesito);
+        when(repository.findById(any())).thenReturn(Optional.of(mockLote()));
+        when(repository.save(any(Lote.class))).thenAnswer(new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+                return invocation.getArguments()[0];
+            }
+        });
+       var updated = loteService.update(mockLoteActualizado);
+       assertEquals("020220220044",updated.getId());
     }
 
     @Test
