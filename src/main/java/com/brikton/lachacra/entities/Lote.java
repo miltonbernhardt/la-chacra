@@ -17,7 +17,7 @@ public class Lote {
 
     @Id
     @Column(name = "id_lote")
-    private String id;//TODO este id tiene que ser string y no es autogenerado
+    private String id;
     private LocalDate fechaElaboracion;
     private Integer numeroTina;
     private Double litrosLeche;

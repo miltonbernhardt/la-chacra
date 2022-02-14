@@ -28,31 +28,31 @@ public class LoteController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse> get(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
-        log.info("API::get - id: {}", id); //TODO logueamos esto? capaz se vuelve muy verboso
+        log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<?> getAll(){
-        log.info("API::getAll"); //TODO logueamos esto? capaz se vuelve muy verboso
+    public ResponseEntity<?> getAll() {
+        log.info("API::getAll");
         return ResponseEntity.ok().body(service.getAll());
     }
 
     @PostMapping(value = "/")
     public ResponseEntity<SuccessfulResponse> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
-        log.info("API::save - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso
+        log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
     }
 
     @PutMapping(value = "/")
     public ResponseEntity<SuccessfulResponse> update(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
-        log.info("API::update - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso
+        log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.update(dto)));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse> delete(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
-        log.info("API::delete - id: {}", id); //TODO logueamos esto? capaz se vuelve muy verboso
+        log.info("API::delete - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.delete(id)));
     }
 }

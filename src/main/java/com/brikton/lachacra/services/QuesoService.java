@@ -22,17 +22,14 @@ public class QuesoService {
 
     public Queso get(Long codigoQueso) throws QuesoNotFoundException {
         var queso = repository.findById(codigoQueso);
-
-        if (queso.isPresent()) {
+        if (queso.isPresent())
             return queso.get();
-        }
-
         throw new QuesoNotFoundException();
     }
 
     public List<QuesoDTO> getAll() {
-        ArrayList<QuesoDTO> listaDTO = new ArrayList<QuesoDTO>();
-        repository.findAll().forEach((q) -> listaDTO.add(new QuesoDTO(q)));
+        var listaDTO = new ArrayList<QuesoDTO>();
+        repository.findAll().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
         return listaDTO;
     }
 
