@@ -60,7 +60,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    public void Get_All_Lotes__OK() throws JsonProcessingException {
+    public void Get_All__OK() throws JsonProcessingException {
         String expectedLotes = mapper.writeValueAsString(List.of(mockLoteDTO1(), mockLoteDTO2(), mockLoteDTO3()));
         var response = restTemplate.getForEntity(baseUrl.concat("/"), SuccessfulResponse.class);
         var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
@@ -70,7 +70,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    public void Get_Lote_By_ID__OK() throws JsonProcessingException {
+    public void Get__OK() throws JsonProcessingException {
         String expectedLote = mapper.writeValueAsString(mockLoteDTO1());
         var response = restTemplate.getForEntity(baseUrl.concat("/221020210011"), SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
@@ -80,7 +80,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    public void Get_Lote_By_ID__Not_Found() throws JsonProcessingException {
+    public void Get__Lote_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
                 HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("/1"), ErrorResponse.class)
         );

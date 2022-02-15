@@ -34,6 +34,9 @@ public class LoteService {
 
     public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
         var lote = loteFromDTO(dto);
+        dto.setRendimiento(90D);
+        dto.setStockLote(90);
+        //todo calcular rendimiento - lote stock
         lote = repository.save(lote);
         return new LoteDTO(lote);
     }

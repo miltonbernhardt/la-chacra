@@ -6,4 +6,8 @@ public class NotFoundConflictException extends Exception {
         super(message, cause);
     }
 
+    public NotFoundConflictException(String message) {
+        super(message);
+    }
+
 }
