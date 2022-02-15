@@ -41,7 +41,7 @@ public class LoteService {
 
         var lote = loteFromDTO(dto);
         var rendimiento = (dto.getPeso() / dto.getLitrosLeche()) * 100;
-        var stock = 90; //todo hardcoded
+        var stock = dto.getCantHormas(); //TODO si es un update no debería asignar directamente, sino que debería sumar/restar
         lote.setRendimiento(rendimiento);
         lote.setStockLote(stock);
         lote = repository.save(lote);
@@ -61,6 +61,7 @@ public class LoteService {
     }
 
     public String delete(String id) throws LoteNotFoundException {
+        //todo logica de borrar o dar de baja
         if (repository.existsById(id))
             repository.deleteById(id);
         else
@@ -93,7 +94,6 @@ public class LoteService {
         return lote;
     }
 
-    //todo use annotation
     private String generateID(LoteDTO dto) {
         String dateString = dto.getFechaElaboracion().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         return dateString + dto.getCodigoQueso() + dto.getNumeroTina().toString();

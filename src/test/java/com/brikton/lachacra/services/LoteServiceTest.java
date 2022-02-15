@@ -175,7 +175,7 @@ public class LoteServiceTest {
     }
 
     @Test
-    void Update_With_Id_In_DTO__OK() throws QuesoNotFoundException, NotFoundConflictException, LoteNotFoundException {
+    void Update_With_ID_In_DTO__OK() throws QuesoNotFoundException, NotFoundConflictException, LoteNotFoundException {
         LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
         dtoToUpdate.setId("101020210011");
         dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
@@ -194,7 +194,7 @@ public class LoteServiceTest {
         updatedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         updatedLote.setNumeroTina(1);
         updatedLote.setCantHormas(1);
-        updatedLote.setStockLote(90);
+        updatedLote.setStockLote(1);
         updatedLote.setLitrosLeche(20D);
         updatedLote.setPeso(10D);
         updatedLote.setRendimiento(20D);
@@ -211,7 +211,7 @@ public class LoteServiceTest {
         expectedLote.setCantHormas(1);
         expectedLote.setLitrosLeche(20D);
         expectedLote.setPeso(10D);
-        expectedLote.setStockLote(90);
+        expectedLote.setStockLote(1);
         expectedLote.setRendimiento(20D);
         expectedLote.setLoteCultivo("cultivo1, cultivo2");
         expectedLote.setLoteColorante("colorante1, colorante2");
@@ -247,7 +247,7 @@ public class LoteServiceTest {
         updatedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         updatedLote.setNumeroTina(1);
         updatedLote.setCantHormas(1);
-        updatedLote.setStockLote(90);
+        updatedLote.setStockLote(1);
         updatedLote.setLitrosLeche(20D);
         updatedLote.setPeso(10D);
         updatedLote.setRendimiento(20D);
@@ -262,9 +262,9 @@ public class LoteServiceTest {
         expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         expectedLote.setNumeroTina(1);
         expectedLote.setCantHormas(1);
+        expectedLote.setStockLote(1);
         expectedLote.setLitrosLeche(20D);
         expectedLote.setPeso(10D);
-        expectedLote.setStockLote(90);
         expectedLote.setRendimiento(20D);
         expectedLote.setLoteCultivo("cultivo1, cultivo2");
         expectedLote.setLoteColorante("colorante1, colorante2");

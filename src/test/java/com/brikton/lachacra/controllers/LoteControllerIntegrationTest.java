@@ -2,25 +2,31 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.Assert;
+import org.springframework.web.client.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,10 +46,27 @@ public class LoteControllerIntegrationTest {
     private int port;
 
     private String baseUrl = "http://localhost";
-    private final String path = "/api/v1/lotes";
+    private final String path = "/api/v1/lotes/";
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
+
+    <T> ResponseEntity<T> putForEntity(String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
+        return nonNull(restTemplate.execute(url, HttpMethod.PUT, requestCallback, responseExtractor, uriVariables));
+    }
+
+    <T> ResponseEntity<T> deleteForEntity(String url, Class<T> responseType, Object... uriVariables) throws RestClientException {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(null, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
+        return nonNull(restTemplate.execute(url, HttpMethod.DELETE, requestCallback, responseExtractor, uriVariables));
+    }
+
+    static <T> T nonNull(@Nullable T result) {
+        Assert.state(result != null, "No result");
+        return result;
+    }
 
     @BeforeAll
     static void init() {
@@ -61,7 +84,7 @@ public class LoteControllerIntegrationTest {
     @Test
     void Get__OK() throws JsonProcessingException {
         String expectedLote = mapper.writeValueAsString(mockLoteDTO1());
-        var response = restTemplate.getForEntity(baseUrl.concat("/221020210011"), SuccessfulResponse.class);
+        var response = restTemplate.getForEntity(baseUrl.concat("221020210011"), SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -69,21 +92,33 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
+    void Get__Bad_ID() throws JsonProcessingException {
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.getForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("id"));
+        assertEquals(path.concat("0"), response.getPath());
+    }
+
+    @Test
     void Get__Lote_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("/1"), ErrorResponse.class)
+                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("1"), ErrorResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
-        assertEquals(path.concat("/1"), response.getPath());
-        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+        assertEquals(path.concat("1"), response.getPath());
     }
 
     @Test
     void Get_All__OK() throws JsonProcessingException {
         String expectedLotes = mapper.writeValueAsString(List.of(mockLoteDTO1(), mockLoteDTO2(), mockLoteDTO3()));
-        var response = restTemplate.getForEntity(baseUrl.concat("/"), SuccessfulResponse.class);
+        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
         var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -91,38 +126,299 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Save__OK() {
-        //todo
+    void Save__OK() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToSave.setNumeroTina(1);
+        dtoToSave.setCantHormas(1);
+        dtoToSave.setLitrosLeche(20D);
+        dtoToSave.setPeso(10D);
+        dtoToSave.setLoteCultivo("cultivo1, cultivo2");
+        dtoToSave.setLoteColorante("colorante1, colorante2");
+        dtoToSave.setLoteCalcio("calcio1, calcio2");
+        dtoToSave.setLoteCuajo("cuajo1, cuajo2");
+        dtoToSave.setCodigoQueso("001");
+
+        LoteDTO expectedLote = new LoteDTO();
+        expectedLote.setId("101020210011");
+        expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        expectedLote.setNumeroTina(1);
+        expectedLote.setCantHormas(1);
+        expectedLote.setStockLote(1);
+        expectedLote.setLitrosLeche(20D);
+        expectedLote.setPeso(10D);
+        expectedLote.setRendimiento(50D);
+        expectedLote.setLoteCultivo("cultivo1, cultivo2");
+        expectedLote.setLoteColorante("colorante1, colorante2");
+        expectedLote.setLoteCalcio("calcio1, calcio2");
+        expectedLote.setLoteCuajo("cuajo1, cuajo2");
+        expectedLote.setCodigoQueso("001");
+
+        var expectedLoteString = mapper.writeValueAsString(expectedLote);
+
+        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedLoteString, actualLote);
     }
 
     @Test
-    void Save__Lote_Not_Found() {
-        //todo
+    void Save__Queso_Not_Found_Conflict() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToSave.setNumeroTina(1);
+        dtoToSave.setCantHormas(1);
+        dtoToSave.setLitrosLeche(20D);
+        dtoToSave.setPeso(10D);
+        dtoToSave.setLoteCultivo("cultivo1, cultivo2");
+        dtoToSave.setLoteColorante("colorante1, colorante2");
+        dtoToSave.setLoteCalcio("calcio1, calcio2");
+        dtoToSave.setLoteCuajo("cuajo1, cuajo2");
+        dtoToSave.setCodigoQueso("011");
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path, response.getPath());
     }
 
     @Test
-    void Update__OK() {
-        //todo
+    void Save__InvalidFields__Fields_Not_Found() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setId("1");
+        dtoToSave.setStockLote(1);
+        dtoToSave.setRendimiento(1d);
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(6, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("fechaElaboracion"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
     }
 
     @Test
-    void Update__Lote_Not_Found() {
-        //todo
+    void Save__InvalidFields__Other_Validations() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setId("1");
+        dtoToSave.setStockLote(1);
+        dtoToSave.setRendimiento(1d);
+        dtoToSave.setFechaElaboracion(LocalDate.of(3000, 10, 10));
+        dtoToSave.setNumeroTina(-1);
+        dtoToSave.setCantHormas(-1);
+        dtoToSave.setLitrosLeche(-20D);
+        dtoToSave.setPeso(-10D);
+        dtoToSave.setLoteCultivo(RandomStringUtils.randomAlphabetic(300));
+        dtoToSave.setLoteColorante(RandomStringUtils.randomAlphabetic(300));
+        dtoToSave.setLoteCalcio(RandomStringUtils.randomAlphabetic(300));
+        dtoToSave.setLoteCuajo(RandomStringUtils.randomAlphabetic(300));
+        dtoToSave.setCodigoQueso("0010000");
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(10, response.getErrors().size());
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.CANT_BE_LATER_THAN_TODAY, response.getErrors().get("fechaElaboracion"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigoQueso"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteColorante"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCultivo"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCalcio"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCuajo"));
     }
 
     @Test
-    void Save__Queso_Not_Found_Conflict() {
-        //todo
+    void Update__OK() throws JsonProcessingException {
+        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
+        dtoToUpdate.setId("221020210011");
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 21));
+        dtoToUpdate.setNumeroTina(3);
+        dtoToUpdate.setCantHormas(2);
+        dtoToUpdate.setLitrosLeche(40D);
+        dtoToUpdate.setPeso(20D);
+        dtoToUpdate.setLoteCultivo("cultivo3, cultivo4");
+        dtoToUpdate.setLoteColorante("colorante3, colorante4");
+        dtoToUpdate.setLoteCalcio("calcio3, calcio4");
+        dtoToUpdate.setLoteCuajo("cuajo3, cuajo4");
+        dtoToUpdate.setCodigoQueso("002");
+
+        LoteDTO expectedLote = new LoteDTO();
+        expectedLote.setId("211020210023");
+        expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 21));
+        expectedLote.setNumeroTina(3);
+        expectedLote.setCantHormas(2);
+        expectedLote.setStockLote(2);
+        expectedLote.setLitrosLeche(40D);
+        expectedLote.setPeso(20D);
+        expectedLote.setRendimiento(50D);
+        expectedLote.setLoteCultivo("cultivo3, cultivo4");
+        expectedLote.setLoteColorante("colorante3, colorante4");
+        expectedLote.setLoteCalcio("calcio3, calcio4");
+        expectedLote.setLoteCuajo("cuajo3, cuajo4");
+        expectedLote.setCodigoQueso("002");
+
+        var expectedLoteString = mapper.writeValueAsString(expectedLote);
+
+        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedLoteString, actualLote);
     }
 
     @Test
-    void Delete__OK() {
-        //todo
+    void Update__Lote_Not_Found() throws JsonProcessingException {
+        LoteDTO dtoToUpdate = new LoteDTO();
+        dtoToUpdate.setId("011020210011");
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToUpdate.setNumeroTina(1);
+        dtoToUpdate.setCantHormas(1);
+        dtoToUpdate.setLitrosLeche(20D);
+        dtoToUpdate.setPeso(10D);
+        dtoToUpdate.setLoteCultivo("cultivo1, cultivo2");
+        dtoToUpdate.setLoteColorante("colorante1, colorante2");
+        dtoToUpdate.setLoteCalcio("calcio1, calcio2");
+        dtoToUpdate.setLoteCuajo("cuajo1, cuajo2");
+        dtoToUpdate.setCodigoQueso("001");
+
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(path, response.getPath());
     }
 
     @Test
-    void Delete__Lote_Not_Found() {
-        //todo
+    void Update__Queso_Not_Found_Conflict() throws JsonProcessingException {
+        LoteDTO dtoToUpdate = new LoteDTO();
+        dtoToUpdate.setId("221020210011");
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dtoToUpdate.setNumeroTina(1);
+        dtoToUpdate.setCantHormas(1);
+        dtoToUpdate.setLitrosLeche(20D);
+        dtoToUpdate.setPeso(10D);
+        dtoToUpdate.setLoteCultivo("cultivo1, cultivo2");
+        dtoToUpdate.setLoteColorante("colorante1, colorante2");
+        dtoToUpdate.setLoteCalcio("calcio1, calcio2");
+        dtoToUpdate.setLoteCuajo("cuajo1, cuajo2");
+        dtoToUpdate.setCodigoQueso("011");
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path, response.getPath());
+    }
+
+    @Test
+    void Update__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
+        LoteDTO dtoToUpdate = new LoteDTO();
+        dtoToUpdate.setStockLote(1);
+        dtoToUpdate.setRendimiento(1d);
+        dtoToUpdate.setCodigoQueso("");
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(7, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("fechaElaboracion"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
+    }
+
+    @Test
+    void Update__Invalid_Fields__Other_Validations() throws JsonProcessingException {
+        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
+        dtoToUpdate.setId("");
+        dtoToUpdate.setStockLote(1);
+        dtoToUpdate.setRendimiento(1d);
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(3000, 10, 10));
+        dtoToUpdate.setNumeroTina(-1);
+        dtoToUpdate.setCantHormas(-1);
+        dtoToUpdate.setLitrosLeche(-20D);
+        dtoToUpdate.setPeso(-10D);
+        dtoToUpdate.setLoteCultivo(RandomStringUtils.randomAlphabetic(300));
+        dtoToUpdate.setLoteColorante(RandomStringUtils.randomAlphabetic(300));
+        dtoToUpdate.setLoteCalcio(RandomStringUtils.randomAlphabetic(300));
+        dtoToUpdate.setLoteCuajo(RandomStringUtils.randomAlphabetic(300));
+        dtoToUpdate.setCodigoQueso("0010000");
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(11, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.CANT_BE_LATER_THAN_TODAY, response.getErrors().get("fechaElaboracion"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigoQueso"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteColorante"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCultivo"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCalcio"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCuajo"));
+    }
+
+    @Test
+    void Delete__OK() throws JsonProcessingException {
+        var expectedID = mapper.writeValueAsString("221020210011");
+
+        var response = deleteForEntity(baseUrl.concat("221020210011"), SuccessfulResponse.class);
+        var actualID = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedID, actualID);
+    }
+
+    @Test
+    void Delete__Lote_Not_Found() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("1"), response.getPath());
     }
 
     LoteDTO mockLoteDTO1() {
