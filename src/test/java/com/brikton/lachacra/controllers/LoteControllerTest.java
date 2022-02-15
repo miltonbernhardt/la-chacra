@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,7 +29,7 @@ public class LoteControllerTest {
     @Test
     void Get_Lote__OK() throws LoteNotFoundException {
         when(loteService.get("1L")).thenReturn(mockLoteDTO());
-        var dtoActual = (LoteDTO) loteController.get("1L").getBody().getData();
+        var dtoActual = (LoteDTO) Objects.requireNonNull(loteController.get("1L").getBody()).getData();
         LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(dtoExpected, dtoActual);
     }
@@ -45,7 +46,7 @@ public class LoteControllerTest {
     @Test
     void Save_Lote__OK() throws NotFoundConflictException {
         when(loteService.save(any(LoteDTO.class))).thenReturn(mockLoteDTO());
-        LoteDTO dtoActual = (LoteDTO) loteController.save(mockLoteDTO()).getBody().getData();
+        LoteDTO dtoActual = (LoteDTO) Objects.requireNonNull(loteController.save(mockLoteDTO()).getBody()).getData();
         LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(dtoExpected, dtoActual);
     }
