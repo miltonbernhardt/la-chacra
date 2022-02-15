@@ -54,7 +54,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
-        status = HttpStatus.UNPROCESSABLE_ENTITY;
+        status = HttpStatus.BAD_REQUEST;
         return handleExceptionInternal(
                 ex,
                 ErrorResponse.set(ErrorMessages.MSG_INVALID_BODY, errors, ((ServletWebRequest) request).getRequest().getRequestURI(), status.value()),
