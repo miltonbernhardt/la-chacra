@@ -26,7 +26,7 @@ public class QuesoServiceTest {
     QuesoRepository repository;
 
     @Test
-    void Get_All_Queso() {
+    void Get_All__OK() {
         List<Queso> listaMock = new ArrayList<Queso>();
         listaMock.add(mockQueso());
         listaMock.add(mockQueso());
@@ -35,7 +35,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Queso__OK() throws QuesoNotFoundException {
+    void Get__OK() throws QuesoNotFoundException {
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.get(1L);
         Queso quesoExpected = mockQueso();
@@ -43,7 +43,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Queso__Queso_Not_Found() {
+    void Get__Queso_Not_Found() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
                 QuesoNotFoundException.class, () -> quesoService.get(1L)

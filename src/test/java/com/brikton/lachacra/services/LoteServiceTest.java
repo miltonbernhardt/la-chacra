@@ -1,5 +1,6 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
@@ -7,7 +8,6 @@ import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
-import org.aspectj.weaver.ast.Not;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +37,7 @@ public class LoteServiceTest {
     QuesoService quesoService;
 
     @Test
-    void Get_Lote__OK() throws LoteNotFoundException {
+    void Get__OK() throws LoteNotFoundException {
         when(repository.findById("1L")).thenReturn(Optional.of(mockLote()));
         LoteDTO dtoActual = loteService.get("1L");
         LoteDTO dtoExpected = mockLoteDTO();
@@ -44,16 +45,26 @@ public class LoteServiceTest {
     }
 
     @Test
-    void Get_Lote__Lote_Not_Found() {
+    void Get__Lote_Not_Found() {
         when(repository.findById("1L")).thenReturn(Optional.empty());
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteService.get("1L")
         );
-        assertEquals("Lote no encontrado", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
-    void Save_Lote__OK() throws QuesoNotFoundException, NotFoundConflictException {
+    void Get_All__OK() {
+        when(repository.findAll()).thenReturn(List.of(mockLote(), mockLote()));
+        var actualLotes = loteService.getAll();
+        LoteDTO dtoExpected = mockLoteDTO();
+        assertEquals(2, actualLotes.size());
+        assertEquals(dtoExpected, actualLotes.get(0));
+        assertEquals(dtoExpected, actualLotes.get(1));
+    }
+
+    @Test
+    void Save__OK() throws QuesoNotFoundException, NotFoundConflictException {
         when(quesoService.get(1L)).thenReturn(mockQueso());
         when(repository.save(any(Lote.class))).thenReturn(mockLote());
         LoteDTO dtoActual = loteService.save(mockLoteDTO());
@@ -62,17 +73,17 @@ public class LoteServiceTest {
     }
 
     @Test
-    void Save_Lote__Queso_Not_Found() throws QuesoNotFoundException {
+    void Save__Queso_Not_Found() throws QuesoNotFoundException {
         when(quesoService.get(1L)).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
                 NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
         );
-        assertEquals("Queso no encontrado", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
-
     @Test
-    void Update_Lote() throws QuesoNotFoundException, LoteNotFoundException, NotFoundConflictException {
+    void Update__OK() throws QuesoNotFoundException, LoteNotFoundException, NotFoundConflictException {
+        //todo fix
         LoteDTO mockLoteActualizado = mockLoteDTO();
         mockLoteActualizado.setNumeroTina(4);
         mockLoteActualizado.setIdQueso(4L);
@@ -87,25 +98,34 @@ public class LoteServiceTest {
                 return invocation.getArguments()[0];
             }
         });
-       var updated = loteService.update(mockLoteActualizado);
-       assertEquals("020220220044",updated.getId());
+        var updated = loteService.update(mockLoteActualizado);
+        assertEquals("020220220044", updated.getId());
     }
 
     @Test
-    void Delete_Lote__OK() throws LoteNotFoundException {
+    void Update__Lote_Not_Found() throws QuesoNotFoundException, LoteNotFoundException, NotFoundConflictException {
+        when(repository.findById(any())).thenReturn(Optional.empty());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> loteService.update(mockLoteDTO())
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Delete__OK() throws LoteNotFoundException {
         Lote l = mockLote();
         when(repository.findById(any(String.class))).thenReturn(Optional.of(mockLote()));
         LoteDTO dto = loteService.delete("1L");
-        assertEquals(mockLoteDTO(),dto);
+        assertEquals(mockLoteDTO(), dto);
     }
-//TODO
+
     @Test
-    void Delete_Lote__Lote_Not_Found() throws LoteNotFoundException {
+    void Delete__Lote_Not_Found() {
         when(repository.findById("1L")).thenReturn(Optional.empty());
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteService.delete("1L")
         );
-        assertEquals("Lote no encontrado", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     Lote mockLote() {

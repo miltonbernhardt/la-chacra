@@ -29,7 +29,6 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(DatabaseTestConfig.class)
 @ActiveProfiles("test")
@@ -47,12 +46,12 @@ public class LoteControllerIntegrationTest {
     private static ObjectMapper mapper = null;
 
     @BeforeAll
-    public static void init() {
+    static void init() {
         restTemplate = new RestTemplate();
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
@@ -60,17 +59,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    public void Get_All__OK() throws JsonProcessingException {
-        String expectedLotes = mapper.writeValueAsString(List.of(mockLoteDTO1(), mockLoteDTO2(), mockLoteDTO3()));
-        var response = restTemplate.getForEntity(baseUrl.concat("/"), SuccessfulResponse.class);
-        var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-        assertNotNull(response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedLotes, actualLotes);
-    }
-
-    @Test
-    public void Get__OK() throws JsonProcessingException {
+    void Get__OK() throws JsonProcessingException {
         String expectedLote = mapper.writeValueAsString(mockLoteDTO1());
         var response = restTemplate.getForEntity(baseUrl.concat("/221020210011"), SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
@@ -80,7 +69,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    public void Get__Lote_Not_Found() throws JsonProcessingException {
+    void Get__Lote_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
                 HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("/1"), ErrorResponse.class)
         );
@@ -89,6 +78,51 @@ public class LoteControllerIntegrationTest {
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("/1"), response.getPath());
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    void Get_All__OK() throws JsonProcessingException {
+        String expectedLotes = mapper.writeValueAsString(List.of(mockLoteDTO1(), mockLoteDTO2(), mockLoteDTO3()));
+        var response = restTemplate.getForEntity(baseUrl.concat("/"), SuccessfulResponse.class);
+        var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedLotes, actualLotes);
+    }
+
+    @Test
+    void Save__OK() {
+        //todo
+    }
+
+    @Test
+    void Save__Lote_Not_Found() {
+        //todo
+    }
+
+    @Test
+    void Update__OK() {
+        //todo
+    }
+
+    @Test
+    void Update__Lote_Not_Found() {
+        //todo
+    }
+
+    @Test
+    void Save__Queso_Not_Found_Conflict() {
+        //todo
+    }
+
+    @Test
+    void Delete__OK() {
+        //todo
+    }
+
+    @Test
+    void Delete__Lote_Not_Found() {
+        //todo
     }
 
     LoteDTO mockLoteDTO1() {

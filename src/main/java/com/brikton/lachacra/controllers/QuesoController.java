@@ -3,7 +3,6 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
