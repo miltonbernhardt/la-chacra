@@ -1,11 +1,17 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,6 +20,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {QuesoService.class})
@@ -49,6 +56,40 @@ public class QuesoServiceTest {
                 QuesoNotFoundException.class, () -> quesoService.get(1L)
         );
         assertEquals("Queso no encontrado", thrown.getMessage());
+    }
+
+    @Test
+    void Save__Ok(){
+        when(repository.save(any(Queso.class))).thenAnswer(new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+                return invocation.getArguments()[0];
+            }
+        });
+        var queso = mockQueso();
+        var dto = new QuesoDTO(queso);
+        assertEquals(dto,quesoService.save(new QuesoDTO((queso))));
+    }
+
+    @Test
+    void Update__Ok() throws QuesoNotFoundException {
+        when(repository.save(any(Queso.class))).thenAnswer(new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+                return invocation.getArguments()[0];
+            }
+        });
+        when(repository.findById(any())).thenReturn(Optional.of(mockQueso()));
+        var queso = mockQueso();
+        queso.setTipoQueso("test");
+        assertEquals("test",quesoService.update(new QuesoDTO((queso))).getTipoQueso());
+    }
+
+    @Test
+    void Update__Queso_Not_Found(){
+        when(repository.findById(any())).thenReturn(Optional.empty());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.update(new QuesoDTO(mockQueso()))
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     Queso mockQueso() {

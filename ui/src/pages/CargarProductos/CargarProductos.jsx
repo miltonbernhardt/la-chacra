@@ -2,7 +2,7 @@ import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from "react";
 import FeedbackToast from "../../components/FeedbackToast";
-import { getAllQuesos } from "../../services/RestServices";
+import { getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
 import CargarProductoDialog from './CargarProductoDialog';
 import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
@@ -53,9 +53,17 @@ const CargarProductos = () => {
 
     const onSubmit = () => {
         if (validarQueso()) {
-            if (queso.id === ''); //TODO post
-            else;//TODO put
-        } else {
+            if (queso.id === '') {
+                postQueso(queso).then(() => {
+                    showSuccess("Carga Exitosa");
+                    fetchQuesos();
+                }).catch(e => feedbackErrors(e));
+            }
+            else
+                putQueso(queso).then(() => {
+                    showSuccess("Actualización Exitosa");
+                    fetchQuesos();
+                }).catch(e => feedbackErrors(e));
         }
         setOpenCargarProducto(false);
     }
@@ -77,11 +85,13 @@ const CargarProductos = () => {
     }
 
     const openEditarDialog = () => {
-        setOpenCargarProducto(true);
+        queso.id === '' ? showWarning("No se ha seleccionado un producto") :
+            setOpenCargarProducto(true);
     }
 
     const openEliminarDialog = () => {
-        setOpenEliminarProducto(true);
+        queso.id === '' ? showWarning("No se ha seleccionado un producto") :
+            setOpenEliminarProducto(true);
     }
 
     const setSelection = (id) => {

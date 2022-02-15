@@ -43,7 +43,7 @@ public class LoteController {
     public ResponseEntity<SuccessfulResponse<LoteDTO>> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
-    }
+    } //TODO nunca se considero que pasa si te llega un post con un elemento que ya tenga id, eso no deberia pasar, deberia ir por el put
 
     @PutMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
