@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
@@ -40,13 +41,13 @@ public class LoteControllerTest {
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteController.get("1L")
         );
-        assertEquals("Lote no encontrado", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Save_Lote__OK() throws NotFoundConflictException {
         when(loteService.save(any(LoteDTO.class))).thenReturn(mockLoteDTO());
-        LoteDTO dtoActual = (LoteDTO) Objects.requireNonNull(loteController.save(mockLoteDTO()).getBody()).getData();
+        LoteDTO dtoActual = Objects.requireNonNull(loteController.save(mockLoteDTO()).getBody()).getData();
         LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(dtoExpected, dtoActual);
     }
@@ -57,7 +58,7 @@ public class LoteControllerTest {
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteController.get("1L")
         );
-        assertEquals("Lote no encontrado", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     LoteDTO mockLoteDTO() {

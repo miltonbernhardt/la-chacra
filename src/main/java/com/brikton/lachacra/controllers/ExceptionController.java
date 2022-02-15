@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.exceptions.DatabaseException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
@@ -26,14 +27,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-    private final String msgInternalServerError = "Ocurrió un error interno";
-    private final String msgInvalidBody = "Cuerpo del mensaje inválido";
-    private final String msgInvalidParam = "Parámetro inválido";
-    private final String msgLoteNotFound = "Lote no encontrado";
+
 
     @ExceptionHandler(value = {LoteNotFoundException.class})
     protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, LoteNotFoundException ex) {
-        return response(ex, req, HttpStatus.NOT_FOUND, msgLoteNotFound);
+        return response(ex, req, HttpStatus.NOT_FOUND, ErrorMessages.MSG_LOTE_NOT_FOUND);
     }
 
     @ExceptionHandler(NotFoundConflictException.class)
@@ -44,13 +42,13 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {ConstraintViolationException.class})
     ResponseEntity<ErrorResponse> handleValidationError(HttpServletRequest req, ConstraintViolationException ex) {
         Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(n -> n.getPropertyPath().toString(), ConstraintViolation::getMessage));
-        return response(ex, req, HttpStatus.BAD_REQUEST, msgInvalidParam, errors);
+        return response(ex, req, HttpStatus.BAD_REQUEST, ErrorMessages.MSG_INVALID_PARAM, errors);
     }
 
     @ExceptionHandler(value = {DatabaseException.class, Exception.class})
     protected ResponseEntity<ErrorResponse> handlerInternalError(HttpServletRequest req, Exception ex) {
         log.error("Request: {} - {}", req.getRequestURL(), ex);
-        return new ResponseEntity<>(ErrorResponse.set(msgInternalServerError, req.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ErrorResponse.set(ErrorMessages.MSG_INTERNAL_SERVER_ERROR, req.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         status = HttpStatus.UNPROCESSABLE_ENTITY;
         return handleExceptionInternal(
                 ex,
-                ErrorResponse.set(msgInvalidBody, errors, ((ServletWebRequest) request).getRequest().getRequestURI(), status.value()),
+                ErrorResponse.set(ErrorMessages.MSG_INVALID_BODY, errors, ((ServletWebRequest) request).getRequest().getRequestURI(), status.value()),
                 headers, status, request
         );
     }
