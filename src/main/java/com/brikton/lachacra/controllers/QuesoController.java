@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/quesos")
 @Slf4j
 @Validated
 public class QuesoController {
-
 
     private final QuesoService service;
 
@@ -27,21 +28,14 @@ public class QuesoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse> get(@PathVariable("id") @Min(value = 1, message = "El id del queso debe ser mayor a 0") Long id) throws QuesoNotFoundException {
-        log.info("API::get - id: {}", id); //TODO logueamos esto? capaz se vuelve muy verboso
+    public ResponseEntity<SuccessfulResponse<Queso>> get(@PathVariable("id") @Min(value = 1, message = "El id del queso debe ser mayor a 0") Long id) throws QuesoNotFoundException {
+        log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
 
     @GetMapping(value = "/")
-    public ResponseEntity<?> getAll(){
-        log.info("API::getAll"); //TODO logueamos esto? capaz se vuelve muy verboso
-        return ResponseEntity.ok().body(service.getAll());
+    public ResponseEntity<SuccessfulResponse<List<QuesoDTO>>> getAll() {
+        log.info("API::getAll");
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
-/*
-    @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse> save(@RequestBody @Valid QuesoDTO dto) throws NotFoundConflictException {
-        log.info("API::save - dto: {}", dto); //TODO logueamos esto? capaz se vuelve muy verboso
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
-    }
-*/
 }
