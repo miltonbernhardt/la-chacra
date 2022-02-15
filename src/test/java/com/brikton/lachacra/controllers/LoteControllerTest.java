@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
@@ -9,11 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +34,7 @@ public class LoteControllerTest {
     @Test
     void Get__OK() throws LoteNotFoundException {
         when(loteService.get("1L")).thenReturn(mockLoteDTO1());
-        var dtoActual = Objects.requireNonNull(loteController.get("1L").getBody()).getData();
+        var dtoActual = requireNonNull(loteController.get("1L").getBody()).getData();
         LoteDTO dtoExpected = mockLoteDTO1();
         assertEquals(dtoExpected, dtoActual);
     }
@@ -48,7 +51,7 @@ public class LoteControllerTest {
     @Test
     void Get_All__OK() {
         when(loteService.getAll()).thenReturn(List.of(mockLoteDTO1(), mockLoteDTO2()));
-        var listOfDTOs = Objects.requireNonNull(loteController.getAll().getBody()).getData();
+        var listOfDTOs = requireNonNull(loteController.getAll().getBody()).getData();
         LoteDTO dtoExpected1 = mockLoteDTO1();
         LoteDTO dtoExpected2 = mockLoteDTO2();
         assertEquals(2, listOfDTOs.size());
@@ -59,9 +62,11 @@ public class LoteControllerTest {
     @Test
     void Save__OK() throws NotFoundConflictException {
         when(loteService.save(any(LoteDTO.class))).thenReturn(mockLoteDTO1());
-        LoteDTO dtoActual = Objects.requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getData();
+        LoteDTO dtoActual = requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getData();
+        String message = requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getMessage();
         LoteDTO dtoExpected = mockLoteDTO1();
         assertEquals(dtoExpected, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_LOTE_CREATED, message);
     }
 
     @Test
@@ -76,9 +81,11 @@ public class LoteControllerTest {
     @Test
     void Update__OK() throws NotFoundConflictException, LoteNotFoundException {
         when(loteService.update(any(LoteDTO.class))).thenReturn(mockLoteDTO1());
-        LoteDTO dtoActual = Objects.requireNonNull(loteController.update(mockLoteDTO1()).getBody()).getData();
+        LoteDTO dtoActual = requireNonNull(loteController.update(mockLoteDTO1()).getBody()).getData();
+        String message = requireNonNull(loteController.update(mockLoteDTO1()).getBody()).getMessage();
         LoteDTO dtoExpected = mockLoteDTO1();
         assertEquals(dtoExpected, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_LOTE_UPDATED, message);
     }
 
     @Test
@@ -99,26 +106,27 @@ public class LoteControllerTest {
         assertEquals("queso not found", thrown.getMessage());
     }
 
-//    @Test todo
-//    void Delete__OK() throws LoteNotFoundException {
-//        when(loteService.delete("1L")).thenReturn(mockLoteDTO1());
-//        var dtoActual = (LoteDTO) Objects.requireNonNull(loteController.delete("1L").getBody()).getData();
-//        LoteDTO dtoExpected = mockLoteDTO1();
-//        assertEquals(dtoExpected, dtoActual);
-//    }
-//
-//    @Test
-//    void Delete__Lote_Not_Found() throws LoteNotFoundException {
-//        when(loteService.delete("1L")).thenThrow(new LoteNotFoundException());
-//        LoteNotFoundException thrown = assertThrows(
-//                LoteNotFoundException.class, () -> loteController.delete("1L")
-//        );
-//        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
-//    }
+    @Test
+    void Delete__OK() throws LoteNotFoundException {
+        when(loteService.delete("101020210011")).thenReturn("101020210011");
+        var actualID = (String) requireNonNull(loteController.delete("101020210011").getBody()).getData();
+        var message = (String) requireNonNull(loteController.delete("101020210011").getBody()).getMessage();
+        assertEquals("101020210011", actualID);
+        assertEquals(SuccessfulMessages.MSG_LOTE_DELETED, message);
+    }
+
+    @Test
+    void Delete__Lote_Not_Found() throws LoteNotFoundException {
+        when(loteService.delete("101020210011")).thenThrow(new LoteNotFoundException());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> loteController.delete("101020210011")
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
+    }
 
     LoteDTO mockLoteDTO1() {
         LoteDTO dto = new LoteDTO();
-        dto.setId("1L");
+        dto.setId("101020210011");
         dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dto.setNumeroTina(1);
         dto.setLitrosLeche(1D);
@@ -136,7 +144,7 @@ public class LoteControllerTest {
 
     LoteDTO mockLoteDTO2() {
         LoteDTO dto = new LoteDTO();
-        dto.setId("1L");
+        dto.setId("111020210022");
         dto.setFechaElaboracion(LocalDate.of(2021, 10, 11));
         dto.setNumeroTina(2);
         dto.setLitrosLeche(2D);

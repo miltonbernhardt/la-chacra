@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
@@ -42,18 +43,18 @@ public class LoteController {
     @PostMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<LoteDTO>> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
         log.info("API::save - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_CREATED, service.save(dto)));
     }
 
     @PutMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
         log.info("API::update - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.update(dto)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_UPDATED, service.update(dto)));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> delete(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<String>> delete(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
         log.info("API::delete - id: {}", id);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.delete(id)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED, service.delete(id)));
     }
 }
