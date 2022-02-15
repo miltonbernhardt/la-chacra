@@ -31,7 +31,7 @@ public class LoteDTO {
     @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double peso;
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
     private String codigoQueso;
 

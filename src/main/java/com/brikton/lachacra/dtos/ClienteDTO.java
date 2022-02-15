@@ -7,16 +7,17 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Mod11Check;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
 public class ClienteDTO {
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String razonSocial;
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     @Mod11Check(threshold = 7, message = ValidationMessages.INVALID_FORMAT)
     private String cuit;

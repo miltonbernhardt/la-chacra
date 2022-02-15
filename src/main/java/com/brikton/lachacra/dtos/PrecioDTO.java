@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -15,7 +16,7 @@ public class PrecioDTO {
     @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double precio;
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
     private String codigoQueso;
 
