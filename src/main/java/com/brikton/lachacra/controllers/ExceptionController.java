@@ -6,6 +6,8 @@ import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-
-
     @ExceptionHandler(value = {LoteNotFoundException.class})
     protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, LoteNotFoundException ex) {
         return response(ex, req, HttpStatus.NOT_FOUND, ErrorMessages.MSG_LOTE_NOT_FOUND);
@@ -41,8 +41,8 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     ResponseEntity<ErrorResponse> handleValidationError(HttpServletRequest req, ConstraintViolationException ex) {
-        Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(n -> n.getPropertyPath().toString(), ConstraintViolation::getMessage));
-        return response(ex, req, HttpStatus.BAD_REQUEST, ErrorMessages.MSG_INVALID_PARAM, errors);
+        Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(n -> ((PathImpl) n.getPropertyPath()).getLeafNode().toString(), ConstraintViolation::getMessage));
+        return response(ex, req, HttpStatus.BAD_REQUEST, ErrorMessages.MSG_INVALID_PARAMS, errors);
     }
 
     @ExceptionHandler(value = {DatabaseException.class, Exception.class})
