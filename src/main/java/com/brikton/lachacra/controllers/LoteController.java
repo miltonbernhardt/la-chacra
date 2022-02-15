@@ -1,7 +1,10 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.SuccessfulMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
@@ -29,7 +32,7 @@ public class LoteController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@PathVariable("id") @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_0) String id) throws LoteNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
@@ -47,7 +50,7 @@ public class LoteController {
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Valid LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
         log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_UPDATED, service.update(dto)));
     }

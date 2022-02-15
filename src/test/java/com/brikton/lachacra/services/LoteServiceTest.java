@@ -2,6 +2,7 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
@@ -175,7 +176,7 @@ public class LoteServiceTest {
 
     @Test
     void Update_With_Id_In_DTO__OK() throws QuesoNotFoundException, NotFoundConflictException, LoteNotFoundException {
-        LoteDTO dtoToUpdate = new LoteDTO();
+        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
         dtoToUpdate.setId("101020210011");
         dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dtoToUpdate.setNumeroTina(1);
@@ -227,8 +228,9 @@ public class LoteServiceTest {
     }
 
     @Test
-    void Update_Without_Id_In_DTO__OK() throws QuesoNotFoundException, NotFoundConflictException, LoteNotFoundException {
-        LoteDTO dtoToUpdate = new LoteDTO();
+    void Update_Without_ID_In_DTO__OK() throws QuesoNotFoundException, NotFoundConflictException, LoteNotFoundException {
+        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
+        dtoToUpdate.setId("101020210011");
         dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dtoToUpdate.setNumeroTina(1);
         dtoToUpdate.setCantHormas(1);
@@ -282,7 +284,7 @@ public class LoteServiceTest {
     void Update__Lote_Not_Found() {
         when(repository.existsById("1")).thenReturn(false);
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteService.update(mockLoteDTO())
+                LoteNotFoundException.class, () -> loteService.update(mockLoteUpdateDTO())
         );
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
@@ -332,6 +334,24 @@ public class LoteServiceTest {
 
     LoteDTO mockLoteDTO() {
         LoteDTO dto = new LoteDTO();
+        dto.setId("101020210011");
+        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dto.setNumeroTina(1);
+        dto.setLitrosLeche(1D);
+        dto.setCantHormas(1);
+        dto.setStockLote(1);
+        dto.setPeso(1D);
+        dto.setRendimiento(1D);
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setCodigoQueso("001");
+        return dto;
+    }
+
+    LoteUpdateDTO mockLoteUpdateDTO() {
+        LoteUpdateDTO dto = new LoteUpdateDTO();
         dto.setId("101020210011");
         dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dto.setNumeroTina(1);

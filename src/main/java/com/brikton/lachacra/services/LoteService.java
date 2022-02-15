@@ -1,6 +1,7 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.*;
@@ -47,11 +48,9 @@ public class LoteService {
         return new LoteDTO(lote);
     }
 
-    public LoteDTO update(LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
-        var id = dto.getId() == null || dto.getId().equals("") ? generateID(dto) : dto.getId();
-        dto.setId(id);
+    public LoteDTO update(LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
         delete(dto.getId());
-        return save(dto);
+        return save(new LoteDTO(dto));
     }
 
     public List<LoteDTO> getAll() {
