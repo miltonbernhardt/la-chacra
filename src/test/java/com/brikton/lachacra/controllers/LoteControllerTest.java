@@ -31,7 +31,7 @@ public class LoteControllerTest {
     @Test
     void Get__OK() throws LoteNotFoundException {
         when(loteService.get("1L")).thenReturn(mockLoteDTO1());
-        var dtoActual = (LoteDTO) Objects.requireNonNull(loteController.get("1L").getBody()).getData();
+        var dtoActual = Objects.requireNonNull(loteController.get("1L").getBody()).getData();
         LoteDTO dtoExpected = mockLoteDTO1();
         assertEquals(dtoExpected, dtoActual);
     }
