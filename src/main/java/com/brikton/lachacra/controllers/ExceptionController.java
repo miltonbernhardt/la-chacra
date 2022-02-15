@@ -1,9 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ErrorMessages;
-import com.brikton.lachacra.exceptions.DatabaseException;
-import com.brikton.lachacra.exceptions.LoteNotFoundException;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.responses.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +28,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {LoteNotFoundException.class})
-    protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, LoteNotFoundException ex) {
-        return response(ex, req, HttpStatus.NOT_FOUND, ErrorMessages.MSG_LOTE_NOT_FOUND);
+    @ExceptionHandler(value = {LoteNotFoundException.class, QuesoNotFoundException.class})
+    protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, NotFoundException ex) {
+        return response(ex, req, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(NotFoundConflictException.class)
