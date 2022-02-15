@@ -27,7 +27,7 @@ public class QuesoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<Queso>> get(@PathVariable("id") @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS) String id) throws QuesoNotFoundException {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> get(@PathVariable("id") @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS) String id) throws QuesoNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }

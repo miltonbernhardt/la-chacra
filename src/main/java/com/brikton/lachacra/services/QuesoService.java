@@ -20,11 +20,15 @@ public class QuesoService {
         this.repository = repository;
     }
 
-    public Queso get(String codigoQueso) throws QuesoNotFoundException {
+    public Queso getEntity(String codigoQueso) throws QuesoNotFoundException {
         var queso = repository.findById(codigoQueso);
         if (queso.isPresent())
             return queso.get();
         throw new QuesoNotFoundException();
+    }
+
+    public QuesoDTO get(String codigoQueso) throws QuesoNotFoundException {
+        return new QuesoDTO(this.getEntity(codigoQueso));
     }
 
     public List<QuesoDTO> getAll() {

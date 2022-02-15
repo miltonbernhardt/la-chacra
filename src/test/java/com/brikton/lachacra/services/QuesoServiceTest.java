@@ -1,5 +1,6 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
@@ -35,20 +36,37 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get__OK() throws QuesoNotFoundException {
+    void Get_Entity__OK() throws QuesoNotFoundException {
         when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
-        Queso quesoActual = quesoService.get("001");
+        Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
         assertEquals(quesoActual, quesoExpected);
     }
 
     @Test
-    void Get__Queso_Not_Found() {
+    void Get_Entity__Queso_Not_Found() {
         when(repository.findById("001")).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
                 QuesoNotFoundException.class, () -> quesoService.get("001")
         );
-        assertEquals("Queso no encontrado", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Get_DTO__OK() throws QuesoNotFoundException {
+        when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
+        Queso quesoActual = quesoService.getEntity("001");
+        Queso quesoExpected = mockQueso();
+        assertEquals(quesoActual, quesoExpected);
+    }
+
+    @Test
+    void Get_DTO__Queso_Not_Found() {
+        when(repository.findById("001")).thenReturn(Optional.empty());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.get("001")
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     Queso mockQueso() {

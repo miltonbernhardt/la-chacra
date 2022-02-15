@@ -65,7 +65,7 @@ public class LoteServiceTest {
 
     @Test
     void Save__OK() throws QuesoNotFoundException, NotFoundConflictException {
-        when(quesoService.get("001")).thenReturn(mockQueso());
+        when(quesoService.getEntity("001")).thenReturn(mockQueso());
         when(repository.save(any(Lote.class))).thenReturn(mockLote());
         LoteDTO dtoActual = loteService.save(mockLoteDTO());
         LoteDTO dtoExpected = mockLoteDTO();
@@ -74,7 +74,7 @@ public class LoteServiceTest {
 
     @Test
     void Save__Queso_Not_Found() throws QuesoNotFoundException {
-        when(quesoService.get("001")).thenThrow(QuesoNotFoundException.class);
+        when(quesoService.getEntity("001")).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
                 NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
         );
@@ -88,10 +88,10 @@ public class LoteServiceTest {
         mockLoteActualizado.setNumeroTina(4);
         mockLoteActualizado.setCodigoQueso("004");
         mockLoteActualizado.setFechaElaboracion(LocalDate.of(2022, 2, 2));
-        when(quesoService.get("001")).thenReturn(mockQueso());
+        when(quesoService.getEntity("001")).thenReturn(mockQueso());
         var quesito = mockQueso();
         quesito.setCodigo("004");
-        when(quesoService.get("004")).thenReturn(quesito);
+        when(quesoService.getEntity("004")).thenReturn(quesito);
         when(repository.findById(any())).thenReturn(Optional.of(mockLote()));
         when(repository.save(any(Lote.class))).thenAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
