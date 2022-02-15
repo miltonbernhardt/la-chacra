@@ -16,7 +16,7 @@ const headers = {
 const getNewHeader = () => {
     // const token = localStorage.getItem('token');
     // return {...headers, Authorization: `Bearer ${token}`}
-    return { ...headers }
+    return {...headers}
 }
 
 // --- LOTE METHODS ---
@@ -38,9 +38,9 @@ export const POST = async (port, postfixUrl, data) => {
 
     const method = `POST ${URL}`;
 
-    console.log({ request: method, data })
-    const response = await axios.post(URL, data, { headers: getNewHeader() })
-    const { data: dataResponse, status } = response
+    console.log({request: method, data})
+    const response = await axios.post(URL, data, {headers: getNewHeader()})
+    const {data: dataResponse, status} = response
     if (status !== 200) {
         if (status === 401) {
             localStorage.removeItem("token")
@@ -48,20 +48,20 @@ export const POST = async (port, postfixUrl, data) => {
         }
         throw new Error(dataResponse)
     } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
+        console.log({response: method, dataResponse})
+        return {data: dataResponse}
     }
 }
 
 export const PUT = async (port, postfixUrl, data) => {
-    console.log({ postfixUrl })
+    console.log({postfixUrl})
     const URL = `${RAIZ_URL}:${port}/api/${postfixUrl}`;
 
     const method = `PUT ${URL}`
-    console.log({ request: method, data })
+    console.log({request: method, data})
 
-    const response = await axios.put(URL, data, { headers: getNewHeader() })
-    const { data: dataResponse, status } = response
+    const response = await axios.put(URL, data, {headers: getNewHeader()})
+    const {data: dataResponse, status} = response
     if (status !== 200) {
         if (status === 401) {
             localStorage.removeItem("token")
@@ -69,8 +69,8 @@ export const PUT = async (port, postfixUrl, data) => {
         }
         throw new Error(dataResponse)
     } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
+        console.log({response: method, dataResponse})
+        return {data: dataResponse}
     }
 }
 
@@ -79,32 +79,34 @@ export const GET = async (port, postfixUrl) => {
 
     const method = `GET ${URL}`
 
-    console.log({ request: method })
+    console.log({request: method})
 
-    const response = await axios.get(URL, { headers: getNewHeader() })
+    const response = await axios.get(URL, {headers: getNewHeader()})
 
-    const { data: dataResponse, status } = response
+    console.log({response: response})
+
+    const data = response.data.data
+    const status = response.status
 
     if (status !== 200) {
         if (status === 401) {
             localStorage.removeItem("token")
             localStorage.removeItem("username")
         }
-        throw new Error(dataResponse)
+        throw new Error(data)
     } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
+        return {data}
     }
 }
 
 export const DELETE = async (port, postfixUrl) => {
     const URL = `${RAIZ_URL}:${port}/api/${postfixUrl}`;
     const method = `DELETE ${URL}`
-    console.log({ request: method })
+    console.log({request: method})
 
-    const response = await axios.delete(URL, { headers: getNewHeader() })
+    const response = await axios.delete(URL, {headers: getNewHeader()})
 
-    const { data: dataResponse, status } = response
+    const {data: dataResponse, status} = response
 
     if (status !== 200) {
         if (status === 401) {
@@ -113,7 +115,7 @@ export const DELETE = async (port, postfixUrl) => {
         }
         throw new Error(dataResponse)
     } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
+        console.log({response: method, dataResponse})
+        return {data: dataResponse}
     }
 }

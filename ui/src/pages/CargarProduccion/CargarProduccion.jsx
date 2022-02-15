@@ -53,8 +53,9 @@ const CargarProduccion = () => {
     const [warningToastOpen, setWarningToast] = useState(false);
 
     const fetchQuesos = () => {
-        getAllQuesos().then(quesos => {
-            setListaQuesos(quesos.data)
+        getAllQuesos().then(data => {
+            console.log({quesos: data.data})
+            setListaQuesos(data.data)
         }).catch(e => feedbackErrors(e));
     }
 
