@@ -139,7 +139,7 @@ public class LoteControllerIntegrationTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(1L);
+        dto.setCodigoQueso("001");
         return dto;
     }
 
@@ -153,7 +153,7 @@ public class LoteControllerIntegrationTest {
         dto.setStockLote(25);
         dto.setPeso(842.5);
         dto.setRendimiento(12.96);
-        dto.setIdQueso(2L);
+        dto.setCodigoQueso("002");
         return dto;
     }
 
@@ -169,7 +169,7 @@ public class LoteControllerIntegrationTest {
         dto.setRendimiento(14.36);
         dto.setLoteCultivo("cultivo1, cultivo2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(3L);
+        dto.setCodigoQueso("003");
         return dto;
     }
 }

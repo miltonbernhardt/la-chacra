@@ -1,16 +1,17 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class QuesoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<Queso>> get(@PathVariable("id") @Min(value = 1, message = "El id del queso debe ser mayor a 0") Long id) throws QuesoNotFoundException {
+    public ResponseEntity<SuccessfulResponse<Queso>> get(@PathVariable("id") @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS) String id) throws QuesoNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }

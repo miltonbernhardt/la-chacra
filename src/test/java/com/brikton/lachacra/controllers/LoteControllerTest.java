@@ -130,7 +130,7 @@ public class LoteControllerTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(1L);
+        dto.setCodigoQueso("001");
         return dto;
     }
 
@@ -148,7 +148,7 @@ public class LoteControllerTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(2L);
+        dto.setCodigoQueso("002");
         return dto;
     }
 }

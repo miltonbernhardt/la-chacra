@@ -73,7 +73,7 @@ public class LoteService {
     private Lote loteFromDTO(LoteDTO dto) throws NotFoundConflictException {
         Queso queso;
         try {
-            queso = quesoService.get(dto.getIdQueso());
+            queso = quesoService.get(dto.getCodigoQueso());
         } catch (QuesoNotFoundException e) {
             throw new NotFoundConflictException("Queso no encontrado", e.getCause());
         }

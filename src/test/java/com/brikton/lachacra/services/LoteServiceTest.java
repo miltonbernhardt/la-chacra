@@ -65,7 +65,7 @@ public class LoteServiceTest {
 
     @Test
     void Save__OK() throws QuesoNotFoundException, NotFoundConflictException {
-        when(quesoService.get(1L)).thenReturn(mockQueso());
+        when(quesoService.get("001")).thenReturn(mockQueso());
         when(repository.save(any(Lote.class))).thenReturn(mockLote());
         LoteDTO dtoActual = loteService.save(mockLoteDTO());
         LoteDTO dtoExpected = mockLoteDTO();
@@ -74,7 +74,7 @@ public class LoteServiceTest {
 
     @Test
     void Save__Queso_Not_Found() throws QuesoNotFoundException {
-        when(quesoService.get(1L)).thenThrow(QuesoNotFoundException.class);
+        when(quesoService.get("001")).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
                 NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
         );
@@ -86,12 +86,12 @@ public class LoteServiceTest {
         //todo fix
         LoteDTO mockLoteActualizado = mockLoteDTO();
         mockLoteActualizado.setNumeroTina(4);
-        mockLoteActualizado.setIdQueso(4L);
+        mockLoteActualizado.setCodigoQueso("004");
         mockLoteActualizado.setFechaElaboracion(LocalDate.of(2022, 2, 2));
-        when(quesoService.get(1L)).thenReturn(mockQueso());
+        when(quesoService.get("001")).thenReturn(mockQueso());
         var quesito = mockQueso();
         quesito.setCodigo("004");
-        when(quesoService.get(4L)).thenReturn(quesito);
+        when(quesoService.get("004")).thenReturn(quesito);
         when(repository.findById(any())).thenReturn(Optional.of(mockLote()));
         when(repository.save(any(Lote.class))).thenAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
@@ -148,9 +148,8 @@ public class LoteServiceTest {
 
     Queso mockQueso() {
         Queso queso = new Queso();
-        queso.setId(1L);
-        queso.setTipoQueso("tipoQueso");
         queso.setCodigo("001");
+        queso.setTipoQueso("tipoQueso");
         queso.setNomenclatura("tip");
         queso.setStock(1);
         return queso;
@@ -170,7 +169,7 @@ public class LoteServiceTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(1L);
+        dto.setCodigoQueso("001");
         return dto;
     }
 }

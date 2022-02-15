@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QuesoRepository extends JpaRepository<Queso, Long> {
+public interface QuesoRepository extends JpaRepository<Queso, String> {
 
 }

@@ -16,10 +16,6 @@ import java.util.Objects;
 public class Queso {
 
     @Id
-    @Column(name = "id_queso")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     @Column(unique = true, name = "codigo_queso")
     private String codigo;
 
