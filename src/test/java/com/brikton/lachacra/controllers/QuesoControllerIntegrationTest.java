@@ -148,13 +148,7 @@ public class QuesoControllerIntegrationTest {
         mockQueso3.setNomenclatura("S");
         mockQueso3.setStock(53);
 
-        QuesoDTO mockQueso4 = new QuesoDTO();
-        mockQueso4.setCodigo("004");
-        mockQueso4.setTipoQueso("Rojo");
-        mockQueso4.setNomenclatura("R");
-        mockQueso4.setStock(0);
-
-        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3, mockQueso4));
+        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
         var actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
@@ -172,7 +166,47 @@ public class QuesoControllerIntegrationTest {
         assertEquals(expectedID, actualID);
     }
 
-    //todo delete queso and later make a get all to check that not exists
+    @Test
+    void Delete__OK___After_That_Queso_Doesnt_Show_In_Get_All() throws JsonProcessingException {
+        QuesoDTO mockQueso1 = new QuesoDTO();
+        mockQueso1.setCodigo("001");
+        mockQueso1.setTipoQueso("Cremoso");
+        mockQueso1.setNomenclatura("C");
+        mockQueso1.setStock(70);
+
+        QuesoDTO mockQueso2 = new QuesoDTO();
+        mockQueso2.setCodigo("002");
+        mockQueso2.setTipoQueso("Barra");
+        mockQueso2.setNomenclatura("B");
+        mockQueso2.setStock(20);
+
+        QuesoDTO mockQueso3 = new QuesoDTO();
+        mockQueso3.setCodigo("003");
+        mockQueso3.setTipoQueso("Sardo");
+        mockQueso3.setNomenclatura("S");
+        mockQueso3.setStock(53);
+
+        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
+        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesos, actualQuesos);
+
+        String expectedID = mapper.writeValueAsString("001");
+        response = deleteForEntity(baseUrl.concat("001"), SuccessfulResponse.class);
+        var actualID = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedID, actualID);
+
+        expectedQuesos = mapper.writeValueAsString(List.of(mockQueso2, mockQueso3));
+        response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesos, actualQuesos);
+    }
 
     @Test
     void Delete__Bad_ID() throws JsonProcessingException {

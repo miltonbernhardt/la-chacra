@@ -35,9 +35,8 @@ public class QuesoService {
     }
 
     public List<QuesoDTO> getAll() {
-        //todo get quesos no dados de baja
         var listaDTO = new ArrayList<QuesoDTO>();
-        repository.findAll().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
+        repository.findALLQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
         return listaDTO;
     }
 

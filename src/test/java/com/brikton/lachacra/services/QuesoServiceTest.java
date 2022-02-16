@@ -36,7 +36,7 @@ public class QuesoServiceTest {
         List<Queso> listaMock = new ArrayList<>();
         listaMock.add(mockQueso());
         listaMock.add(mockQueso());
-        when(repository.findAll()).thenReturn(listaMock);
+        when(repository.findALLQuesos()).thenReturn(listaMock);
         assertEquals(2,quesoService.getAll().size());
     }
 
