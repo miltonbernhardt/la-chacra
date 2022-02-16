@@ -58,17 +58,47 @@ public class QuesoControllerTest {
 
     @Test
     void Save__OK() {
-        QuesoDTO dtoExpected = new QuesoDTO();
-        dtoExpected.setCodigo("001");
-        dtoExpected.setTipoQueso("tipoQueso");
-        dtoExpected.setNomenclatura("tip");
-        dtoExpected.setStock(1);
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("001");
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("tip");
+        dtoToSave.setStock(1);
 
-        when(quesoService.save(any(QuesoDTO.class))).thenReturn(dtoExpected);
-        QuesoDTO dtoActual = requireNonNull(quesoController.save(dtoExpected).getBody()).getData();
-        String message = requireNonNull(quesoController.save(dtoExpected).getBody()).getMessage();
-        assertEquals(dtoExpected, dtoActual);
+        when(quesoService.save(any(QuesoDTO.class))).thenReturn(dtoToSave);
+        QuesoDTO dtoActual = requireNonNull(quesoController.save(dtoToSave).getBody()).getData();
+        String message = requireNonNull(quesoController.save(dtoToSave).getBody()).getMessage();
+        assertEquals(dtoToSave, dtoActual);
         assertEquals(SuccessfulMessages.MSG_QUESO_CREATED, message);
+    }
+
+    @Test
+    void Update__OK() throws QuesoNotFoundException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        when(quesoService.update(any(QuesoDTO.class))).thenReturn(dtoToUpdate);
+        QuesoDTO dtoActual = requireNonNull(quesoController.update(dtoToUpdate).getBody()).getData();
+        String message = requireNonNull(quesoController.update(dtoToUpdate).getBody()).getMessage();
+        assertEquals(dtoToUpdate, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_QUESO_UPDATED, message);
+    }
+
+    @Test
+    void Update__Queso_Not_Found() throws QuesoNotFoundException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenThrow(new QuesoNotFoundException());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoController.update(dtoToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test

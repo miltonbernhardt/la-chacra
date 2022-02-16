@@ -1,9 +1,7 @@
 package com.brikton.lachacra.services;
 
-import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
@@ -62,6 +60,20 @@ public class QuesoService {
         return new QuesoDTO(queso);
     }
 
+    public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException {
+        if (!repository.existsById(dto.getCodigo())) {//todo que pasa si el queso esta dado de bajo? actualizamos o no? yo diria que no (usar el getEntity sino va)
+            throw new QuesoNotFoundException();
+        }
+
+        var queso = quesoFromDTO(dto);
+
+        var oldQueso = repository.getById(dto.getCodigo());
+        if (oldQueso.getFechaBaja() != null) {
+            queso.setFechaBaja(oldQueso.getFechaBaja());
+        }
+        queso = repository.save(queso);
+        return new QuesoDTO(queso);
+    }
 
     public String delete(String codigo) throws QuesoNotFoundException {
         var queso = getEntity(codigo);
@@ -78,4 +90,6 @@ public class QuesoService {
         queso.setStock(dto.getStock());
         return queso;
     }
+
+
 }

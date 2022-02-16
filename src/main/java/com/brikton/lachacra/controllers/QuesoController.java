@@ -51,6 +51,12 @@ public class QuesoController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_CREATED, service.save(dto)));
     }
 
+    @PutMapping(value = "/")
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoDTO dto)throws QuesoNotFoundException {
+        log.info("API::save - dto: {}", dto);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_UPDATED, service.update(dto)));
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<String>> delete(@Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
                                                              @PathVariable("id") String id) throws QuesoNotFoundException {

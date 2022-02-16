@@ -3,7 +3,6 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
-import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
