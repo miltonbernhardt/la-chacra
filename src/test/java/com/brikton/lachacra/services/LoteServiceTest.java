@@ -37,9 +37,23 @@ public class LoteServiceTest {
 
     @Test
     void Get__OK() throws LoteNotFoundException {
+        LoteDTO dtoExpected = new LoteDTO();
+        dtoExpected.setId("101020210011");
+        dtoExpected.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoExpected.setNumeroTina(1);
+        dtoExpected.setLitrosLeche(1D);
+        dtoExpected.setCantHormas(1);
+        dtoExpected.setStockLote(1);
+        dtoExpected.setPeso(1D);
+        dtoExpected.setRendimiento(1D);
+        dtoExpected.setLoteCultivo("cultivo1, cultivo2");
+        dtoExpected.setLoteColorante("colorante1, colorante2");
+        dtoExpected.setLoteCalcio("calcio1, calcio2");
+        dtoExpected.setLoteCuajo("cuajo1, cuajo2");
+        dtoExpected.setCodigoQueso("001");
+
         when(repository.findById("1")).thenReturn(Optional.of(mockLote()));
         LoteDTO dtoActual = loteService.get("1");
-        LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(dtoExpected, dtoActual);
     }
 
@@ -54,9 +68,23 @@ public class LoteServiceTest {
 
     @Test
     void Get_All__OK() {
+        LoteDTO dtoExpected = new LoteDTO();
+        dtoExpected.setId("101020210011");
+        dtoExpected.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoExpected.setNumeroTina(1);
+        dtoExpected.setLitrosLeche(1D);
+        dtoExpected.setCantHormas(1);
+        dtoExpected.setStockLote(1);
+        dtoExpected.setPeso(1D);
+        dtoExpected.setRendimiento(1D);
+        dtoExpected.setLoteCultivo("cultivo1, cultivo2");
+        dtoExpected.setLoteColorante("colorante1, colorante2");
+        dtoExpected.setLoteCalcio("calcio1, calcio2");
+        dtoExpected.setLoteCuajo("cuajo1, cuajo2");
+        dtoExpected.setCodigoQueso("001");
+
         when(repository.findAll()).thenReturn(List.of(mockLote(), mockLote()));
         var actualLotes = loteService.getAll();
-        LoteDTO dtoExpected = mockLoteDTO();
         assertEquals(2, actualLotes.size());
         assertEquals(dtoExpected, actualLotes.get(0));
         assertEquals(dtoExpected, actualLotes.get(1));
@@ -115,9 +143,24 @@ public class LoteServiceTest {
 
     @Test
     void Save__Queso_Not_Found() throws QuesoNotFoundException {
+        LoteDTO dto = new LoteDTO();
+        dto.setId("101020210011");
+        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dto.setNumeroTina(1);
+        dto.setLitrosLeche(1D);
+        dto.setCantHormas(1);
+        dto.setStockLote(1);
+        dto.setPeso(1D);
+        dto.setRendimiento(1D);
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setCodigoQueso("001");
+
         when(quesoService.getEntity("001")).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
-                NotFoundConflictException.class, () -> loteService.save(mockLoteDTO())
+                NotFoundConflictException.class, () -> loteService.save(dto)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
@@ -282,9 +325,24 @@ public class LoteServiceTest {
 
     @Test
     void Update__Lote_Not_Found() {
+        LoteUpdateDTO dto = new LoteUpdateDTO();
+        dto.setId("101020210011");
+        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dto.setNumeroTina(1);
+        dto.setLitrosLeche(1D);
+        dto.setCantHormas(1);
+        dto.setStockLote(1);
+        dto.setPeso(1D);
+        dto.setRendimiento(1D);
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setCodigoQueso("001");
+
         when(repository.existsById("1")).thenReturn(false);
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteService.update(mockLoteUpdateDTO())
+                LoteNotFoundException.class, () -> loteService.update(dto)
         );
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
@@ -330,41 +388,5 @@ public class LoteServiceTest {
         queso.setNomenclatura("tip");
         queso.setStock(1);
         return queso;
-    }
-
-    LoteDTO mockLoteDTO() {
-        LoteDTO dto = new LoteDTO();
-        dto.setId("101020210011");
-        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-        dto.setNumeroTina(1);
-        dto.setLitrosLeche(1D);
-        dto.setCantHormas(1);
-        dto.setStockLote(1);
-        dto.setPeso(1D);
-        dto.setRendimiento(1D);
-        dto.setLoteCultivo("cultivo1, cultivo2");
-        dto.setLoteColorante("colorante1, colorante2");
-        dto.setLoteCalcio("calcio1, calcio2");
-        dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setCodigoQueso("001");
-        return dto;
-    }
-
-    LoteUpdateDTO mockLoteUpdateDTO() {
-        LoteUpdateDTO dto = new LoteUpdateDTO();
-        dto.setId("101020210011");
-        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-        dto.setNumeroTina(1);
-        dto.setLitrosLeche(1D);
-        dto.setCantHormas(1);
-        dto.setStockLote(1);
-        dto.setPeso(1D);
-        dto.setRendimiento(1D);
-        dto.setLoteCultivo("cultivo1, cultivo2");
-        dto.setLoteColorante("colorante1, colorante2");
-        dto.setLoteCalcio("calcio1, calcio2");
-        dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setCodigoQueso("001");
-        return dto;
     }
 }

@@ -83,7 +83,22 @@ public class LoteControllerIntegrationTest {
 
     @Test
     void Get__OK() throws JsonProcessingException {
-        String expectedLote = mapper.writeValueAsString(mockLoteDTO1());
+        LoteDTO dto = new LoteDTO();
+        dto.setId("221020210011");
+        dto.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dto.setNumeroTina(1);
+        dto.setLitrosLeche(4900D);
+        dto.setCantHormas(124);
+        dto.setStockLote(20);
+        dto.setPeso(526.7);
+        dto.setRendimiento(10.75);
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setCodigoQueso("001");
+
+        String expectedLote = mapper.writeValueAsString(dto);
         var response = restTemplate.getForEntity(baseUrl.concat("221020210011"), SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
@@ -107,7 +122,7 @@ public class LoteControllerIntegrationTest {
     @Test
     void Get__Lote_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("1"), ErrorResponse.class)
+                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("1"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
@@ -117,7 +132,46 @@ public class LoteControllerIntegrationTest {
 
     @Test
     void Get_All__OK() throws JsonProcessingException {
-        String expectedLotes = mapper.writeValueAsString(List.of(mockLoteDTO1(), mockLoteDTO2(), mockLoteDTO3()));
+        LoteDTO dto1 = new LoteDTO();
+        dto1.setId("221020210011");
+        dto1.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dto1.setNumeroTina(1);
+        dto1.setLitrosLeche(4900D);
+        dto1.setCantHormas(124);
+        dto1.setStockLote(20);
+        dto1.setPeso(526.7);
+        dto1.setRendimiento(10.75);
+        dto1.setLoteCultivo("cultivo1, cultivo2");
+        dto1.setLoteColorante("colorante1, colorante2");
+        dto1.setLoteCalcio("calcio1, calcio2");
+        dto1.setLoteCuajo("cuajo1, cuajo2");
+        dto1.setCodigoQueso("001");
+
+        LoteDTO dto2 = new LoteDTO();
+        dto2.setId("231020210022");
+        dto2.setFechaElaboracion(LocalDate.of(2021, 10, 23));
+        dto2.setNumeroTina(2);
+        dto2.setLitrosLeche(6500D);
+        dto2.setCantHormas(228);
+        dto2.setStockLote(25);
+        dto2.setPeso(842.5);
+        dto2.setRendimiento(12.96);
+        dto2.setCodigoQueso("002");
+
+        LoteDTO dto3 = new LoteDTO();
+        dto3.setId("241020210033");
+        dto3.setFechaElaboracion(LocalDate.of(2021, 10, 24));
+        dto3.setNumeroTina(3);
+        dto3.setLitrosLeche(6537D);
+        dto3.setCantHormas(242);
+        dto3.setStockLote(30);
+        dto3.setPeso(938.8);
+        dto3.setRendimiento(14.36);
+        dto3.setLoteCultivo("cultivo1, cultivo2");
+        dto3.setLoteCuajo("cuajo1, cuajo2");
+        dto3.setCodigoQueso("003");
+
+        String expectedLotes = mapper.writeValueAsString(List.of(dto1, dto2, dto3));
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
         var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
@@ -421,51 +475,4 @@ public class LoteControllerIntegrationTest {
         assertEquals(path.concat("1"), response.getPath());
     }
 
-    LoteDTO mockLoteDTO1() {
-        LoteDTO dto = new LoteDTO();
-        dto.setId("221020210011");
-        dto.setFechaElaboracion(LocalDate.of(2021, 10, 22));
-        dto.setNumeroTina(1);
-        dto.setLitrosLeche(4900D);
-        dto.setCantHormas(124);
-        dto.setStockLote(20);
-        dto.setPeso(526.7);
-        dto.setRendimiento(10.75);
-        dto.setLoteCultivo("cultivo1, cultivo2");
-        dto.setLoteColorante("colorante1, colorante2");
-        dto.setLoteCalcio("calcio1, calcio2");
-        dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setCodigoQueso("001");
-        return dto;
-    }
-
-    LoteDTO mockLoteDTO2() {
-        LoteDTO dto = new LoteDTO();
-        dto.setId("231020210022");
-        dto.setFechaElaboracion(LocalDate.of(2021, 10, 23));
-        dto.setNumeroTina(2);
-        dto.setLitrosLeche(6500D);
-        dto.setCantHormas(228);
-        dto.setStockLote(25);
-        dto.setPeso(842.5);
-        dto.setRendimiento(12.96);
-        dto.setCodigoQueso("002");
-        return dto;
-    }
-
-    LoteDTO mockLoteDTO3() {
-        LoteDTO dto = new LoteDTO();
-        dto.setId("241020210033");
-        dto.setFechaElaboracion(LocalDate.of(2021, 10, 24));
-        dto.setNumeroTina(3);
-        dto.setLitrosLeche(6537D);
-        dto.setCantHormas(242);
-        dto.setStockLote(30);
-        dto.setPeso(938.8);
-        dto.setRendimiento(14.36);
-        dto.setLoteCultivo("cultivo1, cultivo2");
-        dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setCodigoQueso("003");
-        return dto;
-    }
 }

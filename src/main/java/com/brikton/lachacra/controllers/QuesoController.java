@@ -2,7 +2,6 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
@@ -18,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/quesos")
 @Slf4j
 @Validated
+@CrossOrigin(origins = "**")
 public class QuesoController {
 
     private final QuesoService service;

@@ -1,0 +1,128 @@
+package com.brikton.lachacra.controllers;
+
+import com.brikton.lachacra.configs.DatabaseTestConfig;
+import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
+import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.exceptions.QuesoNotFoundException;
+import com.brikton.lachacra.responses.ErrorResponse;
+import com.brikton.lachacra.responses.SuccessfulResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(DatabaseTestConfig.class)
+@ActiveProfiles("test")
+@Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class QuesoControllerIntegrationTest {
+
+    @LocalServerPort
+    private int port;
+
+    private String baseUrl = "http://localhost";
+    private final String path = "/api/v1/quesos/";
+
+    private static RestTemplate restTemplate = null;
+    private static ObjectMapper mapper = null;
+
+    @BeforeAll
+    static void init() {
+        restTemplate = new RestTemplate();
+    }
+
+    @BeforeEach
+    void setUp() {
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    }
+
+    @Test
+    void Get__OK() throws JsonProcessingException {
+        QuesoDTO mockQueso1 = new QuesoDTO();
+        mockQueso1.setCodigo("001");
+        mockQueso1.setTipoQueso("Cremoso");
+        mockQueso1.setNomenclatura("C");
+        mockQueso1.setStock(70);
+
+        String expectedQueso = mapper.writeValueAsString(mockQueso1);
+        var response = restTemplate.getForEntity(baseUrl.concat("001"), SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQueso, actualQueso);
+    }
+
+    @Test
+    void Get__Bad_ID() throws JsonProcessingException {
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.getForEntity(baseUrl.concat("0001"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("id"));
+        assertEquals(path.concat("0001"), response.getPath());
+    }
+
+    @Test
+    void Get__Queso_Not_Found() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("011"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("011"), response.getPath());
+    }
+
+    @Test
+    void Get_All__OK() throws JsonProcessingException {
+        QuesoDTO mockQueso1 = new QuesoDTO();
+        mockQueso1.setCodigo("001");
+        mockQueso1.setTipoQueso("Cremoso");
+        mockQueso1.setNomenclatura("C");
+        mockQueso1.setStock(70);
+
+        QuesoDTO mockQueso2 = new QuesoDTO();
+        mockQueso2.setCodigo("002");
+        mockQueso2.setTipoQueso("Barra");
+        mockQueso2.setNomenclatura("B");
+        mockQueso2.setStock(20);
+
+        QuesoDTO mockQueso3 = new QuesoDTO();
+        mockQueso3.setCodigo("003");
+        mockQueso3.setTipoQueso("Sardo");
+        mockQueso3.setNomenclatura("S");
+        mockQueso3.setStock(53);
+
+        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
+        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesos, actualQuesos);
+    }
+}
