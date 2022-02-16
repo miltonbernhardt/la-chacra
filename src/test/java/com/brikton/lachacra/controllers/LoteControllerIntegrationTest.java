@@ -475,4 +475,17 @@ public class LoteControllerIntegrationTest {
         assertEquals(path.concat("1"), response.getPath());
     }
 
+    @Test
+    void Delete__Bad_ID() throws JsonProcessingException {
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("id"));
+        assertEquals(path.concat("0"), response.getPath());
+    }
+    //todo delete bad id x2
 }

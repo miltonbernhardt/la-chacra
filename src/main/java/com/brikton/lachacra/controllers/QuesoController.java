@@ -1,7 +1,12 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
+import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.exceptions.LoteNotFoundException;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
@@ -27,7 +32,8 @@ public class QuesoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> get(@PathVariable("id") @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS) String id) throws QuesoNotFoundException {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> get(@Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+                                                            @PathVariable("id") String id) throws QuesoNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
@@ -36,5 +42,12 @@ public class QuesoController {
     public ResponseEntity<SuccessfulResponse<List<QuesoDTO>>> getAll() {
         log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+                                                             @PathVariable("id") String id) throws QuesoNotFoundException {
+        log.info("API::delete - id: {}", id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_DELETED, service.delete(id)));
     }
 }

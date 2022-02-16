@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,13 +19,11 @@ public class Queso {
     @Id
     @Column(unique = true, name = "codigo_queso")
     private String codigo;
-
     private String tipoQueso;
-
     @Column(unique = true)
     private String nomenclatura;
-
     private Integer stock;
+    private LocalDate fechaBaja;
 
     @OneToMany
     @ToString.Exclude

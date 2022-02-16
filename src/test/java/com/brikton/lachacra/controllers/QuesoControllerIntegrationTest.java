@@ -4,7 +4,6 @@ import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,12 +16,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.Assert;
+import org.springframework.web.client.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +47,23 @@ public class QuesoControllerIntegrationTest {
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
+
+    <T> ResponseEntity<T> putForEntity(String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
+        return nonNull(restTemplate.execute(url, HttpMethod.PUT, requestCallback, responseExtractor, uriVariables));
+    }
+
+    <T> ResponseEntity<T> deleteForEntity(String url, Class<T> responseType, Object... uriVariables) throws RestClientException {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(null, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
+        return nonNull(restTemplate.execute(url, HttpMethod.DELETE, requestCallback, responseExtractor, uriVariables));
+    }
+
+    static <T> T nonNull(@Nullable T result) {
+        Assert.state(result != null, "No result");
+        return result;
+    }
 
     @BeforeAll
     static void init() {
@@ -124,5 +143,40 @@ public class QuesoControllerIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedQuesos, actualQuesos);
+    }
+
+    @Test
+    void Delete__OK() throws JsonProcessingException {
+        String expectedID = mapper.writeValueAsString("001");
+        var response = deleteForEntity(baseUrl.concat("001"), SuccessfulResponse.class);
+        var actualID = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedID, actualID);
+    }
+
+    //todo delete queso and later make a get all to check that not exists
+
+    @Test
+    void Delete__Bad_ID() throws JsonProcessingException {
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0001"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("id"));
+        assertEquals(path.concat("0001"), response.getPath());
+    }
+
+    @Test
+    void Delete__Queso_Not_Found() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("011"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("011"), response.getPath());
     }
 }

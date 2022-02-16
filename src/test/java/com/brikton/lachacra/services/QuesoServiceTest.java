@@ -69,6 +69,21 @@ public class QuesoServiceTest {
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
+    @Test
+    void Delete__OK() throws QuesoNotFoundException {
+        when(repository.existsById("001")).thenReturn(true);
+        String actualID = quesoService.delete("001");
+        assertEquals("001", actualID);
+    }
+
+    @Test
+    void Delete__Queso_Not_Found() {
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.delete("001")
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
     Queso mockQueso() {
         Queso queso = new Queso();
         queso.setTipoQueso("tipoQueso");
