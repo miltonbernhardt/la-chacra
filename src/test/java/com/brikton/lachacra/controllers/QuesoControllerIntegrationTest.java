@@ -156,8 +156,6 @@ public class QuesoControllerIntegrationTest {
     }
 
     //todo delete queso and later make a get all to check that not exists
-    //todo get queso with fecha baja
-    //todo getAll queso with fecha baja
 
     @Test
     void Delete__Bad_ID() throws JsonProcessingException {
@@ -180,16 +178,5 @@ public class QuesoControllerIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("011"), response.getPath());
-    }
-
-    @Test
-    void Delete__Already_Deleted() throws JsonProcessingException {
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("004"), SuccessfulResponse.class)
-        );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
-        assertEquals(path.concat("004"), response.getPath());
     }
 }

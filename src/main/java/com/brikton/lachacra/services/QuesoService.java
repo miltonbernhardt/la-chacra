@@ -24,7 +24,10 @@ public class QuesoService {
     }
 
     public Queso getEntity(String codigoQueso) throws QuesoNotFoundException {
-        return repository.getById(codigoQueso);
+        var queso = repository.findById(codigoQueso);
+        if (queso.isPresent())
+            return queso.get();
+        throw new QuesoNotFoundException();
     }
 
     public QuesoDTO get(String codigoQueso) throws QuesoNotFoundException {
@@ -39,9 +42,12 @@ public class QuesoService {
     }
 
     public String delete(String id) throws QuesoNotFoundException {
-        var queso = getEntity(id);
-        queso.setFechaBaja(dateUtil.now());
-        repository.save(queso);
+        var queso = repository.findById(id);
+        if (queso.isPresent()) {
+            queso.get().setFechaBaja(dateUtil.now());
+            repository.save(queso.get());
+        } else
+            throw new QuesoNotFoundException();
         return id;
     }
 }
