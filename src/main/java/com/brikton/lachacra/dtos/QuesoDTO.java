@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 public class QuesoDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
     private String codigo;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)

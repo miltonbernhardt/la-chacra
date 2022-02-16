@@ -1,7 +1,11 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.SuccessfulMessages;
+import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.entities.Queso;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.services.QuesoService;
 import org.junit.jupiter.api.Test;
@@ -12,8 +16,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {QuesoController.class})
@@ -48,6 +54,21 @@ public class QuesoControllerTest {
         var actualDTOs = Objects.requireNonNull(quesoController.getAll().getBody()).getData();
         assertEquals(mockQuesoDTO(), actualDTOs.get(0));
         assertEquals(mockQuesoDTO(), actualDTOs.get(1));
+    }
+
+    @Test
+    void Save__OK() {
+        QuesoDTO dtoExpected = new QuesoDTO();
+        dtoExpected.setCodigo("001");
+        dtoExpected.setTipoQueso("tipoQueso");
+        dtoExpected.setNomenclatura("tip");
+        dtoExpected.setStock(1);
+
+        when(quesoService.save(any(QuesoDTO.class))).thenReturn(dtoExpected);
+        QuesoDTO dtoActual = requireNonNull(quesoController.save(dtoExpected).getBody()).getData();
+        String message = requireNonNull(quesoController.save(dtoExpected).getBody()).getMessage();
+        assertEquals(dtoExpected, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_QUESO_CREATED, message);
     }
 
     @Test

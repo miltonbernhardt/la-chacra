@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -42,6 +43,12 @@ public class QuesoController {
     public ResponseEntity<SuccessfulResponse<List<QuesoDTO>>> getAll() {
         log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
+    }
+
+    @PostMapping(value = "/")
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto) {
+        log.info("API::save - dto: {}", dto);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_CREATED, service.save(dto)));
     }
 
     @DeleteMapping(value = "/{id}")

@@ -71,12 +71,12 @@ public class LoteControllerTest {
     }
 
     @Test
-    void Save__Lote_Not_Found() throws NotFoundConflictException {
-        when(loteService.save(any(LoteDTO.class))).thenThrow(new NotFoundConflictException("queso not found"));
+    void Save__Queso_Not_Found() throws NotFoundConflictException {
+        when(loteService.save(any(LoteDTO.class))).thenThrow(new NotFoundConflictException(ErrorMessages.MSG_QUESO_NOT_FOUND));
         NotFoundConflictException thrown = assertThrows(
                 NotFoundConflictException.class, () -> loteController.save(mockLoteDTO1())
         );
-        assertEquals("queso not found", thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test

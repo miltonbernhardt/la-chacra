@@ -7,6 +7,7 @@ import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +43,20 @@ public class QuesoService {
         return listaDTO;
     }
 
+    @SneakyThrows//todo
     public QuesoDTO save(QuesoDTO dto) {
-        if (repository.existsById(dto.getCodigo())) {
-            repository.deleteById(dto.getCodigo());
-        }
+        //todo deberia retornar un alreadyExists
+
         var queso = quesoFromDTO(dto);
+
+        if (repository.existsById(dto.getCodigo())) {
+            //todo que pasa si el queso esta dado de bajo?
+            var oldQueso = repository.getById(dto.getCodigo());
+            if (oldQueso.getFechaBaja() != null) {
+                queso.setFechaBaja(oldQueso.getFechaBaja());
+            }
+        }
+
         //todo trae los precios o sea asocian en otro momento?
         queso = repository.save(queso);
         return new QuesoDTO(queso);

@@ -264,7 +264,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Save__InvalidFields__Fields_Not_Found() throws JsonProcessingException {
+    void Save__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
         LoteDTO dtoToSave = new LoteDTO();
         dtoToSave.setId("1");
         dtoToSave.setStockLote(1);
@@ -288,7 +288,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Save__InvalidFields__Other_Validations() throws JsonProcessingException {
+    void Save__Invalid_Fields__Other_Validations() throws JsonProcessingException {
         LoteDTO dtoToSave = new LoteDTO();
         dtoToSave.setId("1");
         dtoToSave.setStockLote(1);

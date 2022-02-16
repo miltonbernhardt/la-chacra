@@ -3,6 +3,7 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
+import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -154,6 +157,116 @@ public class QuesoControllerIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedQuesos, actualQuesos);
+    }
+
+    @Test
+    void Save__OK() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("005");
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("tip");
+        dtoToSave.setStock(10);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setCodigo("005");
+        expectedDTO.setTipoQueso("tipoQueso");
+        expectedDTO.setNomenclatura("tip");
+        expectedDTO.setStock(10);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
+
+    @Test
+    void Save__Already_Exists_Queso__OK() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("005");
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("tip");
+        dtoToSave.setStock(10);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setCodigo("005");
+        expectedDTO.setTipoQueso("tipoQueso");
+        expectedDTO.setNomenclatura("tip");
+        expectedDTO.setStock(10);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
+
+    @Test
+    void Save__Over_Queso_Deleted__OK() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("004");
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("tip");
+        dtoToSave.setStock(10);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setCodigo("004");
+        expectedDTO.setTipoQueso("tipoQueso");
+        expectedDTO.setNomenclatura("tip");
+        expectedDTO.setStock(10);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
+
+    @Test
+    void Save__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setStock(10);
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(3, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("tipoQueso"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigo"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("nomenclatura"));
+    }
+
+    @Test
+    void Save__InvalidFields__Other_Validations() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("0010");
+        dtoToSave.setTipoQueso(RandomStringUtils.randomAlphabetic(300));
+        dtoToSave.setNomenclatura(RandomStringUtils.randomAlphabetic(300));
+        dtoToSave.setStock(10);
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(3, response.getErrors().size());
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigo"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("tipoQueso"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("nomenclatura"));
     }
 
     @Test
