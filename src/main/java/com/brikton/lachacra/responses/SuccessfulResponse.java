@@ -5,28 +5,33 @@ import lombok.Getter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
-public class SuccessfulResponse {
+public class SuccessfulResponse<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final Object data;
+    private final T data;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String message;
 
-    private SuccessfulResponse(String message, Object data) {
+    public SuccessfulResponse() {
+        this.data = null;
+        this.message = "";
+    }
+
+    private SuccessfulResponse(String message, T data) {
         this.data = data;
         this.message = message;
     }
 
-    public static SuccessfulResponse set(String message) {
-        return new SuccessfulResponse(message, null);
+    public static <T> SuccessfulResponse<T> set(String message) {
+        return new SuccessfulResponse<>(message, null);
     }
 
-    public static SuccessfulResponse set(Object data) {
-        return new SuccessfulResponse(null, data);
+    public static <T> SuccessfulResponse<T> set(T data) {
+        return new SuccessfulResponse<>(null, data);
     }
 
-    public static SuccessfulResponse set(String message, Object data) {
-        return new SuccessfulResponse(message, data);
+    public static <T> SuccessfulResponse<T> set(String message, T data) {
+        return new SuccessfulResponse<>(message, data);
     }
 }

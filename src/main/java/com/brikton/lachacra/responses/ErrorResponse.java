@@ -18,6 +18,14 @@ public class ErrorResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final Map<String, String> errors;
 
+    public ErrorResponse() {
+        this.message = null;
+        this.errors = null;
+        this.path = null;
+        this.status = null;
+        this.timestamp = null;
+    }
+
     private ErrorResponse(String message, Map<String, String> errors, String path, Integer status) {
         this.message = message;
         this.errors = errors;

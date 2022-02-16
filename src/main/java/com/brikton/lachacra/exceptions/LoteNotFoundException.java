@@ -1,12 +1,9 @@
 package com.brikton.lachacra.exceptions;
 
-public class LoteNotFoundException extends Exception {
+import com.brikton.lachacra.constants.ErrorMessages;
 
-    public LoteNotFoundException(Throwable cause) {
-        super("Lote no encontrado", cause);
-    }
-
+public class LoteNotFoundException extends NotFoundException {
     public LoteNotFoundException() {
-        super("Lote no encontrado");
+        super(ErrorMessages.MSG_LOTE_NOT_FOUND);
     }
 }
