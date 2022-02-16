@@ -19,17 +19,6 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                     <Grid container spacing={2}>
                         <Grid item xs={12} >
                             <TextField
-                                id="cultivo"
-                                name="cultivo"
-                                label="Cultivo"
-                                fullWidth
-                                variant="outlined"
-                                value={lote.cultivo}
-                                onChange={handleChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12} >
-                            <TextField
                                 id="loteCultivo"
                                 name="loteCultivo"
                                 label="Lote de cultivo"

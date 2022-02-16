@@ -1,6 +1,7 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.*;
@@ -33,25 +34,23 @@ public class LoteService {
     }
 
     public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
+        var id = dto.getId() == null || dto.getId().equals("") ? generateID(dto) : dto.getId();
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+        }
+
         var lote = loteFromDTO(dto);
-        dto.setRendimiento(90D);
-        dto.setStockLote(90);
-        //todo calcular rendimiento - lote stock
+        var rendimiento = (dto.getPeso() / dto.getLitrosLeche()) * 100;
+        var stock = dto.getCantHormas(); //TODO si es un update no debería asignar directamente, sino que debería sumar/restar
+        lote.setRendimiento(rendimiento);
+        lote.setStockLote(stock);
         lote = repository.save(lote);
         return new LoteDTO(lote);
     }
 
-    public LoteDTO update(LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
-        var lote = repository.findById(dto.getId());
-        if (lote.isPresent()) {
-            repository.delete(lote.get());
-            var loteUpdated = loteFromDTO(dto);
-            var id = generateID(dto, loteUpdated.getQueso());
-            loteUpdated.setId(id);
-            loteUpdated = repository.save(loteUpdated);
-            return new LoteDTO(loteUpdated);
-        } else
-            throw new LoteNotFoundException();
+    public LoteDTO update(LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
+        delete(dto.getId());
+        return save(new LoteDTO(dto));
     }
 
     public List<LoteDTO> getAll() {
@@ -61,31 +60,26 @@ public class LoteService {
         return lotesDTO;
     }
 
-    public LoteDTO delete(String id) throws LoteNotFoundException {
-        var lote = repository.findById(id);
-        if (lote.isPresent())
-            repository.delete(lote.get());
+    public String delete(String id) throws LoteNotFoundException {
+        //todo logica de borrar o dar de baja
+        if (repository.existsById(id))
+            repository.deleteById(id);
         else
             throw new LoteNotFoundException();
-        return new LoteDTO(lote.get());
+        return id;
     }
 
     private Lote loteFromDTO(LoteDTO dto) throws NotFoundConflictException {
         Queso queso;
         try {
-            queso = quesoService.get(dto.getIdQueso());
+            queso = quesoService.getEntity(dto.getCodigoQueso());
         } catch (QuesoNotFoundException e) {
             throw new NotFoundConflictException("Queso no encontrado", e.getCause());
         }
 
         var lote = new Lote();
+        lote.setId(generateID(dto));
         lote.setQueso(queso);
-
-        if (dto.getId().equals(""))
-            lote.setId(generateID(dto, queso));
-        else
-            lote.setId(dto.getId());
-
         lote.setFechaElaboracion(dto.getFechaElaboracion());
         lote.setNumeroTina(dto.getNumeroTina());
         lote.setLitrosLeche(dto.getLitrosLeche());
@@ -100,8 +94,8 @@ public class LoteService {
         return lote;
     }
 
-    private String generateID(LoteDTO dto, Queso queso) {
+    private String generateID(LoteDTO dto) {
         String dateString = dto.getFechaElaboracion().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
-        return dateString + queso.getCodigo() + dto.getNumeroTina().toString();
+        return dateString + dto.getCodigoQueso() + dto.getNumeroTina().toString();
     }
 }

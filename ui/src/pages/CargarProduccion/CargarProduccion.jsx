@@ -18,12 +18,11 @@ const loteInicial = {
     litrosLeche: '',
     cantHormas: '',
     peso: '',
-    cultivo: '',
     loteCultivo: '',
     loteColorante: '',
     loteCalcio: '',
     loteCuajo: '',
-    idQueso: ''
+    codigoQueso: ''
 }
 
 const errors = {
@@ -45,7 +44,7 @@ const CargarProduccion = () => {
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
     // States for feedback
-    const [successMsg, setSucsessMsg] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
     const [errorMsg, setErrorMsg] = useState();
     const [warningMsg, setWarningMsg] = useState('');
     const [successToastOpen, setSuccessToast] = useState(false);
@@ -55,6 +54,7 @@ const CargarProduccion = () => {
     const fetchQuesos = () => {
         getAllQuesos().then(data => {
             console.log({quesos: data.data})
+            /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
         }).catch(e => feedbackErrors(e));
     }
@@ -69,8 +69,8 @@ const CargarProduccion = () => {
     const onCargar = () => { setDialogOpen(true) }
 
     const handleSubmit = () => {
-        const idQueso = lote.idQueso.label;
-        const newLote = { ...lote, ['idQueso']: idQueso };
+        const codigoQueso = lote.codigoQueso.label;
+        const newLote = { ...lote, ['codigoQueso']: codigoQueso };
         //-- validation
         if (validarLote()) {
             //-- if is editing
@@ -102,7 +102,7 @@ const CargarProduccion = () => {
         if (lote.cantHormas < 1 ||
             validator.isBefore(date, lote.fechaElaboracion) ||
             lote.fechaElaboracion === '' ||
-            lote.idQueso === '' ||
+            lote.codigoQueso === '' ||
             lote.litrosLeche < 1 ||
             lote.numeroTina < 1 ||
             lote.peso < 1) {
@@ -145,9 +145,9 @@ const CargarProduccion = () => {
     // --- TOAST METHODS ---
 
     const showWarning = (msg) => {
+        //todo show all warning
         setWarningMsg(msg);
         setWarningToast(true);
-
     }
 
     const showError = (msg) => {
@@ -156,12 +156,13 @@ const CargarProduccion = () => {
     }
 
     const showSuccess = (msg) => {
-        setSucsessMsg(msg);
+        setSuccessMsg(msg);
         setSuccessToast(true);
     }
 
     const feedbackErrors = (error) => {
         try {
+            console.log({error2: error})
             showError(errors[error.response.status]);
             if (error.response.status === 422) {
                 console.log(error.message);

@@ -2,9 +2,10 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
+import com.brikton.lachacra.util.DateUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,48 +16,80 @@ import java.util.List;
 @Slf4j
 public class QuesoService {
 
+    private final DateUtil dateUtil;
     private final QuesoRepository repository;
 
-    public QuesoService(QuesoRepository repository) {
+    public QuesoService(DateUtil dateUtil, QuesoRepository repository) {
+        this.dateUtil = dateUtil;
         this.repository = repository;
     }
 
-    public Queso get(Long codigoQueso) throws QuesoNotFoundException {
-        var queso = repository.findById(codigoQueso);
-        if (queso.isPresent())
+    public Queso getEntity(String codigo) throws QuesoNotFoundException {
+        var queso = repository.findById(codigo);
+        if (queso.isPresent() && queso.get().getFechaBaja() == null) //todo usamos la fecha de baja aca? debemos retornar un mensaje de que el queso se elimino?
             return queso.get();
         throw new QuesoNotFoundException();
     }
 
+    public QuesoDTO get(String codigoQueso) throws QuesoNotFoundException {
+        return new QuesoDTO(this.getEntity(codigoQueso));
+    }
+
     public List<QuesoDTO> getAll() {
         var listaDTO = new ArrayList<QuesoDTO>();
-        repository.findAll().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
+        repository.findALLQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
         return listaDTO;
     }
 
+    @SneakyThrows//todo
     public QuesoDTO save(QuesoDTO dto) {
-        var queso = fromDto(dto);
+        //todo deberia retornar un alreadyExists
+
+        var queso = quesoFromDTO(dto);
+
+        if (repository.existsById(dto.getCodigo())) {
+            //todo que pasa si el queso esta dado de bajo?
+            var oldQueso = repository.getById(dto.getCodigo());
+            if (oldQueso.getFechaBaja() != null) {
+                queso.setFechaBaja(oldQueso.getFechaBaja());
+            }
+        }
+
+        //todo trae los precios o sea asocian en otro momento?
         queso = repository.save(queso);
         return new QuesoDTO(queso);
     }
 
     public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException {
-        var queso = repository.findById(dto.getId());
-        if (queso.isPresent()){
-            var updateQueso = fromDto(dto);
-            var updated = repository.save(updateQueso);
-            return new QuesoDTO(updated);
-        } else throw new QuesoNotFoundException();
+        if (!repository.existsById(dto.getCodigo())) {//todo que pasa si el queso esta dado de bajo? actualizamos o no? yo diria que no (usar el getEntity sino va)
+            throw new QuesoNotFoundException();
+        }
+
+        var queso = quesoFromDTO(dto);
+
+        var oldQueso = repository.getById(dto.getCodigo());
+        if (oldQueso.getFechaBaja() != null) {
+            queso.setFechaBaja(oldQueso.getFechaBaja());
+        }
+        queso = repository.save(queso);
+        return new QuesoDTO(queso);
     }
 
-    private Queso fromDto (QuesoDTO dto){
-        Queso queso = new Queso();
+    public String delete(String codigo) throws QuesoNotFoundException {
+        var queso = getEntity(codigo);
+        queso.setFechaBaja(dateUtil.now());
+        repository.save(queso);
+        return codigo;
+    }
+
+    private Queso quesoFromDTO(QuesoDTO dto) {
+        var queso = new Queso();
+        queso.setTipoQueso(dto.getTipoQueso());
         queso.setCodigo(dto.getCodigo());
         queso.setNomenclatura(dto.getNomenclatura());
         queso.setStock(dto.getStock());
-        queso.setId(dto.getId());
-        queso.setTipoQueso(dto.getTipoQueso());
         return queso;
     }
+
 
 }

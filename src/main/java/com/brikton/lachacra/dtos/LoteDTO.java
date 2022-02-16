@@ -16,6 +16,7 @@ public class LoteDTO {
     private LocalDate fechaElaboracion;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Integer numeroTina;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -30,9 +31,9 @@ public class LoteDTO {
     @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
     private Double peso;
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
-    private Long idQueso;
+    @NotBlank(message = ValidationMessages.NOT_FOUND)
+    @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+    private String codigoQueso;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteColorante;
@@ -66,6 +67,22 @@ public class LoteDTO {
         this.setLoteColorante(lote.getLoteColorante());
         this.setLoteCalcio(lote.getLoteCalcio());
         this.setLoteCuajo(lote.getLoteCuajo());
-        this.setIdQueso(lote.getQueso().getId());
+        this.setCodigoQueso(lote.getQueso().getCodigo());
+    }
+
+    public LoteDTO(LoteUpdateDTO dto) {
+        this.setId(dto.getId());
+        this.setFechaElaboracion(dto.getFechaElaboracion());
+        this.setNumeroTina(dto.getNumeroTina());
+        this.setLitrosLeche(dto.getLitrosLeche());
+        this.setCantHormas(dto.getCantHormas());
+        this.setStockLote(dto.getStockLote());
+        this.setPeso(dto.getPeso());
+        this.setRendimiento(dto.getRendimiento());
+        this.setLoteCultivo(dto.getLoteCultivo());
+        this.setLoteColorante(dto.getLoteColorante());
+        this.setLoteCalcio(dto.getLoteCalcio());
+        this.setLoteCuajo(dto.getLoteCuajo());
+        this.setCodigoQueso(dto.getCodigoQueso());
     }
 }

@@ -20,17 +20,17 @@ const ProduccionGrid = ({ produccion, quesos, handleEdit, setSelection }) => {
             minWidth: 50,
         },
         {
-            field: 'idQueso',
+            field: 'codigoQueso',
             headerName: 'Queso',
             flex: 0.5,
             minWidth: 50,
-            valueFormatter: (params) => {
-                return quesos
-                    .filter(q => {
-                        return q.id === params.value
-                    })
-                    .pop().tipoQueso
-            }
+            // valueFormatter: (params) => {
+            //     return quesos
+            //         .filter(q => {
+            //             return q.id === params.value
+            //         })
+            //         .pop().tipoQueso //todo esto estaba dando error, revisar
+            // }
         },
         {
             field: 'numeroTina',

@@ -36,7 +36,7 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                     <Grid item xs={12}>
                         <Autocomplete //TODO bug cuando se selecciona queso para editar
                             id="autocomplete-tipoQueso"
-                            name="idQueso"
+                            name="codigoQueso"
                             options={quesosAutocomplete}
                             autoHighlight
                             getOptionLabel={(option) => option.string || ''}
@@ -50,10 +50,10 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                                     {...params}
                                     label="Tipo de queso" />
                             )}
-                            value={lote.idQueso}
+                            value={lote.codigoQueso}
                             onChange={(evt, newValue) => {
                                 //-- lo paso asi para no chequear validez del campo
-                                updateStateLote('idQueso', newValue);
+                                updateStateLote('codigoQueso', newValue);
                             }}
                         />
                     </Grid>

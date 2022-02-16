@@ -1,6 +1,9 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.SuccessfulMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -27,8 +31,11 @@ public class LoteController {
         this.service = service;
     }
 
+    //todo getall
+
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+                                                           @PathVariable("id") String id) throws LoteNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
@@ -42,18 +49,19 @@ public class LoteController {
     @PostMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<LoteDTO>> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
         log.info("API::save - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
-    } //TODO nunca se considero que pasa si te llega un post con un elemento que ya tenga id, eso no deberia pasar, deberia ir por el put
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_CREATED, service.save(dto)));
+    }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException, LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Validated LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
         log.info("API::update - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.update(dto)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_UPDATED, service.update(dto)));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> delete(@PathVariable("id") @Min(value = 1, message = "El id del lote debe ser mayor a 0") String id) throws LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+                                                             @PathVariable("id") String id) throws LoteNotFoundException {
         log.info("API::delete - id: {}", id);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.delete(id)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED, service.delete(id)));
     }
 }

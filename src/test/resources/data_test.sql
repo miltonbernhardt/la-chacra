@@ -1,7 +1,8 @@
-INSERT INTO public.Queso (id_queso, codigo_queso, nomenclatura, tipo_queso, stock)
-VALUES (001, '001', 'C', 'Cremoso', 70),
-       (002, '002', 'B', 'Barra', 0),
-       (003, '003', 'S', 'Sardo', 53);
+INSERT INTO public.Queso (codigo_queso, nomenclatura, tipo_queso, stock, fecha_baja)
+VALUES ('001', 'C', 'Cremoso', 70, null),
+       ('002', 'B', 'Barra', 20, null),
+       ('003', 'S', 'Sardo', 53, null),
+       ('004', 'R', 'Rojo', 0, '2021-10-10');
 
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, codigo_queso,
                          id_lote, peso, rendimiento, stock_lote, lote_cultivo, lote_colorante, lote_calcio,
@@ -28,15 +29,15 @@ VALUES ('101', 'ABDALA, Gustavo', 1, '20-21641332-7', 'Jacob 2830', '3080', 'Esp
         'Buenos Aires', 'Argentina', 'Bianchi', '83200');
 
 INSERT INTO public.precio (id_tipo_cliente, id_queso, precio, id_precio)
-VALUES (1, 1, 371.00, 1),
-       (1, 2, 486.00, 2),
-       (1, 3, 550.00, 3),
-       (1, 1, 580.00, 4),
-       (1, 2, 451.00, 5),
-       (1, 3, 465.00, 6),
-       (1, 1, 431.00, 7),
-       (1, 2, 850.00, 8),
-       (1, 3, 620.00, 9);
+VALUES (1, '001', 371.00, 1),
+       (1, '002', 486.00, 2),
+       (1, '003', 550.00, 3),
+       (1, '001', 580.00, 4),
+       (1, '002', 451.00, 5),
+       (1, '003', 465.00, 6),
+       (1, '001', 431.00, 7),
+       (1, '002', 850.00, 8),
+       (1, '003', 620.00, 9);
 
 -- agregar expedicion
 -- agregar remitos

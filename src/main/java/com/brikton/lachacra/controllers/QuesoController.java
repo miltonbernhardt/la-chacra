@@ -1,20 +1,22 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.SuccessfulMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -31,7 +33,8 @@ public class QuesoController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<Queso>> get(@PathVariable("id") @Min(value = 1, message = "El id del queso debe ser mayor a 0") Long id) throws QuesoNotFoundException {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> get(@Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+                                                            @PathVariable("id") String id) throws QuesoNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
@@ -43,14 +46,21 @@ public class QuesoController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto){
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto) {
         log.info("API::save - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.save(dto)));
-    } //TODO nunca se considero que pasa si te llega un post con un elemento que ya tenga id, eso no deberia pasar, deberia ir por el put
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_CREATED, service.save(dto)));
+    }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoDTO dto) throws QuesoNotFoundException {
-        log.info("API::update - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.update(dto)));
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoDTO dto)throws QuesoNotFoundException {
+        log.info("API::save - dto: {}", dto);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_UPDATED, service.update(dto)));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+                                                             @PathVariable("id") String id) throws QuesoNotFoundException {
+        log.info("API::delete - id: {}", id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_DELETED, service.delete(id)));
     }
 }
