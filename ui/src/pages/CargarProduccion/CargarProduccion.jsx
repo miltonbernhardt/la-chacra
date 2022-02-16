@@ -18,7 +18,6 @@ const loteInicial = {
     litrosLeche: '',
     cantHormas: '',
     peso: '',
-    cultivo: '',
     loteCultivo: '',
     loteColorante: '',
     loteCalcio: '',
