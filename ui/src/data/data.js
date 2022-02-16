@@ -1406,121 +1406,101 @@ export const produccion = [
 ]
 export const quesos = [
     {
-        id: "001",
         codigoQueso: "001",
         nomenclatura: "C",
         nombreQueso: "Cremoso"
     },
     {
-        id: "002",
         codigoQueso: "002",
         nomenclatura: "B",
         nombreQueso: "Barra"
     },
     {
-        id: "003",
         codigoQueso: "003",
         nomenclatura: "S",
         nombreQueso: "Sardo"
     },
     {
-        id: "004",
         codigoQueso: "004",
         nomenclatura: "P",
         nombreQueso: "Pategras"
     },
     {
-        id: "005",
         codigoQueso: "005",
         nomenclatura: "M",
         nombreQueso: "Muzzarella"
     },
     {
-        id: "006",
         codigoQueso: "006",
         nomenclatura: "CH",
         nombreQueso: "Chedar"
     },
     {
-        id: "007",
         codigoQueso: "007",
         nomenclatura: "PS",
         nombreQueso: "Por Salut"
     },
     {
-        id: "008",
         codigoQueso: "008",
         nomenclatura: "SE",
         nombreQueso: "Sardo Estacionado"
     },
     {
-        id: "009",
         codigoQueso: "009",
         nomenclatura: "F",
         nombreQueso: "Fontina"
     },
     {
-        id: "010",
         codigoQueso: "010",
         nomenclatura: "R",
         nombreQueso: "Ricota"
     },
     {
-        id: "011",
         codigoQueso: "011",
         nomenclatura: "CC",
         nombreQueso: "Cremoso x Kilo"
     },
     {
-        id: "016",
         codigoQueso: "016",
         nomenclatura: "SC",
         nombreQueso: "Sardo Cabra"
     },
     {
-        id: "017",
         codigoQueso: "017",
         nomenclatura: "SCS",
         nombreQueso: "Sardo Cabra Saborizado"
     },
     {
-        id: "020",
         codigoQueso: "020",
         nomenclatura: "SS",
         nombreQueso: "Sardo Saborizado"
     },
     {
-        id: "012",
         codigoQueso: "012",
         nomenclatura: "BV",
         nombreQueso: "Bouche Vaca"
     },
     {
-        id: "013",
         codigoQueso: "013",
         nomenclatura: "BC",
         nombreQueso: "Bouche Cabra"
     },
     {
-        id: "014",
         codigoQueso: "014",
         nomenclatura: "Cam",
         nombreQueso: "Camembert"
     },
     {
-        id: "015",
         codigoQueso: "015",
         nomenclatura: "Az",
         nombreQueso: "Azul"
     },
     {
-        id: "018",
         codigoQueso: "018",
         nomenclatura: "Mig",
         nombreQueso: "Miguelacho"
     },
     {
-        id: "040",
         codigoQueso: "040",
         nomenclatura: "Crema",
         nombreQueso: "Crema"

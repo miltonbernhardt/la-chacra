@@ -104,9 +104,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-
 const App = () => {
-
     const theme = createTheme(themeOptions);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
 
