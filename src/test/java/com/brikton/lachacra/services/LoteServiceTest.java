@@ -52,14 +52,14 @@ public class LoteServiceTest {
         dtoExpected.setLoteCuajo("cuajo1, cuajo2");
         dtoExpected.setCodigoQueso("001");
 
-        when(repository.findById("1")).thenReturn(Optional.of(mockLote()));
+        when(repository.getById("1")).thenReturn(mockLote());
         LoteDTO dtoActual = loteService.get("1");
         assertEquals(dtoExpected, dtoActual);
     }
 
     @Test
     void Get__Lote_Not_Found() {
-        when(repository.findById("1")).thenReturn(Optional.empty());
+        when(repository.getById("1")).thenThrow(new LoteNotFoundException());
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteService.get("1")
         );

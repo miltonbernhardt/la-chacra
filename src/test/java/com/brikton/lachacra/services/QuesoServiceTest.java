@@ -6,11 +6,13 @@ import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
+import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +28,9 @@ public class QuesoServiceTest {
     @MockBean
     QuesoRepository repository;
 
+    @MockBean
+    DateUtil dateUtil;
+
     @Test
     void Get_All__OK() {
         List<Queso> listaMock = new ArrayList<>();
@@ -37,7 +42,7 @@ public class QuesoServiceTest {
 
     @Test
     void Get_Entity__OK() throws QuesoNotFoundException {
-        when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
+        when(repository.getById("001")).thenReturn(mockQueso());
         Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
         assertEquals(quesoActual, quesoExpected);
@@ -45,7 +50,7 @@ public class QuesoServiceTest {
 
     @Test
     void Get_Entity__Queso_Not_Found() {
-        when(repository.findById("001")).thenReturn(Optional.empty());
+        when(repository.getById("001")).thenThrow(new QuesoNotFoundException());
         QuesoNotFoundException thrown = assertThrows(
                 QuesoNotFoundException.class, () -> quesoService.get("001")
         );
@@ -54,7 +59,7 @@ public class QuesoServiceTest {
 
     @Test
     void Get_DTO__OK() throws QuesoNotFoundException {
-        when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
+        when(repository.getById("001")).thenReturn(mockQueso());
         Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
         assertEquals(quesoActual, quesoExpected);
@@ -62,7 +67,7 @@ public class QuesoServiceTest {
 
     @Test
     void Get_DTO__Queso_Not_Found() {
-        when(repository.findById("001")).thenReturn(Optional.empty());
+        when(repository.getById("001")).thenThrow(new QuesoNotFoundException());
         QuesoNotFoundException thrown = assertThrows(
                 QuesoNotFoundException.class, () -> quesoService.get("001")
         );
@@ -71,13 +76,15 @@ public class QuesoServiceTest {
 
     @Test
     void Delete__OK() throws QuesoNotFoundException {
-        when(repository.existsById("001")).thenReturn(true);
+        when(repository.getById("001")).thenReturn(mockQueso());
+        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete("001");
         assertEquals("001", actualID);
     }
 
     @Test
     void Delete__Queso_Not_Found() {
+        when(repository.getById("001")).thenThrow(new QuesoNotFoundException());
         QuesoNotFoundException thrown = assertThrows(
                 QuesoNotFoundException.class, () -> quesoService.delete("001")
         );

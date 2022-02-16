@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {LoteNotFoundException.class, QuesoNotFoundException.class})
-    protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, NotFoundException ex) {
+    protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, EntityNotFoundException ex) {
         return response(ex, req, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 

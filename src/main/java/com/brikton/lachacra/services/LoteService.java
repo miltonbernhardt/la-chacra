@@ -26,11 +26,7 @@ public class LoteService {
     }
 
     public LoteDTO get(String id) throws LoteNotFoundException {
-        var lote = repository.findById(id);
-        if (lote.isPresent())
-            return new LoteDTO(lote.get());
-        else
-            throw new LoteNotFoundException();
+        return new LoteDTO(repository.getById(id));
     }
 
     public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {

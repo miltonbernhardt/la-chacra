@@ -1,7 +1,8 @@
-INSERT INTO public.Queso (codigo_queso, nomenclatura, tipo_queso, stock)
-VALUES ('001', 'C', 'Cremoso', 70),
-       ('002', 'B', 'Barra', 20),
-       ('003', 'S', 'Sardo', 53);
+INSERT INTO public.Queso (codigo_queso, nomenclatura, tipo_queso, stock, fecha_baja)
+VALUES ('001', 'C', 'Cremoso', 70, null),
+       ('002', 'B', 'Barra', 20, null),
+       ('003', 'S', 'Sardo', 53, null),
+       ('004', 'R', 'Rojo', 0, '2021-10-10');
 
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, codigo_queso,
                          id_lote, peso, rendimiento, stock_lote, lote_cultivo, lote_colorante, lote_calcio,
