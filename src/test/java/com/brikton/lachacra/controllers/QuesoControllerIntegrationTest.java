@@ -107,6 +107,17 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
+    void Get__Queso_Already_Deleted() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("004"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("004"), response.getPath());
+    }
+
+    @Test
     void Get__Queso_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
                 HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("011"), SuccessfulResponse.class)
@@ -137,7 +148,13 @@ public class QuesoControllerIntegrationTest {
         mockQueso3.setNomenclatura("S");
         mockQueso3.setStock(53);
 
-        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
+        QuesoDTO mockQueso4 = new QuesoDTO();
+        mockQueso4.setCodigo("004");
+        mockQueso4.setTipoQueso("Rojo");
+        mockQueso4.setNomenclatura("R");
+        mockQueso4.setStock(0);
+
+        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3, mockQueso4));
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
         var actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
@@ -167,6 +184,17 @@ public class QuesoControllerIntegrationTest {
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("id"));
         assertEquals(path.concat("0001"), response.getPath());
+    }
+
+    @Test
+    void Delete__Queso_Already_Deleted() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("004"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("004"), response.getPath());
     }
 
     @Test

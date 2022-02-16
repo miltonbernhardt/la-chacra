@@ -241,6 +241,29 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
+    void Save__Queso_Deleted_Conflict() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToSave.setNumeroTina(1);
+        dtoToSave.setCantHormas(1);
+        dtoToSave.setLitrosLeche(20D);
+        dtoToSave.setPeso(10D);
+        dtoToSave.setLoteCultivo("cultivo1, cultivo2");
+        dtoToSave.setLoteColorante("colorante1, colorante2");
+        dtoToSave.setLoteCalcio("calcio1, calcio2");
+        dtoToSave.setLoteCuajo("cuajo1, cuajo2");
+        dtoToSave.setCodigoQueso("004");
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(path, response.getPath());
+    }
+
+    @Test
     void Save__InvalidFields__Fields_Not_Found() throws JsonProcessingException {
         LoteDTO dtoToSave = new LoteDTO();
         dtoToSave.setId("1");

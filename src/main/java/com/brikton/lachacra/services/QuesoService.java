@@ -23,9 +23,9 @@ public class QuesoService {
         this.repository = repository;
     }
 
-    public Queso getEntity(String codigoQueso) throws QuesoNotFoundException {
-        var queso = repository.findById(codigoQueso);
-        if (queso.isPresent())
+    public Queso getEntity(String codigo) throws QuesoNotFoundException {
+        var queso = repository.findById(codigo);
+        if (queso.isPresent() && queso.get().getFechaBaja() == null) //todo usamos la fecha de baja aca? debemos retornar un mensaje de que el queso se elimino?
             return queso.get();
         throw new QuesoNotFoundException();
     }
@@ -41,13 +41,10 @@ public class QuesoService {
         return listaDTO;
     }
 
-    public String delete(String id) throws QuesoNotFoundException {
-        var queso = repository.findById(id);
-        if (queso.isPresent()) {
-            queso.get().setFechaBaja(dateUtil.now());
-            repository.save(queso.get());
-        } else
-            throw new QuesoNotFoundException();
-        return id;
+    public String delete(String codigo) throws QuesoNotFoundException {
+        var queso = getEntity(codigo);
+        queso.setFechaBaja(dateUtil.now());
+        repository.save(queso);
+        return codigo;
     }
 }
