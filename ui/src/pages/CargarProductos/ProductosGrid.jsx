@@ -36,8 +36,6 @@ const ProductosGrid = ({ listaQuesos, setSelection }) => {
             <DataGrid
                 rows={listaQuesos}
                 columns={columns}
-                // pageSize={20}
-                // rowsPerPageOptions={[20]}
                 pagination={false}
                 hideFooterPagination
                 onCellClick={(params, event, details) => setSelection(params.id)}

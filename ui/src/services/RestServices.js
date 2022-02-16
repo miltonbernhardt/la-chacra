@@ -30,6 +30,7 @@ export const deleteLote = async (id) => await DELETE(PUERTO, `${API_LOTE}${id}`)
 export const getAllQuesos = async () => await GET(PUERTO, `${API_QUESO}`);
 export const postQueso = async (queso) => await POST(PUERTO, `${API_QUESO}`, queso);
 export const putQueso = async (queso) => await PUT(PUERTO, `${API_QUESO}`, queso);
+export const deleteQueso = async (codigo) => await DELETE(PUERTO, `${API_QUESO}${codigo}`);
 
 
 // --- GENERAL METHODS ---

@@ -2,7 +2,7 @@ import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from "react";
 import FeedbackToast from "../../components/FeedbackToast";
-import { getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
+import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
 import CargarProductoDialog from './CargarProductoDialog';
 import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
@@ -29,6 +29,7 @@ const CargarProductos = () => {
     // Dialogs
     const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
+
     // States for feedback
     const [successMsg, setSucsessMsg] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
@@ -42,7 +43,16 @@ const CargarProductos = () => {
 
     const fetchQuesos = () => {
         getAllQuesos().then(quesos => {
-            setListaQuesos(quesos.data)
+            //--- agrego id porque necesita el datagrid y mi codigo
+            const listaAux = quesos.data.map((q) => {
+                return {
+                    id: q.codigo,
+                    codigo: q.codigo,
+                    nomenclatura: q.nomenclatura,
+                    tipoQueso: q.tipoQueso
+                }
+            })
+            setListaQuesos(listaAux)
         }).catch(e => feedbackErrors(e));
     }
 
@@ -54,14 +64,14 @@ const CargarProductos = () => {
     const onSubmit = () => {
         if (validarQueso()) {
             if (queso.id === '') {
-                postQueso(queso).then(() => {
-                    showSuccess("Carga Exitosa");
+                postQueso(queso).then((response) => {
+                    showSuccess(response.data.message);
                     fetchQuesos();
                 }).catch(e => feedbackErrors(e));
             }
             else
-                putQueso(queso).then(() => {
-                    showSuccess("Actualización Exitosa");
+                putQueso(queso).then((response) => {
+                    showSuccess(response.data.message);
                     fetchQuesos();
                 }).catch(e => feedbackErrors(e));
         }
@@ -96,6 +106,16 @@ const CargarProductos = () => {
 
     const setSelection = (id) => {
         setQueso(listaQuesos.filter((o) => { return o.id === id }).pop());
+    }
+
+    const onDelete = () => {
+        setOpenEliminarProducto(false);
+        deleteQueso(queso.codigo)
+            .then((response) => {
+                showSuccess(response.data.message);
+                fetchQuesos()
+            })
+            .catch(e => feedbackErrors(e));
     }
 
     //--- FEEDBACK METHODS ---
@@ -156,7 +176,8 @@ const CargarProductos = () => {
             <EliminarProductoDialog
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
-                queso={queso} />
+                queso={queso}
+                onBorrar={onDelete} />
             <ProductosGrid
                 listaQuesos={listaQuesos}
                 setSelection={setSelection} />

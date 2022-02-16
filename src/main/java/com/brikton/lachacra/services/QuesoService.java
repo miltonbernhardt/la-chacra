@@ -76,7 +76,7 @@ public class QuesoService {
     }
 
     public String delete(String codigo) throws QuesoNotFoundException {
-        var queso = getEntity(codigo);
+        var queso = getEntity(codigo);//TODO hacer la query para verificar los lotes
         queso.setFechaBaja(dateUtil.now());
         repository.save(queso);
         return codigo;
