@@ -1,6 +1,18 @@
-import { Autocomplete, Box, Button, ButtonGroup, Container, Grid, TextField, Typography } from "@mui/material";
+import {Autocomplete, Box, Button, ButtonGroup, Container, Grid, TextField, Typography} from "@mui/material";
 
-const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, cancelEditing, deleteLote, updateLote }) => {
+
+const BotoneraLoteForm = ({cancelEditing, deleteLote, updateLote, onCargar, isEditingLote}) => {
+    return <Grid item xs={12} alignSelf="right" mb={0.5}>
+        <ButtonGroup fullWidth variant="contained">
+            <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
+            <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
+            <Button onClick={updateLote} disabled={!isEditingLote} color="warning">Actualizar</Button>
+            <Button onClick={onCargar} disabled={isEditingLote}>Cargar Lote</Button>
+        </ButtonGroup>
+    </Grid>;
+}
+
+const LoteForm = ({lote, quesos, updateStateLote, onCargar, isEditingLote, cancelEditing, deleteLote, updateLote}) => {
 
     const quesosAutocomplete = quesos.map((q) => {
         return {
@@ -29,10 +41,10 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
             >
                 <Grid container spacing={2} justifyContent="right">
                     <Grid item xs={12}>
-                        <Typography variant="h6" >
+                        <Typography variant="h6">
                             Ingreso de producción
                         </Typography>
-                    </Grid >
+                    </Grid>
                     <Grid item xs={12}>
                         <Autocomplete //TODO bug cuando se selecciona queso para editar
                             id="autocomplete-tipoQueso"
@@ -48,7 +60,7 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    label="Tipo de queso" />
+                                    label="Tipo de queso"/>
                             )}
                             value={lote.codigoQueso}
                             onChange={(evt, newValue) => {
@@ -56,9 +68,13 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                                 updateStateLote('codigoQueso', newValue);
                             }}
                             isOptionEqualToValue={(option, value) => {
-                                console.log({ option: option.label, value: value });
-                                if (value.label) { return option.label === value.label }
-                                else { return (option.label === value) };
+                                console.log({option: option.label, value: value});
+                                if (value.label) {
+                                    return option.label === value.label
+                                } else {
+                                    return (option.label === value)
+                                }
+                                ;
                             }}
                         />
                     </Grid>
@@ -84,7 +100,7 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                             type="number"
                             variant="outlined"
                             value={lote.numeroTina}
-                            onChange={handleChange} />
+                            onChange={handleChange}/>
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -95,9 +111,9 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                             type="number"
                             variant="outlined"
                             value={lote.cantHormas}
-                            onChange={handleChange} />
+                            onChange={handleChange}/>
                     </Grid>
-                    <Grid item xs={12} >
+                    <Grid item xs={12}>
                         <TextField
                             id="pesoLote"
                             name="peso"
@@ -106,7 +122,7 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                             type="number"
                             variant="outlined"
                             value={lote.peso}
-                            onChange={handleChange} />
+                            onChange={handleChange}/>
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -120,16 +136,10 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                                 shrink: true,
                             }}
                             value={lote.fechaElaboracion}
-                            onChange={handleChange} />
+                            onChange={handleChange}/>
                     </Grid>
-                    <Grid item xs={12} alignSelf="right" mb={0.5}>
-                        <ButtonGroup fullWidth variant="contained">
-                            <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
-                            <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
-                            <Button onClick={updateLote} disabled={!isEditingLote} color="warning">Actualizar</Button>
-                            <Button onClick={onCargar} disabled={isEditingLote}>Cargar Lote</Button>
-                        </ButtonGroup>
-                    </Grid>
+                    <BotoneraLoteForm cancelEditing={cancelEditing} isEditingLote={isEditingLote} deleteLote={deleteLote}
+                                  updateLote={updateLote} onCargar={onCargar}/>
                 </Grid>
             </Box>
         </Container>
