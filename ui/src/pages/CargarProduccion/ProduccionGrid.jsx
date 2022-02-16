@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 
-const ProduccionGrid = ({ produccion, quesos, handleEdit, setSelection }) => {
+const ProduccionGrid = ({ produccion, quesos, setSelection }) => {
 
     const columns = [
         {
@@ -16,21 +16,21 @@ const ProduccionGrid = ({ produccion, quesos, handleEdit, setSelection }) => {
                     params.value.at(2) + params.value.at(3);
                 return `${valueFormatted}`;
             },
-            flex: 1,
+            flex: 0.75,
             minWidth: 50,
         },
         {
             field: 'codigoQueso',
             headerName: 'Queso',
-            flex: 0.5,
+            flex: 0.75,
             minWidth: 50,
-            // valueFormatter: (params) => {
-            //     return quesos
-            //         .filter(q => {
-            //             return q.id === params.value
-            //         })
-            //         .pop().tipoQueso //todo esto estaba dando error, revisar
-            // }
+            valueFormatter: (params) => {
+                return quesos
+                    .filter(q => {
+                        return q.codigo === params.value
+                    })
+                    .pop().tipoQueso
+            }
         },
         {
             field: 'numeroTina',
@@ -71,6 +71,9 @@ const ProduccionGrid = ({ produccion, quesos, handleEdit, setSelection }) => {
                 alignItems: 'center',
 
             }}>
+            <Typography variant="h6" color="GrayText" padding={1}>
+                Producción ingresada
+            </Typography>
             <DataGrid
                 rows={produccion}
                 columns={columns}

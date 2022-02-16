@@ -53,7 +53,7 @@ const CargarProduccion = () => {
 
     const fetchQuesos = () => {
         getAllQuesos().then(data => {
-            console.log({quesos: data.data})
+            console.log({ quesos: data.data })
             /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
         }).catch(e => feedbackErrors(e));
@@ -66,10 +66,12 @@ const CargarProduccion = () => {
         setLote(newLote);
     }
 
-    const onCargar = () => { setDialogOpen(true) }
+    const onCargar = () => {
+        if (validarLote()) setDialogOpen(true);
+    }
 
     const handleSubmit = () => {
-        const codigoQueso = lote.codigoQueso.label;
+        const codigoQueso = lote.codigoQueso.label ? lote.codigoQueso.label : lote.codigoQueso;
         const newLote = { ...lote, ['codigoQueso']: codigoQueso };
         //-- validation
         if (validarLote()) {
@@ -80,6 +82,7 @@ const CargarProduccion = () => {
                     const newList = listaLotes.filter((item) => item.id !== lote.id);
                     setListaLotes([...newList, res.data.data]);
                     showSuccess('Actualización Exitosa');
+                    setLote(loteInicial);
                 }).catch(e => feedbackErrors(e));
                 setEditingLote(false);
             }
@@ -88,9 +91,9 @@ const CargarProduccion = () => {
                 postLote(newLote).then(res => {
                     addToListaLotes(res.data.data);
                     showSuccess('Carga Exitosa');
+                    setLote(loteInicial);
                 }).catch(e => feedbackErrors(e));
             }
-            setLote(loteInicial);
         }
         else { //TODO mostrar campos incorrectos o algo
         } setDialogOpen(false);
@@ -162,7 +165,7 @@ const CargarProduccion = () => {
 
     const feedbackErrors = (error) => {
         try {
-            console.log({error2: error})
+            console.log({ error2: error })
             showError(errors[error.response.status]);
             if (error.response.status === 422) {
                 console.log(error.message);
@@ -191,19 +194,19 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     updateLote={onCargar}
-                    deleteLote={eliminarLote}
-                />
+                    deleteLote={eliminarLote} />
                 <CargarTrazabilidadDialog
                     open={dialogOpen}
                     onClose={() => { setDialogOpen(false) }}
                     lote={lote}
                     updateStateLote={updateStateLote}
-                    onSubmit={handleSubmit} />
+                    onSubmit={handleSubmit}
+                    isEditing={isEditingLote} />
                 <EliminarLoteDialog
                     open={eliminarDialog}
+                    lote={lote}
                     onClose={() => setEliminarDialog(false)}
-                    onSubmit={handleEliminar}
-                />
+                    onSubmit={handleEliminar} />
                 {/* Tabla */}
                 <ProduccionGrid
                     quesos={listaQuesos}
@@ -218,8 +221,7 @@ const CargarProduccion = () => {
                     closeSuccess={closeToast}
                     msgWarning={warningMsg}
                     openWarning={warningToastOpen}
-                    closeWarning={closeToast}
-                />
+                    closeWarning={closeToast} />
             </Paper>
         </>
     );

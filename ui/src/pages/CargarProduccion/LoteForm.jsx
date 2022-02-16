@@ -55,6 +55,11 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                                 //-- lo paso asi para no chequear validez del campo
                                 updateStateLote('codigoQueso', newValue);
                             }}
+                            isOptionEqualToValue={(option, value) => {
+                                console.log({ option: option.label, value: value });
+                                if (value.label) { return option.label === value.label }
+                                else { return (option.label === value) };
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={8}>
@@ -121,7 +126,7 @@ const LoteForm = ({ lote, quesos, updateStateLote, onCargar, isEditingLote, canc
                         <ButtonGroup fullWidth variant="contained">
                             <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
                             <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
-                            <Button onClick={updateLote} disabled={!isEditingLote} color="warning">Guardar</Button>
+                            <Button onClick={updateLote} disabled={!isEditingLote} color="warning">Actualizar</Button>
                             <Button onClick={onCargar} disabled={isEditingLote}>Cargar Lote</Button>
                         </ButtonGroup>
                     </Grid>

@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
 
-const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLote }) => {
+const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLote, isEditing }) => {
 
     const handleChange = evt => {
         const nombreAtributo = evt.target.name;
@@ -61,7 +61,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onSubmit}>Cargar Lote</Button>
+                    <Button onClick={onSubmit}>{isEditing ? 'Actualizar Lote' : 'Cargar Lote'}</Button>
                 </DialogActions>
             </Dialog>
         </div>
