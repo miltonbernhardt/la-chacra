@@ -1,6 +1,7 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
@@ -45,7 +46,7 @@ public class QuesoServiceTest {
         when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
-        assertEquals(quesoActual, quesoExpected);
+        assertEquals(quesoExpected, quesoActual);
     }
 
     @Test
@@ -73,7 +74,7 @@ public class QuesoServiceTest {
         when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
-        assertEquals(quesoActual, quesoExpected);
+        assertEquals(quesoExpected, quesoActual);
     }
 
     @Test
@@ -96,6 +97,25 @@ public class QuesoServiceTest {
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
+    @Test
+    void Save__OK() {
+        QuesoDTO quesoExpected = new QuesoDTO();
+        quesoExpected.setCodigo("001");
+        quesoExpected.setTipoQueso("tipoQueso");
+        quesoExpected.setNomenclatura("tip");
+        quesoExpected.setStock(1);
+
+        Queso mockQueso = new Queso();
+        mockQueso.setCodigo("001");
+        mockQueso.setTipoQueso("tipoQueso");
+        mockQueso.setNomenclatura("tip");
+        mockQueso.setStock(1);
+
+        when(repository.existsById("001")).thenReturn(true);
+        when(repository.save(mockQueso)).thenReturn(mockQueso);
+        QuesoDTO quesoActual = quesoService.save(quesoExpected);
+        assertEquals(quesoExpected, quesoActual);
+    }
 
     @Test
     void Delete__OK() throws QuesoNotFoundException {

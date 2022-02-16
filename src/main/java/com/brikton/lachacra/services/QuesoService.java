@@ -1,7 +1,9 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
@@ -40,10 +42,30 @@ public class QuesoService {
         return listaDTO;
     }
 
+    public QuesoDTO save(QuesoDTO dto) {
+        if (repository.existsById(dto.getCodigo())) {
+            repository.deleteById(dto.getCodigo());
+        }
+        var queso = quesoFromDTO(dto);
+        //todo trae los precios o sea asocian en otro momento?
+        queso = repository.save(queso);
+        return new QuesoDTO(queso);
+    }
+
+
     public String delete(String codigo) throws QuesoNotFoundException {
         var queso = getEntity(codigo);
         queso.setFechaBaja(dateUtil.now());
         repository.save(queso);
         return codigo;
+    }
+
+    private Queso quesoFromDTO(QuesoDTO dto) {
+        var queso = new Queso();
+        queso.setTipoQueso(dto.getTipoQueso());
+        queso.setCodigo(dto.getCodigo());
+        queso.setNomenclatura(dto.getNomenclatura());
+        queso.setStock(dto.getStock());
+        return queso;
     }
 }
