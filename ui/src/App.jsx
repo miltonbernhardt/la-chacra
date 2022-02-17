@@ -19,7 +19,7 @@ import VerVentas from './pages/Ventas/VerVentas';
 import VerLitrosElaborados from './pages/VerLitrosProducidos/VerLitrosElaborados';
 import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
-import { Toaster } from 'react-hot-toast';
+import {toast, Toaster, ToastBar} from 'react-hot-toast';
 
 export const themeOptions = {
     palette: {
@@ -164,7 +164,44 @@ const App = () => {
                     </Box>
                 </Router>
             </ThemeProvider>
-            <Toaster/>
+            <Toaster
+
+                containerStyle={{
+                    bottom: 30,
+                    right: 10,
+                }}
+                position="bottom-right"
+                toastOptions={{
+                    iconTheme: {
+                        primary: 'black',
+                    },
+                    style: {
+                        border: '1px solid #713200',
+                        // padding: '4px 8px 4px 8px',
+                        width: '100%',
+                        fontSize: '0.85em',
+                        color: 'black',
+                    },
+                    success: {
+                        duration: 3000,
+                        style: {
+                            background: '#7ecc8e',
+                        },
+                    },
+                    custom: {
+                        duration: 5000,
+                        style: {
+                            background: '#ff9191',
+                        },
+                    },
+                    error: {
+                        duration: 5000,
+                        style: {
+                            background: '#ff9191',
+                        },
+                    },
+                }}
+            />
         </>
     );
 }

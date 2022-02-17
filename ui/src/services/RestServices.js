@@ -1,11 +1,10 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import * as fields from './../fields';
+import {toastValidationErrors} from "../fields";
 
 const PUERTO = '8000';
 const RAIZ_URL = `http://localhost:${PUERTO}`;
 
-const DIRECCION_LOTE = 'localhost';
 const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'
 
@@ -22,13 +21,11 @@ const getNewHeader = () => {
 }
 
 // --- LOTE METHODS ---
-
 export const postLote = async (lote) => await POST(`${API_LOTE}`, lote);
 export const putLote = async (lote) => await PUT(`${API_LOTE}`, lote);
 export const deleteLote = async (id) => await DELETE(`${API_LOTE}${id}`);
 
 // --- QUESO METHODS ---
-
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);
 export const postQueso = async (queso) => await POST(`${API_QUESO}`, queso);
 export const putQueso = async (queso) => await PUT(`${API_QUESO}`, queso);
@@ -36,7 +33,6 @@ export const deleteQueso = async (codigo) => await DELETE(`${API_QUESO}${codigo}
 
 
 // --- GENERAL METHODS ---
-
 export const POST = async (postfixUrl, data) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `POST ${URL}`;
@@ -52,7 +48,7 @@ export const POST = async (postfixUrl, data) => {
         .catch(err => {
             const {data, status} = err.response
             console.error({data, status})
-            processFieldsErrors(data)
+            toastValidationErrors(data)
             throw new Error(data.message)
         })
 }
@@ -72,7 +68,7 @@ export const PUT = async (postfixUrl, data) => {
         .catch(err => {
             const {data, status} = err.response
             console.error({data, status})
-            processFieldsErrors(data)
+            toastValidationErrors(data)
             throw new Error(data.message)
         })
 }
@@ -110,16 +106,7 @@ export const DELETE = async (postfixUrl) => {
         .catch(err => {
             const {data, status} = err.response
             console.error({data, status})
-            processFieldsErrors(data)
+            toastValidationErrors(data)
             throw new Error(data.message)
         })
-}
-
-const processFieldsErrors = ({errors}) => {
-    let mapFields = fields.fieldsFromBackend()
-    new Map(Object.entries(errors)).forEach((msg, field) => {
-            let realField = mapFields.get(field)
-            toast.error(`${realField}: ${msg}`)
-        }
-    )
 }

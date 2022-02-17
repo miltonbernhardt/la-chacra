@@ -6,7 +6,8 @@ import CargarProductoDialog from './CargarProductoDialog';
 import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
 import toast from 'react-hot-toast';
-import {valEmptyField} from "../../messages";
+import * as message from "../../messages";
+import {toastValidationErrors} from "../../fields";
 
 const quesoInicial = {
     id: '',
@@ -79,19 +80,17 @@ const CargarProductos = () => {
         const errors = new Map();
 
         if (queso.codigo === '')
-            errors.set(fieldCodigo, valEmptyField)
+            errors.set(fieldCodigo, message.valEmptyField)
 
         if (queso.nomenclatura === '')
-            errors.set(fieldNomenclatura, valEmptyField)
+            errors.set(fieldNomenclatura,  message.valEmptyField)
 
         if (queso.tipoQueso === '')
-            errors.set(fieldTipoQueso, valEmptyField)
+            errors.set(fieldTipoQueso,  message.valEmptyField)
 
         if (errors.size > 0) {
             console.error({errors})
-            errors.forEach(function (msg, field) {
-                toast.error(`${field}: ${msg}`)
-            })
+            toastValidationErrors(errors)
             return false;
         }
         return true;

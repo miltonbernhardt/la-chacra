@@ -10,9 +10,10 @@ import EliminarLoteDialog from "./EliminarLoteDialog";
 import toast from 'react-hot-toast';
 import * as message from "../../messages";
 import * as field from "../../fields";
+import {toastValidationErrors} from "../../fields";
 
 const loteInicial = {
-    id: 1,
+    id: '',
     fechaElaboracion: '',
     numeroTina: '',
     litrosLeche: '',
@@ -24,10 +25,6 @@ const loteInicial = {
     loteCuajo: '',
     codigoQueso: ''
 }
-
-//todo mover estas constantes a un archivo aparte
-
-const successfulDelete = 'Lote borrado'
 
 const CargarProduccion = () => {
 
@@ -61,14 +58,65 @@ const CargarProduccion = () => {
     }
 
     const onCargar = () => {
-        if (validarLote()) setDialogOpen(true);
+        if (validateLote()) setDialogOpen(true);
+    }
+
+    const validateLote = () => {
+        const current = new Date();
+        const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
+
+        const errors = new Map();
+
+        if (lote.codigoQueso === '')
+            errors.set(field.queso, message.valEmptyField)
+
+        if (lote.litrosLeche < 1)
+            errors.set(field.litrosLeche, message.valZeroValue)
+
+        if (lote.numeroTina < 1)
+            errors.set(field.numeroTina, message.valZeroValue)
+
+        if (lote.cantHormas < 1)
+            errors.set(field.cantidadHormas, message.valZeroValue)
+
+        if (lote.peso < 1)
+            errors.set(field.peso, message.valZeroValue)
+
+        if (lote.fechaElaboracion === '')
+            errors.set(field.fechaElaboracion, message.valEmptyFecha)
+        else if (validator.isBefore(date, lote.fechaElaboracion))
+            errors.set(field.fechaElaboracion, message.valOlderDate)
+
+        if (errors.size > 0) {
+            console.error({errors})
+            toastValidationErrors(errors)
+            return false;
+        }
+        return true;
+    }
+
+    // --- EDIT LOTE METHODS ---
+    const setSelection = (id) => {
+        setLote(listaLotes.filter((o) => {
+            return o.id === id
+        }).pop());
+        setEditingLote(true);
+    }
+
+    const cancelEditing = () => {
+        setEditingLote(false);
+        setLote(loteInicial);
+    }
+
+    const deleteLote = () => {
+        setEliminarDialog(true);
     }
 
     const handleSubmit = () => {
         const codigoQueso = lote.codigoQueso.label ? lote.codigoQueso.label : lote.codigoQueso;
         const newLote = {...lote, ['codigoQueso']: codigoQueso};
 
-        if (validarLote()) {
+        if (validateLote()) {
             //-- if is editing
             if (isEditingLote) {
                 putLote(newLote)
@@ -93,69 +141,11 @@ const CargarProduccion = () => {
         setDialogOpen(false);
     }
 
-    const validarLote = () => {
-        const current = new Date();
-        const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-
-        const errors = new Map();
-
-        if (lote.fechaElaboracion === '')
-            errors.set(field.fechaElaboracion, message.valEmptyFecha)
-        else if (validator.isBefore(date, lote.fechaElaboracion))
-            errors.set(field.fechaElaboracion, message.valOlderDate)
-
-        if (lote.cantHormas < 1)
-            errors.set(field.cantidadHormas, message.valZeroValue)
-
-        if (lote.litrosLeche < 1)
-            errors.set(field.litrosLeche, message.valZeroValue)
-
-        if (lote.numeroTina < 1)
-            errors.set(field.numeroTina, message.valZeroValue)
-
-        if (lote.peso < 1)
-            errors.set(field.peso, message.valZeroValue)
-
-        if (lote.codigoQueso === '')
-            errors.set(field.queso, message.valEmptyField)
-
-        if (errors.size > 0) {
-            console.error({errors})
-            errors.forEach(function (msg, field) {
-                toast.error(`${field}: ${msg}`)
-            })
-            return false;
-        }
-        return true;
-    }
-
-    // --- EDIT LOTE METHODS ---
-    const setSelection = (id) => {
-        setLote(listaLotes.filter((o) => {
-            return o.id === id
-        }).pop());
-        setEditingLote(true);
-    }
-
-    const cancelEditing = () => {
-        setEditingLote(false);
-        setLote(loteInicial);
-    }
-
-    const eliminarLote = () => {
-        setEliminarDialog(true);
-    }
-
     const handleEliminar = () => {
         deleteLote(lote.id).then(res => {
-            console.log({res})
-            toast.success(successfulDelete);
             const newList = listaLotes.filter((item) => item.id !== lote.id);
             setListaLotes(newList);
-        }).catch(e => {
-            toast.error(e)
-            console.error({e})
-        });//todos
+        }).catch(e => console.error(e.message));
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
@@ -173,7 +163,7 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     updateLote={onCargar}
-                    deleteLote={eliminarLote}/>
+                    deleteLote={deleteLote}/>
                 <CargarTrazabilidadDialog
                     open={dialogOpen}
                     onClose={() => {
