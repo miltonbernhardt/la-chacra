@@ -27,7 +27,6 @@ const CargarProduccion = () => {
     const [listaQuesos, setListaQuesos] = useState([]);
 
     // Dialogs
-    // const [dialogOpen, setDialogOpen] = useState(false);
     const [isEditingLote, setEditingLote] = useState(false);
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
@@ -105,7 +104,11 @@ const CargarProduccion = () => {
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
-    }, [lote.id]);
+    }, [lote.id, listaLotes]);
+
+    const cancelEliminar = useCallback(() => {
+        setEliminarDialog(false);
+    }, []);
 
     // --- VARIABLES 
     const quesosAutocomplete = listaQuesos.map((q) => {
@@ -132,7 +135,7 @@ const CargarProduccion = () => {
                 <EliminarLoteDialog
                     open={eliminarDialog}
                     lote={lote}
-                    onClose={() => setEliminarDialog(false)}
+                    onClose={cancelEliminar}
                     onSubmit={handleEliminar} />
                 {/* Tabla */}
                 <ProduccionGrid

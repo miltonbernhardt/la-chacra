@@ -5,6 +5,19 @@ import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
 import validator from "validator";
 import toast from 'react-hot-toast';
 
+const loteInicial = {
+    id: '',
+    fechaElaboracion: '',
+    numeroTina: '',
+    litrosLeche: '',
+    cantHormas: '',
+    peso: '',
+    loteCultivo: '',
+    loteColorante: '',
+    loteCalcio: '',
+    loteCuajo: '',
+    codigoQueso: ''
+}
 
 const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit }) => {
 
@@ -13,10 +26,10 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
 
     useEffect(() => { setLoteForm(lote) }, [lote]);
 
-    const updateStateLote = (attribute, value) => {
+    const updateStateLote = useCallback((attribute, value) => {
         const newLote = { ...loteForm, [attribute]: value };
         setLoteForm(newLote);
-    }
+    }, [loteForm]);
 
     const handleChange = useCallback(evt => {
         const nombreAtributo = evt.target.name;
@@ -24,7 +37,6 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
         if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
     }, [updateStateLote])
 
-    // const onCargar = useCallback(() => setDialogOpen(true), []);
     const onCargar = () => {
         if (validarLote()) setDialogOpen(true);
     }
@@ -48,7 +60,10 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
             ['loteCalcio']: trazabilidadLote.loteCalcio,
             ['loteCuajo']: trazabilidadLote.loteCuajo
         }
-        if (validarLote()) handleSubmit(newLote); //TODO
+        if (validarLote()) {
+            handleSubmit(newLote);
+            setLoteForm(loteInicial);
+        }
         setDialogOpen(false);
     }
 
