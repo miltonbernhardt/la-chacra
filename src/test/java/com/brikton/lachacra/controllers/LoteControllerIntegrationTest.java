@@ -115,7 +115,7 @@ public class LoteControllerIntegrationTest {
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
         assertEquals(path.concat("0"), response.getPath());
     }
 
@@ -313,11 +313,11 @@ public class LoteControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(10, response.getErrors().size());
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("cantHormas"));
         assertEquals(ValidationMessages.CANT_BE_LATER_THAN_TODAY, response.getErrors().get("fechaElaboracion"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("numeroTina"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("litrosLeche"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("peso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigoQueso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteColorante"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCultivo"));
@@ -464,11 +464,11 @@ public class LoteControllerIntegrationTest {
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(11, response.getErrors().size());
         assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("cantHormas"));
         assertEquals(ValidationMessages.CANT_BE_LATER_THAN_TODAY, response.getErrors().get("fechaElaboracion"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("numeroTina"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("litrosLeche"));
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("peso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigoQueso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteColorante"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCultivo"));
@@ -507,7 +507,7 @@ public class LoteControllerIntegrationTest {
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_0, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
         assertEquals(path.concat("0"), response.getPath());
     }
     //todo delete bad id x2

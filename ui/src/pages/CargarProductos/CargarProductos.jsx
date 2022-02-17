@@ -65,11 +65,12 @@ const CargarProductos = () => {
                     toast.success(response.data.message);
                     fetchQuesos();
                 }).catch(e => feedbackErrors(e));
-            } else
+            } else {
                 putQueso(queso).then((response) => {
                     toast.success(response.data.message);
                     fetchQuesos();
                 }).catch(e => feedbackErrors(e));
+            }
         }
         setOpenCargarProducto(false);
     }
@@ -77,22 +78,18 @@ const CargarProductos = () => {
     const validarQueso = () => {
         const errors = new Map();
 
-        if (queso.codigo === '') {
+        if (queso.codigo === '')
             errors.set(fieldCodigo, valEmptyField)
-        }
 
-        if (queso.nomenclatura === '') {
+        if (queso.nomenclatura === '')
             errors.set(fieldNomenclatura, valEmptyField)
-        }
 
-        if (queso.tipoQueso === '') {
+        if (queso.tipoQueso === '')
             errors.set(fieldTipoQueso, valEmptyField)
-        }
-
 
         if (errors.size > 0) {
+            console.error({errors})
             errors.forEach(function (msg, field) {
-                console.log(`${field}: ${msg}`)
                 toast.error(`${field}: ${msg}`)
             })
             return false;
@@ -132,7 +129,7 @@ const CargarProductos = () => {
             .catch(e => feedbackErrors(e));
     }
 
-    const feedbackErrors = (error) => {
+    const feedbackErrors = (error) => { //todo
         try {
             toast.error(errors[error.response.status]);
             if (error.response.status === 422) {

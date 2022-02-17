@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -34,7 +33,7 @@ public class LoteController {
     //todo getall
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
                                                            @PathVariable("id") String id) throws LoteNotFoundException {
         log.info("API::get - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
@@ -58,7 +57,7 @@ public class LoteController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
                                                              @PathVariable("id") String id) throws LoteNotFoundException {
         log.info("API::delete - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED, service.delete(id)));

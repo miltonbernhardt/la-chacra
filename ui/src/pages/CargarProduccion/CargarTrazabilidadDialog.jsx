@@ -13,7 +13,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
             <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>Trazabilidad</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText paddingBottom={2}>
                         Ingrese los datos de los insumos
                     </DialogContentText>
                     <Grid container spacing={2}>

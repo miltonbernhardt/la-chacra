@@ -19,19 +19,19 @@ public class ExpedicionDTO {
     private LocalDate fechaExpedicion;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Integer cantidad;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double peso;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double importe;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Long idCliente;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)

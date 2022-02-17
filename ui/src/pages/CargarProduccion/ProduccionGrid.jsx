@@ -80,7 +80,7 @@ const ProduccionGrid = ({ produccion, quesos, setSelection }) => {
                 pageSize={20}
                 rowsPerPageOptions={[20]}
                 hideFooterPagination
-                onCellDoubleClick={(params, event, details) => setSelection(params.id)}
+                onCellDoubleClick={(params) => setSelection(params.id)}
             />
         </Box>
     );

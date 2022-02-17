@@ -1,11 +1,13 @@
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import * as fields from './../fields';
 
-const RAIZ_URL = `http://localhost`;
+const PUERTO = '8000';
+const RAIZ_URL = `http://localhost:${PUERTO}`;
 
 const DIRECCION_LOTE = 'localhost';
-const PUERTO = '8000';
-const API_LOTE = 'v1/lotes/'
-const API_QUESO = 'v1/quesos/'
+const API_LOTE = '/api/v1/lotes/'
+const API_QUESO = '/api/v1/quesos/'
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -16,108 +18,108 @@ const headers = {
 const getNewHeader = () => {
     // const token = localStorage.getItem('token');
     // return {...headers, Authorization: `Bearer ${token}`}
-    return { ...headers }
+    return {...headers}
 }
 
 // --- LOTE METHODS ---
 
-export const postLote = async (lote) => await POST(PUERTO, `${API_LOTE}`, lote);
-export const putLote = async (lote) => await PUT(PUERTO, `${API_LOTE}`, lote);
-export const deleteLote = async (id) => await DELETE(PUERTO, `${API_LOTE}${id}`);
+export const postLote = async (lote) => await POST(`${API_LOTE}`, lote);
+export const putLote = async (lote) => await PUT(`${API_LOTE}`, lote);
+export const deleteLote = async (id) => await DELETE(`${API_LOTE}${id}`);
 
 // --- QUESO METHODS ---
 
-export const getAllQuesos = async () => await GET(PUERTO, `${API_QUESO}`);
-export const postQueso = async (queso) => await POST(PUERTO, `${API_QUESO}`, queso);
-export const putQueso = async (queso) => await PUT(PUERTO, `${API_QUESO}`, queso);
-export const deleteQueso = async (codigo) => await DELETE(PUERTO, `${API_QUESO}${codigo}`);
+export const getAllQuesos = async () => await GET(`${API_QUESO}`);
+export const postQueso = async (queso) => await POST(`${API_QUESO}`, queso);
+export const putQueso = async (queso) => await PUT(`${API_QUESO}`, queso);
+export const deleteQueso = async (codigo) => await DELETE(`${API_QUESO}${codigo}`);
 
 
 // --- GENERAL METHODS ---
 
-export const POST = async (port, postfixUrl, data) => {
-    const URL = `${RAIZ_URL}:${port}/api/${postfixUrl}`;
-
+export const POST = async (postfixUrl, data) => {
+    const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `POST ${URL}`;
+    console.log({request: method, data})
 
-    console.log({ request: method, data })
-    const response = await axios.post(URL, data, { headers: getNewHeader() })
-    const { data: dataResponse, status } = response
-    if (status !== 200) {
-        if (status === 401) {
-            localStorage.removeItem("token")
-            localStorage.removeItem("username")
-        }
-        throw new Error(dataResponse)
-    } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
-    }
+    return await axios.post(URL, data, {headers: getNewHeader()})
+        .then(response => {
+            const {data} = response
+            console.info({response: data})
+            toast.success(data.message);
+            return {data: data.data}
+        })
+        .catch(err => {
+            const {data, status} = err.response
+            console.error({data, status})
+            processFieldsErrors(data)
+            throw new Error(data.message)
+        })
 }
 
-export const PUT = async (port, postfixUrl, data) => {
-    console.log({ postfixUrl })
-    const URL = `${RAIZ_URL}:${port}/api/${postfixUrl}`;
-
+export const PUT = async (postfixUrl, data) => {
+    const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `PUT ${URL}`
-    console.log({ request: method, data })
+    console.log({request: method, data})
 
-    const response = await axios.put(URL, data, { headers: getNewHeader() })
-    const { data: dataResponse, status } = response
-    if (status !== 200) {
-        if (status === 401) {
-            localStorage.removeItem("token")
-            localStorage.removeItem("username")
-        }
-        throw new Error(dataResponse)
-    } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
-    }
+    return await axios.put(URL, data, {headers: getNewHeader()})
+        .then(response => {
+            const {data} = response
+            console.info({response: data})
+            toast.success(data.message);
+            return {data: data.data}
+        })
+        .catch(err => {
+            const {data, status} = err.response
+            console.error({data, status})
+            processFieldsErrors(data)
+            throw new Error(data.message)
+        })
 }
 
-export const GET = async (port, postfixUrl) => {
-    const URL = `${RAIZ_URL}:${port}/api/${postfixUrl}`;
-
+export const GET = async (postfixUrl) => {
+    const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `GET ${URL}`
+    console.log({request: method})
 
-    console.log({ request: method })
-
-    const response = await axios.get(URL, { headers: getNewHeader() })
-
-    console.log({ response: response })
-
-    const data = response.data.data
-    const status = response.status
-
-    if (status !== 200) {
-        if (status === 401) {
-            localStorage.removeItem("token")
-            localStorage.removeItem("username")
-        }
-        throw new Error(data)
-    } else {
-        return { data }
-    }
+    return await axios.get(URL, {headers: getNewHeader()})
+        .then(response => {
+            const {data} = response
+            console.info({response: data})
+            return {data: data.data}
+        })
+        .catch(err => {
+            const {data, status} = err.response
+            console.error({data, status})
+            throw new Error(data.message)
+        })
 }
 
-export const DELETE = async (port, postfixUrl) => {
-    const URL = `${RAIZ_URL}:${port}/api/${postfixUrl}`;
+export const DELETE = async (postfixUrl) => {
+    const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `DELETE ${URL}`
-    console.log({ request: method })
+    console.log({request: method})
 
-    const response = await axios.delete(URL, { headers: getNewHeader() })
+    return await axios.delete(URL, {headers: getNewHeader()})
+        .then(response => {
+            const {data} = response
+            console.info({response: data})
+            toast.success(data.message);
+            return {data: data.data}
+        })
+        .catch(err => {
+            const {data, status} = err.response
+            console.error({data, status})
+            processFieldsErrors(data)
+            throw new Error(data.message)
+        })
+}
 
-    const { data: dataResponse, status } = response
-
-    if (status !== 200) {
-        if (status === 401) {
-            localStorage.removeItem("token")
-            localStorage.removeItem("username")
+const processFieldsErrors = ({errors}) => {
+    let mapFields = fields.fieldsFromBackend()
+    new Map(Object.entries(errors)).forEach((msg, field) => {
+            let realField = mapFields.get(field)
+            toast.error(`${realField}: ${msg}`)
         }
-        throw new Error(dataResponse)
-    } else {
-        console.log({ response: method, dataResponse })
-        return { data: dataResponse }
-    }
+    )
 }

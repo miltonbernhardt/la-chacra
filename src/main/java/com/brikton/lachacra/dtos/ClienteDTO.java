@@ -44,7 +44,7 @@ public class ClienteDTO {
     private String senasaUta;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Long idTipoCliente;
 
     private Long id;
