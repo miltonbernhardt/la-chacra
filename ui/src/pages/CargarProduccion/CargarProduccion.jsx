@@ -1,11 +1,11 @@
-import {Paper} from "@mui/material";
-import {useState} from "react";
-import {getAllQuesos, postLote, putLote, deleteLote} from "../../services/RestServices";
+import { Paper } from "@mui/material";
+import { useState } from "react";
+import { getAllQuesos, postLote, putLote, deleteLote } from "../../services/RestServices";
 import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
 import LoteForm from "./LoteForm";
 import ProduccionGrid from "./ProduccionGrid";
 import validator from "validator";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import EliminarLoteDialog from "./EliminarLoteDialog";
 import toast from 'react-hot-toast';
 
@@ -36,10 +36,10 @@ const CargarProduccion = () => {
 
     const fetchQuesos = () => {
         getAllQuesos().then(data => {
-            console.log({quesos: data.data})
+            console.log({ quesos: data.data })
             /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
-        }).catch(e => toast.error(e));//todo
+        }).catch(e => toast.error(e.response ? e : e.message));//todo
     }
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const CargarProduccion = () => {
     }, []);
 
     const updateStateLote = (attribute, value) => {
-        const newLote = {...lote, [attribute]: value};
+        const newLote = { ...lote, [attribute]: value };
         setLote(newLote);
     }
 
@@ -60,7 +60,7 @@ const CargarProduccion = () => {
 
     const handleSubmit = () => {
         const codigoQueso = lote.codigoQueso.label ? lote.codigoQueso.label : lote.codigoQueso;
-        const newLote = {...lote, ['codigoQueso']: codigoQueso};
+        const newLote = { ...lote, ['codigoQueso']: codigoQueso };
         //-- validation
         if (validarLote()) {
             //-- if is editing
@@ -94,12 +94,12 @@ const CargarProduccion = () => {
         const errors = new Map();
 
         //todo mover estas constantes a un archivo aparte
-        const fieldFechaElaboracion = "Fecha elaboración"
-        const fieldHormas = "Hormas"
-        const fieldLitrosLeche = "Litros de leche"
-        const fieldNumeroTina = "Número tina"
-        const fieldPeso = "Peso"
-        const fieldQueso = "Código queso"
+        const fieldFechaElaboracion = "Fecha de elaboración"
+        const fieldHormas = "Cantidad de Hormas"
+        const fieldLitrosLeche = "Litros procesados"
+        const fieldNumeroTina = "Número de tina"
+        const fieldPeso = "Peso del lote"
+        const fieldQueso = "Tipo de queso"
 
         const valEmptyFecha = "Debe elegirse una fecha"
         const valOlderDate = "La fecha no debe ser posterior al día de hoy"
@@ -134,7 +134,7 @@ const CargarProduccion = () => {
 
 
         if (errors.size > 0) {
-            errors.forEach(function(msg, field) {
+            errors.forEach(function (msg, field) {
                 console.log(`${field}: ${msg}`)
                 toast.error(`${field}: ${msg}`)
             })
@@ -147,7 +147,7 @@ const CargarProduccion = () => {
         setListaLotes([...listaLotes, newLote])
     }
 
-// --- EDIT LOTE METHODS ---
+    // --- EDIT LOTE METHODS ---
     const setSelection = (id) => {
         setLote(listaLotes.filter((o) => {
             return o.id === id
@@ -177,7 +177,7 @@ const CargarProduccion = () => {
 
     return (
         <>
-            <Paper style={{width: '100%', height: '100%', padding: 2}}>
+            <Paper style={{ width: '100%', height: '100%', padding: 2 }}>
                 {/* Formulario */}
                 <LoteForm
                     quesos={listaQuesos}
@@ -187,7 +187,7 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     updateLote={onCargar}
-                    deleteLote={eliminarLote}/>
+                    deleteLote={eliminarLote} />
                 <CargarTrazabilidadDialog
                     open={dialogOpen}
                     onClose={() => {
@@ -196,17 +196,17 @@ const CargarProduccion = () => {
                     lote={lote}
                     updateStateLote={updateStateLote}
                     onSubmit={handleSubmit}
-                    isEditing={isEditingLote}/>
+                    isEditing={isEditingLote} />
                 <EliminarLoteDialog
                     open={eliminarDialog}
                     lote={lote}
                     onClose={() => setEliminarDialog(false)}
-                    onSubmit={handleEliminar}/>
+                    onSubmit={handleEliminar} />
                 {/* Tabla */}
                 <ProduccionGrid
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
                 {/*<FeedbackToast*/}
                 {/*    msgError={errorMsg}*/}
                 {/*    openError={errorToastOpen}*/}
