@@ -1,12 +1,23 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
+import { useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
-const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLote, isEditing }) => {
+const CargarTrazabilidadDialog = ({ open, onClose, submitLote, isEditing, trazabilidad }) => {
+
+    const [trazabilidadForm, setTrazabilidad] = useState({});
+
+    useEffect(() => setTrazabilidad(trazabilidad), [trazabilidad])
 
     const handleChange = evt => {
-        const nombreAtributo = evt.target.name;
-        const valorAtributo = evt.target.value;
-        if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
+        const attribute = evt.target.name;
+        const value = evt.target.value;
+        if (evt.target.validity.valid) {
+            const newTrazabilidad = { ...trazabilidadForm, [attribute]: value }
+            setTrazabilidad(newTrazabilidad);
+        }
     }
+
+    const onCargar = () => submitLote(trazabilidadForm);
 
     return (
         <div>
@@ -24,7 +35,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de cultivo"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteCultivo}
+                                value={trazabilidadForm.loteCultivo}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -34,7 +45,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de colorante"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteColorante}
+                                value={trazabilidadForm.loteColorante}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -44,7 +55,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de calcio"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteCalcio}
+                                value={trazabilidadForm.loteCalcio}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -54,14 +65,14 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de cuajo"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteCuajo}
+                                value={trazabilidadForm.loteCuajo}
                                 onChange={handleChange} />
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onSubmit}>{isEditing ? 'Actualizar Lote' : 'Cargar Lote'}</Button>
+                    <Button onClick={onCargar}>{isEditing ? 'Actualizar Lote' : 'Cargar Lote'}</Button>
                 </DialogActions>
             </Dialog>
         </div>
