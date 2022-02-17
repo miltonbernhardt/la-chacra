@@ -1,15 +1,13 @@
-import { Paper } from "@mui/material";
-import { useState } from "react";
-import FeedbackToast from "../../components/FeedbackToast";
-import { getAllQuesos, postLote, putLote, deleteLote } from "../../services/RestServices";
+import {Paper} from "@mui/material";
+import {useState} from "react";
+import {getAllQuesos, postLote, putLote, deleteLote} from "../../services/RestServices";
 import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
 import LoteForm from "./LoteForm";
 import ProduccionGrid from "./ProduccionGrid";
 import validator from "validator";
-import { useEffect } from "react";
+import {useEffect} from "react";
 import EliminarLoteDialog from "./EliminarLoteDialog";
-
-
+import toast from 'react-hot-toast';
 
 const loteInicial = {
     id: '',
@@ -25,13 +23,6 @@ const loteInicial = {
     codigoQueso: ''
 }
 
-const errors = {
-    400: 'La solicitud es inválida',
-    404: 'No se encontró el lote',
-    422: 'Los datos enviados no son correctos',
-    500: 'Error en el servidor'
-}
-
 const CargarProduccion = () => {
 
     const [lote, setLote] = useState(loteInicial);
@@ -43,26 +34,20 @@ const CargarProduccion = () => {
     const [isEditingLote, setEditingLote] = useState(false);
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
-    // States for feedback
-    const [successMsg, setSuccessMsg] = useState('');
-    const [errorMsg, setErrorMsg] = useState();
-    const [warningMsg, setWarningMsg] = useState('');
-    const [successToastOpen, setSuccessToast] = useState(false);
-    const [errorToastOpen, setErrorToast] = useState(false);
-    const [warningToastOpen, setWarningToast] = useState(false);
-
     const fetchQuesos = () => {
         getAllQuesos().then(data => {
-            console.log({ quesos: data.data })
+            console.log({quesos: data.data})
             /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
-        }).catch(e => feedbackErrors(e));
+        }).catch(e => toast.error(e));//todo
     }
 
-    useEffect(() => { fetchQuesos() }, []);
+    useEffect(() => {
+        fetchQuesos()
+    }, []);
 
     const updateStateLote = (attribute, value) => {
-        const newLote = { ...lote, [attribute]: value };
+        const newLote = {...lote, [attribute]: value};
         setLote(newLote);
     }
 
@@ -70,9 +55,12 @@ const CargarProduccion = () => {
         if (validarLote()) setDialogOpen(true);
     }
 
+    const successfulUpdate = 'Actualización exitosa'
+    const successfulLoad = 'Carga exitosa'
+
     const handleSubmit = () => {
         const codigoQueso = lote.codigoQueso.label ? lote.codigoQueso.label : lote.codigoQueso;
-        const newLote = { ...lote, ['codigoQueso']: codigoQueso };
+        const newLote = {...lote, ['codigoQueso']: codigoQueso};
         //-- validation
         if (validarLote()) {
             //-- if is editing
@@ -81,35 +69,75 @@ const CargarProduccion = () => {
                     //-- update list 
                     const newList = listaLotes.filter((item) => item.id !== lote.id);
                     setListaLotes([...newList, res.data.data]);
-                    showSuccess('Actualización Exitosa');
+                    toast.success(successfulUpdate);
                     setLote(loteInicial);
-                }).catch(e => feedbackErrors(e));
+                }).catch(e => toast.error(e));
                 setEditingLote(false);
             }
             //-- if is new lote
             else {
                 postLote(newLote).then(res => {
                     addToListaLotes(res.data.data);
-                    showSuccess('Carga Exitosa');
+                    toast.success(successfulLoad);
                     setLote(loteInicial);
-                }).catch(e => feedbackErrors(e));
+                }).catch(e => toast.error((e)));
             }
+        } else { //TODO mostrar campos incorrectos o algo
         }
-        else { //TODO mostrar campos incorrectos o algo
-        } setDialogOpen(false);
+        setDialogOpen(false);
     }
 
     const validarLote = () => {
         const current = new Date();
         const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-        if (lote.cantHormas < 1 ||
-            validator.isBefore(date, lote.fechaElaboracion) ||
-            lote.fechaElaboracion === '' ||
-            lote.codigoQueso === '' ||
-            lote.litrosLeche < 1 ||
-            lote.numeroTina < 1 ||
-            lote.peso < 1) {
-            showWarning('Los datos ingresados no son validos');
+
+        const errors = new Map();
+
+        //todo mover estas constantes a un archivo aparte
+        const fieldFechaElaboracion = "Fecha elaboración"
+        const fieldHormas = "Hormas"
+        const fieldLitrosLeche = "Litros de leche"
+        const fieldNumeroTina = "Número tina"
+        const fieldPeso = "Peso"
+        const fieldQueso = "Código queso"
+
+        const valEmptyFecha = "Debe elegirse una fecha"
+        const valOlderDate = "La fecha no debe ser posterior al día de hoy"
+        const valZeroValue = "No puede ser menor a 1"
+        const valEmptyCodigoQueso = "No puede estar vacío"
+
+        if (lote.fechaElaboracion === '') {
+            errors.set(fieldFechaElaboracion, valEmptyFecha)
+        } else if (validator.isBefore(date, lote.fechaElaboracion)) {
+            errors.set(fieldFechaElaboracion, valOlderDate)
+        }
+
+        if (lote.cantHormas < 1) {
+            errors.set(fieldHormas, valZeroValue)
+        }
+
+        if (lote.litrosLeche < 1) {
+            errors.set(fieldLitrosLeche, valZeroValue)
+        }
+
+        if (lote.numeroTina < 1) {
+            errors.set(fieldNumeroTina, valZeroValue)
+        }
+
+        if (lote.peso < 1) {
+            errors.set(fieldPeso, valZeroValue)
+        }
+
+        if (lote.codigoQueso === '') {
+            errors.set(fieldQueso, valEmptyCodigoQueso)
+        }
+
+
+        if (errors.size > 0) {
+            errors.forEach(function(msg, field) {
+                console.log(`${field}: ${msg}`)
+                toast.error(`${field}: ${msg}`)
+            })
             return false;
         }
         return true;
@@ -119,9 +147,11 @@ const CargarProduccion = () => {
         setListaLotes([...listaLotes, newLote])
     }
 
-    // --- EDIT LOTE METHODS ---
+// --- EDIT LOTE METHODS ---
     const setSelection = (id) => {
-        setLote(listaLotes.filter((o) => { return o.id === id }).pop());
+        setLote(listaLotes.filter((o) => {
+            return o.id === id
+        }).pop());
         setEditingLote(true);
     }
 
@@ -136,55 +166,18 @@ const CargarProduccion = () => {
 
     const handleEliminar = () => {
         deleteLote(lote.id).then(res => {
-            showSuccess('Lote Borrado');
+            toast.success('Lote Borrado');//todo
             const newList = listaLotes.filter((item) => item.id !== lote.id);
             setListaLotes(newList);
-        }).catch(e => feedbackErrors(e));
+        }).catch(e => toast.error(e));//todos
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
     }
 
-    // --- TOAST METHODS ---
-
-    const showWarning = (msg) => {
-        //todo show all warning
-        setWarningMsg(msg);
-        setWarningToast(true);
-    }
-
-    const showError = (msg) => {
-        setErrorMsg(errors[msg]);
-        setErrorToast(true);
-    }
-
-    const showSuccess = (msg) => {
-        setSuccessMsg(msg);
-        setSuccessToast(true);
-    }
-
-    const feedbackErrors = (error) => {
-        try {
-            console.log({ error2: error })
-            showError(errors[error.response.status]);
-            if (error.response.status === 422) {
-                console.log(error.message);
-            }
-        } catch {
-            setErrorMsg(error.message);
-            setErrorToast(true);
-        }
-    }
-
-    const closeToast = () => {
-        setSuccessToast(false);
-        setErrorToast(false);
-        setWarningToast(false);
-    }
-
     return (
         <>
-            <Paper style={{ width: '100%', height: '100%', padding: 2 }}>
+            <Paper style={{width: '100%', height: '100%', padding: 2}}>
                 {/* Formulario */}
                 <LoteForm
                     quesos={listaQuesos}
@@ -194,34 +187,36 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     updateLote={onCargar}
-                    deleteLote={eliminarLote} />
+                    deleteLote={eliminarLote}/>
                 <CargarTrazabilidadDialog
                     open={dialogOpen}
-                    onClose={() => { setDialogOpen(false) }}
+                    onClose={() => {
+                        setDialogOpen(false)
+                    }}
                     lote={lote}
                     updateStateLote={updateStateLote}
                     onSubmit={handleSubmit}
-                    isEditing={isEditingLote} />
+                    isEditing={isEditingLote}/>
                 <EliminarLoteDialog
                     open={eliminarDialog}
                     lote={lote}
                     onClose={() => setEliminarDialog(false)}
-                    onSubmit={handleEliminar} />
+                    onSubmit={handleEliminar}/>
                 {/* Tabla */}
                 <ProduccionGrid
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection} />
-                <FeedbackToast
-                    msgError={errorMsg}
-                    openError={errorToastOpen}
-                    closeError={closeToast}
-                    msgSuccess={successMsg}
-                    openSuccess={successToastOpen}
-                    closeSuccess={closeToast}
-                    msgWarning={warningMsg}
-                    openWarning={warningToastOpen}
-                    closeWarning={closeToast} />
+                    setSelection={setSelection}/>
+                {/*<FeedbackToast*/}
+                {/*    msgError={errorMsg}*/}
+                {/*    openError={errorToastOpen}*/}
+                {/*    closeError={closeToast}*/}
+                {/*    msgSuccess={successMsg}*/}
+                {/*    openSuccess={successToastOpen}*/}
+                {/*    closeSuccess={closeToast}*/}
+                {/*    msgWarning={warningMsg}*/}
+                {/*    openWarning={warningToastOpen}*/}
+                {/*    closeWarning={closeToast} />*/}
             </Paper>
         </>
     );
