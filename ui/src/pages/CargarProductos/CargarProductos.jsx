@@ -6,6 +6,7 @@ import CargarProductoDialog from './CargarProductoDialog';
 import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
 import toast from 'react-hot-toast';
+import {valEmptyField} from "../../messages";
 
 const quesoInicial = {
     id: '',
@@ -22,6 +23,9 @@ const errors = {
 }
 
 const CargarProductos = () => {
+    const fieldCodigo = "Código"
+    const fieldNomenclatura = "Nomenclatura"
+    const fieldTipoQueso = "Tipo queso"
 
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -71,13 +75,29 @@ const CargarProductos = () => {
     }
 
     const validarQueso = () => {
-        if (queso.codigo === '' ||
-            queso.nomenclatura === '' ||
-            queso.tipoQueso === '') {
-            //todo show validacion
-            toast.error('Los datos ingresados no son válidos');
+        const errors = new Map();
+
+        if (queso.codigo === '') {
+            errors.set(fieldCodigo, valEmptyField)
+        }
+
+        if (queso.nomenclatura === '') {
+            errors.set(fieldNomenclatura, valEmptyField)
+        }
+
+        if (queso.tipoQueso === '') {
+            errors.set(fieldTipoQueso, valEmptyField)
+        }
+
+
+        if (errors.size > 0) {
+            errors.forEach(function (msg, field) {
+                console.log(`${field}: ${msg}`)
+                toast.error(`${field}: ${msg}`)
+            })
             return false;
-        } else return true;
+        }
+        return true;
     }
 
     //--- EDIT QUESO METHODS ---
@@ -87,7 +107,7 @@ const CargarProductos = () => {
     }
 
     const openEditarDialog = () => {
-        queso.id === '' ?  toast.error("No se ha seleccionado un producto") :
+        queso.id === '' ? toast.error("No se ha seleccionado un producto") :
             setOpenCargarProducto(true);
     }
 

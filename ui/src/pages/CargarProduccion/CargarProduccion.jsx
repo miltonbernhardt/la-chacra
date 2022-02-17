@@ -8,6 +8,7 @@ import validator from "validator";
 import { useEffect } from "react";
 import EliminarLoteDialog from "./EliminarLoteDialog";
 import toast from 'react-hot-toast';
+import {valEmptyFecha, valEmptyField, valOlderDate, valZeroValue} from "../../messages";
 
 const loteInicial = {
     id: '',
@@ -22,6 +23,19 @@ const loteInicial = {
     loteCuajo: '',
     codigoQueso: ''
 }
+
+//todo mover estas constantes a un archivo aparte
+
+const successfulUpdate = 'Actualización exitosa'
+const successfulLoad = 'Carga exitosa'
+const successfulDelete = 'Lote borrado'
+
+const fieldFechaElaboracion = "Fecha de producción"
+const fieldHormas = "Cantidad de hormas"
+const fieldLitrosLeche = "Litros procesados"
+const fieldNumeroTina = "Número de tina"
+const fieldPeso = "Peso del lote"
+const fieldQueso = "Tipo de queso"
 
 const CargarProduccion = () => {
 
@@ -39,7 +53,10 @@ const CargarProduccion = () => {
             console.log({ quesos: data.data })
             /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
-        }).catch(e => toast.error(e.response ? e : e.message));//todo
+        }).catch(e => {
+            console.error(e)
+            toast.error(e.response ? e : e.message)//todo
+        });
     }
 
     useEffect(() => {
@@ -55,8 +72,7 @@ const CargarProduccion = () => {
         if (validarLote()) setDialogOpen(true);
     }
 
-    const successfulUpdate = 'Actualización exitosa'
-    const successfulLoad = 'Carga exitosa'
+
 
     const handleSubmit = () => {
         const codigoQueso = lote.codigoQueso.label ? lote.codigoQueso.label : lote.codigoQueso;
@@ -93,19 +109,6 @@ const CargarProduccion = () => {
 
         const errors = new Map();
 
-        //todo mover estas constantes a un archivo aparte
-        const fieldFechaElaboracion = "Fecha de elaboración"
-        const fieldHormas = "Cantidad de Hormas"
-        const fieldLitrosLeche = "Litros procesados"
-        const fieldNumeroTina = "Número de tina"
-        const fieldPeso = "Peso del lote"
-        const fieldQueso = "Tipo de queso"
-
-        const valEmptyFecha = "Debe elegirse una fecha"
-        const valOlderDate = "La fecha no debe ser posterior al día de hoy"
-        const valZeroValue = "No puede ser menor a 1"
-        const valEmptyCodigoQueso = "No puede estar vacío"
-
         if (lote.fechaElaboracion === '') {
             errors.set(fieldFechaElaboracion, valEmptyFecha)
         } else if (validator.isBefore(date, lote.fechaElaboracion)) {
@@ -129,7 +132,7 @@ const CargarProduccion = () => {
         }
 
         if (lote.codigoQueso === '') {
-            errors.set(fieldQueso, valEmptyCodigoQueso)
+            errors.set(fieldQueso, valEmptyField)
         }
 
 
@@ -166,10 +169,14 @@ const CargarProduccion = () => {
 
     const handleEliminar = () => {
         deleteLote(lote.id).then(res => {
-            toast.success('Lote Borrado');//todo
+            console.log({res})
+            toast.success(successfulDelete);
             const newList = listaLotes.filter((item) => item.id !== lote.id);
             setListaLotes(newList);
-        }).catch(e => toast.error(e));//todos
+        }).catch(e => {
+            toast.error(e)
+            console.error({e})
+        });//todos
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
