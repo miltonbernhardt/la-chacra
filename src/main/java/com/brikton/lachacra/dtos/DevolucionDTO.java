@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Data
@@ -35,6 +36,7 @@ public class DevolucionDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    @Pattern(regexp = "^[0-9]{12,13}$", message = ValidationMessages.INVALID_FORMAT)
     private String idLoteProducto;
 
     private Long id;

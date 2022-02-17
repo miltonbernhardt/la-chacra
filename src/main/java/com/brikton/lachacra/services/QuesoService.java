@@ -61,7 +61,7 @@ public class QuesoService {
     }
 
     public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException {
-        if (!repository.existsById(dto.getCodigo())) {//todo que pasa si el queso esta dado de bajo? actualizamos o no? yo diria que no (usar el getEntity sino va)
+        if (!repository.existsById(dto.getCodigo())) {
             throw new QuesoNotFoundException();
         }
 

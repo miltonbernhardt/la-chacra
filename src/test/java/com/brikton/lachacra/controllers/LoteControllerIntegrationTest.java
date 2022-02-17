@@ -109,25 +109,25 @@ public class LoteControllerIntegrationTest {
     @Test
     void Get__Bad_ID() throws JsonProcessingException {
         HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> restTemplate.getForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.getForEntity(baseUrl.concat("1233"), SuccessfulResponse.class)
         );
 
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
-        assertEquals(path.concat("0"), response.getPath());
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
+        assertEquals(path.concat("1233"), response.getPath());
     }
 
     @Test
     void Get__Lote_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("1"), SuccessfulResponse.class)
+                HttpClientErrorException.NotFound.class, () -> restTemplate.getForEntity(baseUrl.concat("112233334445"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
-        assertEquals(path.concat("1"), response.getPath());
+        assertEquals(path.concat("112233334445"), response.getPath());
     }
 
     @Test
@@ -440,7 +440,7 @@ public class LoteControllerIntegrationTest {
     @Test
     void Update__Invalid_Fields__Other_Validations() throws JsonProcessingException {
         LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
-        dtoToUpdate.setId("");
+        dtoToUpdate.setId("123");
         dtoToUpdate.setStockLote(1);
         dtoToUpdate.setRendimiento(1d);
         dtoToUpdate.setFechaElaboracion(LocalDate.of(3000, 10, 10));
@@ -463,7 +463,7 @@ public class LoteControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(11, response.getErrors().size());
-        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
         assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("cantHormas"));
         assertEquals(ValidationMessages.CANT_BE_LATER_THAN_TODAY, response.getErrors().get("fechaElaboracion"));
         assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("numeroTina"));
@@ -490,12 +490,12 @@ public class LoteControllerIntegrationTest {
     @Test
     void Delete__Lote_Not_Found() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class)
+                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("1122333344455"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
-        assertEquals(path.concat("1"), response.getPath());
+        assertEquals(path.concat("1122333344455"), response.getPath());
     }
 
     @Test
@@ -507,7 +507,7 @@ public class LoteControllerIntegrationTest {
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
-        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
         assertEquals(path.concat("0"), response.getPath());
     }
     //todo delete bad id x2

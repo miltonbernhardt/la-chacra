@@ -4,10 +4,7 @@ import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
@@ -15,6 +12,7 @@ public class LoteUpdateDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    @Pattern(regexp = "^[0-9]{12,13}$", message = ValidationMessages.INVALID_FORMAT) //todo test
     private String id;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)

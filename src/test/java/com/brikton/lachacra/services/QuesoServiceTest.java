@@ -112,7 +112,7 @@ public class QuesoServiceTest {
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
 
-        when(repository.existsById("001")).thenReturn(true);
+        when(repository.getById("001")).thenReturn(mockQueso);
         when(repository.save(mockQueso)).thenReturn(mockQueso);
         QuesoDTO quesoActual = quesoService.save(quesoExpected);
         assertEquals(quesoExpected, quesoActual);
@@ -141,9 +141,11 @@ public class QuesoServiceTest {
 
     @Test
     void Update__Queso_Not_Exists() {
+        QuesoDTO dto = new QuesoDTO();
+        dto.setCodigo("001");
         when(repository.existsById("001")).thenReturn(false);
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.update(any(QuesoDTO.class))
+                QuesoNotFoundException.class, () -> quesoService.update(dto)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
