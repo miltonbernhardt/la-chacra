@@ -207,16 +207,6 @@ const CargarProduccion = () => {
                     quesos={listaQuesos}
                     produccion={listaLotes}
                     setSelection={setSelection} />
-                {/*<FeedbackToast*/}
-                {/*    msgError={errorMsg}*/}
-                {/*    openError={errorToastOpen}*/}
-                {/*    closeError={closeToast}*/}
-                {/*    msgSuccess={successMsg}*/}
-                {/*    openSuccess={successToastOpen}*/}
-                {/*    closeSuccess={closeToast}*/}
-                {/*    msgWarning={warningMsg}*/}
-                {/*    openWarning={warningToastOpen}*/}
-                {/*    closeWarning={closeToast} />*/}
             </Paper>
         </>
     );

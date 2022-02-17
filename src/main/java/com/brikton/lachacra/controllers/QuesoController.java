@@ -41,7 +41,6 @@ public class QuesoController {
 
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<QuesoDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 

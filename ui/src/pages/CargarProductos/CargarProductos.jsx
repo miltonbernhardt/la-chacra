@@ -1,11 +1,11 @@
-import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
+import {Button, ButtonGroup, Grid, Typography} from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useEffect, useState } from "react";
-import FeedbackToast from "../../components/FeedbackToast";
-import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
+import {useEffect, useState} from "react";
+import {deleteQueso, getAllQuesos, postQueso, putQueso} from "../../services/RestServices";
 import CargarProductoDialog from './CargarProductoDialog';
 import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
+import toast from 'react-hot-toast';
 
 const quesoInicial = {
     id: '',
@@ -30,16 +30,9 @@ const CargarProductos = () => {
     const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
-    // States for feedback
-    const [successMsg, setSucsessMsg] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
-    const [warningMsg, setWarningMsg] = useState('');
-    const [successToastOpen, setSuccessToast] = useState(false);
-    const [errorToastOpen, setErrorToast] = useState(false);
-    const [warningToastOpen, setWarningToast] = useState(false);
-
-
-    useEffect(() => { fetchQuesos() }, []);
+    useEffect(() => {
+        fetchQuesos()
+    }, []);
 
     const fetchQuesos = () => {
         getAllQuesos().then(quesos => {
@@ -57,7 +50,7 @@ const CargarProductos = () => {
     }
 
     const updateStateQueso = (attribute, value) => {
-        const newQueso = { ...queso, [attribute]: value };
+        const newQueso = {...queso, [attribute]: value};
         setQueso(newQueso);
     }
 
@@ -65,13 +58,12 @@ const CargarProductos = () => {
         if (validarQueso()) {
             if (queso.id === '') {
                 postQueso(queso).then((response) => {
-                    showSuccess(response.data.message);
+                    toast.success(response.data.message);
                     fetchQuesos();
                 }).catch(e => feedbackErrors(e));
-            }
-            else
+            } else
                 putQueso(queso).then((response) => {
-                    showSuccess(response.data.message);
+                    toast.success(response.data.message);
                     fetchQuesos();
                 }).catch(e => feedbackErrors(e));
         }
@@ -82,10 +74,10 @@ const CargarProductos = () => {
         if (queso.codigo === '' ||
             queso.nomenclatura === '' ||
             queso.tipoQueso === '') {
-            showWarning('Los datos ingresados no son válidos');
+            //todo show validacion
+            toast.error('Los datos ingresados no son válidos');
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
     //--- EDIT QUESO METHODS ---
@@ -95,74 +87,53 @@ const CargarProductos = () => {
     }
 
     const openEditarDialog = () => {
-        queso.id === '' ? showWarning("No se ha seleccionado un producto") :
+        queso.id === '' ?  toast.error("No se ha seleccionado un producto") :
             setOpenCargarProducto(true);
     }
 
     const openEliminarDialog = () => {
-        queso.id === '' ? showWarning("No se ha seleccionado un producto") :
+        queso.id === '' ? toast.error("No se ha seleccionado un producto") :
             setOpenEliminarProducto(true);
     }
 
     const setSelection = (id) => {
-        setQueso(listaQuesos.filter((o) => { return o.id === id }).pop());
+        setQueso(listaQuesos.filter((o) => {
+            return o.id === id
+        }).pop());
     }
 
     const onDelete = () => {
         setOpenEliminarProducto(false);
         deleteQueso(queso.codigo)
             .then((response) => {
-                showSuccess(response.data.message);
+                toast.success(response.data.message);
                 fetchQuesos()
             })
             .catch(e => feedbackErrors(e));
     }
 
-    //--- FEEDBACK METHODS ---
-    const showWarning = (msg) => {
-        setWarningMsg(msg);
-        setWarningToast(true);
-    }
-
-    const showError = (msg) => {
-        setErrorMsg(errors[msg]);
-        setErrorToast(true);
-    }
-
-    const showSuccess = (msg) => {
-        setSucsessMsg(msg);
-        setSuccessToast(true);
-    }
-
     const feedbackErrors = (error) => {
         try {
-            showError(errors[error.response.status]);
+            toast.error(errors[error.response.status]);
             if (error.response.status === 422) {
                 console.log(error.message);
             }
         } catch {
-            setErrorMsg(error.message);
-            setErrorToast(true);
+            toast.error(error.message)
         }
     }
 
-    const closeToast = () => {
-        setSuccessToast(false);
-        setErrorToast(false);
-        setWarningToast(false);
-    }
-
     return (
-        <Paper style={{ width: '100%', height: '100%', padding: 2 }}>
+        <Paper style={{width: '100%', height: '100%', padding: 2}}>
             <Grid container columns={2} justifyContent="space-between" padding={2}>
-                <Grid item >
+                <Grid item>
                     <Typography variant="h6">Productos</Typography>
                 </Grid>
-                <Grid item >
+                <Grid item>
                     <ButtonGroup variant="contained">
                         <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
                         <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
-                        <Button onClick={openCargarDialog} >Cargar Producto</Button>
+                        <Button onClick={openCargarDialog}>Cargar Producto</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>
@@ -177,22 +148,11 @@ const CargarProductos = () => {
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
-                onBorrar={onDelete} />
+                onBorrar={onDelete}/>
             <ProductosGrid
                 listaQuesos={listaQuesos}
-                setSelection={setSelection} />
-            <FeedbackToast
-                msgError={errorMsg}
-                openError={errorToastOpen}
-                closeError={closeToast}
-                msgSuccess={successMsg}
-                openSuccess={successToastOpen}
-                closeSuccess={closeToast}
-                msgWarning={warningMsg}
-                openWarning={warningToastOpen}
-                closeWarning={closeToast}
-            />
-        </Paper >
+                setSelection={setSelection}/>
+        </Paper>
     );
 }
 
