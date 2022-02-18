@@ -61,7 +61,10 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso}) => {
     }, [quesoForm.codigo, quesoForm.nomenclatura, quesoForm.tipoQueso]);
 
     const onCargar = useCallback(() => {
-        if (validateQueso()) onSubmit(quesoForm);
+        if (validateQueso()) {
+            onSubmit(quesoForm);
+            setQuesoForm(quesoInicial)
+        }
     }, [validateQueso, onSubmit, quesoForm]);
 
     return (
