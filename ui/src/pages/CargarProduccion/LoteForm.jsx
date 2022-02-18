@@ -3,6 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from 'react-hot-toast';
 import validator from "validator";
 import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
+import * as message from "../../messages";
+import * as field from "../../fields";
+import { toastValidationErrors } from "../../fields";
 
 const loteInicial = {
     id: '',
@@ -38,7 +41,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
         if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
     }, [updateStateLote])
 
-    const onCargar = () => { if (validarLote()) setDialogOpen(true); }
+    const onCargar = () => { if (validateLote()) setDialogOpen(true); }
 
     const onCloseDialog = useCallback(() => setDialogOpen(false), []);
 
@@ -51,68 +54,47 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
             ['loteCalcio']: trazabilidadLote.loteCalcio,
             ['loteCuajo']: trazabilidadLote.loteCuajo
         }
-        if (validarLote()) {
+        if (validateLote()) {
             handleSubmit(newLote);
             setLoteForm(loteInicial);
         }
         setDialogOpen(false);
     }
 
-    const validarLote = () => {
+    const validateLote = () => {
         const current = new Date();
         const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
 
         const errors = new Map();
 
-        //todo mover estas constantes a un archivo aparte
-        const fieldFechaElaboracion = "Fecha de elaboración"
-        const fieldHormas = "Cantidad de Hormas"
-        const fieldLitrosLeche = "Litros procesados"
-        const fieldNumeroTina = "Número de tina"
-        const fieldPeso = "Peso del lote"
-        const fieldQueso = "Tipo de queso"
+        if (loteForm.codigoQueso === '')
+            errors.set(field.queso, message.valEmptyField)
 
-        const valEmptyFecha = "Debe elegirse una fecha"
-        const valOlderDate = "La fecha no debe ser posterior al día de hoy"
-        const valZeroValue = "No puede ser menor a 1"
-        const valEmptyCodigoQueso = "No puede estar vacío"
+        if (loteForm.litrosLeche < 1)
+            errors.set(field.litrosLeche, message.valZeroValue)
 
-        if (loteForm.fechaElaboracion === '') {
-            errors.set(fieldFechaElaboracion, valEmptyFecha)
-        } else if (validator.isBefore(date, loteForm.fechaElaboracion)) {
-            errors.set(fieldFechaElaboracion, valOlderDate)
-        }
+        if (loteForm.numeroTina < 1)
+            errors.set(field.numeroTina, message.valZeroValue)
 
-        if (loteForm.cantHormas < 1) {
-            errors.set(fieldHormas, valZeroValue)
-        }
+        if (loteForm.cantHormas < 1)
+            errors.set(field.cantidadHormas, message.valZeroValue)
 
-        if (loteForm.litrosLeche < 1) {
-            errors.set(fieldLitrosLeche, valZeroValue)
-        }
+        if (loteForm.peso < 1)
+            errors.set(field.peso, message.valZeroValue)
 
-        if (loteForm.numeroTina < 1) {
-            errors.set(fieldNumeroTina, valZeroValue)
-        }
-
-        if (loteForm.peso < 1) {
-            errors.set(fieldPeso, valZeroValue)
-        }
-
-        if (loteForm.codigoQueso === '') {
-            errors.set(fieldQueso, valEmptyCodigoQueso)
-        }
-
+        if (loteForm.fechaElaboracion === '')
+            errors.set(field.fechaElaboracion, message.valEmptyFecha)
+        else if (validator.isBefore(date, loteForm.fechaElaboracion))
+            errors.set(field.fechaElaboracion, message.valOlderDate)
 
         if (errors.size > 0) {
-            errors.forEach(function (msg, field) {
-                console.log(`${field}: ${msg}`)
-                toast.error(`${field}: ${msg}`)
-            })
+            console.error({ errors })
+            toastValidationErrors(errors)
             return false;
         }
         return true;
     }
+
     // --- VARIABLES ---
     const trazabilidad = useCallback(() => {
         return {

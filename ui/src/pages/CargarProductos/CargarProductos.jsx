@@ -1,14 +1,11 @@
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from "react";
-import FeedbackToast from "../../components/FeedbackToast";
+import toast from 'react-hot-toast';
 import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
 import CargarProductoDialog from './CargarProductoDialog';
-import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
-import toast from 'react-hot-toast';
-import * as message from "../../messages";
-import {toastValidationErrors} from "../../fields";
+import ProductosGrid from './ProductosGrid';
 
 const quesoInicial = {
     id: '',
@@ -33,15 +30,6 @@ const CargarProductos = () => {
     const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
-    // States for feedback
-    const [successMsg, setSucsessMsg] = useState('');
-    const [errorMsg, setErrorMsg] = useState('');
-    const [warningMsg, setWarningMsg] = useState('');
-    const [successToastOpen, setSuccessToast] = useState(false);
-    const [errorToastOpen, setErrorToast] = useState(false);
-    const [warningToastOpen, setWarningToast] = useState(false);
-
-
     useEffect(() => { fetchQuesos() }, []);
 
     const fetchQuesos = () => {
@@ -62,13 +50,11 @@ const CargarProductos = () => {
     const onSubmit = (quesoSubmit) => {
         if (quesoSubmit.id === '') {
             postQueso(quesoSubmit).then((response) => {
-                showSuccess(response.data.message);
                 fetchQuesos();
             }).catch(e => feedbackErrors(e));
         }
         else
             putQueso(quesoSubmit).then((response) => {
-                showSuccess(response.data.message);
                 fetchQuesos();
             }).catch(e => feedbackErrors(e));
         setOpenCargarProducto(false);
@@ -142,7 +128,7 @@ const CargarProductos = () => {
                 onBorrar={onDelete} />
             <ProductosGrid
                 listaQuesos={listaQuesos}
-                setSelection={setSelection}/>
+                setSelection={setSelection} />
         </Paper>
     );
 }

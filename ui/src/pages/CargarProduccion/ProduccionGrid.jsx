@@ -64,7 +64,7 @@ const ProduccionGrid = ({ produccion, quesos, setSelection }) => {
             },
 
         ]
-    }, [produccion]);
+    }, [quesos]);
 
     return (
         <Box height={600}

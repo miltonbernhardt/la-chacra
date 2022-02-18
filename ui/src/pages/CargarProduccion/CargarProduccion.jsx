@@ -5,13 +5,6 @@ import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/Rest
 import EliminarLoteDialog from "./EliminarLoteDialog";
 import LoteForm from "./LoteForm";
 import ProduccionGrid from "./ProduccionGrid";
-import validator from "validator";
-import {useEffect} from "react";
-import EliminarLoteDialog from "./EliminarLoteDialog";
-import toast from 'react-hot-toast';
-import * as message from "../../messages";
-import * as field from "../../fields";
-import {toastValidationErrors} from "../../fields";
 
 const loteInicial = {
     id: '',
@@ -54,33 +47,28 @@ const CargarProduccion = () => {
         setLote(newLote);
     }, [lote]);
 
-    const successfulUpdate = 'Actualización exitosa'
-    const successfulLoad = 'Carga exitosa'
-
     const handleSubmit = (newLote) => {
         const codigoQueso = newLote.codigoQueso.label ? newLote.codigoQueso.label : newLote.codigoQueso;
         const loteSubmit = { ...newLote, ['codigoQueso']: codigoQueso };
         //-- if is editing
         if (isEditingLote) {
-            putLote(loteSubmit).then(res => {
+            putLote(loteSubmit).then(({ data }) => {
                 //-- update list
                 const newList = listaLotes.filter((item) => item.id !== lote.id);
-                setListaLotes([...newList, res.data.data]);
+                setListaLotes([...newList, data]);
                 setLote(loteInicial);
-            }).catch(e => toast.error(e));
+            })
+                .catch(e => console.error(e.message));
             setEditingLote(false);
         }
         //-- if is new lote
         else {
-            postLote(loteSubmit).then(res => {
-                addToListaLotes(res.data.data);
+            postLote(loteSubmit).then(({ data }) => {
+                setListaLotes([...listaLotes, data]);
                 setLote(loteInicial);
-            }).catch(e => toast.error((e)));
+            })
+                .catch(e => console.error(e.message));
         }
-    }
-
-    const addToListaLotes = (newLote) => {
-        setListaLotes([...listaLotes, newLote])
     }
 
     // --- EDIT LOTE METHODS ---
@@ -102,10 +90,9 @@ const CargarProduccion = () => {
 
     const handleEliminar = useCallback(() => {
         deleteLote(lote.id).then(res => {
-            toast.success('Lote Borrado');//todo
             const newList = listaLotes.filter((item) => item.id !== lote.id);
             setListaLotes(newList);
-        }).catch(e => toast.error(e));//todos
+        }).catch(e => console.error(e.message));
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
@@ -146,7 +133,7 @@ const CargarProduccion = () => {
                 <ProduccionGrid
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             </Paper>
         </>
     );
