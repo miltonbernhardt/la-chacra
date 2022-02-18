@@ -1,12 +1,66 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useCallback } from 'react';
+import toast from 'react-hot-toast';
+const quesoInicial = {
+    id: '',
+    codigo: '',
+    tipoQueso: '',
+    nomenclatura: ''
+}
 
-const CargarProductoDialog = ({ open, onClose, onSubmit, queso, updateStateQueso }) => {
+const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
+
+    const [quesoForm, setQuesoForm] = useState(quesoInicial);
+
+    useEffect(() => setQuesoForm(queso), [queso]);
 
     const handleChange = evt => {
-        const nombreAtributo = evt.target.name;
-        const valorAtributo = evt.target.value;
-        if (evt.target.validity.valid) updateStateQueso(nombreAtributo, valorAtributo);
+        const attribute = evt.target.name;
+        const value = evt.target.value;
+        if (evt.target.validity.valid) {
+            const newQueso = { ...quesoForm, [attribute]: value };
+            setQuesoForm(newQueso);
+        };
     }
+
+
+    const validar = useCallback(() => {
+        const errors = new Map();
+
+        //todo mover estas constantes a un archivo aparte
+        const fieldTipoQueso = "Nombre"
+        const fieldCodigo = "Código"
+        const fieldNomenclatura = "Nomenclatura"
+
+        const valEmpty = "No puede estar vacío"
+
+        if (quesoForm.tipoQueso === '') {
+            errors.set(fieldTipoQueso, valEmpty)
+        }
+
+        if (quesoForm.nomenclatura === '') {
+            errors.set(fieldNomenclatura, valEmpty)
+        }
+
+        if (quesoForm.codigo === '') {
+            errors.set(fieldCodigo, valEmpty)
+        }
+
+        if (errors.size > 0) {
+            errors.forEach(function (msg, field) {
+                console.log(`${field}: ${msg}`)
+                toast.error(`${field}: ${msg}`)
+            })
+            return false;
+        }
+        return true;
+    }, [quesoForm]);
+
+    const onCargar = useCallback(() => {
+        if (validar()) onSubmit(quesoForm);
+    }, [validar, onSubmit, quesoForm]);
 
     return (
         <>
@@ -24,7 +78,7 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso, updateStateQueso
                                 label="Nombre"
                                 fullWidth
                                 variant="outlined"
-                                value={queso.tipoQueso}
+                                value={quesoForm.tipoQueso}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -35,7 +89,7 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso, updateStateQueso
                                 label="Nomenclatura"
                                 fullWidth
                                 variant="outlined"
-                                value={queso.nomenclatura}
+                                value={quesoForm.nomenclatura}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -45,17 +99,18 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso, updateStateQueso
                                 label="Código"
                                 fullWidth
                                 variant="outlined"
-                                value={queso.codigo}
+                                value={quesoForm.codigo}
                                 onChange={handleChange} />
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onSubmit}>Cargar Producto</Button>
+                    <Button onClick={onCargar}>Cargar Producto</Button>
                 </DialogActions>
             </Dialog>
-        </>);
+        </>
+    );
 }
 
 export default CargarProductoDialog;

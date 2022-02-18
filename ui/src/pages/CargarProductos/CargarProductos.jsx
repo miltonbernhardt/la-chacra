@@ -1,7 +1,8 @@
-import {Button, ButtonGroup, Grid, Typography} from '@mui/material';
+import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import {useEffect, useState} from "react";
-import {deleteQueso, getAllQuesos, postQueso, putQueso} from "../../services/RestServices";
+import { useEffect, useState } from "react";
+import FeedbackToast from "../../components/FeedbackToast";
+import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
 import CargarProductoDialog from './CargarProductoDialog';
 import ProductosGrid from './ProductosGrid';
 import EliminarProductoDialog from './EliminarProductoDialog';
@@ -24,9 +25,6 @@ const errors = {
 }
 
 const CargarProductos = () => {
-    const fieldCodigo = "Código"
-    const fieldNomenclatura = "Nomenclatura"
-    const fieldTipoQueso = "Tipo queso"
 
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -35,9 +33,16 @@ const CargarProductos = () => {
     const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
-    useEffect(() => {
-        fetchQuesos()
-    }, []);
+    // States for feedback
+    const [successMsg, setSucsessMsg] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+    const [warningMsg, setWarningMsg] = useState('');
+    const [successToastOpen, setSuccessToast] = useState(false);
+    const [errorToastOpen, setErrorToast] = useState(false);
+    const [warningToastOpen, setWarningToast] = useState(false);
+
+
+    useEffect(() => { fetchQuesos() }, []);
 
     const fetchQuesos = () => {
         getAllQuesos().then(quesos => {
@@ -54,46 +59,19 @@ const CargarProductos = () => {
         }).catch(e => feedbackErrors(e));
     }
 
-    const updateStateQueso = (attribute, value) => {
-        const newQueso = {...queso, [attribute]: value};
-        setQueso(newQueso);
-    }
-
-    const onSubmit = () => {
-        if (validarQueso()) {
-            if (queso.id === '') {
-                postQueso(queso).then((response) => {
-                    toast.success(response.data.message);
-                    fetchQuesos();
-                }).catch(e => feedbackErrors(e));
-            } else {
-                putQueso(queso).then((response) => {
-                    toast.success(response.data.message);
-                    fetchQuesos();
-                }).catch(e => feedbackErrors(e));
-            }
+    const onSubmit = (quesoSubmit) => {
+        if (quesoSubmit.id === '') {
+            postQueso(quesoSubmit).then((response) => {
+                showSuccess(response.data.message);
+                fetchQuesos();
+            }).catch(e => feedbackErrors(e));
         }
+        else
+            putQueso(quesoSubmit).then((response) => {
+                showSuccess(response.data.message);
+                fetchQuesos();
+            }).catch(e => feedbackErrors(e));
         setOpenCargarProducto(false);
-    }
-
-    const validarQueso = () => {
-        const errors = new Map();
-
-        if (queso.codigo === '')
-            errors.set(fieldCodigo, message.valEmptyField)
-
-        if (queso.nomenclatura === '')
-            errors.set(fieldNomenclatura,  message.valEmptyField)
-
-        if (queso.tipoQueso === '')
-            errors.set(fieldTipoQueso,  message.valEmptyField)
-
-        if (errors.size > 0) {
-            console.error({errors})
-            toastValidationErrors(errors)
-            return false;
-        }
-        return true;
     }
 
     //--- EDIT QUESO METHODS ---
@@ -113,9 +91,7 @@ const CargarProductos = () => {
     }
 
     const setSelection = (id) => {
-        setQueso(listaQuesos.filter((o) => {
-            return o.id === id
-        }).pop());
+        setQueso(listaQuesos.filter((o) => { return o.id === id }).pop());
     }
 
     const onDelete = () => {
@@ -140,16 +116,16 @@ const CargarProductos = () => {
     }
 
     return (
-        <Paper style={{width: '100%', height: '100%', padding: 2}}>
+        <Paper style={{ width: '100%', height: '100%', padding: 2 }}>
             <Grid container columns={2} justifyContent="space-between" padding={2}>
-                <Grid item>
+                <Grid item >
                     <Typography variant="h6">Productos</Typography>
                 </Grid>
-                <Grid item>
+                <Grid item >
                     <ButtonGroup variant="contained">
                         <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
                         <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
-                        <Button onClick={openCargarDialog}>Cargar Producto</Button>
+                        <Button onClick={openCargarDialog} >Cargar Producto</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>
@@ -157,14 +133,13 @@ const CargarProductos = () => {
                 open={isOpenCargarProducto}
                 queso={queso}
                 onClose={() => setOpenCargarProducto(false)}
-                updateStateQueso={updateStateQueso}
                 onSubmit={onSubmit}
             />
             <EliminarProductoDialog
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
-                onBorrar={onDelete}/>
+                onBorrar={onDelete} />
             <ProductosGrid
                 listaQuesos={listaQuesos}
                 setSelection={setSelection}/>
