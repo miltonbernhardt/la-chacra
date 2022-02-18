@@ -165,7 +165,6 @@ const App = () => {
                 </Router>
             </ThemeProvider>
             <Toaster
-
                 containerStyle={{
                     bottom: 30,
                     right: 10,
@@ -177,21 +176,14 @@ const App = () => {
                     },
                     style: {
                         border: '1px solid #713200',
-                        // padding: '4px 8px 4px 8px',
                         width: '100%',
                         fontSize: '0.85em',
                         color: 'black',
                     },
                     success: {
-                        duration: 3000,
+                        duration: 2000,
                         style: {
                             background: '#7ecc8e',
-                        },
-                    },
-                    custom: {
-                        duration: 5000,
-                        style: {
-                            background: '#ff9191',
                         },
                     },
                     error: {

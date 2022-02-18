@@ -30,7 +30,6 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
         setLoteForm(lote)
     }, [lote]);
 
-
     // --- STATES ---
     const updateStateLote = useCallback((attribute, value) => {
         const newLote = {...loteForm, [attribute]: value};
