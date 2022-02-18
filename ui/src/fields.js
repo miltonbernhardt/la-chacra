@@ -27,7 +27,7 @@ export const toastValidationErrors = (errors) => {
     errors.forEach(function (msg, field) {
         let realField = mapFields.get(field)
         realField = realField ?? field
-        toast.error(<><b>{realField}</b>: {msg}</>)
+        toast.error(<><div style={{width: "100%"}}><b>{realField}</b>: {msg}</div></>)
     })
 }
 
