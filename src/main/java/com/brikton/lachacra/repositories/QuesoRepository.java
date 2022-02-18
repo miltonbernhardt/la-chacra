@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface QuesoRepository extends JpaRepository<Queso, String> {
-    @Query("SELECT q FROM Queso q WHERE q.fechaBaja = null")
+    @Query("SELECT q FROM Queso q WHERE q.fechaBaja = null ORDER BY q.codigo")
     List<Queso> findALLQuesos();
 }
