@@ -4,7 +4,6 @@ import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.responses.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +33,11 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundConflictException.class)
     protected ResponseEntity<ErrorResponse> handlerNotFoundConflictException(HttpServletRequest req, NotFoundConflictException ex) {
+        return response(ex, req, HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(value = {QuesoAlreadyExistsException.class})
+    protected ResponseEntity<ErrorResponse> handlerAlreadyExistsConflictException(HttpServletRequest req, QuesoAlreadyExistsException ex) {
         return response(ex, req, HttpStatus.CONFLICT, ex.getMessage());
     }
 

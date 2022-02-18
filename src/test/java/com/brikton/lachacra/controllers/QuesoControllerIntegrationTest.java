@@ -27,7 +27,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -182,49 +181,39 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Save__Already_Exists_Queso__OK() throws JsonProcessingException {
+    void Save__Queso_Already_Exists() throws JsonProcessingException {
         QuesoDTO dtoToSave = new QuesoDTO();
-        dtoToSave.setCodigo("005");
+        dtoToSave.setCodigo("003");
         dtoToSave.setTipoQueso("tipoQueso");
         dtoToSave.setNomenclatura("tip");
         dtoToSave.setStock(10);
 
-        QuesoDTO expectedDTO = new QuesoDTO();
-        expectedDTO.setCodigo("005");
-        expectedDTO.setTipoQueso("tipoQueso");
-        expectedDTO.setNomenclatura("tip");
-        expectedDTO.setStock(10);
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
 
-        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
-
-        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
-        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-        assertNotNull(response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedQuesoString, actualQueso);
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, response.getMessage());
     }
 
     @Test
-    void Save__Over_Queso_Deleted__OK() throws JsonProcessingException {
+    void Save__Over_Queso_Deleted() throws JsonProcessingException {
         QuesoDTO dtoToSave = new QuesoDTO();
         dtoToSave.setCodigo("004");
         dtoToSave.setTipoQueso("tipoQueso");
         dtoToSave.setNomenclatura("tip");
         dtoToSave.setStock(10);
 
-        QuesoDTO expectedDTO = new QuesoDTO();
-        expectedDTO.setCodigo("004");
-        expectedDTO.setTipoQueso("tipoQueso");
-        expectedDTO.setNomenclatura("tip");
-        expectedDTO.setStock(10);
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
 
-        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
-
-        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
-        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-        assertNotNull(response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedQuesoString, actualQueso);
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, response.getMessage());
     }
 
     @Test

@@ -2,10 +2,10 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
+import com.brikton.lachacra.exceptions.QuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class QuesoService {
 
     public Queso getEntity(String codigo) throws QuesoNotFoundException {
         var queso = repository.findById(codigo);
-        if (queso.isPresent() && queso.get().getFechaBaja() == null) //todo usamos la fecha de baja aca? debemos retornar un mensaje de que el queso se elimino?
+        if (queso.isPresent() && queso.get().getFechaBaja() == null)
             return queso.get();
         throw new QuesoNotFoundException();
     }
@@ -41,21 +41,11 @@ public class QuesoService {
         return listaDTO;
     }
 
-    @SneakyThrows//todo
-    public QuesoDTO save(QuesoDTO dto) {
-        //todo deberia retornar un alreadyExists
-
-        var queso = quesoFromDTO(dto);
-
+    public QuesoDTO save(QuesoDTO dto) throws QuesoAlreadyExistsException {
         if (repository.existsById(dto.getCodigo())) {
-            //todo que pasa si el queso esta dado de bajo?
-            var oldQueso = repository.getById(dto.getCodigo());
-            if (oldQueso.getFechaBaja() != null) {
-                queso.setFechaBaja(oldQueso.getFechaBaja());
-            }
+            throw new QuesoAlreadyExistsException();
         }
-
-        //todo trae los precios o sea asocian en otro momento?
+        var queso = quesoFromDTO(dto);
         queso = repository.save(queso);
         return new QuesoDTO(queso);
     }
@@ -64,9 +54,7 @@ public class QuesoService {
         if (!repository.existsById(dto.getCodigo())) {
             throw new QuesoNotFoundException();
         }
-
         var queso = quesoFromDTO(dto);
-
         var oldQueso = repository.getById(dto.getCodigo());
         if (oldQueso.getFechaBaja() != null) {
             queso.setFechaBaja(oldQueso.getFechaBaja());

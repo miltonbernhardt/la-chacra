@@ -5,6 +5,7 @@ import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
+import com.brikton.lachacra.exceptions.QuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
@@ -14,11 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {QuesoService.class})
@@ -99,7 +101,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__OK() {
+    void Save__OK() throws QuesoAlreadyExistsException {
         QuesoDTO quesoExpected = new QuesoDTO();
         quesoExpected.setCodigo("001");
         quesoExpected.setTipoQueso("tipoQueso");
@@ -112,10 +114,24 @@ public class QuesoServiceTest {
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
 
+        when(repository.existsById("001")).thenReturn(false);
         when(repository.getById("001")).thenReturn(mockQueso);
         when(repository.save(mockQueso)).thenReturn(mockQueso);
         QuesoDTO quesoActual = quesoService.save(quesoExpected);
         assertEquals(quesoExpected, quesoActual);
+    }
+
+    @Test
+    void Save__Already_Exists() {
+        QuesoDTO dto = new QuesoDTO();
+        dto.setCodigo("001");
+
+        when(repository.existsById("001")).thenReturn(true);
+
+        QuesoAlreadyExistsException thrown = assertThrows(
+                QuesoAlreadyExistsException.class, () -> quesoService.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
     @Test

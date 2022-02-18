@@ -2,11 +2,8 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
-import com.brikton.lachacra.dtos.LoteDTO;
-import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.exceptions.LoteNotFoundException;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
@@ -45,7 +42,7 @@ public class QuesoController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto) {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto) throws QuesoAlreadyExistsException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_CREATED, service.save(dto)));
     }

@@ -2,10 +2,8 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.SuccessfulMessages;
-import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.services.QuesoService;
 import org.junit.jupiter.api.Test;
@@ -57,7 +55,7 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Save__OK() {
+    void Save__OK() throws QuesoAlreadyExistsException {
         QuesoDTO dtoToSave = new QuesoDTO();
         dtoToSave.setCodigo("001");
         dtoToSave.setTipoQueso("tipoQueso");
@@ -69,6 +67,16 @@ public class QuesoControllerTest {
         String message = requireNonNull(quesoController.save(dtoToSave).getBody()).getMessage();
         assertEquals(dtoToSave, dtoActual);
         assertEquals(SuccessfulMessages.MSG_QUESO_CREATED, message);
+    }
+
+    @Test
+    void Save__Queso_Already_Exists() throws QuesoAlreadyExistsException {
+        QuesoDTO dto = new QuesoDTO();
+        when(quesoService.save(dto)).thenThrow(new QuesoAlreadyExistsException());
+        QuesoAlreadyExistsException thrown = assertThrows(
+                QuesoAlreadyExistsException.class, () -> quesoController.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
     @Test
