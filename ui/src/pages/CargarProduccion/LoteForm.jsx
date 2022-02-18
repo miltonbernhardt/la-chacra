@@ -1,11 +1,11 @@
-import { Autocomplete, Box, Button, ButtonGroup, Container, Grid, TextField, Typography } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {Autocomplete, Box, Button, ButtonGroup, Container, Grid, TextField, Typography} from "@mui/material";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import toast from 'react-hot-toast';
 import validator from "validator";
 import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
 import * as message from "../../messages";
 import * as field from "../../fields";
-import { toastValidationErrors } from "../../fields";
+import {toastValidationErrors} from "../../fields";
 
 const loteInicial = {
     id: '',
@@ -21,17 +21,19 @@ const loteInicial = {
     codigoQueso: ''
 }
 
-const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit }) => {
+const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
 
     const [loteForm, setLoteForm] = useState({});
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    useEffect(() => { setLoteForm(lote) }, [lote]);
+    useEffect(() => {
+        setLoteForm(lote)
+    }, [lote]);
 
 
     // --- STATES ---
     const updateStateLote = useCallback((attribute, value) => {
-        const newLote = { ...loteForm, [attribute]: value };
+        const newLote = {...loteForm, [attribute]: value};
         setLoteForm(newLote);
     }, [loteForm]);
 
@@ -41,7 +43,9 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
         if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
     }, [updateStateLote])
 
-    const onCargar = () => { if (validateLote()) setDialogOpen(true); }
+    const onCargar = () => {
+        if (validateLote()) setDialogOpen(true);
+    }
 
     const onCloseDialog = useCallback(() => setDialogOpen(false), []);
 
@@ -88,7 +92,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
             errors.set(field.fechaElaboracion, message.valOlderDate)
 
         if (errors.size > 0) {
-            console.error({ errors })
+            console.error(errors)
             toastValidationErrors(errors)
             return false;
         }
@@ -105,8 +109,12 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
         }
     }, [loteForm]);
 
-    const labelCargar = useMemo(() => { return isEditingLote ? 'Actualizar' : 'Cargar Lote' }, [isEditingLote]);
-    const colorCargar = useMemo(() => { return isEditingLote ? 'warning' : 'primary' }, [isEditingLote]);
+    const labelCargar = useMemo(() => {
+        return isEditingLote ? 'Actualizar' : 'Cargar Lote'
+    }, [isEditingLote]);
+    const colorCargar = useMemo(() => {
+        return isEditingLote ? 'warning' : 'primary'
+    }, [isEditingLote]);
 
     return (
         <>
@@ -125,7 +133,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label="Tipo de queso" />
+                            label="Tipo de queso"/>
                     )}
                     value={loteForm.codigoQueso}
                     onChange={(evt, newValue) => {
@@ -139,7 +147,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                             return (option.label === value)
                         }
                         ;
-                    }} />
+                    }}/>
             </Grid>
             <Grid item xs={12} sm={8}>
                 <TextField
@@ -163,7 +171,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                     type="number"
                     variant="outlined"
                     value={loteForm.numeroTina}
-                    onChange={handleChange} />
+                    onChange={handleChange}/>
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -174,7 +182,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                     type="number"
                     variant="outlined"
                     value={loteForm.cantHormas}
-                    onChange={handleChange} />
+                    onChange={handleChange}/>
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -185,7 +193,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                     type="number"
                     variant="outlined"
                     value={loteForm.peso}
-                    onChange={handleChange} />
+                    onChange={handleChange}/>
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -199,7 +207,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                         shrink: true,
                     }}
                     value={loteForm.fechaElaboracion}
-                    onChange={handleChange} />
+                    onChange={handleChange}/>
             </Grid>
             <Grid item xs={12} alignSelf="right" mb={0.5}>
                 <ButtonGroup fullWidth variant="contained">
@@ -213,12 +221,12 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                 onClose={onCloseDialog}
                 trazabilidad={trazabilidad}
                 submitLote={submitLote}
-                isEditing={isEditingLote} />
+                isEditing={isEditingLote}/>
         </>
     )
 }
 
-const LoteForm = ({ quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit }) => {
+const LoteForm = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit}) => {
 
     return (
         <Container maxWidth="sm">
@@ -243,7 +251,7 @@ const LoteForm = ({ quesos, lote, onCargar, isEditingLote, cancelEditing, delete
                         isEditingLote={isEditingLote}
                         deleteLote={deleteLote}
                         onCargar={onCargar}
-                        handleSubmit={handleSubmit} />
+                        handleSubmit={handleSubmit}/>
                 </Grid>
             </Box>
         </Container>

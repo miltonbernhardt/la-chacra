@@ -1,7 +1,17 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import { toastValidationErrors } from "../../fields";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    TextField
+} from '@mui/material';
+import {useCallback, useEffect, useState} from 'react';
+import {toastValidationErrors} from "../../fields";
 import * as message from "../../messages";
+import {valMoreThan3Characters} from "../../messages";
 
 const quesoInicial = {
     id: '',
@@ -10,7 +20,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
+const CargarProductoDialog = ({open, onClose, onSubmit, queso}) => {
 
     const fieldCodigo = "Código"
     const fieldNomenclatura = "Nomenclatura"
@@ -23,26 +33,27 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
         const attribute = evt.target.name;
         const value = evt.target.value;
         if (evt.target.validity.valid) {
-            const newQueso = { ...quesoForm, [attribute]: value };
+            const newQueso = {...quesoForm, [attribute]: value};
             setQuesoForm(newQueso);
-        };
+        }
     }
 
-
-    const validar = useCallback(() => {
+    const validateQueso = useCallback(() => {
         const errors = new Map();
-
-        if (quesoForm.codigo === '')
-            errors.set(fieldCodigo, message.valEmptyField)
-
-        if (quesoForm.nomenclatura === '')
-            errors.set(fieldNomenclatura, message.valEmptyField)
 
         if (quesoForm.tipoQueso === '')
             errors.set(fieldTipoQueso, message.valEmptyField)
 
+        if (quesoForm.nomenclatura === '')
+            errors.set(fieldNomenclatura, message.valEmptyField)
+
+        if (quesoForm.codigo === '')
+            errors.set(fieldCodigo, message.valEmptyField)
+        else if (quesoForm.codigo.length > 3)
+            errors.set(fieldCodigo, message.valMoreThan3Characters)
+
         if (errors.size > 0) {
-            console.error({ errors })
+            console.error(errors)
             toastValidationErrors(errors)
             return false;
         }
@@ -50,8 +61,8 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
     }, [quesoForm.codigo, quesoForm.nomenclatura, quesoForm.tipoQueso]);
 
     const onCargar = useCallback(() => {
-        if (validar()) onSubmit(quesoForm);
-    }, [validar, onSubmit, quesoForm]);
+        if (validateQueso()) onSubmit(quesoForm);
+    }, [validateQueso, onSubmit, quesoForm]);
 
     return (
         <>
@@ -62,7 +73,7 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
                         Ingrese los datos del producto
                     </DialogContentText>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="tipoQueso"
                                 name="tipoQueso"
@@ -73,7 +84,7 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
                                 onChange={handleChange}
                             />
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="nomenclatura"
                                 name="nomenclatura"
@@ -81,9 +92,9 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
                                 fullWidth
                                 variant="outlined"
                                 value={quesoForm.nomenclatura}
-                                onChange={handleChange} />
+                                onChange={handleChange}/>
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="codigo"
                                 name="codigo"
@@ -91,7 +102,7 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
                                 fullWidth
                                 variant="outlined"
                                 value={quesoForm.codigo}
-                                onChange={handleChange} />
+                                onChange={handleChange}/>
                         </Grid>
                     </Grid>
                 </DialogContent>

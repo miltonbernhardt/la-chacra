@@ -48,7 +48,7 @@ export const POST = async (postfixUrl, data) => {
         .catch(err => {
             const {data, status} = err.response
             console.error({data, status})
-            toastValidationErrors(data)
+            toastValidationErrors(new Map(Object.entries(data.errors)))
             throw new Error(data.message)
         })
 }
@@ -68,7 +68,7 @@ export const PUT = async (postfixUrl, data) => {
         .catch(err => {
             const {data, status} = err.response
             console.error({data, status})
-            toastValidationErrors(data)
+            toastValidationErrors(new Map(Object.entries(data.errors)))
             throw new Error(data.message)
         })
 }
@@ -106,7 +106,7 @@ export const DELETE = async (postfixUrl) => {
         .catch(err => {
             const {data, status} = err.response
             console.error({data, status})
-            toastValidationErrors(data)
+            toastValidationErrors(new Map(Object.entries(data.errors)))
             throw new Error(data.message)
         })
 }

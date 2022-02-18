@@ -6,6 +6,6 @@ public class ValidationMessages {
     public static final String MUST_NOT_EXCEED_3_CHARACTERS = "no debe superar los 3 caracteres";
     public static final String MUST_NOT_EXCEED_6_CHARACTERS = "no debe superar los 6 caracteres";
     public static final String MUST_NOT_EXCEED_255_CHARACTERS = "no debe superar los 255 caracteres";
-    public static final String NOT_FOUND = "no está presente";
+    public static final String NOT_FOUND = "no puede estar vacío";
     public static final String INVALID_FORMAT = "formato inválido";
 }
