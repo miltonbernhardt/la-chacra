@@ -56,36 +56,19 @@ const CargarProductos = () => {
         }).catch(e => feedbackErrors(e));
     }
 
-    const updateStateQueso = (attribute, value) => {
-        const newQueso = { ...queso, [attribute]: value };
-        setQueso(newQueso);
-    }
-
-    const onSubmit = () => {
-        if (validarQueso()) {
-            if (queso.id === '') {
-                postQueso(queso).then((response) => {
-                    showSuccess(response.data.message);
-                    fetchQuesos();
-                }).catch(e => feedbackErrors(e));
-            }
-            else
-                putQueso(queso).then((response) => {
-                    showSuccess(response.data.message);
-                    fetchQuesos();
-                }).catch(e => feedbackErrors(e));
+    const onSubmit = (quesoSubmit) => {
+        if (quesoSubmit.id === '') {
+            postQueso(quesoSubmit).then((response) => {
+                showSuccess(response.data.message);
+                fetchQuesos();
+            }).catch(e => feedbackErrors(e));
         }
+        else
+            putQueso(quesoSubmit).then((response) => {
+                showSuccess(response.data.message);
+                fetchQuesos();
+            }).catch(e => feedbackErrors(e));
         setOpenCargarProducto(false);
-    }
-
-    const validarQueso = () => {
-        if (queso.codigo === '' ||
-            queso.nomenclatura === '' ||
-            queso.tipoQueso === '') {
-            showWarning('Los datos ingresados no son válidos');
-            return false;
-        }
-        else return true;
     }
 
     //--- EDIT QUESO METHODS ---
@@ -170,7 +153,6 @@ const CargarProductos = () => {
                 open={isOpenCargarProducto}
                 queso={queso}
                 onClose={() => setOpenCargarProducto(false)}
-                updateStateQueso={updateStateQueso}
                 onSubmit={onSubmit}
             />
             <EliminarProductoDialog

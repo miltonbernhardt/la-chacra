@@ -1,9 +1,8 @@
 import { Autocomplete, Box, Button, ButtonGroup, Container, Grid, TextField, Typography } from "@mui/material";
-import { useEffect } from "react";
-import { useCallback, useState } from "react";
-import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
-import validator from "validator";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from 'react-hot-toast';
+import validator from "validator";
+import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
 
 const loteInicial = {
     id: '',
@@ -26,6 +25,8 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
 
     useEffect(() => { setLoteForm(lote) }, [lote]);
 
+
+    // --- STATES ---
     const updateStateLote = useCallback((attribute, value) => {
         const newLote = { ...loteForm, [attribute]: value };
         setLoteForm(newLote);
@@ -37,21 +38,11 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
         if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
     }, [updateStateLote])
 
-    const onCargar = () => {
-        if (validarLote()) setDialogOpen(true);
-    }
+    const onCargar = () => { if (validarLote()) setDialogOpen(true); }
 
     const onCloseDialog = useCallback(() => setDialogOpen(false), []);
 
-    const trazabilidad = useCallback(() => {
-        return {
-            loteCultivo: loteForm.loteCultivo,
-            loteColorante: loteForm.loteColorante,
-            loteCalcio: loteForm.loteCalcio,
-            loteCuajo: loteForm.loteCuajo
-        }
-    }, [loteForm]);
-
+    // --- SUBMIT ---
     const submitLote = (trazabilidadLote) => {
         const newLote = {
             ...loteForm,
@@ -122,11 +113,23 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
         }
         return true;
     }
+    // --- VARIABLES ---
+    const trazabilidad = useCallback(() => {
+        return {
+            loteCultivo: loteForm.loteCultivo,
+            loteColorante: loteForm.loteColorante,
+            loteCalcio: loteForm.loteCalcio,
+            loteCuajo: loteForm.loteCuajo
+        }
+    }, [loteForm]);
+
+    const labelCargar = useMemo(() => { return isEditingLote ? 'Actualizar' : 'Cargar Lote' }, [isEditingLote]);
+    const colorCargar = useMemo(() => { return isEditingLote ? 'warning' : 'primary' }, [isEditingLote]);
 
     return (
         <>
             <Grid item xs={12}>
-                <Autocomplete //TODO bug cuando se selecciona queso para editar
+                <Autocomplete //TODO bug queda siempre algo seleccionado
                     id="autocomplete-tipoQueso"
                     name="codigoQueso"
                     options={quesos}
@@ -220,8 +223,7 @@ const Form = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSu
                 <ButtonGroup fullWidth variant="contained">
                     <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
                     <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
-                    <Button onClick={onCargar} disabled={!isEditingLote} color="warning">Actualizar</Button>
-                    <Button onClick={onCargar} disabled={isEditingLote}>Cargar Lote</Button>
+                    <Button onClick={onCargar} color={colorCargar}>{labelCargar}</Button>
                 </ButtonGroup>
             </Grid>
             <CargarTrazabilidadDialog

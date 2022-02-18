@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
-import { useCallback } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 const CargarTrazabilidadDialog = ({ open, onClose, submitLote, isEditing, trazabilidad }) => {
 
@@ -18,6 +17,8 @@ const CargarTrazabilidadDialog = ({ open, onClose, submitLote, isEditing, trazab
     }
 
     const onCargar = () => submitLote(trazabilidadForm);
+
+    const labelCargar = useMemo(() => { return isEditing ? 'Actualizar' : 'Cargar Lote' }, [isEditing]);
 
     return (
         <div>
@@ -72,7 +73,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, submitLote, isEditing, trazab
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onCargar}>{isEditing ? 'Actualizar Lote' : 'Cargar Lote'}</Button>
+                    <Button onClick={onCargar}>{labelCargar}</Button>
                 </DialogActions>
             </Dialog>
         </div>
