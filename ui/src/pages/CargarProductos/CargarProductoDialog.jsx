@@ -11,6 +11,7 @@ import {
 import {useCallback, useEffect, useState, useMemo} from 'react';
 import {toastValidationErrors} from "../../fields";
 import * as message from "../../messages";
+import * as field from "../../fields";
 
 const quesoInicial = {
     id: '',
@@ -21,9 +22,6 @@ const quesoInicial = {
 
 const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) => {
 
-    const fieldCodigo = "Código"
-    const fieldNomenclatura = "Nomenclatura"
-    const fieldTipoQueso = "Tipo queso"
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
     useEffect(() => setQuesoForm(queso), [queso]);
@@ -38,22 +36,22 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) 
     }
 
     const labelCargar = useMemo(() => {
-        return isEditingQueso ? 'Actualizar' : 'Cargar queso'
+        return isEditingQueso ? 'Actualizar queso' : 'Cargar queso'
     }, [isEditingQueso]);
 
     const validateQueso = useCallback(() => {
         const errors = new Map();
 
         if (quesoForm.tipoQueso === '')
-            errors.set(fieldTipoQueso, message.valEmptyField)
+            errors.set(field.tipoQueso, message.valEmptyField)
 
         if (quesoForm.nomenclatura === '')
-            errors.set(fieldNomenclatura, message.valEmptyField)
+            errors.set(field.nomenclatura, message.valEmptyField)
 
         if (quesoForm.codigo === '')
-            errors.set(fieldCodigo, message.valEmptyField)
+            errors.set(field.codigo, message.valEmptyField)
         else if (quesoForm.codigo.length > 3)
-            errors.set(fieldCodigo, message.valMoreThan3Characters)
+            errors.set(field.codigo, message.valMoreThan3Characters)
 
         if (errors.size > 0) {
             console.error(errors)

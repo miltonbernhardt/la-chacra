@@ -22,7 +22,7 @@ const CargarProductos = () => {
 
     // Dialogs
     const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
-    // const [isEditingQueso, setIsEditingQueso] = useState(false);
+    const [isEditingQueso, setIsEditingQueso] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
     useEffect(() => {
@@ -54,6 +54,7 @@ const CargarProductos = () => {
                 .then(() => fetchQuesos())
                 .catch(e => console.error(e.message));
         setOpenCargarProducto(false);
+        setIsEditingQueso(false);
     }
 
     //--- EDIT QUESO METHODS ---
@@ -63,8 +64,17 @@ const CargarProductos = () => {
     }
 
     const openEditarDialog = () => {
-        queso.id === '' ? toast.error(message.errorProductNotSelected) :
+        if (queso.id === '')
+            toast.error(message.errorProductNotSelected)
+        else {
+            setIsEditingQueso(true);
             setOpenCargarProducto(true);
+        }
+    }
+
+    const closeCargarProducto = () => {
+        setOpenCargarProducto(false);
+        setIsEditingQueso(false);
     }
 
     const openEliminarDialog = () => {
@@ -102,9 +112,9 @@ const CargarProductos = () => {
             <CargarProductoDialog
                 open={isOpenCargarProducto}
                 queso={queso}
-                onClose={() => setOpenCargarProducto(false)}
+                onClose={closeCargarProducto}
                 onSubmit={onSubmit}
-                isEditingQueso={isOpenCargarProducto}
+                isEditingQueso={isEditingQueso}
             />
             <EliminarProductoDialog
                 open={isOpenEliminarProducto}

@@ -6,16 +6,22 @@ export const litrosLeche = "Litros procesados"
 export const numeroTina = "Número de tina"
 export const peso = "Peso del lote"
 export const queso = "Tipo de queso"
+export const codigo = "Código"
+export const nomenclatura = "Nomenclatura"
+export const tipoQueso = "Tipo queso"
 
 const backendFields = () => {
     const fields = new Map()
+    fields.set("id", "ID")
     fields.set("fechaElaboracion", fechaElaboracion)
     fields.set("cantHormas", cantidadHormas)
     fields.set("litrosLeche", litrosLeche)
     fields.set("numeroTina", numeroTina)
     fields.set("peso", peso)
     fields.set("codigoQueso", queso)
-    fields.set("id", "ID")
+    fields.set("codigo", codigo)
+    fields.set("nomenclatura", nomenclatura)
+    fields.set("tipoQueso", tipoQueso)
     return fields
 }
 

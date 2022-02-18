@@ -45,12 +45,7 @@ export const POST = async (postfixUrl, data) => {
             toast.success(data.message);
             return {data: data.data}
         })
-        .catch(err => {
-            const {data, status} = err.response
-            console.error({data, status})
-            toastValidationErrors(new Map(Object.entries(data.errors)))
-            throw new Error(data.message)
-        })
+        .catch(err => processResponseError(err))
 }
 
 export const PUT = async (postfixUrl, data) => {
@@ -65,12 +60,7 @@ export const PUT = async (postfixUrl, data) => {
             toast.success(data.message);
             return {data: data.data}
         })
-        .catch(err => {
-            const {data, status} = err.response
-            console.error({data, status})
-            toastValidationErrors(new Map(Object.entries(data.errors)))
-            throw new Error(data.message)
-        })
+        .catch(err => processResponseError(err))
 }
 
 export const GET = async (postfixUrl) => {
@@ -84,11 +74,7 @@ export const GET = async (postfixUrl) => {
             console.info({response: data})
             return {data: data.data}
         })
-        .catch(err => {
-            const {data, status} = err.response
-            console.error({data, status})
-            throw new Error(data.message)
-        })
+        .catch(err => processResponseError(err))
 }
 
 export const DELETE = async (postfixUrl) => {
@@ -103,10 +89,15 @@ export const DELETE = async (postfixUrl) => {
             toast.success(data.message);
             return {data: data.data}
         })
-        .catch(err => {
-            const {data, status} = err.response
-            console.error({data, status})
-            toastValidationErrors(new Map(Object.entries(data.errors)))
-            throw new Error(data.message)
-        })
+        .catch(err => processResponseError(err))
+}
+
+const processResponseError = (err) => {
+    const {data, status} = err.response
+    console.error({data, status})
+    if (data["errors"])
+        toastValidationErrors(new Map(Object.entries(data.errors)))
+    else
+        toast.error(data.message)
+    throw new Error(data.message)
 }
