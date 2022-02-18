@@ -22,6 +22,7 @@ const CargarProductos = () => {
 
     // Dialogs
     const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
+    // const [isEditingQueso, setIsEditingQueso] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
     useEffect(() => {
@@ -103,6 +104,7 @@ const CargarProductos = () => {
                 queso={queso}
                 onClose={() => setOpenCargarProducto(false)}
                 onSubmit={onSubmit}
+                isEditingQueso={isOpenCargarProducto}
             />
             <EliminarProductoDialog
                 open={isOpenEliminarProducto}

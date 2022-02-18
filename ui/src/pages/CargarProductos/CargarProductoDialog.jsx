@@ -8,10 +8,9 @@ import {
     Grid,
     TextField
 } from '@mui/material';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState, useMemo} from 'react';
 import {toastValidationErrors} from "../../fields";
 import * as message from "../../messages";
-import {valMoreThan3Characters} from "../../messages";
 
 const quesoInicial = {
     id: '',
@@ -20,7 +19,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const CargarProductoDialog = ({open, onClose, onSubmit, queso}) => {
+const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) => {
 
     const fieldCodigo = "Código"
     const fieldNomenclatura = "Nomenclatura"
@@ -37,6 +36,10 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso}) => {
             setQuesoForm(newQueso);
         }
     }
+
+    const labelCargar = useMemo(() => {
+        return isEditingQueso ? 'Actualizar' : 'Cargar queso'
+    }, [isEditingQueso]);
 
     const validateQueso = useCallback(() => {
         const errors = new Map();
@@ -111,7 +114,7 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso}) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onCargar}>Cargar Producto</Button>
+                    <Button onClick={onCargar}>{labelCargar}</Button>
                 </DialogActions>
             </Dialog>
         </>
