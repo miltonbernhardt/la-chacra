@@ -1,8 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useCallback } from 'react';
-import toast from 'react-hot-toast';
+import { useCallback, useEffect, useState } from 'react';
+import { toastValidationErrors } from "../../fields";
+import * as message from "../../messages";
+
 const quesoInicial = {
     id: '',
     codigo: '',
@@ -12,6 +12,9 @@ const quesoInicial = {
 
 const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
 
+    const fieldCodigo = "Código"
+    const fieldNomenclatura = "Nomenclatura"
+    const fieldTipoQueso = "Tipo queso"
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
     useEffect(() => setQuesoForm(queso), [queso]);
@@ -29,34 +32,22 @@ const CargarProductoDialog = ({ open, onClose, onSubmit, queso }) => {
     const validar = useCallback(() => {
         const errors = new Map();
 
-        //todo mover estas constantes a un archivo aparte
-        const fieldTipoQueso = "Nombre"
-        const fieldCodigo = "Código"
-        const fieldNomenclatura = "Nomenclatura"
+        if (quesoForm.codigo === '')
+            errors.set(fieldCodigo, message.valEmptyField)
 
-        const valEmpty = "No puede estar vacío"
+        if (quesoForm.nomenclatura === '')
+            errors.set(fieldNomenclatura, message.valEmptyField)
 
-        if (quesoForm.tipoQueso === '') {
-            errors.set(fieldTipoQueso, valEmpty)
-        }
-
-        if (quesoForm.nomenclatura === '') {
-            errors.set(fieldNomenclatura, valEmpty)
-        }
-
-        if (quesoForm.codigo === '') {
-            errors.set(fieldCodigo, valEmpty)
-        }
+        if (quesoForm.tipoQueso === '')
+            errors.set(fieldTipoQueso, message.valEmptyField)
 
         if (errors.size > 0) {
-            errors.forEach(function (msg, field) {
-                console.log(`${field}: ${msg}`)
-                toast.error(`${field}: ${msg}`)
-            })
+            console.error({ errors })
+            toastValidationErrors(errors)
             return false;
         }
         return true;
-    }, [quesoForm]);
+    }, [quesoForm.codigo, quesoForm.nomenclatura, quesoForm.tipoQueso]);
 
     const onCargar = useCallback(() => {
         if (validar()) onSubmit(quesoForm);
