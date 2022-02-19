@@ -63,29 +63,29 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
             </List>
             <Divider />
             <List>
-                <ListItem button component={Link} to="/cargar/produccion">
+                <ListItem button component={Link} to="/cargar/lotes">
                     <ListItemIcon>
                         <AddIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Cargar Producción" />
+                    <ListItemText primary="Cargar lotes" />
                 </ListItem>
                 <ListItem button component={Link} to="/cargar/expedicion">
                     <ListItemIcon>
                         <LocalShippingIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Cargar Expedición" />
+                    <ListItemText primary="Cargar quesos" />
                 </ListItem>
-                <ListItem button component={Link} to="/cargar/productos">
+                <ListItem button component={Link} to="/cargar/quesos">
                     <ListItemIcon>
                         <MenuBookIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Cargar Productos" />
+                    <ListItemText primary="Cargar productos" />
                 </ListItem>
                 <ListItem button component={Link} to="/cargar/precios">
                     <ListItemIcon>
                         <AttachMoneyIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Cargar Precios" />
+                    <ListItemText primary="Cargar precios" />
                 </ListItem>
                 <ListItem button component={Link} to="/clientes">
                     <ListItemIcon>
@@ -101,13 +101,13 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     <ListItemIcon>
                         <TimelineIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Ver Producción" />
+                    <ListItemText primary="Ver producción" />
                 </ListItem>
                 <ListItem button component={Link} to="/ver/litros">
                     <ListItemIcon>
                         <PercentIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Litros Elaborados" />
+                    <ListItemText primary="Litros elaborados" />
                 </ListItem>
                 <ListItem button component={Link} to="/ver/ventas">
                     <ListItemIcon>
@@ -128,7 +128,7 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     <ListItemIcon>
                         <PointOfSaleIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Emitir Remito" />
+                    <ListItemText primary="Emitir remito" />
                 </ListItem>
             </List >
         </Drawer>

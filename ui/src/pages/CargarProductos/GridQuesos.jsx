@@ -1,8 +1,13 @@
-import { Box } from '@mui/system';
-import { Typography, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
+    {
+        field: 'num',
+        headerName: '#',
+        minWidth: 20,
+        flex: 0.15
+    },
     {
         field: 'codigo',
         headerName: 'Código',
@@ -25,14 +30,18 @@ const columns = [
 
 const GridQuesos = ({listaQuesos, setSelection}) => {
     return (
-        <Grid item xs={12} style={{maxHeight: "1100px"}}>
-            <DataGrid
-                style={{minHeight: "500px"}}
-                rows={listaQuesos}
-                rowsPerPageOptions={[]}
-                columns={columns}
-                onCellClick={(params) => setSelection(params.id)}
-            />
+        <Grid item container direction="column" xs={12} spacing={1}>
+            <Grid item xs={12}>
+                <DataGrid
+                    style={{minHeight: "500px"}}
+                    autoHeight={true}
+                    rows={listaQuesos}
+                    rowsPerPageOptions={[15]}
+                    hideFooterPagination
+                    columns={columns}
+                    onCellClick={(params) => setSelection(params.id)}
+                />
+            </Grid>
         </Grid>
     );
 }

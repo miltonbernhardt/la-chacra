@@ -1,12 +1,12 @@
-import {ThemeProvider} from '@emotion/react';
+import { ThemeProvider } from '@emotion/react';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Box, CssBaseline, Typography} from '@mui/material';
+import { Box, CssBaseline, Typography } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import {createTheme, styled} from '@mui/material/styles';
+import { createTheme, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import CargarExpedicion from './pages/CargarExpedicion/CargarExpedicion';
 import CargarProduccion from './pages/CargarProduccion/CargarLote';
 import CargarQuesos from './pages/CargarProductos/CargarQuesos';
@@ -19,7 +19,7 @@ import VerVentas from './pages/Ventas/VerVentas';
 import VerLitrosElaborados from './pages/VerLitrosProducidos/VerLitrosElaborados';
 import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
-import {Toaster} from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 export const themeOptions = {
     palette: {
@@ -104,36 +104,40 @@ const DrawerHeader = styled('div')(({theme}) => ({
     justifyContent: 'flex-end',
 }));
 
-const Toast = () => <Toaster
-    containerStyle={{
-        bottom: 30,
-        right: 10,
-    }}
-    position="bottom-right"
-    toastOptions={{
-        iconTheme: {
-            primary: 'black',
-        },
-        style: {
-            border: '1px solid #713200',
-            width: '100%',
-            fontSize: '0.85em',
-            color: 'black',
-        },
-        success: {
-            duration: 2000,
-            style: {
-                background: '#7ecc8e',
-            },
-        },
-        error: {
-            duration: 5000,
-            style: {
-                background: '#ff9191',
-            },
-        },
-    }}
-/>
+const Toast = () => {
+    return (
+        <Toaster
+            containerStyle={{
+                bottom: 30,
+                right: 10,
+            }}
+            position="bottom-right"
+            toastOptions={{
+                iconTheme: {
+                    primary: 'black',
+                },
+                style: {
+                    border: '1px solid #713200',
+                    width: '100%',
+                    fontSize: '0.85em',
+                    color: 'black',
+                },
+                success: {
+                    duration: 2000,
+                    style: {
+                        background: '#7ecc8e',
+                    },
+                },
+                error: {
+                    duration: 5000,
+                    style: {
+                        background: '#ff9191',
+                    },
+                },
+            }}
+        />
+    )
+}
 
 const App = () => {
     const theme = createTheme(themeOptions);
@@ -180,9 +184,9 @@ const App = () => {
                             <Switch>
                                 <Route exact path="/" component={Home}/>
                                 <Route path="/clientes" component={Clientes}/>
-                                <Route path="/cargar/produccion" component={CargarProduccion}/>
+                                <Route path="/cargar/lotes" component={CargarProduccion}/>
                                 <Route path="/cargar/expedicion" component={CargarExpedicion}/>
-                                <Route path="/cargar/productos" component={CargarQuesos}/>
+                                <Route path="/cargar/quesos" component={CargarQuesos}/>
                                 <Route path="/cargar/precios" component={CargarPrecios}/>
                                 <Route path="/ver/litros" component={VerLitrosElaborados}/>
                                 <Route path="/ver/produccion" component={VerProduccion}/>

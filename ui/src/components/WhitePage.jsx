@@ -1,8 +1,11 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography, ButtonGroup } from '@mui/material';
 
-const WhitePage = ({form, table, children}) => {
+export const PageFormTable = ({form, table, children}) => {
     return (
-        <Grid container spacing={2} padding={2} direction="row"
+        <Grid container
+              direction="row"
+              spacing={2}
+              padding={2}
               style={{
                   minHeight: "92%",
                   maxWidth: "98%",
@@ -24,4 +27,50 @@ const WhitePage = ({form, table, children}) => {
     )
 }
 
-export default WhitePage
+export const WhitePageTable = ({children}) => {
+    return (
+        <Grid container
+              direction="row"
+              padding={2}
+              spacing={2}
+              justifyContent="flex-start"
+              alignItems="flex-start"
+              style={{
+                  minHeight: "92%",
+                  maxWidth: "98%",
+                  backgroundColor: "white",
+                  margin: "1%",
+                  borderRadius: "8px",
+                  boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px',
+                  boxSizing: "border-box",
+              }}>
+            {children}
+        </Grid>
+    )
+}
+
+export const FixedButtons = ({title, children})=>{
+    return (
+        <Grid item container justifyContent="space-between" xs={12} style={
+            {
+                maxWidth: "98%",
+                position: "fixed",
+                bottom: 0,
+                left: "1%",
+                zIndex: 999,
+                width: "100%",
+                backgroundColor: "#FFF",
+                borderStyle: "groove",
+                borderRadius: "4px",
+                borderColor: "#5e5858",
+                borderWidth: "2px",
+                padding: "10px",
+            }
+        }>
+            <Typography variant="h6">{title}</Typography>
+            <ButtonGroup variant="contained">
+                {children}
+            </ButtonGroup>
+        </Grid>
+    )
+}

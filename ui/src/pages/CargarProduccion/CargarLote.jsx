@@ -5,7 +5,7 @@ import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/Rest
 import DialogEliminarLote from "./DialogEliminarLote";
 import FormLote from "./FormLote";
 import GridLotes from "./GridLotes";
-import WhitePage from "../../components/WhitePage";
+import { PageFormTable } from "../../components/WhitePage";
 
 const loteInicial = {
     id: '',
@@ -90,7 +90,7 @@ const CargarProduccion = () => {
     }, [])
 
     const handleEliminar = useCallback(() => {
-        deleteLote(lote.id).then(res => {
+        deleteLote(lote.id).then(() => {
             const newList = listaLotes.filter((item) => item.id !== lote.id);
             setListaLotes(newList);
         }).catch(e => console.error(e.message));
@@ -113,7 +113,7 @@ const CargarProduccion = () => {
     });
 
     return (
-        <WhitePage
+        <PageFormTable
             form={
                 <FormLote
                     quesos={quesosAutocomplete}
@@ -137,7 +137,7 @@ const CargarProduccion = () => {
                 lote={lote}
                 onClose={cancelEliminar}
                 onSubmit={handleEliminar}/>
-        </WhitePage>
+        </PageFormTable>
     )
 }
 

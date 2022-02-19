@@ -7,6 +7,12 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
     const columns = useMemo(() => {
         return [
             {
+                field: 'num',
+                headerName: '#',
+                minWidth: 20,
+                flex: 0.15,
+            },
+            {
                 field: 'fechaElaboracion',
                 headerName: 'Fecha de produccion',
                 type: 'date',
@@ -73,13 +79,13 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                         Producción ingresada
                     </Typography>
                 </Grid>
-                <Grid item xs={12} style={{maxHeight: "1100px"}}>
+                <Grid item xs={12}>
                     <DataGrid
                         style={{minHeight: "500px"}}
                         autoHeight={true}
                         rows={produccion}
                         columns={columns}
-                        rowsPerPageOptions={[]}
+                        rowsPerPageOptions={[15]}
                         onCellDoubleClick={(params) => setSelection(params.id)}
                     />
                 </Grid>
