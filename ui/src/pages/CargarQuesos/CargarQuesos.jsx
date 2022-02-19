@@ -1,5 +1,4 @@
-import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import { Button, Typography, ButtonGroup, Grid } from '@mui/material';
 import { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
@@ -7,7 +6,7 @@ import DialogCargarQueso from './DialogCargarQueso';
 import DialogEliminarQueso from './DialogEliminarQueso';
 import GridQuesos from './GridQuesos';
 import * as message from "../../messages";
-import { FixedButtons, WhitePageTable } from "../../components/WhitePage";
+import { WhitePageTable } from "../../components/WhitePage";
 
 const quesoInicial = {
     id: '',
@@ -31,11 +30,8 @@ const CargarQuesos = () => {
 
     const fetchQuesos = () => {
         getAllQuesos().then(quesos => {
-            let num = 0;
             const listaAux = quesos.data.map((q) => {
-                num++
                 return {
-                    num: num,
                     id: q.codigo, //todo si agrego id se toca aca
                     codigo: q.codigo,
                     nomenclatura: q.nomenclatura,
@@ -104,15 +100,20 @@ const CargarQuesos = () => {
 
     return (
         <WhitePageTable>
-            <FixedButtons title="Productos">
-                <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
-                <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
-                <Button onClick={openCargarDialog}>Cargar Producto</Button>
-            {/*    TODO FIX THIS*/}
-            </FixedButtons>
-            <GridQuesos
-                listaQuesos={listaQuesos}
-                setSelection={setSelection}/>
+            <Grid item container direction="column" xs={12} spacing={2}>
+                <Grid item container justifyContent="space-between" xs={12}>
+                    <Typography variant="h6">Productos</Typography>
+                    <ButtonGroup variant="contained">
+                        <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
+                        <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
+                        <Button onClick={openCargarDialog}>Cargar Producto</Button>
+                    </ButtonGroup>
+                </Grid>
+                <GridQuesos
+                    listaQuesos={listaQuesos}
+                    setSelection={setSelection}/>
+            </Grid>
+
             <DialogCargarQueso
                 isEditarQueso={isEditarQueso}
                 isCargarQueso={isCargarQueso}

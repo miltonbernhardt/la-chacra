@@ -1,4 +1,3 @@
-import { Paper, Grid } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";

@@ -3,12 +3,6 @@ import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
     {
-        field: 'num',
-        headerName: '#',
-        minWidth: 20,
-        flex: 0.15
-    },
-    {
         field: 'codigo',
         headerName: 'Código',
         flex: 1,
@@ -30,18 +24,17 @@ const columns = [
 
 const GridQuesos = ({listaQuesos, setSelection}) => {
     return (
-        <Grid item container direction="column" xs={12} spacing={1}>
-            <Grid item xs={12}>
-                <DataGrid
-                    style={{minHeight: "500px"}}
-                    autoHeight={true}
-                    rows={listaQuesos}
-                    rowsPerPageOptions={[15]}
-                    hideFooterPagination
-                    columns={columns}
-                    onCellClick={(params) => setSelection(params.id)}
-                />
-            </Grid>
+        <Grid item xs={12}>
+            <DataGrid
+                style={{height: "600px"}}
+                autoHeight={true}
+                rows={listaQuesos}
+                rowHeight={42}
+                pageSize={15}
+                rowsPerPageOptions={[15]}
+                columns={columns}
+                onCellClick={(params) => setSelection(params.id)}
+            />
         </Grid>
     );
 }

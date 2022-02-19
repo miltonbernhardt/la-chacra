@@ -48,29 +48,3 @@ export const WhitePageTable = ({children}) => {
         </Grid>
     )
 }
-
-export const FixedButtons = ({title, children})=>{
-    return (
-        <Grid item container justifyContent="space-between" xs={12} style={
-            {
-                maxWidth: "98%",
-                position: "fixed",
-                bottom: 0,
-                left: "1%",
-                zIndex: 999,
-                width: "100%",
-                backgroundColor: "#FFF",
-                borderStyle: "groove",
-                borderRadius: "4px",
-                borderColor: "#5e5858",
-                borderWidth: "2px",
-                padding: "10px",
-            }
-        }>
-            <Typography variant="h6">{title}</Typography>
-            <ButtonGroup variant="contained">
-                {children}
-            </ButtonGroup>
-        </Grid>
-    )
-}

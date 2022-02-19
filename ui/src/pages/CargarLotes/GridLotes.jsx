@@ -75,12 +75,14 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                 </Grid>
                 <Grid item xs={12}>
                     <DataGrid
-                        style={{minHeight: "500px"}}
+                        style={{height: "600px"}}
                         autoHeight={true}
                         rows={produccion}
                         columns={columns}
-                        rowsPerPageOptions={[15]}
                         onCellDoubleClick={(params) => setSelection(params.id)}
+                        rowHeight={42}
+                        pageSize={15}
+                        rowsPerPageOptions={[15]}
                     />
                 </Grid>
             </Grid>
