@@ -73,13 +73,13 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     <ListItemIcon>
                         <LocalShippingIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Cargar quesos" />
+                    <ListItemText primary="Cargar expediciones" />
                 </ListItem>
                 <ListItem button component={Link} to="/cargar/quesos">
                     <ListItemIcon>
                         <MenuBookIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Cargar productos" />
+                    <ListItemText primary="Cargar quesos" />
                 </ListItem>
                 <ListItem button component={Link} to="/cargar/precios">
                     <ListItemIcon>
@@ -91,7 +91,7 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     <ListItemIcon>
                         <PersonIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Clientes" />
+                    <ListItemText primary="CargarClientes" />
                 </ListItem>
 
             </List>

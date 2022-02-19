@@ -1,4 +1,4 @@
-import { Button, Typography, ButtonGroup, Grid } from '@mui/material';
+import { Button } from '@mui/material';
 import { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
@@ -6,7 +6,7 @@ import DialogCargarQueso from './DialogCargarQueso';
 import DialogEliminarQueso from './DialogEliminarQueso';
 import GridQuesos from './GridQuesos';
 import * as message from "../../messages";
-import { WhitePageTable } from "../../components/WhitePage";
+import PageTableButtonPane from "../../components/PageTableButtonPane";
 
 const quesoInicial = {
     id: '',
@@ -99,21 +99,19 @@ const CargarQuesos = () => {
     }
 
     return (
-        <WhitePageTable>
-            <Grid item container direction="column" xs={12} spacing={2}>
-                <Grid item container justifyContent="space-between" xs={12}>
-                    <Typography variant="h6">Productos</Typography>
-                    <ButtonGroup variant="contained">
-                        <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
-                        <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
-                        <Button onClick={openCargarDialog}>Cargar Producto</Button>
-                    </ButtonGroup>
-                </Grid>
+        <PageTableButtonPane
+            title="Productos"
+            buttons={<>
+                <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
+                <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
+                <Button onClick={openCargarDialog}>Cargar Producto</Button>
+            </>}
+            grid={
                 <GridQuesos
                     listaQuesos={listaQuesos}
                     setSelection={setSelection}/>
-            </Grid>
-
+            }
+        >
             <DialogCargarQueso
                 isEditarQueso={isEditarQueso}
                 isCargarQueso={isCargarQueso}
@@ -126,7 +124,7 @@ const CargarQuesos = () => {
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
                 onBorrar={onDelete}/>
-        </WhitePageTable>
+        </PageTableButtonPane>
     );
 }
 

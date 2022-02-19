@@ -4,7 +4,7 @@ import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/Rest
 import DialogEliminarLote from "./DialogEliminarLote";
 import FormLote from "./FormLote";
 import GridLotes from "./GridLotes";
-import { PageFormTable } from "../../components/WhitePage";
+import PageFormTable from "../../components/PageFormTable";
 
 const loteInicial = {
     id: '',
@@ -129,6 +129,7 @@ const CargarProduccion = () => {
                     produccion={listaLotes}
                     setSelection={setSelection}/>
             }
+            titleTable="Producción ingresada"
         >
             <DialogEliminarLote
                 open={eliminarDialog}

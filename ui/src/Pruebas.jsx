@@ -1,15 +1,15 @@
 import { AppBar, Box, CssBaseline, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import Clientes from './Clientes/Clientes'
+import Clientes from './CargarClientes/CargarClientes'
 import CargarPrecios from './Precios/CargarPrecios'
 import EmitirRemito from './Remito/EmitirRemito'
 import VerVentas from './Ventas/VerVentas'
-import CargarProduccion from './CargarLotes/CargarLotes'
-import CargarProductos from './CargarQuesos/CargarQuesos'
+import CargarProduccion from './Lotes/Lotes'
+import CargarProductos from './Quesos/Quesos'
 import VerLitrosElaborados from './VerLitrosProducidos/VerLitrosElaborados'
 import VerProduccion from './VerProduccion/VerProduccion'
-import CargarExpedicion from './CargarExpedicion/CargarExpedicion'
+import CargarExpedicion from './Expedicion/Expedicion'
 import { ThemeProvider, useTheme, createTheme } from '@mui/material/styles';
 
 function TabPanel(props) {

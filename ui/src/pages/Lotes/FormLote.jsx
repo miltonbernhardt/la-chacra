@@ -230,19 +230,16 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
 }
 
 const FormLote = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit}) => {
-
     return (
         <>
-            <Grid item container direction="row" xs={6} spacing={1}>
-                <Form
-                    lote={lote}
-                    quesos={quesos}
-                    cancelEditing={cancelEditing}
-                    isEditingLote={isEditingLote}
-                    deleteLote={deleteLote}
-                    onCargar={onCargar}
-                    handleSubmit={handleSubmit}/>
-            </Grid>
+            <Form
+                lote={lote}
+                quesos={quesos}
+                cancelEditing={cancelEditing}
+                isEditingLote={isEditingLote}
+                deleteLote={deleteLote}
+                onCargar={onCargar}
+                handleSubmit={handleSubmit}/>
         </>
     )
 }

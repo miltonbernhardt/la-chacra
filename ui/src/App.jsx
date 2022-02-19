@@ -7,10 +7,10 @@ import { createTheme, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import CargarExpedicion from './pages/CargarExpedicion/CargarExpedicion';
-import CargarProduccion from './pages/CargarLotes/CargarLote';
-import CargarQuesos from './pages/CargarQuesos/CargarQuesos';
-import Clientes from './pages/Clientes/Clientes';
+import CargarExpedicion from './pages/Expedicion/CargarExpedicion';
+import CargarProduccion from './pages/Lotes/CargarLote';
+import CargarQuesos from './pages/Quesos/CargarQuesos';
+import CargarClientes from './pages/Clientes/CargarClientes';
 import CustomDrawer from './components/CustomDrawer';
 import Home from './components/Home';
 import CargarPrecios from './pages/Precios/CargarPrecios';
@@ -183,7 +183,7 @@ const App = () => {
                             <DrawerHeader/>
                             <Switch>
                                 <Route exact path="/" component={Home}/>
-                                <Route path="/clientes" component={Clientes}/>
+                                <Route path="/clientes" component={CargarClientes}/>
                                 <Route path="/cargar/lotes" component={CargarProduccion}/>
                                 <Route path="/cargar/expedicion" component={CargarExpedicion}/>
                                 <Route path="/cargar/quesos" component={CargarQuesos}/>

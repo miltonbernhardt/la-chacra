@@ -67,25 +67,16 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
     }, [quesos]);
     return (
         <>
-            <Grid item container direction="column" xs={12} spacing={1}>
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Producción ingresada
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <DataGrid
-                        style={{height: "600px"}}
-                        autoHeight={true}
-                        rows={produccion}
-                        columns={columns}
-                        onCellDoubleClick={(params) => setSelection(params.id)}
-                        rowHeight={42}
-                        pageSize={15}
-                        rowsPerPageOptions={[15]}
-                    />
-                </Grid>
-            </Grid>
+            <DataGrid
+                style={{height: "600px"}}
+                autoHeight={true}
+                rows={produccion}
+                columns={columns}
+                onCellDoubleClick={(params) => setSelection(params.id)}
+                rowHeight={42}
+                pageSize={15}
+                rowsPerPageOptions={[15]}
+            />
         </>
     );
 }
