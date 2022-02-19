@@ -140,6 +140,7 @@ public class QuesoServiceTest {
         QuesoDTO dto = new QuesoDTO();
         dto.setCodigo("001");
         dto.setNomenclatura("Q");
+        dto.setTipoQueso("tipo");
 
         when(repository.existsById("001")).thenReturn(false);
         when(repository.existsQuesoByNomenclatura("Q")).thenReturn(true);
