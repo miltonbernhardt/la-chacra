@@ -39,11 +39,44 @@ public class QuesoServiceTest {
 
     @Test
     void Get_All__OK() {
+        Queso mockQueso1 = new Queso();
+        mockQueso1.setId(1L);
+        mockQueso1.setCodigo("001");
+        mockQueso1.setTipoQueso("TIPO_QUESO");
+        mockQueso1.setNomenclatura("TIP1");
+        mockQueso1.setStock(1);
+
+        Queso mockQueso2 = new Queso();
+        mockQueso2.setId(2L);
+        mockQueso2.setCodigo("002");
+        mockQueso2.setTipoQueso("TIPO_QUESO_2");
+        mockQueso2.setNomenclatura("TIP2");
+        mockQueso2.setStock(2);
+
+        QuesoDTO expectedDTO1 = new QuesoDTO();
+        expectedDTO1.setId(1L);
+        expectedDTO1.setCodigo("001");
+        expectedDTO1.setTipoQueso("TIPO_QUESO");
+        expectedDTO1.setNomenclatura("TIP1");
+        expectedDTO1.setStock(1);
+
+        QuesoDTO expectedDTO2 = new QuesoDTO();
+        expectedDTO2.setId(2L);
+        expectedDTO2.setCodigo("002");
+        expectedDTO2.setTipoQueso("TIPO_QUESO_2");
+        expectedDTO2.setNomenclatura("TIP2");
+        expectedDTO2.setStock(2);
+
         List<Queso> listaMock = new ArrayList<>();
-        listaMock.add(mockQueso());
-        listaMock.add(mockQueso());
-        when(repository.findALLQuesos()).thenReturn(listaMock);
-        assertEquals(2, quesoService.getAll().size());
+        listaMock.add(mockQueso1);
+        listaMock.add(mockQueso2);
+        when(repository.findAllQuesos()).thenReturn(listaMock);
+
+        var quesos = quesoService.getAll();
+
+        assertEquals(2, quesos.size());
+        assertEquals(expectedDTO1, quesos.get(0));
+        assertEquals(expectedDTO2, quesos.get(1));
     }
 
     @Test
@@ -225,33 +258,46 @@ public class QuesoServiceTest {
         assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
-//    @Test
-//    void Delete__OK() throws QuesoNotFoundException {
-//        when(repository.findById("001")).thenReturn(Optional.of(mockQueso()));
-//        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-//        String actualID = quesoService.delete("001");
-//        assertEquals("001", actualID);
-//    }
-//
-//    @Test
-//    void Delete__Queso_Already_Deleted() {
-//        var dto = mockQueso();
-//        dto.setFechaBaja(LocalDate.of(2021, 10, 10));
-//        when(repository.findById("001")).thenReturn(Optional.of(dto));
-//        QuesoNotFoundException thrown = assertThrows(
-//                QuesoNotFoundException.class, () -> quesoService.delete("001")
-//        );
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-//    }
-//
-//    @Test
-//    void Delete__Queso_Not_Found() {
-//        when(repository.findById("001")).thenReturn(Optional.empty());
-//        QuesoNotFoundException thrown = assertThrows(
-//                QuesoNotFoundException.class, () -> quesoService.delete("001")
-//        );
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-//    }
+    @Test
+    void Delete__OK() throws QuesoNotFoundException {
+        Queso mockQueso = new Queso();
+        mockQueso.setId(1L);
+        mockQueso.setCodigo("001");
+        mockQueso.setTipoQueso("TIPO_QUESO");
+        mockQueso.setNomenclatura("tip");
+        mockQueso.setStock(1);
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
+        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
+        String actualID = quesoService.delete(1L);
+        assertEquals("001", actualID);
+    }
+
+    @Test
+    void Delete__Queso_Already_Deleted() {
+        Queso mockQueso = new Queso();
+        mockQueso.setId(1L);
+        mockQueso.setCodigo("001");
+        mockQueso.setTipoQueso("TIPO_QUESO");
+        mockQueso.setNomenclatura("tip");
+        mockQueso.setStock(1);
+        mockQueso.setFechaBaja(LocalDate.of(2021, 10, 10));
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Delete__Queso_Not_Found() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
 
     Queso mockQueso() {
         Queso queso = new Queso();

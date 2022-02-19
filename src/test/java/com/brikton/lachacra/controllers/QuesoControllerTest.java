@@ -156,21 +156,21 @@ public class QuesoControllerTest {
         assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
-//    @Test
-//    void Delete__OK() throws QuesoNotFoundException {
-//        when(quesoService.delete("001")).thenReturn("001");
-//        var actualID = Objects.requireNonNull(quesoController.delete("001").getBody()).getData();
-//        assertEquals("001", actualID);
-//    }
-//
-//    @Test
-//    void Delete__Queso_Not_Found() throws QuesoNotFoundException {
-//        when(quesoService.delete("001")).thenThrow(new QuesoNotFoundException());
-//        QuesoNotFoundException thrown = assertThrows(
-//                QuesoNotFoundException.class, () -> quesoController.delete("001")
-//        );
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-//    }
+    @Test
+    void Delete__OK() throws QuesoNotFoundException {
+        when(quesoService.delete(1L)).thenReturn("001");
+        var codigo = requireNonNull(quesoController.delete(1L).getBody()).getData();
+        assertEquals("001", codigo);
+    }
+
+    @Test
+    void Delete__Queso_Not_Found() throws QuesoNotFoundException {
+        when(quesoService.delete(1L)).thenThrow(new QuesoNotFoundException());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoController.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
 
     QuesoDTO mockQuesoDTO(){
         QuesoDTO queso = new QuesoDTO();

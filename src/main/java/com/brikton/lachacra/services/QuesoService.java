@@ -34,7 +34,7 @@ public class QuesoService {
 
     public List<QuesoDTO> getAll() {
         var listaDTO = new ArrayList<QuesoDTO>();
-        repository.findALLQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
+        repository.findAllQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
         return listaDTO;
     }
 
