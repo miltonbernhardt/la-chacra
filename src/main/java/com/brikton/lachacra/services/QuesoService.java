@@ -25,15 +25,11 @@ public class QuesoService {
         this.repository = repository;
     }
 
-    public Queso getEntity(String codigo) throws QuesoNotFoundException {
-        var queso = repository.findById(codigo);
+    public Queso getEntity(Long id) throws QuesoNotFoundException {
+        var queso = repository.findById(id);
         if (queso.isPresent() && queso.get().getFechaBaja() == null)
             return queso.get();
         throw new QuesoNotFoundException();
-    }
-
-    public QuesoDTO get(String codigoQueso) throws QuesoNotFoundException {
-        return new QuesoDTO(this.getEntity(codigoQueso));
     }
 
     public List<QuesoDTO> getAll() {
@@ -43,7 +39,7 @@ public class QuesoService {
     }
 
     public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
-        if (repository.existsById(dto.getCodigo())) {
+        if (repository.existsQuesoByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
 
@@ -57,11 +53,22 @@ public class QuesoService {
     }
 
     public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException {
-        if (!repository.existsById(dto.getCodigo())) {
+        if (!repository.existsById(dto.getId())) {
             throw new QuesoNotFoundException();
         }
+
+        //todo
+//        if (repository.existsQuesoByCodigo(dto.getCodigo())) {
+//            throw new CodigoQuesoAlreadyExistsException();
+//        }
+//
+//        if (repository.existsQuesoByNomenclatura(dto.getNomenclatura())) {
+//            throw new NomQuesoAlreadyExistsException();
+//        }
+
+
         var queso = quesoFromDTO(dto);
-        var oldQueso = repository.getById(dto.getCodigo());
+        var oldQueso = repository.getById(dto.getId());
         if (oldQueso.getFechaBaja() != null) {
             queso.setFechaBaja(oldQueso.getFechaBaja());
         }
@@ -69,11 +76,11 @@ public class QuesoService {
         return new QuesoDTO(queso);
     }
 
-    public String delete(String codigo) throws QuesoNotFoundException {
-        var queso = getEntity(codigo);//TODO hacer la query para verificar los lotes
+    public String delete(Long id) throws QuesoNotFoundException {
+        var queso = getEntity(id);//TODO hacer la query para verificar los lotes - borrar posta
         queso.setFechaBaja(dateUtil.now());
         repository.save(queso);
-        return codigo;
+        return queso.getCodigo();
     }
 
     private Queso quesoFromDTO(QuesoDTO dto) {

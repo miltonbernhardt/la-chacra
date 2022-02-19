@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QuesoRepository extends JpaRepository<Queso, String> {
+public interface QuesoRepository extends JpaRepository<Queso, Long> {
     @Query("SELECT q FROM Queso q WHERE q.fechaBaja = null ORDER BY q.codigo")
     List<Queso> findALLQuesos();
 
     boolean existsQuesoByNomenclatura(String nomenclatura);
+    boolean existsQuesoByCodigo(String nomenclatura);
 }
