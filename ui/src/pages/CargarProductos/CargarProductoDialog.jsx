@@ -20,11 +20,11 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) => {
+const CargarProductoDialog = ({isCargarQueso, isEditarQueso, onClose, onSubmit, queso}) => {//todo queso
 
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
-    useEffect(() => setQuesoForm(queso), [queso]);
+    useEffect(() => setQuesoForm(queso), [queso, isCargarQueso]);
 
     const handleChange = evt => {
         const attribute = evt.target.name;
@@ -36,8 +36,8 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) 
     }
 
     const labelCargar = useMemo(() => {
-        return isEditingQueso ? 'Actualizar queso' : 'Cargar queso'
-    }, [isEditingQueso]);
+        return isEditarQueso ? 'Actualizar queso' : 'Cargar queso'
+    }, [isEditarQueso]);
 
     const validateQueso = useCallback(() => {
         const errors = new Map();
@@ -50,8 +50,8 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) 
 
         if (quesoForm.codigo === '')
             errors.set(field.codigo, message.valEmptyField)
-        else if (quesoForm.codigo.length > 3)
-            errors.set(field.codigo, message.valMoreThan3Characters)
+        else if (quesoForm.codigo.length !== 3)
+            errors.set(field.codigo, message.val3Characters)
 
         if (errors.size > 0) {
             console.error(errors)
@@ -64,13 +64,12 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) 
     const onCargar = useCallback(() => {
         if (validateQueso()) {
             onSubmit(quesoForm);
-            setQuesoForm(quesoInicial)
         }
     }, [validateQueso, onSubmit, quesoForm]);
 
     return (
         <>
-            <Dialog open={open} onClose={onClose} scroll="body">
+            <Dialog open={isCargarQueso || isEditarQueso} onClose={onClose} scroll="body">
                 <DialogTitle>Productos</DialogTitle>
                 <DialogContent>
                     <DialogContentText paddingBottom={2}>
@@ -81,7 +80,7 @@ const CargarProductoDialog = ({open, onClose, onSubmit, queso, isEditingQueso}) 
                             <TextField
                                 id="tipoQueso"
                                 name="tipoQueso"
-                                label="Nombre"
+                                label="Tipo de queso"
                                 fullWidth
                                 variant="outlined"
                                 value={quesoForm.tipoQueso}

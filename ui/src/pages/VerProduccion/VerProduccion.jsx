@@ -175,10 +175,8 @@ const VerProduccion = () => {
                             rows={data}
                             columns={columns}
                             pageSize={20}
-                            rowsPerPageOptions={[20]}
+                            rowsPerPageOptions={[]}
                             pagination={false}
-                            hideFooterPagination
-
                         >
                         </DataGrid>
                     </Paper>

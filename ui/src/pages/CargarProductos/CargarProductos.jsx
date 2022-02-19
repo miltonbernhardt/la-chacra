@@ -16,13 +16,12 @@ const quesoInicial = {
 }
 
 const CargarProductos = () => {
-
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
 
     // Dialogs
-    const [isOpenCargarProducto, setOpenCargarProducto] = useState(false);
-    const [isEditingQueso, setIsEditingQueso] = useState(false);
+    const [isCargarQueso, setIsCargarQueso] = useState(false);
+    const [isEditarQueso, setIsEditarQueso] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
     useEffect(() => {
@@ -31,10 +30,9 @@ const CargarProductos = () => {
 
     const fetchQuesos = () => {
         getAllQuesos().then(quesos => {
-            //--- agrego id porque necesita el datagrid y mi codigo
             const listaAux = quesos.data.map((q) => {
                 return {
-                    id: q.codigo,
+                    id: q.codigo, //todo si agrego id se toca aca
                     codigo: q.codigo,
                     nomenclatura: q.nomenclatura,
                     tipoQueso: q.tipoQueso
@@ -42,61 +40,66 @@ const CargarProductos = () => {
             })
             setListaQuesos(listaAux)
         }).catch(e => console.error(e.message));
+
+        setQueso(quesoInicial)
     }
 
     const onSubmit = (quesoSubmit) => {
         if (quesoSubmit.id === '') {
             postQueso(quesoSubmit)
-                .then(() => fetchQuesos())
+                .then(() => {
+                    fetchQuesos()
+                    setIsCargarQueso(false);
+                })
                 .catch(e => console.error(e.message));
         } else
             putQueso(quesoSubmit)
-                .then(() => fetchQuesos())
+                .then(() => {
+                    fetchQuesos()
+                    setIsEditarQueso(false);
+                })
                 .catch(e => console.error(e.message));
-        setOpenCargarProducto(false);
-        setIsEditingQueso(false);
-    }
-
-    //--- EDIT QUESO METHODS ---
-    const openCargarDialog = () => {
-        setOpenCargarProducto(true);
-        setQueso(quesoInicial);
-    }
-
-    const openEditarDialog = () => {
-        if (queso.id === '')
-            toast.error(message.errorProductNotSelected)
-        else {
-            setIsEditingQueso(true);
-            setOpenCargarProducto(true);
-        }
-    }
-
-    const closeCargarProducto = () => {
-        setOpenCargarProducto(false);
-        setIsEditingQueso(false);
-    }
-
-    const openEliminarDialog = () => {
-        queso.id === '' ? toast.error(message.errorProductNotSelected) :
-            setOpenEliminarProducto(true);
-    }
-
-    const setSelection = (id) => {
-        setQueso(listaQuesos.filter((o) => {
-            return o.id === id
-        }).pop());
     }
 
     const onDelete = () => {
-        setOpenEliminarProducto(false);
         deleteQueso(queso.codigo)
-            .then(() => fetchQuesos())
+            .then(() => {
+                fetchQuesos()
+            })
             .catch(e => console.error(e.message));
+        closeEliminarDialog()
+    }
+
+    //--- EDIT QUESO METHODS ---
+    const openCargarDialog = () => setIsCargarQueso(true);
+    const openEditarDialog = () => {
+        if (queso.id === '') {
+            toast.dismiss()
+            toast.error(message.errorProductNotSelected)
+        } else
+            setIsEditarQueso(true)
+    }
+
+    const closeGestorProducto = () => {
+        setIsCargarQueso(false);
+        setIsEditarQueso(false);
+    }
+
+    const openEliminarDialog = () => {
+        if (queso.id === '') {
+            toast.dismiss()
+            toast.error(message.errorProductNotSelected)
+        } else
+            setOpenEliminarProducto(true);
+    }
+    const closeEliminarDialog = () => setOpenEliminarProducto(false);
+
+    const setSelection = (id) => {
+        setQueso(listaQuesos.filter(o => o.id === id).pop())
     }
 
     return (
-        <Paper style={{width: '100%', height: '100%', padding: 2}}>
+        <>
             <Grid container columns={2} justifyContent="space-between" padding={2}>
                 <Grid item>
                     <Typography variant="h6">Productos</Typography>
@@ -110,11 +113,11 @@ const CargarProductos = () => {
                 </Grid>
             </Grid>
             <CargarProductoDialog
-                open={isOpenCargarProducto}
-                queso={queso}
-                onClose={closeCargarProducto}
+                isEditarQueso={isEditarQueso}
+                isCargarQueso={isCargarQueso}
+                queso={isCargarQueso ? quesoInicial : queso}
+                onClose={closeGestorProducto}
                 onSubmit={onSubmit}
-                isEditingQueso={isEditingQueso}
             />
             <EliminarProductoDialog
                 open={isOpenEliminarProducto}
@@ -124,7 +127,7 @@ const CargarProductos = () => {
             <ProductosGrid
                 listaQuesos={listaQuesos}
                 setSelection={setSelection}/>
-        </Paper>
+        </>
     );
 }
 

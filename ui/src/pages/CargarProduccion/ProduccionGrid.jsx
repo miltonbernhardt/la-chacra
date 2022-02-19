@@ -1,8 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
-const ProduccionGrid = ({ produccion, quesos, setSelection }) => {
+const ProduccionGrid = ({produccion, quesos, setSelection}) => {
 
     const columns = useMemo(() => {
         return [
@@ -65,27 +65,26 @@ const ProduccionGrid = ({ produccion, quesos, setSelection }) => {
 
         ]
     }, [quesos]);
-
     return (
-        <Box height={600}
-            sx={{
-                padding: 1,
-                flexDirection: 'column',
-                alignItems: 'center',
-
-            }}>
-            <Typography variant="h6" color="GrayText" padding={1}>
-                Producción ingresada
-            </Typography>
-            <DataGrid
-                rows={produccion}
-                columns={columns}
-                pageSize={20}
-                rowsPerPageOptions={[20]}
-                hideFooterPagination
-                onCellDoubleClick={(params) => setSelection(params.id)}
-            />
-        </Box>
+        <>
+            <Grid item container direction="column" xs={12} spacing={1}>
+                <Grid item xs={12}>
+                    <Typography variant="h6">
+                        Producción ingresada
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} style={{maxHeight: "1100px"}}>
+                    <DataGrid
+                        style={{minHeight: "500px"}}
+                        autoHeight={true}
+                        rows={produccion}
+                        columns={columns}
+                        rowsPerPageOptions={[]}
+                        onCellDoubleClick={(params) => setSelection(params.id)}
+                    />
+                </Grid>
+            </Grid>
+        </>
     );
 }
 

@@ -1,15 +1,16 @@
-import { Paper } from "@mui/material";
+import { Paper, Grid } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
 import EliminarLoteDialog from "./EliminarLoteDialog";
 import LoteForm from "./LoteForm";
 import ProduccionGrid from "./ProduccionGrid";
+import WhitePage from "../../components/WhitePage";
 
 const loteInicial = {
     id: '',
     fechaElaboracion: '',
-    numeroTina: '',
+    numeroTina: '',//todo validar tina cantidad dig
     litrosLeche: '',
     cantHormas: '',
     peso: '',
@@ -32,7 +33,7 @@ const CargarProduccion = () => {
 
     const fetchQuesos = useCallback(() => {
         getAllQuesos().then(data => {
-            console.log({ quesos: data.data })
+            console.log({quesos: data.data})
             /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
         }).catch(e => toast.error(e.response ? e : e.message));//todo
@@ -43,16 +44,16 @@ const CargarProduccion = () => {
     }, []);
 
     const updateStateLote = useCallback((attribute, value) => {
-        const newLote = { ...lote, [attribute]: value };
+        const newLote = {...lote, [attribute]: value};
         setLote(newLote);
     }, [lote]);
 
     const handleSubmit = (newLote) => {
         const codigoQueso = newLote.codigoQueso.label ? newLote.codigoQueso.label : newLote.codigoQueso;
-        const loteSubmit = { ...newLote, ['codigoQueso']: codigoQueso };
+        const loteSubmit = {...newLote, ['codigoQueso']: codigoQueso};
         //-- if is editing
         if (isEditingLote) {
-            putLote(loteSubmit).then(({ data }) => {
+            putLote(loteSubmit).then(({data}) => {
                 //-- update list
                 const newList = listaLotes.filter((item) => item.id !== lote.id);
                 setListaLotes([...newList, data]);
@@ -63,7 +64,7 @@ const CargarProduccion = () => {
         }
         //-- if is new lote
         else {
-            postLote(loteSubmit).then(({ data }) => {
+            postLote(loteSubmit).then(({data}) => {
                 setListaLotes([...listaLotes, data]);
                 setLote(loteInicial);
             })
@@ -112,9 +113,8 @@ const CargarProduccion = () => {
     });
 
     return (
-        <>
-            <Paper style={{ width: '100%', height: '100%', padding: 2 }}>
-                {/* Formulario */}
+        <WhitePage
+            form={
                 <LoteForm
                     quesos={quesosAutocomplete}
                     lote={lote}
@@ -123,20 +123,22 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit} />
-                <EliminarLoteDialog
-                    open={eliminarDialog}
-                    lote={lote}
-                    onClose={cancelEliminar}
-                    onSubmit={handleEliminar} />
-                {/* Tabla */}
+                    handleSubmit={handleSubmit}/>
+            }
+            table={
                 <ProduccionGrid
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection} />
-            </Paper>
-        </>
-    );
+                    setSelection={setSelection}/>
+            }
+        >
+            <EliminarLoteDialog
+                open={eliminarDialog}
+                lote={lote}
+                onClose={cancelEliminar}
+                onSubmit={handleEliminar}/>
+        </WhitePage>
+    )
 }
 
 export default CargarProduccion;

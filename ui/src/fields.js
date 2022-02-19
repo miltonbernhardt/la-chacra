@@ -8,7 +8,7 @@ export const peso = "Peso del lote"
 export const queso = "Tipo de queso"
 export const codigo = "Código"
 export const nomenclatura = "Nomenclatura"
-export const tipoQueso = "Tipo queso"
+export const tipoQueso = "Tipo de queso"
 
 const backendFields = () => {
     const fields = new Map()

@@ -1,5 +1,5 @@
-
 import { Box } from '@mui/system';
+import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
@@ -17,30 +17,23 @@ const columns = [
     },
     {
         field: 'tipoQueso',
-        headerName: 'Nombre',
+        headerName: 'Tipo de queso',
         flex: 1,
         minWidth: 50
     },
 ]
 
-const ProductosGrid = ({ listaQuesos, setSelection }) => {
+const ProductosGrid = ({listaQuesos, setSelection}) => {
     return (
-        <Box height={600}
-            sx={{
-                padding: 1,
-                flexDirection: 'column',
-                alignItems: 'center',
-
-            }}
-        >
+        <Grid item xs={12} style={{maxHeight: "1100px"}}>
             <DataGrid
+                style={{minHeight: "500px"}}
                 rows={listaQuesos}
+                rowsPerPageOptions={[]}
                 columns={columns}
-                pagination={false}
-                hideFooterPagination
-                onCellClick={(params, event, details) => setSelection(params.id)}
+                onCellClick={(params) => setSelection(params.id)}
             />
-        </Box>
+        </Grid>
     );
 }
 

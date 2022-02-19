@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import CargarExpedicion from './pages/CargarExpedicion/CargarExpedicion';
-import CargarProduccion from './pages/CargarProduccion/CargarProduccion';
+import CargarProduccion from './pages/CargarProduccion/CargarLote';
 import CargarProductos from './pages/CargarProductos/CargarProductos';
 import Clientes from './pages/Clientes/Clientes';
 import CustomDrawer from './components/CustomDrawer';
@@ -19,7 +19,7 @@ import VerVentas from './pages/Ventas/VerVentas';
 import VerLitrosElaborados from './pages/VerLitrosProducidos/VerLitrosElaborados';
 import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
-import {toast, Toaster, ToastBar} from 'react-hot-toast';
+import {Toaster} from 'react-hot-toast';
 
 export const themeOptions = {
     palette: {
@@ -63,7 +63,6 @@ const drawerWidth = 240;
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
     ({theme, open}) => ({
         flexGrow: 1,
-        padding: theme.spacing(3),
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -105,6 +104,37 @@ const DrawerHeader = styled('div')(({theme}) => ({
     justifyContent: 'flex-end',
 }));
 
+const Toast = () => <Toaster
+    containerStyle={{
+        bottom: 30,
+        right: 10,
+    }}
+    position="bottom-right"
+    toastOptions={{
+        iconTheme: {
+            primary: 'black',
+        },
+        style: {
+            border: '1px solid #713200',
+            width: '100%',
+            fontSize: '0.85em',
+            color: 'black',
+        },
+        success: {
+            duration: 2000,
+            style: {
+                background: '#7ecc8e',
+            },
+        },
+        error: {
+            duration: 5000,
+            style: {
+                background: '#ff9191',
+            },
+        },
+    }}
+/>
+
 const App = () => {
     const theme = createTheme(themeOptions);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -121,7 +151,7 @@ const App = () => {
         <>
             <ThemeProvider theme={theme}>
                 <Router>
-                    <Box sx={{display: 'flex'}}>
+                    <Box display="flex" height="98vh">
                         <CssBaseline/>
                         <AppBar position="fixed" open={drawerOpen}>
                             <Toolbar>
@@ -164,36 +194,7 @@ const App = () => {
                     </Box>
                 </Router>
             </ThemeProvider>
-            <Toaster
-                containerStyle={{
-                    bottom: 30,
-                    right: 10,
-                }}
-                position="bottom-right"
-                toastOptions={{
-                    iconTheme: {
-                        primary: 'black',
-                    },
-                    style: {
-                        border: '1px solid #713200',
-                        width: '100%',
-                        fontSize: '0.85em',
-                        color: 'black',
-                    },
-                    success: {
-                        duration: 2000,
-                        style: {
-                            background: '#7ecc8e',
-                        },
-                    },
-                    error: {
-                        duration: 5000,
-                        style: {
-                            background: '#ff9191',
-                        },
-                    },
-                }}
-            />
+            <Toast/>
         </>
     );
 }

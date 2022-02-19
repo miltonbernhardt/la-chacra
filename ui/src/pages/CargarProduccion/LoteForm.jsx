@@ -1,11 +1,10 @@
-import {Autocomplete, Box, Button, ButtonGroup, Container, Grid, TextField, Typography} from "@mui/material";
-import {useCallback, useEffect, useMemo, useState} from "react";
-import toast from 'react-hot-toast';
+import { Autocomplete, Box, Button, ButtonGroup, Grid, TextField, Typography, Paper } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import validator from "validator";
 import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
 import * as message from "../../messages";
 import * as field from "../../fields";
-import {toastValidationErrors} from "../../fields";
+import { toastValidationErrors } from "../../fields";
 
 const loteInicial = {
     id: '',
@@ -118,6 +117,11 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
     return (
         <>
             <Grid item xs={12}>
+                <Typography variant="h6">
+                    Ingreso de producción
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
                 <Autocomplete //TODO bug queda siempre algo seleccionado
                     id="autocomplete-tipoQueso"
                     name="codigoQueso"
@@ -228,34 +232,19 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
 const LoteForm = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit}) => {
 
     return (
-        <Container maxWidth="sm">
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    mt: 3
-                }}>
-                <Grid container spacing={2} justifyContent="right">
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Ingreso de producción
-                        </Typography>
-                    </Grid>
-                    <Form
-                        lote={lote}
-                        quesos={quesos}
-                        cancelEditing={cancelEditing}
-                        isEditingLote={isEditingLote}
-                        deleteLote={deleteLote}
-                        onCargar={onCargar}
-                        handleSubmit={handleSubmit}/>
-                </Grid>
-            </Box>
-        </Container>
-
-    );
+        <>
+            <Grid item container direction="row" xs={6} spacing={1}>
+                <Form
+                    lote={lote}
+                    quesos={quesos}
+                    cancelEditing={cancelEditing}
+                    isEditingLote={isEditingLote}
+                    deleteLote={deleteLote}
+                    onCargar={onCargar}
+                    handleSubmit={handleSubmit}/>
+            </Grid>
+        </>
+    )
 }
 
 export default LoteForm;

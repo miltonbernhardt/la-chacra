@@ -33,36 +33,6 @@ export const deleteQueso = async (codigo) => await DELETE(`${API_QUESO}${codigo}
 
 
 // --- GENERAL METHODS ---
-export const POST = async (postfixUrl, data) => {
-    const URL = `${RAIZ_URL}${postfixUrl}`;
-    const method = `POST ${URL}`;
-    console.log({request: method, data})
-
-    return await axios.post(URL, data, {headers: getNewHeader()})
-        .then(response => {
-            const {data} = response
-            console.info({response: data})
-            toast.success(data.message);
-            return {data: data.data}
-        })
-        .catch(err => processResponseError(err))
-}
-
-export const PUT = async (postfixUrl, data) => {
-    const URL = `${RAIZ_URL}${postfixUrl}`;
-    const method = `PUT ${URL}`
-    console.log({request: method, data})
-
-    return await axios.put(URL, data, {headers: getNewHeader()})
-        .then(response => {
-            const {data} = response
-            console.info({response: data})
-            toast.success(data.message);
-            return {data: data.data}
-        })
-        .catch(err => processResponseError(err))
-}
-
 export const GET = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `GET ${URL}`
@@ -77,24 +47,48 @@ export const GET = async (postfixUrl) => {
         .catch(err => processResponseError(err))
 }
 
+export const POST = async (postfixUrl, data) => {
+    const URL = `${RAIZ_URL}${postfixUrl}`;
+    const method = `POST ${URL}`;
+    console.log({request: method, data})
+
+    return await axios.post(URL, data, {headers: getNewHeader()})
+        .then(response => processSuccessResponseWithMessage(response))
+        .catch(err => processResponseError(err))
+}
+
+export const PUT = async (postfixUrl, data) => {
+    const URL = `${RAIZ_URL}${postfixUrl}`;
+    const method = `PUT ${URL}`
+    console.log({request: method, data})
+
+    return await axios.put(URL, data, {headers: getNewHeader()})
+        .then(response => processSuccessResponseWithMessage(response))
+        .catch(err => processResponseError(err))
+}
+
 export const DELETE = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `DELETE ${URL}`
     console.log({request: method})
 
     return await axios.delete(URL, {headers: getNewHeader()})
-        .then(response => {
-            const {data} = response
-            console.info({response: data})
-            toast.success(data.message);
-            return {data: data.data}
-        })
+        .then(response => processSuccessResponseWithMessage(response))
         .catch(err => processResponseError(err))
+}
+
+const processSuccessResponseWithMessage = (response) => {
+    const {data} = response
+    console.info({response: data})
+    toast.dismiss()
+    toast.success(data.message);
+    return {data: data.data}
 }
 
 const processResponseError = (err) => {
     const {data, status} = err.response
     console.error({data, status})
+    toast.dismiss()
     if (data["errors"])
         toastValidationErrors(new Map(Object.entries(data.errors)))
     else
