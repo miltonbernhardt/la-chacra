@@ -34,9 +34,8 @@ const CargarProduccion = () => {
     const fetchQuesos = useCallback(() => {
         getAllQuesos().then(data => {
             console.log({quesos: data.data})
-            /* quesos: {codigo, tipoQueso, nomenclatura, stock}*/
             setListaQuesos(data.data)
-        }).catch(e => toast.error(e.response ? e : e.message));//todo
+        }).catch(e => toast.error(e.response ? e : e.message));
     }, []);
 
     useEffect(() => {

@@ -135,6 +135,7 @@ public class LoteServiceTest {
         expectedLote.setCodigoQueso("001");
 
         when(quesoService.getEntity("001")).thenReturn(mockQueso());
+        when(repository.existsById("001")).thenReturn(false);
         when(repository.save(any(Lote.class))).thenReturn(savedLote);
 
         LoteDTO dtoActual = loteService.save(dtoToSave);

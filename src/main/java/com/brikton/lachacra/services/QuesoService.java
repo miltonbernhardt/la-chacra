@@ -2,7 +2,8 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.QuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
@@ -41,10 +42,18 @@ public class QuesoService {
         return listaDTO;
     }
 
-    public QuesoDTO save(QuesoDTO dto) throws QuesoAlreadyExistsException {
+    public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+        dto.setCodigo(dto.getCodigo().toUpperCase());
+        dto.setTipoQueso(dto.getTipoQueso().toUpperCase());
+        dto.setNomenclatura(dto.getNomenclatura().toUpperCase());
         if (repository.existsById(dto.getCodigo())) {
-            throw new QuesoAlreadyExistsException();
+            throw new CodigoQuesoAlreadyExistsException();
         }
+
+        if (repository.existsQuesoByNomenclatura(dto.getNomenclatura())) {
+            throw new NomQuesoAlreadyExistsException();
+        }
+
         var queso = quesoFromDTO(dto);
         queso = repository.save(queso);
         return new QuesoDTO(queso);

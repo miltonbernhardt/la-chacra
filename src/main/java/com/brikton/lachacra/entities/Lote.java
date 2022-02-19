@@ -30,7 +30,7 @@ public class Lote {
     private String loteCalcio;
     private String loteCuajo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_queso")
     private Queso queso;
 

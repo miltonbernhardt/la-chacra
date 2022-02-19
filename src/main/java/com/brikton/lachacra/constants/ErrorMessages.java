@@ -6,6 +6,6 @@ public class ErrorMessages {
     public static final String MSG_INVALID_PARAMS = "Parámetros inválido";
     public static final String MSG_LOTE_NOT_FOUND = "Lote no encontrado";
     public static final String MSG_QUESO_NOT_FOUND = "Queso no encontrado";
-    public static final String MSG_QUESO_ALREADY_EXIST = "El queso ya existe";
-    public static final String MSG_DATABASE_ERROR = "Error en la base de datos";
+    public static final String MSG_CODIGO_QUESO_ALREADY_EXIST = "Ya existe un queso con ese código";
+    public static final String MSG_NOMENCLATURE_QUESO_ALREADY_EXIST = "Ya existe un queso con esa nomenclatura";
 }

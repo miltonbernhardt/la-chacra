@@ -32,7 +32,7 @@ public class LoteDTO {
     private Double peso;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+    @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)
     private String codigoQueso;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
@@ -84,5 +84,9 @@ public class LoteDTO {
         this.setLoteCalcio(dto.getLoteCalcio());
         this.setLoteCuajo(dto.getLoteCuajo());
         this.setCodigoQueso(dto.getCodigoQueso());
+    }
+
+    public String getCodigoQueso() {
+        return codigoQueso.toUpperCase();
     }
 }

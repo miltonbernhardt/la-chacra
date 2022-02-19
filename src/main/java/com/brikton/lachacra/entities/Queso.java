@@ -25,7 +25,7 @@ public class Queso {
     private Integer stock;
     private LocalDate fechaBaja;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Precio> preciosActual;
 

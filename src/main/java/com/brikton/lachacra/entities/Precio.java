@@ -20,11 +20,11 @@ public class Precio {
 
     private Double precio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_queso")
     private Queso queso;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_cliente")
     private TipoCliente tipoCliente;
 

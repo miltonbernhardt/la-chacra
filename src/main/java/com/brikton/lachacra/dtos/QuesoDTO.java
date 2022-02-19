@@ -1,18 +1,17 @@
 package com.brikton.lachacra.dtos;
 
-import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.constants.ValidationMessages;
-import lombok.*;
+import com.brikton.lachacra.entities.Queso;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class QuesoDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+    @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS) //todo test
     private String codigo;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
@@ -33,5 +32,17 @@ public class QuesoDTO {
         this.setTipoQueso(queso.getTipoQueso());
         this.setNomenclatura(queso.getNomenclatura());
         this.setStock(queso.getStock());
+    }
+
+    public String getCodigo() {
+        return codigo.toUpperCase();
+    }
+
+    public String getTipoQueso() {
+        return tipoQueso.toUpperCase();
+    }
+
+    public String getNomenclatura() {
+        return nomenclatura.toUpperCase();
     }
 }

@@ -36,7 +36,7 @@ public class LoteService {
     public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
         var id = dto.getId() == null || dto.getId().equals("") ? generateID(dto) : dto.getId();
         if (repository.existsById(id)) {
-            repository.deleteById(id);
+            repository.deleteById(id);//todo test
         }
 
         var lote = loteFromDTO(dto);

@@ -23,10 +23,6 @@ public class SuccessfulResponse<T> {
         this.message = message;
     }
 
-    public static <T> SuccessfulResponse<T> set(String message) {
-        return new SuccessfulResponse<>(message, null);
-    }
-
     public static <T> SuccessfulResponse<T> set(T data) {
         return new SuccessfulResponse<>(null, data);
     }

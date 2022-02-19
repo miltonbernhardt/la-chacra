@@ -96,15 +96,27 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Get__Bad_ID() throws JsonProcessingException {
+    void Get__Bad_ID_Too_Long() throws JsonProcessingException {
         HttpClientErrorException.BadRequest thrown = assertThrows(
                 HttpClientErrorException.BadRequest.class, () -> restTemplate.getForEntity(baseUrl.concat("0001"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
-        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("id"));
         assertEquals(path.concat("0001"), response.getPath());
+    }
+
+    @Test
+    void Get__Bad_ID_Too_Short() throws JsonProcessingException {
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.getForEntity(baseUrl.concat("01"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("id"));
+        assertEquals(path.concat("01"), response.getPath());
     }
 
     @Test
@@ -195,7 +207,7 @@ public class QuesoControllerIntegrationTest {
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(path, response.getPath());
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, response.getMessage());
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
     }
 
     @Test
@@ -213,7 +225,7 @@ public class QuesoControllerIntegrationTest {
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(path, response.getPath());
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, response.getMessage());
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
     }
 
     @Test
@@ -252,9 +264,28 @@ public class QuesoControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(3, response.getErrors().size());
-        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigo"));
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigo"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("tipoQueso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("nomenclatura"));
+    }
+
+    @Test
+    void Save__Invalid_Fields__Codigo_Too_Short() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("10");
+        dtoToSave.setTipoQueso("11a");
+        dtoToSave.setNomenclatura("11a");
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(1, response.getErrors().size());
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigo"));
     }
 
     @Test
@@ -357,9 +388,28 @@ public class QuesoControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(3, response.getErrors().size());
-        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("codigo"));
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigo"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("tipoQueso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("nomenclatura"));
+    }
+
+    @Test
+    void Update__Invalid_Fields__Codigo_Too_Short() throws JsonProcessingException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setCodigo("10");
+        dtoToUpdate.setTipoQueso("11a");
+        dtoToUpdate.setNomenclatura("11a");
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(1, response.getErrors().size());
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigo"));
     }
 
     @Test
@@ -415,15 +465,27 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Delete__Bad_ID() throws JsonProcessingException {
+    void Delete__Bad_ID_Too_Long() throws JsonProcessingException {
         HttpClientErrorException.BadRequest thrown = assertThrows(
                 HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0001"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
-        assertEquals(ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("id"));
         assertEquals(path.concat("0001"), response.getPath());
+    }
+
+    @Test
+    void Delete__Bad_ID_Too_Short() throws JsonProcessingException {
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("01"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("id"));
+        assertEquals(path.concat("01"), response.getPath());
     }
 
     @Test

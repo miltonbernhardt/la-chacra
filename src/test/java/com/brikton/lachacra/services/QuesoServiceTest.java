@@ -5,7 +5,8 @@ import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
-import com.brikton.lachacra.exceptions.QuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
@@ -101,7 +102,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__OK() throws QuesoAlreadyExistsException {
+    void Save__OK() throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
         QuesoDTO quesoExpected = new QuesoDTO();
         quesoExpected.setCodigo("001");
         quesoExpected.setTipoQueso("tipoQueso");
@@ -122,16 +123,31 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__Already_Exists() {
+    void Save__Already_Exists_By_Codigo_Queso() {
         QuesoDTO dto = new QuesoDTO();
         dto.setCodigo("001");
 
         when(repository.existsById("001")).thenReturn(true);
 
-        QuesoAlreadyExistsException thrown = assertThrows(
-                QuesoAlreadyExistsException.class, () -> quesoService.save(dto)
+        CodigoQuesoAlreadyExistsException thrown = assertThrows(
+                CodigoQuesoAlreadyExistsException.class, () -> quesoService.save(dto)
         );
-        assertEquals(ErrorMessages.MSG_QUESO_ALREADY_EXIST, thrown.getMessage());
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
+    }
+
+    @Test
+    void Save__Already_Exists_By_Nomenclatura() {
+        QuesoDTO dto = new QuesoDTO();
+        dto.setCodigo("001");
+        dto.setNomenclatura("Q");
+
+        when(repository.existsById("001")).thenReturn(false);
+        when(repository.existsQuesoByNomenclatura("Q")).thenReturn(true);
+
+        NomQuesoAlreadyExistsException thrown = assertThrows(
+                NomQuesoAlreadyExistsException.class, () -> quesoService.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
     @Test

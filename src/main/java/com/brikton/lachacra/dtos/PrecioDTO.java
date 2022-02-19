@@ -17,7 +17,7 @@ public class PrecioDTO {
     private Double precio;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+    @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)//todo test
     private String codigoQueso;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)

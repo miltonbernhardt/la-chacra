@@ -62,6 +62,5 @@ public class LoteController {
                                                              @PathVariable("id") String id) throws LoteNotFoundException {
         log.info("API::delete - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED, service.delete(id)));
-//        throw new LoteNotFoundException();
     }
 }

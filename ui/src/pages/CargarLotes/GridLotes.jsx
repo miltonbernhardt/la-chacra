@@ -7,12 +7,6 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
     const columns = useMemo(() => {
         return [
             {
-                field: 'num',
-                headerName: '#',
-                minWidth: 20,
-                flex: 0.15,
-            },
-            {
                 field: 'fechaElaboracion',
                 headerName: 'Fecha de produccion',
                 type: 'date',

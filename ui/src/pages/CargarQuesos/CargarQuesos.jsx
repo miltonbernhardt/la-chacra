@@ -35,7 +35,7 @@ const CargarQuesos = () => {
             const listaAux = quesos.data.map((q) => {
                 num++
                 return {
-                    num: num, //todo si agrego id se toca aca
+                    num: num,
                     id: q.codigo, //todo si agrego id se toca aca
                     codigo: q.codigo,
                     nomenclatura: q.nomenclatura,

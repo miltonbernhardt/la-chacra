@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {LoteNotFoundException.class, QuesoNotFoundException.class})
+    @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, NotFoundException ex) {
         return response(ex, req, HttpStatus.NOT_FOUND, ex.getMessage());
     }
@@ -36,18 +36,18 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return response(ex, req, HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    @ExceptionHandler(value = {QuesoAlreadyExistsException.class})
-    protected ResponseEntity<ErrorResponse> handlerAlreadyExistsConflictException(HttpServletRequest req, QuesoAlreadyExistsException ex) {
+    @ExceptionHandler(AlreadyExistsException.class)
+    protected ResponseEntity<ErrorResponse> handlerAlreadyExistsConflictException(HttpServletRequest req, AlreadyExistsException ex) {
         return response(ex, req, HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    @ExceptionHandler(value = {ConstraintViolationException.class})
+    @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<ErrorResponse> handleValidationError(HttpServletRequest req, ConstraintViolationException ex) {
         Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(n -> ((PathImpl) n.getPropertyPath()).getLeafNode().toString(), ConstraintViolation::getMessage));
         return response(ex, req, HttpStatus.BAD_REQUEST, ErrorMessages.MSG_INVALID_PARAMS, errors);
     }
 
-    @ExceptionHandler(value = {DatabaseException.class, Exception.class})
+    @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handlerInternalError(HttpServletRequest req, Exception ex) {
         log.error("Request: {} - {}", req.getRequestURL(), ex);
         return new ResponseEntity<>(ErrorResponse.set(ErrorMessages.MSG_INTERNAL_SERVER_ERROR, req.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
