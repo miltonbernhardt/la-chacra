@@ -20,7 +20,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const CargarProductoDialog = ({isCargarQueso, isEditarQueso, onClose, onSubmit, queso}) => {//todo queso
+const DialogCargarQueso = ({isCargarQueso, isEditarQueso, onClose, onSubmit, queso}) => {//todo queso
 
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
@@ -118,4 +118,4 @@ const CargarProductoDialog = ({isCargarQueso, isEditarQueso, onClose, onSubmit, 
     );
 }
 
-export default CargarProductoDialog;
+export default DialogCargarQueso;

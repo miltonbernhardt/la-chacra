@@ -23,7 +23,7 @@ const columns = [
     },
 ]
 
-const ProductosGrid = ({listaQuesos, setSelection}) => {
+const GridQuesos = ({listaQuesos, setSelection}) => {
     return (
         <Grid item xs={12} style={{maxHeight: "1100px"}}>
             <DataGrid
@@ -37,4 +37,4 @@ const ProductosGrid = ({listaQuesos, setSelection}) => {
     );
 }
 
-export default ProductosGrid;
+export default GridQuesos;

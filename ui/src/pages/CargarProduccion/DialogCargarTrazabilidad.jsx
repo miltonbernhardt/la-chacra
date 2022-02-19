@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 
-const CargarTrazabilidadDialog = ({ open, onClose, submitLote, isEditing, trazabilidad }) => {
+const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazabilidad }) => {
 
     const [trazabilidadForm, setTrazabilidad] = useState({});
 
@@ -80,4 +80,4 @@ const CargarTrazabilidadDialog = ({ open, onClose, submitLote, isEditing, trazab
     );
 }
 
-export default CargarTrazabilidadDialog;
+export default DialogCargarTrazabilidad;

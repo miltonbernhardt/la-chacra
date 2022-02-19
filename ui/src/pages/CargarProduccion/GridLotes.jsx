@@ -2,7 +2,7 @@ import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
-const ProduccionGrid = ({produccion, quesos, setSelection}) => {
+const GridLotes = ({produccion, quesos, setSelection}) => {
 
     const columns = useMemo(() => {
         return [
@@ -88,4 +88,4 @@ const ProduccionGrid = ({produccion, quesos, setSelection}) => {
     );
 }
 
-export default ProduccionGrid;
+export default GridLotes;

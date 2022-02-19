@@ -9,7 +9,7 @@ import * as React from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import CargarExpedicion from './pages/CargarExpedicion/CargarExpedicion';
 import CargarProduccion from './pages/CargarProduccion/CargarLote';
-import CargarProductos from './pages/CargarProductos/CargarProductos';
+import CargarQuesos from './pages/CargarProductos/CargarQuesos';
 import Clientes from './pages/Clientes/Clientes';
 import CustomDrawer from './components/CustomDrawer';
 import Home from './components/Home';
@@ -182,7 +182,7 @@ const App = () => {
                                 <Route path="/clientes" component={Clientes}/>
                                 <Route path="/cargar/produccion" component={CargarProduccion}/>
                                 <Route path="/cargar/expedicion" component={CargarExpedicion}/>
-                                <Route path="/cargar/productos" component={CargarProductos}/>
+                                <Route path="/cargar/productos" component={CargarQuesos}/>
                                 <Route path="/cargar/precios" component={CargarPrecios}/>
                                 <Route path="/ver/litros" component={VerLitrosElaborados}/>
                                 <Route path="/ver/produccion" component={VerProduccion}/>

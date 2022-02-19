@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-const EliminarLoteDialog = ({ open, onClose, onSubmit, lote }) => {
+const DialogEliminarLote = ({ open, onClose, onSubmit, lote }) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">
@@ -19,4 +19,4 @@ const EliminarLoteDialog = ({ open, onClose, onSubmit, lote }) => {
     );
 }
 
-export default EliminarLoteDialog;
+export default DialogEliminarLote;

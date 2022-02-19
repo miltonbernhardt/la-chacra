@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
 
 
-const EliminarProductoDialog = ({ open, onClose, queso, onBorrar }) => {
+const DialogEliminarQueso = ({ open, onClose, queso, onBorrar }) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body" >
@@ -20,4 +20,4 @@ const EliminarProductoDialog = ({ open, onClose, queso, onBorrar }) => {
     );
 }
 
-export default EliminarProductoDialog;
+export default DialogEliminarQueso;

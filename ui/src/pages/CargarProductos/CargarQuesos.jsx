@@ -3,9 +3,9 @@ import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
 import toast from 'react-hot-toast';
 import {deleteQueso, getAllQuesos, postQueso, putQueso} from "../../services/RestServices";
-import CargarProductoDialog from './CargarProductoDialog';
-import EliminarProductoDialog from './EliminarProductoDialog';
-import ProductosGrid from './ProductosGrid';
+import DialogCargarQueso from './DialogCargarQueso';
+import DialogEliminarQueso from './DialogEliminarQueso';
+import GridQuesos from './GridQuesos';
 import * as message from "../../messages";
 
 const quesoInicial = {
@@ -15,7 +15,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const CargarProductos = () => {
+const CargarQuesos = () => {
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
 
@@ -112,23 +112,23 @@ const CargarProductos = () => {
                     </ButtonGroup>
                 </Grid>
             </Grid>
-            <CargarProductoDialog
+            <DialogCargarQueso
                 isEditarQueso={isEditarQueso}
                 isCargarQueso={isCargarQueso}
                 queso={isCargarQueso ? quesoInicial : queso}
                 onClose={closeGestorProducto}
                 onSubmit={onSubmit}
             />
-            <EliminarProductoDialog
+            <DialogEliminarQueso
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
                 onBorrar={onDelete}/>
-            <ProductosGrid
+            <GridQuesos
                 listaQuesos={listaQuesos}
                 setSelection={setSelection}/>
         </>
     );
 }
 
-export default CargarProductos;
+export default CargarQuesos;

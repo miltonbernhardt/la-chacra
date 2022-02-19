@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, ButtonGroup, Grid, TextField, Typography, Paper } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import validator from "validator";
-import CargarTrazabilidadDialog from "./CargarTrazabilidadDialog";
+import DialogCargarTrazabilidad from "./DialogCargarTrazabilidad";
 import * as message from "../../messages";
 import * as field from "../../fields";
 import { toastValidationErrors } from "../../fields";
@@ -219,7 +219,7 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
                     <Button onClick={onCargar} color={colorCargar}>{labelCargar}</Button>
                 </ButtonGroup>
             </Grid>
-            <CargarTrazabilidadDialog
+            <DialogCargarTrazabilidad
                 open={dialogOpen}
                 onClose={onCloseDialog}
                 trazabilidad={trazabilidad}
@@ -229,7 +229,7 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
     )
 }
 
-const LoteForm = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit}) => {
+const FormLote = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit}) => {
 
     return (
         <>
@@ -247,4 +247,4 @@ const LoteForm = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteL
     )
 }
 
-export default LoteForm;
+export default FormLote;

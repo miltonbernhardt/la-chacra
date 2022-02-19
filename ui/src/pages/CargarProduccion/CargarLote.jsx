@@ -2,9 +2,9 @@ import { Paper, Grid } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
-import EliminarLoteDialog from "./EliminarLoteDialog";
-import LoteForm from "./LoteForm";
-import ProduccionGrid from "./ProduccionGrid";
+import DialogEliminarLote from "./DialogEliminarLote";
+import FormLote from "./FormLote";
+import GridLotes from "./GridLotes";
 import WhitePage from "../../components/WhitePage";
 
 const loteInicial = {
@@ -115,7 +115,7 @@ const CargarProduccion = () => {
     return (
         <WhitePage
             form={
-                <LoteForm
+                <FormLote
                     quesos={quesosAutocomplete}
                     lote={lote}
                     updateStateLote={updateStateLote}
@@ -126,13 +126,13 @@ const CargarProduccion = () => {
                     handleSubmit={handleSubmit}/>
             }
             table={
-                <ProduccionGrid
+                <GridLotes
                     quesos={listaQuesos}
                     produccion={listaLotes}
                     setSelection={setSelection}/>
             }
         >
-            <EliminarLoteDialog
+            <DialogEliminarLote
                 open={eliminarDialog}
                 lote={lote}
                 onClose={cancelEliminar}
