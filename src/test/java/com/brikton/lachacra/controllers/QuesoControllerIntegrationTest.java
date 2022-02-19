@@ -179,8 +179,8 @@ public class QuesoControllerIntegrationTest {
 
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setCodigo("005");
-        expectedDTO.setTipoQueso("tipoQueso");
-        expectedDTO.setNomenclatura("tip");
+        expectedDTO.setTipoQueso("TIPOQUESO");
+        expectedDTO.setNomenclatura("TIP");
         expectedDTO.setStock(10);
 
         var expectedQuesoString = mapper.writeValueAsString(expectedDTO);

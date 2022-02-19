@@ -35,14 +35,14 @@ public class QuesoDTO {
     }
 
     public String getCodigo() {
-        return codigo.toUpperCase();
+        return codigo != null ? codigo.toUpperCase() : null;
     }
 
     public String getTipoQueso() {
-        return tipoQueso.toUpperCase();
+        return tipoQueso != null ? tipoQueso.toUpperCase() : null;
     }
 
     public String getNomenclatura() {
-        return nomenclatura.toUpperCase();
+        return nomenclatura != null ? nomenclatura.toUpperCase() : null;
     }
 }

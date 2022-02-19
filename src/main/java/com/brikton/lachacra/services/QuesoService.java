@@ -43,9 +43,6 @@ public class QuesoService {
     }
 
     public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
-        dto.setCodigo(dto.getCodigo().toUpperCase());
-        dto.setTipoQueso(dto.getTipoQueso().toUpperCase());
-        dto.setNomenclatura(dto.getNomenclatura().toUpperCase());
         if (repository.existsById(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
@@ -60,10 +57,6 @@ public class QuesoService {
     }
 
     public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException {
-        dto.setCodigo(dto.getCodigo().toUpperCase());
-        dto.setTipoQueso(dto.getTipoQueso().toUpperCase());
-        dto.setNomenclatura(dto.getNomenclatura().toUpperCase());
-
         if (!repository.existsById(dto.getCodigo())) {
             throw new QuesoNotFoundException();
         }

@@ -87,6 +87,6 @@ public class LoteDTO {
     }
 
     public String getCodigoQueso() {
-        return codigoQueso.toUpperCase();
+        return codigoQueso != null ? codigoQueso.toUpperCase() : null;
     }
 }
