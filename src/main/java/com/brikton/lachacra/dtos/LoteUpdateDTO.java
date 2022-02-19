@@ -35,9 +35,9 @@ public class LoteUpdateDTO {
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double peso;
 
-    @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)
-    private String codigoQueso;
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+    private Long idQueso;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteColorante;
@@ -55,9 +55,5 @@ public class LoteUpdateDTO {
     private Integer stockLote;
 
     public LoteUpdateDTO() {
-    }
-
-    public String getCodigoQueso() {
-        return codigoQueso.toUpperCase();
     }
 }

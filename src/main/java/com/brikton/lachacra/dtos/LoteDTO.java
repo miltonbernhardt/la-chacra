@@ -31,9 +31,9 @@ public class LoteDTO {
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double peso;
 
-    @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)
-    private String codigoQueso;
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+    private Long idQueso;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String loteColorante;
@@ -67,7 +67,7 @@ public class LoteDTO {
         this.setLoteColorante(lote.getLoteColorante());
         this.setLoteCalcio(lote.getLoteCalcio());
         this.setLoteCuajo(lote.getLoteCuajo());
-        this.setCodigoQueso(lote.getQueso().getCodigo());
+        this.setIdQueso(lote.getQueso().getId());
     }
 
     public LoteDTO(LoteUpdateDTO dto) {
@@ -83,10 +83,6 @@ public class LoteDTO {
         this.setLoteColorante(dto.getLoteColorante());
         this.setLoteCalcio(dto.getLoteCalcio());
         this.setLoteCuajo(dto.getLoteCuajo());
-        this.setCodigoQueso(dto.getCodigoQueso());
-    }
-
-    public String getCodigoQueso() {
-        return codigoQueso != null ? codigoQueso.toUpperCase() : null;
+        this.setIdQueso(dto.getIdQueso());
     }
 }
