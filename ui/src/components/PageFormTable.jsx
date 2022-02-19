@@ -1,7 +1,7 @@
 import { Grid, Typography, ButtonGroup } from '@mui/material';
 import GridClientes from "../pages/Clientes/GridClientes";
 
-const PageFormTable = ({form, table, titleTable, children}) => {
+const PageFormTable = ({form, table, titleTable, children, sizeForm}) => {
     return (
         <Grid container
               direction="row"
@@ -19,7 +19,7 @@ const PageFormTable = ({form, table, titleTable, children}) => {
 
             {/* FORM */}
             <Grid item container direction="column" xs={12} sm={12} md={4} lg={3}>
-                <Grid item container direction="row" xs={4} spacing={1.5}>
+                <Grid item container direction="row" xs={sizeForm === undefined ? 4 : sizeForm} spacing={1.5}>
                     {form}
                 </Grid>
             </Grid>
