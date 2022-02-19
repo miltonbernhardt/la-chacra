@@ -5,6 +5,7 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.services.QuesoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,37 +81,81 @@ public class QuesoControllerTest {
         );
         assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
-//
-//    @Test
-//    void Update__OK() throws QuesoNotFoundException {
-//        QuesoDTO dtoToUpdate = new QuesoDTO();
-//        dtoToUpdate.setCodigo("001");
-//        dtoToUpdate.setTipoQueso("tipoQueso");
-//        dtoToUpdate.setNomenclatura("tip");
-//        dtoToUpdate.setStock(1);
-//
-//        when(quesoService.update(any(QuesoDTO.class))).thenReturn(dtoToUpdate);
-//        QuesoDTO dtoActual = requireNonNull(quesoController.update(dtoToUpdate).getBody()).getData();
-//        String message = requireNonNull(quesoController.update(dtoToUpdate).getBody()).getMessage();
-//        assertEquals(dtoToUpdate, dtoActual);
-//        assertEquals(SuccessfulMessages.MSG_QUESO_UPDATED, message);
-//    }
-//
-//    @Test
-//    void Update__Queso_Not_Found() throws QuesoNotFoundException {
-//        QuesoDTO dtoToUpdate = new QuesoDTO();
-//        dtoToUpdate.setCodigo("001");
-//        dtoToUpdate.setTipoQueso("tipoQueso");
-//        dtoToUpdate.setNomenclatura("tip");
-//        dtoToUpdate.setStock(1);
-//
-//        when(quesoService.update(dtoToUpdate)).thenThrow(new QuesoNotFoundException());
-//        QuesoNotFoundException thrown = assertThrows(
-//                QuesoNotFoundException.class, () -> quesoController.update(dtoToUpdate)
-//        );
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-//    }
-//
+
+    @Test
+    void Update__OK() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setId(1L);
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        QuesoDTO dtoExpected = new QuesoDTO();
+        dtoExpected.setId(1L);
+        dtoExpected.setCodigo("001");
+        dtoExpected.setTipoQueso("tipoQueso");
+        dtoExpected.setNomenclatura("tip");
+        dtoExpected.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenReturn(dtoExpected);
+
+        var response = requireNonNull(quesoController.update(dtoToUpdate).getBody());
+
+        QuesoDTO dtoActual = response.getData();
+        String message = response.getMessage();
+        assertEquals(dtoExpected, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_QUESO_UPDATED, message);
+    }
+
+    @Test
+    void Update__Queso_Not_Found() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setId(1L);
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenThrow(new QuesoNotFoundException());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoController.update(dtoToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Update__Codigo_Queso_Already_Exists() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setId(1L);
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenThrow(new CodigoQuesoAlreadyExistsException());
+        CodigoQuesoAlreadyExistsException thrown = assertThrows(
+                CodigoQuesoAlreadyExistsException.class, () -> quesoController.update(dtoToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
+    }
+
+    @Test
+    void Update__Nomenclatura_Queso_Already_Exists() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+        QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setId(1L);
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenThrow(new NomQuesoAlreadyExistsException());
+        NomQuesoAlreadyExistsException thrown = assertThrows(
+                NomQuesoAlreadyExistsException.class, () -> quesoController.update(dtoToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
+    }
+
 //    @Test
 //    void Delete__OK() throws QuesoNotFoundException {
 //        when(quesoService.delete("001")).thenReturn("001");

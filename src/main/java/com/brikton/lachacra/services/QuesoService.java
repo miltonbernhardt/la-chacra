@@ -52,27 +52,21 @@ public class QuesoService {
         return new QuesoDTO(queso);
     }
 
-    public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException {
-        if (!repository.existsById(dto.getId())) {
-            throw new QuesoNotFoundException();
+    public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+        var oldQueso = getEntity(dto.getId());
+
+        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsQuesoByCodigo(dto.getCodigo())) {
+            throw new CodigoQuesoAlreadyExistsException();
         }
 
-        //todo
-//        if (repository.existsQuesoByCodigo(dto.getCodigo())) {
-//            throw new CodigoQuesoAlreadyExistsException();
-//        }
-//
-//        if (repository.existsQuesoByNomenclatura(dto.getNomenclatura())) {
-//            throw new NomQuesoAlreadyExistsException();
-//        }
-
-
-        var queso = quesoFromDTO(dto);
-        var oldQueso = repository.getById(dto.getId());
-        if (oldQueso.getFechaBaja() != null) {
-            queso.setFechaBaja(oldQueso.getFechaBaja());
+        if (!oldQueso.getNomenclatura().equals(dto.getNomenclatura()) && repository.existsQuesoByNomenclatura(dto.getNomenclatura())) {
+            throw new NomQuesoAlreadyExistsException();
         }
-        queso = repository.save(queso);
+
+        oldQueso.setCodigo(dto.getCodigo());
+        oldQueso.setNomenclatura(dto.getNomenclatura());
+        oldQueso.setTipoQueso(dto.getTipoQueso());
+        var queso = repository.save(oldQueso);
         return new QuesoDTO(queso);
     }
 
