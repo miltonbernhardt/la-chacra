@@ -5,6 +5,7 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
+import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundConflictException;
 import com.brikton.lachacra.services.LoteService;
@@ -69,35 +70,35 @@ public class LoteControllerTest {
         );
         assertEquals(ErrorMessages.MSG_LOTE_ALREADY_EXIST, thrown.getMessage());
     }
-//
-//    @Test
-//    void Update__OK() throws NotFoundConflictException, LoteNotFoundException {
-//        when(loteService.update(any(LoteUpdateDTO.class))).thenReturn(mockLoteDTO1());
-//        LoteDTO dtoActual = requireNonNull(loteController.update(mockLoteUpdateDTO1()).getBody()).getData();
-//        String message = requireNonNull(loteController.update(mockLoteUpdateDTO1()).getBody()).getMessage();
-//        LoteDTO dtoExpected = mockLoteDTO1();
-//        assertEquals(dtoExpected, dtoActual);
-//        assertEquals(SuccessfulMessages.MSG_LOTE_UPDATED, message);
-//    }
-//
-//    @Test
-//    void Update__Lote_Not_Found() throws LoteNotFoundException, NotFoundConflictException {
-//        when(loteService.update(any(LoteUpdateDTO.class))).thenThrow(new LoteNotFoundException());
-//        LoteNotFoundException thrown = assertThrows(
-//                LoteNotFoundException.class, () -> loteController.update(mockLoteUpdateDTO1())
-//        );
-//        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
-//    }
-//
-//    @Test
-//    void Save__Queso_Not_Found_Conflict() throws NotFoundConflictException, LoteNotFoundException {
-//        when(loteService.update(any(LoteUpdateDTO.class))).thenThrow(new NotFoundConflictException("queso not found"));
-//        NotFoundConflictException thrown = assertThrows(
-//                NotFoundConflictException.class, () -> loteController.update(mockLoteUpdateDTO1())
-//        );
-//        assertEquals("queso not found", thrown.getMessage());
-//    }
-//
+
+    @Test
+    void Update__OK() throws QuesoNotFoundConflictException, LoteNotFoundException {
+        when(loteService.update(any(LoteUpdateDTO.class))).thenReturn(mockLoteDTO1());
+        LoteDTO dtoActual = requireNonNull(loteController.update(mockLoteUpdateDTO1()).getBody()).getData();
+        String message = requireNonNull(loteController.update(mockLoteUpdateDTO1()).getBody()).getMessage();
+        LoteDTO dtoExpected = mockLoteDTO1();
+        assertEquals(dtoExpected, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_LOTE_UPDATED, message);
+    }
+
+    @Test
+    void Update__Lote_Not_Found() throws LoteNotFoundException, QuesoNotFoundConflictException {
+        when(loteService.update(any(LoteUpdateDTO.class))).thenThrow(new LoteNotFoundException());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> loteController.update(mockLoteUpdateDTO1())
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Save__Queso_Not_Found_Conflict() throws QuesoNotFoundConflictException, LoteNotFoundException {
+        when(loteService.update(any(LoteUpdateDTO.class))).thenThrow(new QuesoNotFoundConflictException());
+        QuesoNotFoundConflictException thrown = assertThrows(
+                QuesoNotFoundConflictException.class, () -> loteController.update(mockLoteUpdateDTO1())
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
 //    @Test
 //    void Delete__OK() throws LoteNotFoundException {
 //        when(loteService.delete("101020210011")).thenReturn("101020210011");

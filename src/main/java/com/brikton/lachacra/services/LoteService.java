@@ -26,13 +26,26 @@ public class LoteService {
     }
 
     public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
-        var id = dto.getId() == null || dto.getId().equals("")
-                ? generateID(dto)
-                : dto.getId();
+        var id = generateID(dto);
         if (repository.existsById(id)) {
             throw new LoteAlreadyExistsException();
         }
+        return persist(dto);
+    }
 
+    public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
+        var dto = new LoteDTO(dtpUpdate);
+        var id = dto.getId() == null || dto.getId().equals("")
+                ? generateID(dto)
+                : dto.getId();
+        if (!repository.existsById(id)) {
+            throw new LoteNotFoundException();
+        }
+        repository.deleteById(dto.getId());
+        return persist(dto);
+    }
+
+    private LoteDTO persist(LoteDTO dto) throws QuesoNotFoundConflictException {
         var lote = loteFromDTO(dto);
         var rendimiento = (dto.getPeso() / dto.getLitrosLeche()) * 100;
         var stock = dto.getCantHormas();
@@ -40,13 +53,6 @@ public class LoteService {
         lote.setStockLote(stock);
         lote = repository.save(lote);
         return new LoteDTO(lote);
-    }
-
-    public LoteDTO update(LoteUpdateDTO dto) throws QuesoNotFoundConflictException, LoteNotFoundException {
-        ///TODO sumar stock asignar directamente, sino que debería sumar/restar
-//        delete(dto.getId());
-//        return save(new LoteDTO(dto));
-        return null;
     }
 
     public List<LoteDTO> getAll() {
