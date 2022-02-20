@@ -31,7 +31,7 @@ public class Lote {
     private String loteCuajo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id_queso")
     private Queso queso;
 
     @Override
