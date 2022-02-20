@@ -32,6 +32,7 @@ public class Lote {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_queso")
+    @ToString.Exclude
     private Queso queso;
 
     @Override

@@ -1,6 +1,7 @@
 package com.brikton.lachacra.entities;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,8 +17,9 @@ import java.util.Objects;
 public class Queso {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
+    @GenericGenerator(name = "seq", strategy="increment")
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true, name = "codigo")
     private String codigo;

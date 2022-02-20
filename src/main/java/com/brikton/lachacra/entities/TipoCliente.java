@@ -2,6 +2,7 @@ package com.brikton.lachacra.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -14,8 +15,9 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TipoCliente {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
+    @GenericGenerator(name = "seq", strategy="increment")
     @Column(name = "id_tipo_cliente")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique = true)
