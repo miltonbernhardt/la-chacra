@@ -8,7 +8,9 @@ import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
+import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
@@ -34,6 +36,12 @@ public class QuesoServiceTest {
 
     @MockBean
     QuesoRepository repository;
+
+    @MockBean
+    LoteRepository loteRepository;
+
+    @MockBean
+    PrecioService precioService;
 
     @MockBean
     DateUtil dateUtil;
@@ -288,7 +296,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Delete__OK() throws QuesoNotFoundException {
+    void Delete_Queso_WITH_Dependencies__OK() throws QuesoNotFoundException {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
@@ -297,26 +305,45 @@ public class QuesoServiceTest {
         mockQueso.setStock(1);
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
+        when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);
         assertEquals("001", actualID);
     }
 
     @Test
-    void Delete__Queso_Already_Deleted() {
+    void Delete_Queso_WITHOUT_Dependencies__OK() throws QuesoNotFoundException {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
         mockQueso.setTipoQueso("TIPO_QUESO");
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
-        mockQueso.setFechaBaja(LocalDate.of(2021, 10, 10));
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.delete(1L)
-        );
-        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+        when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
+        when(precioService.getAllByQueso(1L)).thenReturn(List.of(1L, 2L, 3L));
+        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
+        String actualID = quesoService.delete(1L);
+        assertEquals("", actualID);
+    }
+
+    @Test
+    void Delete_Queso_WITHOUT_Dependencies_Precio_Not_Found_OK() throws PrecioNotFoundException, QuesoNotFoundException {
+        Queso mockQueso = new Queso();
+        mockQueso.setId(1L);
+        mockQueso.setCodigo("001");
+        mockQueso.setTipoQueso("TIPO_QUESO");
+        mockQueso.setNomenclatura("tip");
+        mockQueso.setStock(1);
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
+        when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
+        when(precioService.getAllByQueso(1L)).thenReturn(List.of(3L));
+        when(precioService.delete(3L)).thenThrow(new PrecioNotFoundException());
+        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
+        String actualID = quesoService.delete(1L);
+        assertEquals("", actualID);
     }
 
     @Test
@@ -335,24 +362,6 @@ public class QuesoServiceTest {
         queso.setCodigo("001");
         queso.setNomenclatura("tip");
         queso.setStock(1);
-
-        var tipoCliente1 = new TipoCliente(1L, "TIPO1");
-        var tipoCliente2 = new TipoCliente(2L, "TIPO2");
-
-        Precio p1 = new Precio();
-        p1.setId(1L);
-        p1.setQueso(queso);
-        p1.setPrecio(1D);
-        p1.setTipoCliente(tipoCliente1);
-
-        Precio p2 = new Precio();
-        p2.setId(2L);
-        p2.setQueso(queso);
-        p2.setPrecio(2D);
-        p2.setTipoCliente(tipoCliente2);
-
-        queso.setPreciosActual(List.of(p1, p2));
-
         return queso;
     }
 }

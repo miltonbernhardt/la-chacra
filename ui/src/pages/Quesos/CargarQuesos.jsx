@@ -32,7 +32,7 @@ const CargarQuesos = () => {
         getAllQuesos().then(quesos => {
             const listaAux = quesos.data.map((q) => {
                 return {
-                    id: q.codigo, //todo si agrego id se toca aca
+                    id: q.id,
                     codigo: q.codigo,
                     nomenclatura: q.nomenclatura,
                     tipoQueso: q.tipoQueso
@@ -62,7 +62,7 @@ const CargarQuesos = () => {
     }
 
     const onDelete = () => {
-        deleteQueso(queso.codigo)
+        deleteQueso(queso.id)
             .then(() => {
                 fetchQuesos()
             })

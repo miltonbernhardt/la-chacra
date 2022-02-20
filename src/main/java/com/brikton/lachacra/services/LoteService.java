@@ -72,6 +72,11 @@ public class LoteService {
         return id;
     }
 
+    //todo test
+    public boolean existsByQueso(Queso queso) {
+        return repository.existsByQueso(queso);
+    }
+
     private Lote loteFromDTO(LoteDTO dto) throws QuesoNotFoundConflictException {
         Queso queso;
         try {

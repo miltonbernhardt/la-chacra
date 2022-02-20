@@ -5,7 +5,9 @@ import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
+import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
+import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +22,19 @@ public class QuesoService {
 
     private final DateUtil dateUtil;
     private final QuesoRepository repository;
+    private final LoteRepository loteRepository; //todo ver de usar el service sin tener el problema de lo beans ciclicos
+    private final PrecioService precioService;
 
-    public QuesoService(DateUtil dateUtil, QuesoRepository repository) {
+    public QuesoService(
+            DateUtil dateUtil,
+            QuesoRepository repository,
+            LoteRepository loteRepository,
+            PrecioService precioService
+    ) {
         this.dateUtil = dateUtil;
         this.repository = repository;
+        this.loteRepository = loteRepository;
+        this.precioService = precioService;
     }
 
     public Queso getEntity(Long id) throws QuesoNotFoundException {
@@ -65,7 +76,7 @@ public class QuesoService {
         if (oldQuesoOptional.isEmpty())
             throw new QuesoNotFoundException();
 
-        var oldQueso= oldQuesoOptional.get();
+        var oldQueso = oldQuesoOptional.get();
 
 
         if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsQuesoByCodigo(dto.getCodigo())) {
@@ -84,12 +95,24 @@ public class QuesoService {
         return new QuesoDTO(queso);
     }
 
-    //todo las dependencias son de Lote, (Precio se borra tambien)
     public String delete(Long id) throws QuesoNotFoundException {
-        var queso = getEntity(id);//TODO hacer la query para verificar los lotes - borrar posta
-        queso.setFechaBaja(dateUtil.now());
-        repository.save(queso);
-        return queso.getCodigo();
+        var queso = getEntity(id);
+
+        if (loteRepository.existsByQueso(queso)) {
+            queso.setFechaBaja(dateUtil.now());
+            queso = repository.save(queso);
+            return queso.getCodigo();
+        }
+
+        for (Long idPrecio : precioService.getAllByQueso(queso.getId())) {
+            try {
+                precioService.delete(idPrecio);
+            } catch (PrecioNotFoundException ignored) {
+            }
+        }
+
+        repository.delete(queso);
+        return "";
     }
 
     private Queso quesoFromDTO(QuesoDTO dto) {

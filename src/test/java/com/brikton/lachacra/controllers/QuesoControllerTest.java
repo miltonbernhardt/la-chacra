@@ -158,10 +158,17 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Delete__OK() throws QuesoNotFoundException {
+    void Delete_Queso_WITH_Dependencies__OK() throws QuesoNotFoundException {
         when(quesoService.delete(1L)).thenReturn("001");
         var codigo = requireNonNull(quesoController.delete(1L).getBody()).getData();
         assertEquals("001", codigo);
+    }
+
+    @Test
+    void Delete_Queso_WITHOUT_Dependencies__OK() throws QuesoNotFoundException {
+        when(quesoService.delete(1L)).thenReturn("");
+        var codigo = requireNonNull(quesoController.delete(1L).getBody()).getData();
+        assertEquals("", codigo);
     }
 
     @Test

@@ -5,7 +5,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,10 +27,6 @@ public class Queso {
     private String nomenclatura;
     private Integer stock;
     private LocalDate fechaBaja;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private List<Precio> preciosActual;
 
     @Override
     public boolean equals(Object o) {
