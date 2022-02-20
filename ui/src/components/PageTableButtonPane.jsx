@@ -17,8 +17,8 @@ const PageTableButtonPane = ({title, buttons, grid, children}) => {
                   boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px',
                   boxSizing: "border-box",
               }}>
-            <Grid item container direction="column" xs={12} spacing={2}>
-                <Grid item container justifyContent="space-between" xs={12}>
+            <Grid item container direction="column" xs={12}>
+                <Grid item container justifyContent="space-between" xs={12} style={{paddingBottom: "1%"}}>
                     <Typography variant="h6">{title}</Typography>
                     <ButtonGroup variant="contained">
                         {buttons}
