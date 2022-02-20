@@ -9,14 +9,11 @@ import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.LoteService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -31,13 +28,6 @@ public class LoteController {
 
     public LoteController(LoteService service) {
         this.service = service;
-    }
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> get(@Pattern(regexp = "^[0-9]{12,13}$", message = ValidationMessages.INVALID_FORMAT)
-                                                           @PathVariable("id") String id) throws LoteNotFoundException {
-        log.info("API::get - id: {}", id);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
 
     @GetMapping(value = "/")
