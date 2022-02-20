@@ -3,6 +3,7 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
@@ -42,7 +43,7 @@ public class QuesoController {
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoDTO dto) throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoUpdateDTO dto) throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_UPDATED, service.update(dto)));
     }

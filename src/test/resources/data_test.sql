@@ -7,10 +7,10 @@ VALUES (1, '003', 'S', 'Sardo', 53, null),
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, id_queso,
                          id_lote, peso, rendimiento, stock_lote, lote_cultivo, lote_colorante, lote_calcio,
                          lote_cuajo)
-VALUES ('2021-10-22', 1, 4900, 124, 1, '221020210011', 526.7, 10.75, 20, 'cultivo1, cultivo2',
+VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210011', 526.7, 10.75, 20, 'cultivo1, cultivo2',
         'colorante1, colorante2', 'calcio1, calcio2', 'cuajo1, cuajo2'),
-       ('2021-10-23', 2, 6500, 228, 1, '231020210022', 842.5, 12.96, 25, null, null, null, null),
-       ('2021-10-24', 3, 6537, 242, 2, '241020210033', 938.8, 14.36, 30, 'cultivo1, cultivo2', null, null,
+       ('2021-10-23', 2, 6500, 228, 2, '231020210022', 842.5, 12.96, 25, null, null, null, null),
+       ('2021-10-24', 3, 6537, 242, 3, '241020210033', 938.8, 14.36, 30, 'cultivo1, cultivo2', null, null,
         'cuajo1, cuajo2');
 
 INSERT INTO public.tipo_cliente (id_tipo_cliente, tipo)

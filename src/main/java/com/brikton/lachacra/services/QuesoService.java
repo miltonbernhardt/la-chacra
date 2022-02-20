@@ -1,6 +1,7 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
@@ -59,8 +60,13 @@ public class QuesoService {
         return new QuesoDTO(queso);
     }
 
-    public QuesoDTO update(QuesoDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
-        var oldQueso = getEntity(dto.getId());
+    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+        var oldQuesoOptional = repository.findById(dto.getId());
+        if (oldQuesoOptional.isEmpty())
+            throw new QuesoNotFoundException();
+
+        var oldQueso= oldQuesoOptional.get();
+
 
         if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsQuesoByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
@@ -73,10 +79,12 @@ public class QuesoService {
         oldQueso.setCodigo(dto.getCodigo());
         oldQueso.setNomenclatura(dto.getNomenclatura());
         oldQueso.setTipoQueso(dto.getTipoQueso());
+        //todo que hacemos con el stock? para mi, no deberia actualizar porque se calcula a partir de expediciones y lotes
         var queso = repository.save(oldQueso);
         return new QuesoDTO(queso);
     }
 
+    //todo las dependencias son de Lote, (Precio se borra tambien)
     public String delete(Long id) throws QuesoNotFoundException {
         var queso = getEntity(id);//TODO hacer la query para verificar los lotes - borrar posta
         queso.setFechaBaja(dateUtil.now());

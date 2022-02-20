@@ -62,6 +62,7 @@ public class LoteService {
         return lotesDTO;
     }
 
+    //todo dependencias de expedicion,
     public String delete(String id) throws LoteNotFoundException {
         //todo logica de borrar o dar de baja
         if (repository.existsById(id))

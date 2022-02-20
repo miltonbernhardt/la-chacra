@@ -3,6 +3,7 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
@@ -84,7 +85,7 @@ public class QuesoControllerTest {
 
     @Test
     void Update__OK() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+        var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
         dtoToUpdate.setTipoQueso("tipoQueso");
@@ -110,7 +111,7 @@ public class QuesoControllerTest {
 
     @Test
     void Update__Queso_Not_Found() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+        var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
         dtoToUpdate.setTipoQueso("tipoQueso");
@@ -126,7 +127,7 @@ public class QuesoControllerTest {
 
     @Test
     void Update__Codigo_Queso_Already_Exists() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+        var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
         dtoToUpdate.setTipoQueso("tipoQueso");
@@ -142,7 +143,7 @@ public class QuesoControllerTest {
 
     @Test
     void Update__Nomenclatura_Queso_Already_Exists() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+        var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
         dtoToUpdate.setTipoQueso("tipoQueso");

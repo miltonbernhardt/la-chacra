@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,55 +80,55 @@ public class LoteControllerIntegrationTest {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
-//
-//    @Test //todo
-//    void Get_All__OK() throws JsonProcessingException {
-//        LoteDTO dto1 = new LoteDTO();
-//        dto1.setId("221020210011");
-//        dto1.setFechaElaboracion(LocalDate.of(2021, 10, 22));
-//        dto1.setNumeroTina(1);
-//        dto1.setLitrosLeche(4900D);
-//        dto1.setCantHormas(124);
-//        dto1.setStockLote(20);
-//        dto1.setPeso(526.7);
-//        dto1.setRendimiento(10.75);
-//        dto1.setLoteCultivo("cultivo1, cultivo2");
-//        dto1.setLoteColorante("colorante1, colorante2");
-//        dto1.setLoteCalcio("calcio1, calcio2");
-//        dto1.setLoteCuajo("cuajo1, cuajo2");
-//        dto1.setCodigoQueso("001");
-//
-//        LoteDTO dto2 = new LoteDTO();
-//        dto2.setId("231020210022");
-//        dto2.setFechaElaboracion(LocalDate.of(2021, 10, 23));
-//        dto2.setNumeroTina(2);
-//        dto2.setLitrosLeche(6500D);
-//        dto2.setCantHormas(228);
-//        dto2.setStockLote(25);
-//        dto2.setPeso(842.5);
-//        dto2.setRendimiento(12.96);
-//        dto2.setCodigoQueso("002");
-//
-//        LoteDTO dto3 = new LoteDTO();
-//        dto3.setId("241020210033");
-//        dto3.setFechaElaboracion(LocalDate.of(2021, 10, 24));
-//        dto3.setNumeroTina(3);
-//        dto3.setLitrosLeche(6537D);
-//        dto3.setCantHormas(242);
-//        dto3.setStockLote(30);
-//        dto3.setPeso(938.8);
-//        dto3.setRendimiento(14.36);
-//        dto3.setLoteCultivo("cultivo1, cultivo2");
-//        dto3.setLoteCuajo("cuajo1, cuajo2");
-//        dto3.setCodigoQueso("003");
-//
-//        String expectedLotes = mapper.writeValueAsString(List.of(dto1, dto2, dto3));
-//        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-//        var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-//        assertNotNull(response.getBody());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(expectedLotes, actualLotes);
-//    }
+
+    @Test
+    void Get_All__OK() throws JsonProcessingException {
+        LoteDTO dto1 = new LoteDTO();
+        dto1.setId("221020210011");
+        dto1.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dto1.setNumeroTina(1);
+        dto1.setLitrosLeche(4900D);
+        dto1.setCantHormas(124);
+        dto1.setStockLote(20);
+        dto1.setPeso(526.7);
+        dto1.setRendimiento(10.75);
+        dto1.setLoteCultivo("cultivo1, cultivo2");
+        dto1.setLoteColorante("colorante1, colorante2");
+        dto1.setLoteCalcio("calcio1, calcio2");
+        dto1.setLoteCuajo("cuajo1, cuajo2");
+        dto1.setCodigoQueso("001");
+
+        LoteDTO dto2 = new LoteDTO();
+        dto2.setId("231020210022");
+        dto2.setFechaElaboracion(LocalDate.of(2021, 10, 23));
+        dto2.setNumeroTina(2);
+        dto2.setLitrosLeche(6500D);
+        dto2.setCantHormas(228);
+        dto2.setStockLote(25);
+        dto2.setPeso(842.5);
+        dto2.setRendimiento(12.96);
+        dto2.setCodigoQueso("001");
+
+        LoteDTO dto3 = new LoteDTO();
+        dto3.setId("241020210033");
+        dto3.setFechaElaboracion(LocalDate.of(2021, 10, 24));
+        dto3.setNumeroTina(3);
+        dto3.setLitrosLeche(6537D);
+        dto3.setCantHormas(242);
+        dto3.setStockLote(30);
+        dto3.setPeso(938.8);
+        dto3.setRendimiento(14.36);
+        dto3.setLoteCultivo("cultivo1, cultivo2");
+        dto3.setLoteCuajo("cuajo1, cuajo2");
+        dto3.setCodigoQueso("002");
+
+        String expectedLotes = mapper.writeValueAsString(List.of(dto1, dto2, dto3));
+        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var actualLotes = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedLotes, actualLotes);
+    }
 
     @Test
     void Save__OK() throws JsonProcessingException {
@@ -212,30 +213,53 @@ public class LoteControllerIntegrationTest {
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
         assertEquals(path, response.getPath());
     }
-//
-//    @Test //todo
-//    void Save__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
-//        LoteDTO dtoToSave = new LoteDTO();
-//        dtoToSave.setId("1");
-//        dtoToSave.setStockLote(1);
-//        dtoToSave.setRendimiento(1d);
-//
-//        HttpClientErrorException.BadRequest thrown = assertThrows(
-//                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
-//        );
-//
-//        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-//        assertEquals(path, response.getPath());
-//        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
-//        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
-//        assertEquals(6, response.getErrors().size());
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("numeroTina"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("cantHormas"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("fechaElaboracion"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("litrosLeche"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("peso"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
-//    }
+
+    @Test
+    void Save__Lote_Already_Exists() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dtoToSave.setNumeroTina(1);
+        dtoToSave.setCantHormas(1);
+        dtoToSave.setLitrosLeche(20D);
+        dtoToSave.setPeso(10D);
+        dtoToSave.setLoteCultivo("cultivo1, cultivo2");
+        dtoToSave.setLoteColorante("colorante1, colorante2");
+        dtoToSave.setLoteCalcio("calcio1, calcio2");
+        dtoToSave.setLoteCuajo("cuajo1, cuajo2");
+        dtoToSave.setCodigoQueso("001");
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_ALREADY_EXIST, response.getMessage());
+        assertEquals(path, response.getPath());
+    }
+
+    @Test
+    void Save__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setId("1");
+        dtoToSave.setStockLote(1);
+        dtoToSave.setRendimiento(1d);
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(6, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("fechaElaboracion"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
+    }
 
     @Test
     void Save__Invalid_Fields__Other_Validations() throws JsonProcessingException {
@@ -388,29 +412,29 @@ public class LoteControllerIntegrationTest {
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
     }
 
-//    @Test //todo
-//    void Update__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
-//        LoteDTO dtoToUpdate = new LoteDTO();
-//        dtoToUpdate.setStockLote(1);
-//        dtoToUpdate.setRendimiento(1d);
-//
-//        HttpClientErrorException.BadRequest thrown = assertThrows(
-//                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-//        );
-//
-//        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-//        assertEquals(path, response.getPath());
-//        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
-//        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
-//        assertEquals(7, response.getErrors().size());
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("numeroTina"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("cantHormas"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("fechaElaboracion"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("litrosLeche"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("peso"));
-//        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
-//    }
+    @Test
+    void Update__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
+        LoteDTO dtoToUpdate = new LoteDTO();
+        dtoToUpdate.setStockLote(1);
+        dtoToUpdate.setRendimiento(1d);
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(7, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("numeroTina"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("cantHormas"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("fechaElaboracion"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("litrosLeche"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("peso"));
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
+    }
 
     @Test
     void Update__Invalid_Fields__Codigo_Queso_Too_Short() throws JsonProcessingException {

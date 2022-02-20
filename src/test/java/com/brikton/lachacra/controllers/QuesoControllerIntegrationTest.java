@@ -4,6 +4,7 @@ import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,8 +28,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -76,61 +79,64 @@ public class QuesoControllerIntegrationTest {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
+    
+    @Test
+    void Get_All__OK() throws JsonProcessingException {
+        QuesoDTO mockQueso1 = new QuesoDTO();
+        mockQueso1.setId(2L);
+        mockQueso1.setCodigo("001");
+        mockQueso1.setTipoQueso("Cremoso");
+        mockQueso1.setNomenclatura("C");
+        mockQueso1.setStock(70);
 
+        QuesoDTO mockQueso2 = new QuesoDTO();
+        mockQueso2.setId(3L);
+        mockQueso2.setCodigo("002");
+        mockQueso2.setTipoQueso("Barra");
+        mockQueso2.setNomenclatura("B");
+        mockQueso2.setStock(20);
 
-//    @Test
-//    void Get_All__OK() throws JsonProcessingException {
-//        QuesoDTO mockQueso1 = new QuesoDTO();
-//        mockQueso1.setCodigo("001");
-//        mockQueso1.setTipoQueso("Cremoso");
-//        mockQueso1.setNomenclatura("C");
-//        mockQueso1.setStock(70);
-//
-//        QuesoDTO mockQueso2 = new QuesoDTO();
-//        mockQueso2.setCodigo("002");
-//        mockQueso2.setTipoQueso("Barra");
-//        mockQueso2.setNomenclatura("B");
-//        mockQueso2.setStock(20);
-//
-//        QuesoDTO mockQueso3 = new QuesoDTO();
-//        mockQueso3.setCodigo("003");
-//        mockQueso3.setTipoQueso("Sardo");
-//        mockQueso3.setNomenclatura("S");
-//        mockQueso3.setStock(53);
-//
-//        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
-//        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-//        var actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-//        assertNotNull(response.getBody());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(expectedQuesos, actualQuesos);
-//    }
-//
-//    @Test
-//    void Save__OK() throws JsonProcessingException {
-//        QuesoDTO dtoToSave = new QuesoDTO();
-//        dtoToSave.setCodigo("005");
-//        dtoToSave.setTipoQueso("tipoQueso");
-//        dtoToSave.setNomenclatura("tip");
-//        dtoToSave.setStock(10);
-//
-//        QuesoDTO expectedDTO = new QuesoDTO();
-//        expectedDTO.setCodigo("005");
-//        expectedDTO.setTipoQueso("TIPOQUESO");
-//        expectedDTO.setNomenclatura("TIP");
-//        expectedDTO.setStock(10);
-//
-//        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
-//
-//        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
-//        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-//        assertNotNull(response.getBody());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(expectedQuesoString, actualQueso);
-//    }
+        QuesoDTO mockQueso3 = new QuesoDTO();
+        mockQueso3.setId(1L);
+        mockQueso3.setCodigo("003");
+        mockQueso3.setTipoQueso("Sardo");
+        mockQueso3.setNomenclatura("S");
+        mockQueso3.setStock(53);
+
+        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
+        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var actualQuesos = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesos, actualQuesos);
+    }
 
     @Test
-    void Save__Queso_Already_Exists() throws JsonProcessingException {
+    void Save__OK() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("006");
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("tip");
+        dtoToSave.setStock(10);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setId(5L);
+        expectedDTO.setCodigo("006");
+        expectedDTO.setTipoQueso("TIPOQUESO");
+        expectedDTO.setNomenclatura("TIP");
+        expectedDTO.setStock(10);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
+
+    @Test
+    void Save__Codigo_Queso_Already_Exists() throws JsonProcessingException {
         QuesoDTO dtoToSave = new QuesoDTO();
         dtoToSave.setCodigo("003");
         dtoToSave.setTipoQueso("tipoQueso");
@@ -145,6 +151,24 @@ public class QuesoControllerIntegrationTest {
         assertEquals(path, response.getPath());
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
+    }
+
+    @Test
+    void Save__Nomenclatura_Queso_Already_Exists() throws JsonProcessingException {
+        QuesoDTO dtoToSave = new QuesoDTO();
+        dtoToSave.setCodigo("006");
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("B");
+        dtoToSave.setStock(10);
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, response.getMessage());
     }
 
     @Test
@@ -225,73 +249,116 @@ public class QuesoControllerIntegrationTest {
         assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigo"));
     }
 
-//    @Test
-//    void Update__OK() throws JsonProcessingException {
-//        QuesoDTO dtoToUpdate = new QuesoDTO();
-//        dtoToUpdate.setCodigo("003");
-//        dtoToUpdate.setTipoQueso("tipoQueso");
-//        dtoToUpdate.setNomenclatura("tip");
-//        dtoToUpdate.setStock(10);
-//
-//        QuesoDTO expectedDTO = new QuesoDTO();
-//        expectedDTO.setCodigo("003");
-//        expectedDTO.setTipoQueso("tipoQueso");
-//        expectedDTO.setNomenclatura("tip");
-//        expectedDTO.setStock(10);
-//
-//        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
-//
-//        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-//        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-//        assertNotNull(response.getBody());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(expectedQuesoString, actualQueso);
-//    }
-//
-//    @Test
-//    void Update__Queso_Not_Found() throws JsonProcessingException {
-//        QuesoDTO dtoToUpdate = new QuesoDTO();
-//        dtoToUpdate.setCodigo("011");
-//        dtoToUpdate.setTipoQueso("tipoQueso");
-//        dtoToUpdate.setNomenclatura("tip");
-//        dtoToUpdate.setStock(10);
-//
-//        HttpClientErrorException.NotFound thrown = assertThrows(
-//                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-//        );
-//
-//        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-//        assertEquals(path, response.getPath());
-//        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
-//    }
-//
-//    @Test
-//    void Update__Over_Queso_Deleted__OK() throws JsonProcessingException {
-//        QuesoDTO dtoToUpdate = new QuesoDTO();
-//        dtoToUpdate.setCodigo("004");
-//        dtoToUpdate.setTipoQueso("tipoQueso");
-//        dtoToUpdate.setNomenclatura("tip");
-//        dtoToUpdate.setStock(10);
-//
-//        QuesoDTO expectedDTO = new QuesoDTO();
-//        expectedDTO.setCodigo("004");
-//        expectedDTO.setTipoQueso("tipoQueso");
-//        expectedDTO.setNomenclatura("tip");
-//        expectedDTO.setStock(10);
-//
-//        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
-//
-//        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-//        var actualQueso = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
-//        assertNotNull(response.getBody());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(expectedQuesoString, actualQueso);
-//    }
+    @Test
+    void Update__OK() throws JsonProcessingException {
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(1L);
+        dtoToUpdate.setCodigo("005");
+        dtoToUpdate.setTipoQueso("tipoQueso2");
+        dtoToUpdate.setNomenclatura("tip2");
+        dtoToUpdate.setStock(10);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setId(1L);
+        expectedDTO.setCodigo("005");
+        expectedDTO.setTipoQueso("tipoQueso2");
+        expectedDTO.setNomenclatura("tip2");
+        expectedDTO.setStock(53);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
+
+    @Test
+    void Update__Queso_Not_Found() throws JsonProcessingException {
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(11L);
+        dtoToUpdate.setCodigo("011");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(10);
+
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+    }
+
+    @Test
+    void Update__Codigo_Queso_Already_Exists() throws JsonProcessingException {
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(3L);
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(10);
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
+    }
+
+    @Test
+    void Update__Nomenclatura_Queso_Already_Exists() throws JsonProcessingException {
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(3L);
+        dtoToUpdate.setCodigo("002");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("C");
+        dtoToUpdate.setStock(10);
+
+        HttpClientErrorException.Conflict thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, response.getMessage());
+    }
+
+    @Test
+    void Update__Over_Queso_Deleted__OK() throws JsonProcessingException {
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(4L);
+        dtoToUpdate.setCodigo("004");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(20);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setId(4L);
+        expectedDTO.setCodigo("004");
+        expectedDTO.setTipoQueso("tipoQueso");
+        expectedDTO.setNomenclatura("tip");
+        expectedDTO.setStock(0);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
 
     @Test
     void Update__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setStock(10);
 
         HttpClientErrorException.BadRequest thrown = assertThrows(
@@ -302,7 +369,8 @@ public class QuesoControllerIntegrationTest {
         assertEquals(path, response.getPath());
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
-        assertEquals(3, response.getErrors().size());
+        assertEquals(4, response.getErrors().size());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("id"));
         assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("tipoQueso"));
         assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigo"));
         assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("nomenclatura"));
@@ -311,6 +379,7 @@ public class QuesoControllerIntegrationTest {
     @Test
     void Update__Invalid_Fields__Other_Validations() throws JsonProcessingException {
         QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setId(0L);
         dtoToUpdate.setCodigo("0010");
         dtoToUpdate.setTipoQueso(RandomStringUtils.randomAlphabetic(300));
         dtoToUpdate.setNomenclatura(RandomStringUtils.randomAlphabetic(300));
@@ -324,7 +393,8 @@ public class QuesoControllerIntegrationTest {
         assertEquals(path, response.getPath());
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
-        assertEquals(3, response.getErrors().size());
+        assertEquals(4, response.getErrors().size());
+        assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
         assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigo"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("tipoQueso"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("nomenclatura"));
@@ -333,6 +403,7 @@ public class QuesoControllerIntegrationTest {
     @Test
     void Update__Invalid_Fields__Codigo_Too_Short() throws JsonProcessingException {
         QuesoDTO dtoToUpdate = new QuesoDTO();
+        dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("10");
         dtoToUpdate.setTipoQueso("11a");
         dtoToUpdate.setNomenclatura("11a");
@@ -353,7 +424,7 @@ public class QuesoControllerIntegrationTest {
 //    void Delete__OK() throws JsonProcessingException {
 //        String expectedID = mapper.writeValueAsString("001");
 //        var response = deleteForEntity(baseUrl.concat("001"), SuccessfulResponse.class);
-//        var actualID = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+//        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
 //        assertNotNull(response.getBody());
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertEquals(expectedID, actualID);
@@ -381,21 +452,21 @@ public class QuesoControllerIntegrationTest {
 //
 //        String expectedQuesos = mapper.writeValueAsString(List.of(mockQueso1, mockQueso2, mockQueso3));
 //        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-//        var actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+//        var actualQuesos = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
 //        assertNotNull(response.getBody());
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertEquals(expectedQuesos, actualQuesos);
 //
 //        String expectedID = mapper.writeValueAsString("001");
 //        response = deleteForEntity(baseUrl.concat("001"), SuccessfulResponse.class);
-//        var actualID = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+//        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
 //        assertNotNull(response.getBody());
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertEquals(expectedID, actualID);
 //
 //        expectedQuesos = mapper.writeValueAsString(List.of(mockQueso2, mockQueso3));
 //        response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-//        actualQuesos = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+//        actualQuesos = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
 //        assertNotNull(response.getBody());
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
 //        assertEquals(expectedQuesos, actualQuesos);

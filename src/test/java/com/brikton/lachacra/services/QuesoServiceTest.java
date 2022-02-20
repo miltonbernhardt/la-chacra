@@ -2,6 +2,7 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
@@ -195,7 +196,7 @@ public class QuesoServiceTest {
 
     @Test
     void Update__OK() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
-        QuesoDTO quesoTpUpdate = new QuesoDTO();
+        var quesoTpUpdate = new QuesoUpdateDTO();
         quesoTpUpdate.setId(1L);
         quesoTpUpdate.setCodigo("002");
         quesoTpUpdate.setTipoQueso("TIPO_QUESO2");
@@ -226,7 +227,7 @@ public class QuesoServiceTest {
 
     @Test
     void Update__Queso_Not_Exists() {
-        QuesoDTO dto = new QuesoDTO();
+        var dto = new QuesoUpdateDTO();
         dto.setId(1L);
         when(repository.findById(1L)).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
@@ -237,7 +238,7 @@ public class QuesoServiceTest {
 
     @Test
     void Update__Codigo_Queso_Already_Exists() {
-        QuesoDTO dto = new QuesoDTO();
+        var dto = new QuesoUpdateDTO();
         dto.setId(1L);
         dto.setCodigo("002");
         dto.setTipoQueso("TIPO_QUESO2");
@@ -262,7 +263,7 @@ public class QuesoServiceTest {
 
     @Test
     void Update__Nomenclatura_Queso_Already_Exists() {
-        QuesoDTO dto = new QuesoDTO();
+        var dto = new QuesoUpdateDTO();
         dto.setId(1L);
         dto.setCodigo("002");
         dto.setTipoQueso("TIPO_QUESO2");
