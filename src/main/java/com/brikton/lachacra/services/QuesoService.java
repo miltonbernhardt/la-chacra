@@ -32,6 +32,13 @@ public class QuesoService {
         throw new QuesoNotFoundException();
     }
 
+    public Queso getEntity(String codigo) throws QuesoNotFoundException {
+        var queso = repository.findByCodigo(codigo);
+        if (queso.isPresent() && queso.get().getFechaBaja() == null)
+            return queso.get();
+        throw new QuesoNotFoundException();
+    }
+
     public List<QuesoDTO> getAll() {
         var listaDTO = new ArrayList<QuesoDTO>();
         repository.findAllQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));

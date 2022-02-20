@@ -80,7 +80,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity__OK() throws QuesoNotFoundException {
+    void Get_Entity_By_ID__OK() throws QuesoNotFoundException {
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity(1L);
         Queso quesoExpected = mockQueso();
@@ -88,7 +88,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Queso_Deleted() {
+    void Get_Queso_By_ID__Deleted() {
         var dto = mockQueso();
         dto.setFechaBaja(LocalDate.of(2021, 10, 10));
         when(repository.findById(1L)).thenReturn(Optional.of(dto));
@@ -99,10 +99,38 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity__Queso_Not_Found() {
+    void Get_Entity_By_ID__Queso_Not_Found() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
                 QuesoNotFoundException.class, () -> quesoService.getEntity(1L)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Get_Entity_By_Codigo__OK() throws QuesoNotFoundException {
+        when(repository.findByCodigo("001")).thenReturn(Optional.of(mockQueso()));
+        Queso quesoActual = quesoService.getEntity("001");
+        Queso quesoExpected = mockQueso();
+        assertEquals(quesoExpected, quesoActual);
+    }
+
+    @Test
+    void Get_Entity_By_Codigo__Deleted() {
+        var dto = mockQueso();
+        dto.setFechaBaja(LocalDate.of(2021, 10, 10));
+        when(repository.findByCodigo("001")).thenReturn(Optional.of(dto));
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.getEntity("001")
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Get_Entity_By_Codigo__Queso_Not_Found() {
+        when(repository.findByCodigo("001")).thenReturn(Optional.empty());
+        QuesoNotFoundException thrown = assertThrows(
+                QuesoNotFoundException.class, () -> quesoService.getEntity("001")
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }

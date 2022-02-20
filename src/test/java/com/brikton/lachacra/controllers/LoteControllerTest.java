@@ -1,7 +1,12 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
+import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundConflictException;
 import com.brikton.lachacra.services.LoteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,8 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {LoteController.class})
@@ -35,24 +42,33 @@ public class LoteControllerTest {
         assertEquals(dtoExpected2, listOfDTOs.get(1));
     }
 
-//    @Test
-//    void Save__OK() throws NotFoundConflictException {
-//        when(loteService.save(any(LoteDTO.class))).thenReturn(mockLoteDTO1());
-//        LoteDTO dtoActual = requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getData();
-//        String message = requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getMessage();
-//        LoteDTO dtoExpected = mockLoteDTO1();
-//        assertEquals(dtoExpected, dtoActual);
-//        assertEquals(SuccessfulMessages.MSG_LOTE_CREATED, message);
-//    }
-//
-//    @Test
-//    void Save__Queso_Not_Found() throws NotFoundConflictException {
-//        when(loteService.save(any(LoteDTO.class))).thenThrow(new NotFoundConflictException(ErrorMessages.MSG_QUESO_NOT_FOUND));
-//        NotFoundConflictException thrown = assertThrows(
-//                NotFoundConflictException.class, () -> loteController.save(mockLoteDTO1())
-//        );
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-//    }
+    @Test
+    void Save__OK() throws NotFoundConflictException, LoteAlreadyExistsException {
+        when(loteService.save(any(LoteDTO.class))).thenReturn(mockLoteDTO1());
+        LoteDTO dtoActual = requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getData();
+        String message = requireNonNull(loteController.save(mockLoteDTO1()).getBody()).getMessage();
+        LoteDTO dtoExpected = mockLoteDTO1();
+        assertEquals(dtoExpected, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_LOTE_CREATED, message);
+    }
+
+    @Test
+    void Save__Queso_Not_Found() throws NotFoundConflictException, LoteAlreadyExistsException {
+        when(loteService.save(any(LoteDTO.class))).thenThrow(new QuesoNotFoundConflictException());
+        NotFoundConflictException thrown = assertThrows(
+                NotFoundConflictException.class, () -> loteController.save(mockLoteDTO1())
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Save__Lote_Already_Exists() throws NotFoundConflictException, LoteAlreadyExistsException {
+        when(loteService.save(any(LoteDTO.class))).thenThrow(new LoteAlreadyExistsException());
+        LoteAlreadyExistsException thrown = assertThrows(
+                LoteAlreadyExistsException.class, () -> loteController.save(mockLoteDTO1())
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_ALREADY_EXIST, thrown.getMessage());
+    }
 //
 //    @Test
 //    void Update__OK() throws NotFoundConflictException, LoteNotFoundException {
@@ -114,7 +130,7 @@ public class LoteControllerTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(1L);
+        dto.setCodigoQueso("001");
         return dto;
     }
 
@@ -132,7 +148,7 @@ public class LoteControllerTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(1L);
+        dto.setCodigoQueso("001");
         return dto;
     }
 
@@ -150,7 +166,7 @@ public class LoteControllerTest {
         dto.setLoteColorante("colorante1, colorante2");
         dto.setLoteCalcio("calcio1, calcio2");
         dto.setLoteCuajo("cuajo1, cuajo2");
-        dto.setIdQueso(2L);
+        dto.setCodigoQueso("002");
         return dto;
     }
 }

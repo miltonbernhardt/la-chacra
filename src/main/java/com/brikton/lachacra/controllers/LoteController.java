@@ -4,8 +4,9 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
+import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.LoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +37,13 @@ public class LoteController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> save(@RequestBody @Valid LoteDTO dto) throws NotFoundConflictException {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> save(@RequestBody @Valid LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_CREATED, service.save(dto)));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Validated LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Validated LoteUpdateDTO dto) throws QuesoNotFoundConflictException, LoteNotFoundException {
         log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_UPDATED, service.update(dto)));
     }

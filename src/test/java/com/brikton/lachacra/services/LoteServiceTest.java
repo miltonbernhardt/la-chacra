@@ -1,8 +1,12 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
+import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
+import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = LoteService.class)
@@ -42,7 +48,7 @@ public class LoteServiceTest {
         dtoExpected.setLoteColorante("colorante1, colorante2");
         dtoExpected.setLoteCalcio("calcio1, calcio2");
         dtoExpected.setLoteCuajo("cuajo1, cuajo2");
-        dtoExpected.setIdQueso(1L);
+        dtoExpected.setCodigoQueso("001");
 
         when(repository.findAll()).thenReturn(List.of(mockLote(), mockLote()));
         var actualLotes = loteService.getAll();
@@ -51,82 +57,108 @@ public class LoteServiceTest {
         assertEquals(dtoExpected, actualLotes.get(1));
     }
 
-//    @Test
-//    void Save__OK() throws QuesoNotFoundException, NotFoundConflictException {
-//        LoteDTO dtoToSave = new LoteDTO();
-//        dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-//        dtoToSave.setNumeroTina(1);
-//        dtoToSave.setCantHormas(1);
-//        dtoToSave.setLitrosLeche(20D);
-//        dtoToSave.setPeso(10D);
-//        dtoToSave.setLoteCultivo("cultivo1, cultivo2");
-//        dtoToSave.setLoteColorante("colorante1, colorante2");
-//        dtoToSave.setLoteCalcio("calcio1, calcio2");
-//        dtoToSave.setLoteCuajo("cuajo1, cuajo2");
-//        dtoToSave.setCodigoQueso("001");
-//
-//        Lote savedLote = new Lote();
-//        savedLote.setId("101020210011");
-//        savedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-//        savedLote.setNumeroTina(1);
-//        savedLote.setCantHormas(1);
-//        savedLote.setStockLote(90);
-//        savedLote.setLitrosLeche(20D);
-//        savedLote.setPeso(10D);
-//        savedLote.setRendimiento(20D);
-//        savedLote.setLoteCultivo("cultivo1, cultivo2");
-//        savedLote.setLoteColorante("colorante1, colorante2");
-//        savedLote.setLoteCalcio("calcio1, calcio2");
-//        savedLote.setLoteCuajo("cuajo1, cuajo2");
-//        savedLote.setQueso(mockQueso());
-//
-//        LoteDTO expectedLote = new LoteDTO();
-//        expectedLote.setId("101020210011");
-//        expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-//        expectedLote.setNumeroTina(1);
-//        expectedLote.setCantHormas(1);
-//        expectedLote.setLitrosLeche(20D);
-//        expectedLote.setPeso(10D);
-//        expectedLote.setStockLote(90);
-//        expectedLote.setRendimiento(20D);
-//        expectedLote.setLoteCultivo("cultivo1, cultivo2");
-//        expectedLote.setLoteColorante("colorante1, colorante2");
-//        expectedLote.setLoteCalcio("calcio1, calcio2");
-//        expectedLote.setLoteCuajo("cuajo1, cuajo2");
-//        expectedLote.setCodigoQueso("001");
-//
-//        when(quesoService.getEntity("001")).thenReturn(mockQueso());
-//        when(repository.existsById("001")).thenReturn(false);
-//        when(repository.save(any(Lote.class))).thenReturn(savedLote);
-//
-//        LoteDTO dtoActual = loteService.save(dtoToSave);
-//        assertEquals(expectedLote, dtoActual);
-//    }
-//
-//    @Test
-//    void Save__Queso_Not_Found() throws QuesoNotFoundException {
-//        LoteDTO dto = new LoteDTO();
-//        dto.setId("101020210011");
-//        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-//        dto.setNumeroTina(1);
-//        dto.setLitrosLeche(1D);
-//        dto.setCantHormas(1);
-//        dto.setStockLote(1);
-//        dto.setPeso(1D);
-//        dto.setRendimiento(1D);
-//        dto.setLoteCultivo("cultivo1, cultivo2");
-//        dto.setLoteColorante("colorante1, colorante2");
-//        dto.setLoteCalcio("calcio1, calcio2");
-//        dto.setLoteCuajo("cuajo1, cuajo2");
-//        dto.setCodigoQueso("001");
-//
-//        when(quesoService.getEntity("001")).thenThrow(QuesoNotFoundException.class);
-//        NotFoundConflictException thrown = assertThrows(
-//                NotFoundConflictException.class, () -> loteService.save(dto)
-//        );
-//        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-//    }
-//
+    @Test
+    void Save__OK() throws QuesoNotFoundException, NotFoundConflictException, LoteAlreadyExistsException {
+        LoteDTO dtoToSave = new LoteDTO();
+        dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToSave.setNumeroTina(1);
+        dtoToSave.setCantHormas(1);
+        dtoToSave.setLitrosLeche(20D);
+        dtoToSave.setPeso(10D);
+        dtoToSave.setLoteCultivo("cultivo1, cultivo2");
+        dtoToSave.setLoteColorante("colorante1, colorante2");
+        dtoToSave.setLoteCalcio("calcio1, calcio2");
+        dtoToSave.setLoteCuajo("cuajo1, cuajo2");
+        dtoToSave.setCodigoQueso("001");
+
+        Lote savedLote = new Lote();
+        savedLote.setId("101020210011");
+        savedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        savedLote.setNumeroTina(1);
+        savedLote.setCantHormas(1);
+        savedLote.setStockLote(90);
+        savedLote.setLitrosLeche(20D);
+        savedLote.setPeso(10D);
+        savedLote.setRendimiento(20D);
+        savedLote.setLoteCultivo("cultivo1, cultivo2");
+        savedLote.setLoteColorante("colorante1, colorante2");
+        savedLote.setLoteCalcio("calcio1, calcio2");
+        savedLote.setLoteCuajo("cuajo1, cuajo2");
+        savedLote.setQueso(mockQueso());
+
+        LoteDTO expectedLote = new LoteDTO();
+        expectedLote.setId("101020210011");
+        expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        expectedLote.setNumeroTina(1);
+        expectedLote.setCantHormas(1);
+        expectedLote.setLitrosLeche(20D);
+        expectedLote.setPeso(10D);
+        expectedLote.setStockLote(90);
+        expectedLote.setRendimiento(20D);
+        expectedLote.setLoteCultivo("cultivo1, cultivo2");
+        expectedLote.setLoteColorante("colorante1, colorante2");
+        expectedLote.setLoteCalcio("calcio1, calcio2");
+        expectedLote.setLoteCuajo("cuajo1, cuajo2");
+        expectedLote.setCodigoQueso("001");
+
+        when(quesoService.getEntity("001")).thenReturn(mockQueso());
+        when(repository.existsById("101020210011")).thenReturn(false);
+        when(repository.save(any(Lote.class))).thenReturn(savedLote);
+
+        LoteDTO dtoActual = loteService.save(dtoToSave);
+        assertEquals(expectedLote, dtoActual);
+    }
+
+    @Test
+    void Save__Queso_Not_Found() throws QuesoNotFoundException {
+        LoteDTO dto = new LoteDTO();
+        dto.setId("101020210011");
+        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dto.setNumeroTina(1);
+        dto.setLitrosLeche(1D);
+        dto.setCantHormas(1);
+        dto.setStockLote(1);
+        dto.setPeso(1D);
+        dto.setRendimiento(1D);
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setCodigoQueso("001");
+
+        when(quesoService.getEntity("001")).thenThrow(QuesoNotFoundException.class);
+        NotFoundConflictException thrown = assertThrows(
+                NotFoundConflictException.class, () -> loteService.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Save__Lote_Already_Exists() throws QuesoNotFoundException {
+        LoteDTO dto = new LoteDTO();
+        dto.setId("101020210011");
+        dto.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dto.setNumeroTina(1);
+        dto.setLitrosLeche(1D);
+        dto.setCantHormas(1);
+        dto.setStockLote(1);
+        dto.setPeso(1D);
+        dto.setRendimiento(1D);
+        dto.setLoteCultivo("cultivo1, cultivo2");
+        dto.setLoteColorante("colorante1, colorante2");
+        dto.setLoteCalcio("calcio1, calcio2");
+        dto.setLoteCuajo("cuajo1, cuajo2");
+        dto.setCodigoQueso("001");
+
+        when(quesoService.getEntity("001")).thenReturn(mockQueso());
+        when(repository.existsById("101020210011")).thenReturn(true);
+        LoteAlreadyExistsException thrown = assertThrows(
+                LoteAlreadyExistsException.class, () -> loteService.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_ALREADY_EXIST, thrown.getMessage());
+    }
+
+
 //    @Test
 //    void Generate_ID() throws QuesoNotFoundException, NotFoundConflictException {
 //        LoteDTO dtoToSave = new LoteDTO();
