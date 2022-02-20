@@ -22,7 +22,7 @@ public class Precio {
 
     private Double precio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_queso")
     @ToString.Exclude
     private Queso queso;
