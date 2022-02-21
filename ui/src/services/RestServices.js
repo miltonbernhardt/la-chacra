@@ -1,6 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import {toastValidationErrors} from "../fields";
+import { errConnectionFailed } from "../messages";
 
 const PUERTO = '8000';
 const RAIZ_URL = `http://localhost:${PUERTO}`;
@@ -86,6 +87,9 @@ const processSuccessResponseWithMessage = (response) => {
 }
 
 const processResponseError = (err) => {
+    if (!err.response)
+        throw new Error(errConnectionFailed)
+
     const {data, status} = err.response
     console.error({data, status})
     toast.dismiss()
