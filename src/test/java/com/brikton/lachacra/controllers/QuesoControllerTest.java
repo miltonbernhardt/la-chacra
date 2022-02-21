@@ -5,7 +5,6 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.services.QuesoService;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Save__OK() throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+    void Save__OK() throws CodigoQuesoAlreadyExistsException {
         QuesoDTO dtoToSave = new QuesoDTO();
         dtoToSave.setCodigo("001");
         dtoToSave.setTipoQueso("tipoQueso");
@@ -64,7 +63,7 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Save__Codigo_Queso_Already_Exists() throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+    void Save__Codigo_Queso_Already_Exists() throws CodigoQuesoAlreadyExistsException {
         QuesoDTO dto = new QuesoDTO();
         when(quesoService.save(dto)).thenThrow(new CodigoQuesoAlreadyExistsException());
         CodigoQuesoAlreadyExistsException thrown = assertThrows(
@@ -74,17 +73,7 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Save__Nomenclatura_Queso_Already_Exists() throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
-        QuesoDTO dto = new QuesoDTO();
-        when(quesoService.save(dto)).thenThrow(new NomQuesoAlreadyExistsException());
-        NomQuesoAlreadyExistsException thrown = assertThrows(
-                NomQuesoAlreadyExistsException.class, () -> quesoController.save(dto)
-        );
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
-    }
-
-    @Test
-    void Update__OK() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+    void Update__OK() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
@@ -110,7 +99,7 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Update__Queso_Not_Found() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+    void Update__Queso_Not_Found() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
@@ -126,7 +115,7 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Update__Codigo_Queso_Already_Exists() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+    void Update__Codigo_Queso_Already_Exists() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
@@ -139,22 +128,6 @@ public class QuesoControllerTest {
                 CodigoQuesoAlreadyExistsException.class, () -> quesoController.update(dtoToUpdate)
         );
         assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
-    }
-
-    @Test
-    void Update__Nomenclatura_Queso_Already_Exists() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
-        var dtoToUpdate = new QuesoUpdateDTO();
-        dtoToUpdate.setId(1L);
-        dtoToUpdate.setCodigo("001");
-        dtoToUpdate.setTipoQueso("tipoQueso");
-        dtoToUpdate.setNomenclatura("tip");
-        dtoToUpdate.setStock(1);
-
-        when(quesoService.update(dtoToUpdate)).thenThrow(new NomQuesoAlreadyExistsException());
-        NomQuesoAlreadyExistsException thrown = assertThrows(
-                NomQuesoAlreadyExistsException.class, () -> quesoController.update(dtoToUpdate)
-        );
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
     @Test

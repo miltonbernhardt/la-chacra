@@ -35,10 +35,7 @@ public class LoteService {
 
     public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
         var dto = new LoteDTO(dtpUpdate);
-        var id = dto.getId() == null || dto.getId().equals("")
-                ? generateID(dto)
-                : dto.getId();
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(dto.getId())) {
             throw new LoteNotFoundException();
         }
         repository.deleteById(dto.getId());
@@ -70,11 +67,6 @@ public class LoteService {
         else
             throw new LoteNotFoundException();
         return id;
-    }
-
-    //todo test
-    public boolean existsByQueso(Queso queso) {
-        return repository.existsByQueso(queso);
     }
 
     private Lote loteFromDTO(LoteDTO dto) throws QuesoNotFoundConflictException {

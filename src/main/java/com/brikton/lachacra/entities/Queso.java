@@ -16,14 +16,13 @@ import java.util.Objects;
 public class Queso {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
-    @GenericGenerator(name = "seq", strategy="increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column
     private Long id;
-    @Column(unique = true, name = "codigo")
+    @Column(name = "codigo")
     private String codigo;
     private String tipoQueso;
-    @Column(unique = true)
     private String nomenclatura;
     private Integer stock;
     private LocalDate fechaBaja;

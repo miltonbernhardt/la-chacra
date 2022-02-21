@@ -313,25 +313,6 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Update__Nomenclatura_Queso_Already_Exists() throws JsonProcessingException {
-        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
-        dtoToUpdate.setId(3L);
-        dtoToUpdate.setCodigo("002");
-        dtoToUpdate.setTipoQueso("tipoQueso");
-        dtoToUpdate.setNomenclatura("C");
-        dtoToUpdate.setStock(10);
-
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-        );
-
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, response.getMessage());
-    }
-
-    @Test
     void Update__Over_Queso_Deleted__OK() throws JsonProcessingException {
         QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(4L);

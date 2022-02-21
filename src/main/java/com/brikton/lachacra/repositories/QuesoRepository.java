@@ -14,6 +14,6 @@ public interface QuesoRepository extends JpaRepository<Queso, Long> {
     List<Queso> findAllQuesos();
 
     Optional<Queso> findByCodigo(String codigo);
-    boolean existsQuesoByNomenclatura(String nomenclatura);
-    boolean existsQuesoByCodigo(String nomenclatura);
+
+    boolean existsQuesoByCodigo(String nomenclatura);//todo
 }
