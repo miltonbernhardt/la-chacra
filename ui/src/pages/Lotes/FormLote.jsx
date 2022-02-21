@@ -20,7 +20,7 @@ const loteInicial = {
     codigoQueso: ''
 }
 
-const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
+const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
 
     const [loteForm, setLoteForm] = useState({});
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -225,21 +225,6 @@ const Form = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSub
                 trazabilidad={trazabilidad}
                 submitLote={submitLote}
                 isEditing={isEditingLote}/>
-        </>
-    )
-}
-
-const FormLote = ({quesos, lote, onCargar, isEditingLote, cancelEditing, deleteLote, handleSubmit}) => {
-    return (
-        <>
-            <Form
-                lote={lote}
-                quesos={quesos}
-                cancelEditing={cancelEditing}
-                isEditingLote={isEditingLote}
-                deleteLote={deleteLote}
-                onCargar={onCargar}
-                handleSubmit={handleSubmit}/>
         </>
     )
 }

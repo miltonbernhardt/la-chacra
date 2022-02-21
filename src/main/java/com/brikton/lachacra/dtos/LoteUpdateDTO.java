@@ -56,8 +56,4 @@ public class LoteUpdateDTO {
 
     public LoteUpdateDTO() {
     }
-
-    public String getCodigoQueso() {
-        return codigoQueso.toUpperCase();
-    }
 }

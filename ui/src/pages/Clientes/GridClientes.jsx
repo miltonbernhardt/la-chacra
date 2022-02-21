@@ -50,18 +50,16 @@ const columns = [
 
 const GridClientes = () => {
     return (
-        <Grid item xs={12}>
-            <DataGrid
-                rows={clientes}
-                columns={columns}
-                style={{height: "600px"}}
-                autoHeight={true}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-                // onCellClick={(params) => setSelection(params.id)}
-            />
-        </Grid>
+        <DataGrid
+            rows={clientes}
+            columns={columns}
+            style={{height: "600px"}}
+            autoHeight={true}
+            rowHeight={42}
+            pageSize={15}
+            rowsPerPageOptions={[15]}
+            // onCellClick={(params) => setSelection(params.id)}
+        />
     );
 }
 

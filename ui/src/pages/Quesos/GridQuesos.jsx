@@ -24,18 +24,16 @@ const columns = [
 
 const GridQuesos = ({listaQuesos, setSelection}) => {
     return (
-        <Grid item xs={12}>
-            <DataGrid
-                style={{height: "600px"}}
-                autoHeight={true}
-                rows={listaQuesos}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-                columns={columns}
-                onCellClick={(params) => setSelection(params.id)}
-            />
-        </Grid>
+        <DataGrid
+            style={{height: "600px"}}
+            autoHeight={true}
+            rows={listaQuesos}
+            rowHeight={42}
+            pageSize={15}
+            rowsPerPageOptions={[15]}
+            columns={columns}
+            onCellClick={(params) => setSelection(params.id)}
+        />
     );
 }
 

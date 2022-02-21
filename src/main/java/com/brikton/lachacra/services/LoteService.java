@@ -25,32 +25,34 @@ public class LoteService {
         this.quesoService = quesoService;
     }
 
-    public LoteDTO get(String id) throws LoteNotFoundException {
-        var lote = repository.findById(id);
-        if (lote.isPresent())
-            return new LoteDTO(lote.get());
-        else
-            throw new LoteNotFoundException();
+    public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
+        var id = generateID(dto);
+        if (repository.existsById(id)) {
+            throw new LoteAlreadyExistsException();
+        }
+        return persist(dto);
     }
 
-    public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
-        var id = dto.getId() == null || dto.getId().equals("") ? generateID(dto) : dto.getId();
-        if (repository.existsById(id)) {
-            repository.deleteById(id);//todo test
+    public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
+        var dto = new LoteDTO(dtpUpdate);
+        var id = dto.getId() == null || dto.getId().equals("")
+                ? generateID(dto)
+                : dto.getId();
+        if (!repository.existsById(id)) {
+            throw new LoteNotFoundException();
         }
+        repository.deleteById(dto.getId());
+        return persist(dto);
+    }
 
+    private LoteDTO persist(LoteDTO dto) throws QuesoNotFoundConflictException {
         var lote = loteFromDTO(dto);
         var rendimiento = (dto.getPeso() / dto.getLitrosLeche()) * 100;
-        var stock = dto.getCantHormas(); //TODO si es un update no debería asignar directamente, sino que debería sumar/restar
+        var stock = dto.getCantHormas();
         lote.setRendimiento(rendimiento);
         lote.setStockLote(stock);
         lote = repository.save(lote);
         return new LoteDTO(lote);
-    }
-
-    public LoteDTO update(LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
-        delete(dto.getId());
-        return save(new LoteDTO(dto));
     }
 
     public List<LoteDTO> getAll() {
@@ -60,6 +62,7 @@ public class LoteService {
         return lotesDTO;
     }
 
+    //todo dependencias de expedicion,
     public String delete(String id) throws LoteNotFoundException {
         //todo logica de borrar o dar de baja
         if (repository.existsById(id))
@@ -69,12 +72,17 @@ public class LoteService {
         return id;
     }
 
-    private Lote loteFromDTO(LoteDTO dto) throws NotFoundConflictException {
+    //todo test
+    public boolean existsByQueso(Queso queso) {
+        return repository.existsByQueso(queso);
+    }
+
+    private Lote loteFromDTO(LoteDTO dto) throws QuesoNotFoundConflictException {
         Queso queso;
         try {
             queso = quesoService.getEntity(dto.getCodigoQueso());
         } catch (QuesoNotFoundException e) {
-            throw new NotFoundConflictException("Queso no encontrado", e.getCause());
+            throw new QuesoNotFoundConflictException(e.getCause());
         }
 
         var lote = new Lote();
