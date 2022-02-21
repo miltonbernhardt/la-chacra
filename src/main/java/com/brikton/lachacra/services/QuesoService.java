@@ -23,7 +23,7 @@ public class QuesoService {
     private final DateUtil dateUtil;
     private final QuesoRepository repository;
     private final LoteRepository loteRepository; //todo ver de usar el service sin tener el problema de lo beans ciclicos
-    private final PrecioService precioService;
+    private final PrecioService precioService; //TODO por que tenes todo esto sin autowired?
 
     public QuesoService(
             DateUtil dateUtil,

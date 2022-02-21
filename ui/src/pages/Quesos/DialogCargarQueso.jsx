@@ -8,8 +8,8 @@ import {
     Grid,
     TextField
 } from '@mui/material';
-import {useCallback, useEffect, useState, useMemo} from 'react';
-import {toastValidationErrors} from "../../fields";
+import { useCallback, useEffect, useState, useMemo } from 'react';
+import { toastValidationErrors } from "../../fields";
 import * as message from "../../messages";
 import * as field from "../../fields";
 
@@ -20,7 +20,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const DialogCargarQueso = ({isCargarQueso, isEditarQueso, onClose, onSubmit, queso}) => {//todo queso
+const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, queso }) => {//todo queso
 
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
@@ -30,13 +30,13 @@ const DialogCargarQueso = ({isCargarQueso, isEditarQueso, onClose, onSubmit, que
         const attribute = evt.target.name;
         const value = evt.target.value;
         if (evt.target.validity.valid) {
-            const newQueso = {...quesoForm, [attribute]: value};
+            const newQueso = { ...quesoForm, [attribute]: value };
             setQuesoForm(newQueso);
         }
     }
 
     const labelCargar = useMemo(() => {
-        return isEditarQueso ? 'Actualizar queso' : 'Cargar queso'
+        return isEditarQueso ? 'Actualizar Producto' : 'Cargar Producto'
     }, [isEditarQueso]);
 
     const validateQueso = useCallback(() => {
@@ -95,7 +95,7 @@ const DialogCargarQueso = ({isCargarQueso, isEditarQueso, onClose, onSubmit, que
                                 fullWidth
                                 variant="outlined"
                                 value={quesoForm.nomenclatura}
-                                onChange={handleChange}/>
+                                onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -105,7 +105,7 @@ const DialogCargarQueso = ({isCargarQueso, isEditarQueso, onClose, onSubmit, que
                                 fullWidth
                                 variant="outlined"
                                 value={quesoForm.codigo}
-                                onChange={handleChange}/>
+                                onChange={handleChange} />
                         </Grid>
                     </Grid>
                 </DialogContent>
