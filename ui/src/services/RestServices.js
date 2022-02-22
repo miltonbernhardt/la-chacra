@@ -35,6 +35,7 @@ export const deleteQueso = async (codigo) => await DELETE(`${API_QUESO}${codigo}
 // --- CLIENTE METHODS ---
 export const getAllClientes = async () => await GET(`${API_CLIENTE}`);
 export const getAllTipoClientes = async () => await GET(`${API_CLIENTE}tipo/`);
+export const postCliente = async (cliente) => await POST(`${API_CLIENTE}`, cliente);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {

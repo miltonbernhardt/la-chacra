@@ -100,7 +100,7 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                         id="idTipoCliente"
                                         name="idTipoCliente"
                                         options={tiposCliente}
-                                        getOptionLabel={(option) => option.label || tiposCliente.filter(t => t.value === option).pop().label}
+                                        getOptionLabel={(option) => tiposCliente.filter(t => t.value === option).pop() ? tiposCliente.filter(t => t.value === option).pop().label : ''}
                                         renderInput={(params) => <TextField {...params} label="Tipo de cliente" />}
                                         renderOption={(props, option) => {
                                             return <Box component="li"  {...props}>

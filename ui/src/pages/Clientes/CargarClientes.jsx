@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
 import { clientes } from "../../data/data";
-import { getAllClientes, getAllTipoClientes } from '../../services/RestServices';
+import { getAllClientes, getAllTipoClientes, postCliente } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
@@ -38,17 +38,23 @@ const CargarClientes = () => {
 
     const [isEditing, setEditing] = useState(false);
 
-    useEffect(() => fetchData(), [])
-
-    const fetchData = () => {
+    const fetchClientes = () => {
         getAllClientes().then(({ data }) => {
             setListaClientes(data)
-            getAllTipoClientes().then(({ data }) => {
-                setTiposClientes(data);
-                setLoading(false);
-            })
         });
     }
+
+    const fetchTipoClientes = () => {
+        getAllTipoClientes().then(({ data }) => {
+            setTiposClientes(data);
+            setLoading(false);
+        });
+    }
+
+    useEffect(() => {
+        fetchClientes();
+        fetchTipoClientes();
+    }, [])
 
 
     const setSelection = useCallback((id) => {
@@ -58,7 +64,8 @@ const CargarClientes = () => {
     const onSubmit = useCallback((clienteForm) => {
         setOpenDialogAlta(false);
         setCliente(clienteInicial);
-        toast.error('not yet implemented')
+        postCliente(clienteForm).then(() => fetchClientes());
+        // toast.error('not yet implemented')
     }, [])
 
     // --- DIALOGS ---
@@ -73,8 +80,11 @@ const CargarClientes = () => {
         setOpenDialogBaja(true);
     }
     const onOpenActualizar = () => {
-        setEditing(true);
-        setOpenDialogAlta(true);
+        if (!cliente.id) toast.error("No se seleccionó ningún cliente");
+        else {
+            setEditing(true);
+            setOpenDialogAlta(true);
+        }
     }
     const onCloseDialog = () => {
         setEditing(false);

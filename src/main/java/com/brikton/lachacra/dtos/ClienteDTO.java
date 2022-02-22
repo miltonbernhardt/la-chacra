@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Mod11Check;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ public class ClienteDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
-    @Mod11Check(threshold = 7, message = ValidationMessages.INVALID_FORMAT)
+    //@Mod11Check(threshold = 7, message = ValidationMessages.INVALID_FORMAT)
     private String cuit;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
@@ -42,6 +43,19 @@ public class ClienteDTO {
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String senasaUta;
+
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    private String telefono;
+
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    private String celular;
+
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    private String fax;
+
+    @Email
+    @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
+    private String email;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)

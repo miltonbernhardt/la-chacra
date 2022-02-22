@@ -7,4 +7,5 @@ public class SuccessfulMessages {
     public static final String MSG_QUESO_DELETED = "Se borró el queso correctamente";
     public static final String MSG_QUESO_UPDATED = "Se actualizó el queso correctamente";
     public static final String MSG_QUESO_CREATED = "Se creó el queso correctamente";
+    public static final String MSG_CLIENTE_CREATED = "Se dió de alta el cliente correctamente";
 }

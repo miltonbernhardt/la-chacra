@@ -30,7 +30,10 @@ public class Cliente {
     private String pais;
     private String transporte;
     private String senasaUta;
-
+    private String telefono;
+    private String celular;
+    private String fax;
+    private String email;
     @ManyToOne
     @JoinColumn(name = "id_tipo_cliente")
     @NotNull
