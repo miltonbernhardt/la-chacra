@@ -5,6 +5,8 @@ import DialogCargarTrazabilidad from "./DialogCargarTrazabilidad";
 import * as message from "../../resources/messages";
 import * as field from "../../resources/fields";
 import { toastValidationErrors } from "../../resources/fields";
+import InputSmall from "../../components/InputSmall";
+import Input from "../../components/Input";
 
 // const loteTrazabilidad = {
 //     loteCultivo: '',
@@ -13,32 +15,48 @@ import { toastValidationErrors } from "../../resources/fields";
 //     loteCuajo: ''
 // }
 
+function Fecha({fechaInicial}) {
+    const [fechaElaboracion, setFechaElaboracion] = useState(fechaInicial);
+
+    return <Grid item xs={12}>
+        <TextField
+            id="fechaLote"
+            name="fechaElaboracion"
+            label="Fecha de producción"
+            fullWidth
+            type="date"
+            variant="outlined"
+            InputLabelProps={{
+                shrink: true,
+            }}
+            value={fechaElaboracion}
+            onChange={e => setFechaElaboracion(e.target.value)}
+            required
+        />
+    </Grid>;
+}
+
 const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
 
+    const [loteForm, setLoteForm] = useState(lote);
     const [loteTrazabilidad, setLoteTrazabilidad] = useState({});
     const [selectCodigoQueso, setSelectCodigoQueso] = useState({});
-    const [litros, setLitros] = useState(lote.litrosLeche);
-    const [numeroTina, setNumeroTina] = useState(lote.numeroTina);
-    const [cantHormas, setCantHormas] = useState(lote.cantHormas);
-    const [peso, setPeso] = useState(lote.peso);
-    const [fechaElaboracion, setFechaElaboracion] = useState(lote.fechaElaboracion);
+    const [litros, setLitros] = useState(loteForm.litrosLeche);
+    const [cantHormas, setCantHormas] = useState(loteForm.cantHormas);
+    const [peso, setPeso] = useState(loteForm.peso);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
         console.log("ENTRO A USE EFFECT")
-        console.log({lote})
-        if (lote.codigoQueso) {
-            const quesito = quesos.filter((o) => o.value === lote.codigoQueso).pop()
-            setSelectCodigoQueso(quesito);
-        } else
-            setSelectCodigoQueso({});
-        setLitros(lote.litrosLeche);
-        setNumeroTina(lote.numeroTina);
-        setCantHormas(lote.cantHormas);
-        setPeso(lote.peso);
-        setFechaElaboracion(lote.fechaElaboracion);
-        setDialogOpen(false);
-    }, [lote], isEditingLote);
+        console.log({lote: lote})
+        // if (lote.codigoQueso) {
+        //     const quesito = quesos.filter((o) => o.value === lote.codigoQueso).pop()
+        //     setSelectCodigoQueso(quesito);
+        // } else
+        //     setSelectCodigoQueso({});
+        setLoteForm(lote)
+
+    }, [loteForm], isEditingLote);
 
     const validateLote = () => {
         const errors = new Map();
@@ -49,10 +67,10 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
         if (litros < 1)
             errors.set(field.litrosLeche, message.valZeroValue)
 
-        if (numeroTina < 1)
-            errors.set(field.numeroTina, message.valZeroValue)
-        else if (numeroTina > 999)
-            errors.set(field.numeroTina, message.valLessThanThousand)
+        // if (numeroTina < 1)
+        //     errors.set(field.numeroTina, message.valZeroValue)
+        // else if (numeroTina > 999)
+        //     errors.set(field.numeroTina, message.valLessThanThousand)
 
         if (cantHormas < 1)
             errors.set(field.cantidadHormas, message.valZeroValue)
@@ -63,10 +81,10 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
         const currentDate = new Date();
         const today = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
 
-        if (fechaElaboracion === '')
-            errors.set(field.fechaElaboracion, message.valEmptyFecha)
-        else if (validator.isBefore(today, fechaElaboracion))
-            errors.set(field.fechaElaboracion, message.valOlderDate)
+        // if (fechaElaboracion === '')
+        //     errors.set(field.fechaElaboracion, message.valEmptyFecha)
+        // else if (validator.isBefore(today, fechaElaboracion))
+        //     errors.set(field.fechaElaboracion, message.valOlderDate)
 
         if (errors.size > 0) {
             console.error(errors)
@@ -86,10 +104,10 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
         const newLote = {
             [field.backCodigoQueso]: selectCodigoQueso.value,
             [field.backLitrosLeche]: litros,
-            [field.backNumeroTina]: numeroTina,
+            // [field.backNumeroTina]: numeroTina,
             [field.backCantidadHormas]: cantHormas,
             [field.backPeso]: peso,
-            [field.backFechaElaboracion]: fechaElaboracion,
+            // [field.backFechaElaboracion]: fechaElaboracion,
             [field.backLoteCuajo]: trazabilidadLote.loteCultivo,
             [field.backLoteCuajo]: trazabilidadLote.loteColorante,
             [field.backLoteCuajo]: trazabilidadLote.loteCalcio,
@@ -160,20 +178,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={4}>
-                <TextField
-                    id="tina"
-                    name="numeroTina"
-                    label="Tina"
-                    fullWidth
-                    type="number"
-                    variant="outlined"
-                    numeric={numeroTina.toString()}
-                    value={numeroTina}
-                    onChange={e => setNumeroTina(e.target.value)}
-                    required
-                />
-            </Grid>
+            <InputSmall id="numeroTina" label="Tina" initialValue={loteForm.numeroTina}/>
             <Grid item xs={12}>
                 <TextField
                     id="cantidadHormas"
@@ -202,22 +207,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     required
                 />
             </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    id="fechaLote"
-                    name="fechaElaboracion"
-                    label="Fecha de producción"
-                    fullWidth
-                    type="date"
-                    variant="outlined"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={fechaElaboracion}
-                    onChange={e => setFechaElaboracion(e.target.value)}
-                    required
-                />
-            </Grid>
+            <Input id="fechaElaboracion" label="Fecha de producción" fechaInicial={loteForm.fechaElaboracion} type="date"/>
             <Grid item xs={12} alignSelf="right" mb={0.5}>
                 <ButtonGroup fullWidth variant="contained">
                     <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>

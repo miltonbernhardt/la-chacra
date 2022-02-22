@@ -46,6 +46,7 @@ const CargarProduccion = () => {
 
     const handleSubmit = (newLote) => {
         const loteSubmit = {...newLote, ['codigoQueso']: newLote.codigoQueso};
+        setLote(loteSubmit);
         if (isEditingLote) {
             putLote(loteSubmit)
                 .then(({data}) => {

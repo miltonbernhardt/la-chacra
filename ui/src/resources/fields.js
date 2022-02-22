@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 
 export const backID = "id"
 export const backFechaElaboracion = "fechaElaboracion"
-export const backCantidadHormas = "cantHormas"
+export const backCantHormas = "cantHormas"
 export const backLitrosLeche = "litrosLeche"
 export const backNumeroTina = "numeroTina"
 export const backPeso = "peso"
@@ -16,25 +16,29 @@ export const backLoteCalcio = "loteCalcio"
 export const backLoteCuajo = "loteCuajo"
 
 export const ID = "ID"
+
+// produccion
 export const fechaElaboracion = "Fecha de producción"
-export const cantidadHormas = "Cantidad de hormas"
+export const cantHormas = "Cantidad de hormas"
 export const litrosLeche = "Litros procesados"
-export const numeroTina = "Número de tina"
+export const numeroTina = "Tina"
 export const peso = "Peso del lote"
 export const queso = "Tipo de queso"
-export const codigo = "Código"
-export const nomenclatura = "Nomenclatura"
-export const tipoQueso = "Tipo de queso"
 export const loteCultivo = "Lote cultivo"
 export const loteColorante = "Lote colorante"
 export const loteCalcio = "Lote calcio"
 export const loteCuajo = "Lote cuajo"
 
+// producto
+export const codigo = "Código"
+export const nomenclatura = "Nomenclatura"
+export const tipoQueso = "Tipo de queso"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
     fields.set(backFechaElaboracion, fechaElaboracion)
-    fields.set(backCantidadHormas, cantidadHormas)
+    fields.set(backCantHormas, cantHormas)
     fields.set(backLitrosLeche, litrosLeche)
     fields.set(backNumeroTina, numeroTina)
     fields.set(backPeso, peso)
