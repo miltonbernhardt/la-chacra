@@ -446,7 +446,6 @@ public class QuesoControllerIntegrationTest {
         assertEquals(path.concat("0"), response.getPath());
     }
 
-
     @Test
     void Delete__Queso_Already_Deleted() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(

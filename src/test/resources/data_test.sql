@@ -41,6 +41,8 @@ VALUES (1, 1, 371.00, 1),
        (1, 3, 620.00, 9),
        (1, 4, 620.00, 10);
 
+INSERT INTO public.expedicion (id_expedicion, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
+VALUES (1, '2021-11-08', 216, 855.3, 62658.00, '101', '241020210033');
 -- agregar expedicion
 -- agregar remitos
 -- agregar devoluciones
