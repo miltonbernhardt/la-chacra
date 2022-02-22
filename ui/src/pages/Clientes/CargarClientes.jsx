@@ -1,11 +1,14 @@
-import { Button } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { Box, Button } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import PageTableButtonPane from "../../components/PageTableButtonPane";
+import { clientes } from "../../data/data";
+import { getAllClientes } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
-import PageTableButtonPane from "../../components/PageTableButtonPane";
-import { clientes } from "../../data/data";
-import toast from 'react-hot-toast';
+
 
 const clienteInicial = {
     id: '',
@@ -28,8 +31,19 @@ const CargarClientes = () => {
 
     const [cliente, setCliente] = useState(clienteInicial);
     const [listaClientes, setListaClientes] = useState(clientes);
+    const [isLoading, setLoading] = useState(true);
 
     const [isEditing, setEditing] = useState(false);
+
+    useEffect(() => fetchClientes(), [])
+
+    const fetchClientes = () => {
+        getAllClientes().then(({ data }) => {
+            setListaClientes(data)
+            setLoading(false);
+        });
+    }
+
 
     const setSelection = useCallback((id) => {
         setCliente(listaClientes.filter(c => c.id === id).pop())
@@ -61,6 +75,20 @@ const CargarClientes = () => {
         setOpenDialogBaja(false);
         setOpenDialogAlta(false);
     }
+
+    if (isLoading) {
+        return (
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 3,
+            }}>
+                <CircularProgress />
+            </Box>
+        )
+    };
 
     return (
         <PageTableButtonPane
