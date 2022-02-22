@@ -1,4 +1,3 @@
-import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 

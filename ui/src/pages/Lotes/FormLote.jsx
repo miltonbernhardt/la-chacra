@@ -5,7 +5,6 @@ import DialogCargarTrazabilidad from "./DialogCargarTrazabilidad";
 import * as message from "../../resources/messages";
 import * as field from "../../resources/fields";
 import { toastValidationErrors } from "../../resources/fields";
-import { valLessThanThousand } from "../../resources/messages";
 
 const loteInicial = {
     id: '',

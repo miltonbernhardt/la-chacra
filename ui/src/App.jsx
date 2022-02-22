@@ -20,6 +20,7 @@ import VerLitrosElaborados from './pages/VerLitrosProducidos/VerLitrosElaborados
 import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
 import { Toaster } from 'react-hot-toast';
+import './App.css';
 
 export const themeOptions = {
     palette: {
