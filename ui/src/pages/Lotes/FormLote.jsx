@@ -140,12 +140,12 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                             {...params}
                             label="Tipo de queso"/>
                     )}
-                    value={loteForm.codigoQueso}
+                    defaultValue={loteForm.codigoQueso}
                     onChange={(evt, newValue) => {
                         //-- lo paso asi para no chequear validez del campo
                         updateStateLote('codigoQueso', newValue);
                     }}
-                    isOptionEqualToValue={(option, value) =>
+                    isOptionEqualTodefaultValue={(option, value) =>
                         value.label ? option.label === value.label : option.label === value
                     }/>
             </Grid>
@@ -157,7 +157,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    value={loteForm.litrosLeche}
+                    defaultValue={loteForm.litrosLeche}
                     onChange={handleChange}
                 />
             </Grid>
@@ -169,7 +169,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    value={loteForm.numeroTina}
+                    defaultValue={loteForm.numeroTina}
                     onChange={handleChange}/>
             </Grid>
             <Grid item xs={12}>
@@ -180,7 +180,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    value={loteForm.cantHormas}
+                    defaultValue={loteForm.cantHormas}
                     onChange={handleChange}/>
             </Grid>
             <Grid item xs={12}>
@@ -191,7 +191,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    value={loteForm.peso}
+                    defaultValue={loteForm.peso}
                     onChange={handleChange}/>
             </Grid>
             <Grid item xs={12}>
@@ -205,7 +205,7 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    value={loteForm.fechaElaboracion}
+                    defaultValue={loteForm.fechaElaboracion}
                     onChange={handleChange}/>
             </Grid>
             <Grid item xs={12} alignSelf="right" mb={0.5}>

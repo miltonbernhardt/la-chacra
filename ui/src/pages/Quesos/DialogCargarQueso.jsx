@@ -83,7 +83,7 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                                 label="Tipo de queso"
                                 fullWidth
                                 variant="outlined"
-                                value={quesoForm.tipoQueso}
+                                defaultValue={quesoForm.tipoQueso}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -94,7 +94,7 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                                 label="Nomenclatura"
                                 fullWidth
                                 variant="outlined"
-                                value={quesoForm.nomenclatura}
+                                defaultValue={quesoForm.nomenclatura}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12}>
@@ -104,7 +104,7 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                                 label="Código"
                                 fullWidth
                                 variant="outlined"
-                                value={quesoForm.codigo}
+                                defaultValue={quesoForm.codigo}
                                 onChange={handleChange} />
                         </Grid>
                     </Grid>
