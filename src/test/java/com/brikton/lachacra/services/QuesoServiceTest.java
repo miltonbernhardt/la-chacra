@@ -182,10 +182,6 @@ public class QuesoServiceTest {
         assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
-    //todo save queso with a code that a deleted queso has
-
-    //todo update queso with a code that a deleted queso has
-
     @Test
     void Update__OK() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var quesoTpUpdate = new QuesoUpdateDTO();
@@ -261,7 +257,16 @@ public class QuesoServiceTest {
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
 
+        Queso deletedQueso = new Queso();
+        deletedQueso.setId(1L);
+        deletedQueso.setCodigo("001");
+        deletedQueso.setTipoQueso("TIPO_QUESO");
+        deletedQueso.setNomenclatura("tip");
+        deletedQueso.setStock(1);
+        deletedQueso.setFechaBaja(LocalDate.of(2021, 10, 10));
+
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
+        when(repository.save(any(Queso.class))).thenReturn(deletedQueso);
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);

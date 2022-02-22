@@ -73,7 +73,6 @@ public class QuesoService {
 
         var oldQueso = oldQuesoOptional.get();
 
-
         if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsQuesoByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
