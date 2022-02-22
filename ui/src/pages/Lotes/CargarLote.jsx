@@ -17,16 +17,14 @@ const loteInicial = {
     loteColorante: '',
     loteCalcio: '',
     loteCuajo: '',
-    codigoQueso: ''
+    codigoQueso: ""
 }
 
 const CargarProduccion = () => {
-
     const [lote, setLote] = useState(loteInicial);
     const [listaLotes, setListaLotes] = useState([]);
     const [listaQuesos, setListaQuesos] = useState([]);
 
-    // Dialogs
     const [isEditingLote, setEditingLote] = useState(false);
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
@@ -47,34 +45,27 @@ const CargarProduccion = () => {
     }, [lote]);
 
     const handleSubmit = (newLote) => {
-        const codigoQueso = newLote.codigoQueso.label ? newLote.codigoQueso.label : newLote.codigoQueso;
-        const loteSubmit = {...newLote, ['codigoQueso']: codigoQueso};
-        //-- if is editing
+        const loteSubmit = {...newLote, ['codigoQueso']: newLote.codigoQueso};
         if (isEditingLote) {
-            putLote(loteSubmit).then(({data}) => {
-                //-- update list
-                const newList = listaLotes.filter((item) => item.id !== lote.id);
-                setListaLotes([...newList, data]);
-                setLote(loteInicial);
-            })
+            putLote(loteSubmit)
+                .then(({data}) => {
+                    const newList = listaLotes.filter((item) => item.id !== lote.id);
+                    setListaLotes([...newList, data]);
+                })
                 .catch(e => console.error(e.message));
             setEditingLote(false);
-        }
-        //-- if is new lote
-        else {
-            postLote(loteSubmit).then(({data}) => {
-                setListaLotes([...listaLotes, data]);
-                setLote(loteInicial);
-            })
+        } else {
+            postLote(loteSubmit)
+                .then(({data}) => {
+                    setListaLotes([...listaLotes, data]);
+                    setLote(loteInicial);
+                })
                 .catch(e => console.error(e.message));
         }
     }
 
-    // --- EDIT LOTE METHODS ---
     const setSelection = (id) => {
-        setLote(listaLotes.filter((o) => {
-            return o.id === id
-        }).pop());
+        setLote(listaLotes.filter((o) => o.id === id).pop())
         setEditingLote(true);
     }
 
@@ -83,9 +74,7 @@ const CargarProduccion = () => {
         setLote(loteInicial);
     }, []);
 
-    const eliminarLote = useCallback(() => {
-        setEliminarDialog(true);
-    }, [])
+    const eliminarLote = useCallback(() => setEliminarDialog(true), [])
 
     const handleEliminar = useCallback(() => {
         deleteLote(lote.id).then(() => {
@@ -97,16 +86,13 @@ const CargarProduccion = () => {
         setEditingLote(false);
     }, [lote.id, listaLotes]);
 
-    const cancelEliminar = useCallback(() => {
-        setEliminarDialog(false);
-    }, []);
+    const cancelEliminar = useCallback(() => setEliminarDialog(false), []);
 
-    // --- VARIABLES
     const quesosAutocomplete = listaQuesos.map((q) => {
         return {
             id: q.id,
-            string: q.codigo + ' - ' + q.tipoQueso + ' - ' + q.nomenclatura,
-            label: q.codigo
+            label: q.codigo + ' - ' + q.tipoQueso + ' - ' + q.nomenclatura,
+            value: q.codigo
         }
     });
 

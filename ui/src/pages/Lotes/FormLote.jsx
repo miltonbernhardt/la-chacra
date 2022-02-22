@@ -6,89 +6,66 @@ import * as message from "../../resources/messages";
 import * as field from "../../resources/fields";
 import { toastValidationErrors } from "../../resources/fields";
 
-const loteInicial = {
-    id: '',
-    fechaElaboracion: '',
-    numeroTina: '',
-    litrosLeche: '',
-    cantHormas: '',
-    peso: '',
-    loteCultivo: '',
-    loteColorante: '',
-    loteCalcio: '',
-    loteCuajo: '',
-    codigoQueso: ''
-}
+// const loteTrazabilidad = {
+//     loteCultivo: '',
+//     loteColorante: '',
+//     loteCalcio: '',
+//     loteCuajo: ''
+// }
 
 const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
 
-    const [loteForm, setLoteForm] = useState({});
+    const [loteTrazabilidad, setLoteTrazabilidad] = useState({});
+    const [selectCodigoQueso, setSelectCodigoQueso] = useState({});
+    const [litros, setLitros] = useState(lote.litrosLeche);
+    const [numeroTina, setNumeroTina] = useState(lote.numeroTina);
+    const [cantHormas, setCantHormas] = useState(lote.cantHormas);
+    const [peso, setPeso] = useState(lote.peso);
+    const [fechaElaboracion, setFechaElaboracion] = useState(lote.fechaElaboracion);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
-        setLoteForm(lote)
-    }, [lote]);
-
-    // --- STATES ---
-    const updateStateLote = useCallback((attribute, value) => {
-        const newLote = {...loteForm, [attribute]: value};
-        setLoteForm(newLote);
-    }, [loteForm]);
-
-    const handleChange = useCallback(evt => {
-        const nombreAtributo = evt.target.name;
-        const valorAtributo = evt.target.value;
-        if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
-    }, [updateStateLote])
-
-    const onCargar = () => {
-        if (validateLote()) setDialogOpen(true);
-    }
-
-    const onCloseDialog = useCallback(() => setDialogOpen(false), []);
-
-    // --- SUBMIT ---
-    const submitLote = (trazabilidadLote) => {
-        const newLote = {
-            ...loteForm,
-            ['loteCultivo']: trazabilidadLote.loteCultivo,
-            ['loteColorante']: trazabilidadLote.loteColorante,
-            ['loteCalcio']: trazabilidadLote.loteCalcio,
-            ['loteCuajo']: trazabilidadLote.loteCuajo
-        }
-        if (validateLote()) {
-            handleSubmit(newLote);
-            setLoteForm(loteInicial);
-        }
+        console.log("ENTRO A USE EFFECT")
+        console.log({lote})
+        if (lote.codigoQueso) {
+            const quesito = quesos.filter((o) => o.value === lote.codigoQueso).pop()
+            setSelectCodigoQueso(quesito);
+        } else
+            setSelectCodigoQueso({});
+        setLitros(lote.litrosLeche);
+        setNumeroTina(lote.numeroTina);
+        setCantHormas(lote.cantHormas);
+        setPeso(lote.peso);
+        setFechaElaboracion(lote.fechaElaboracion);
         setDialogOpen(false);
-    }
+    }, [lote], isEditingLote);
 
     const validateLote = () => {
-        const current = new Date();
-        const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-
         const errors = new Map();
 
-        if (loteForm.codigoQueso === '')
+        if (!selectCodigoQueso || !selectCodigoQueso.value || selectCodigoQueso.value === '')
             errors.set(field.queso, message.valEmptyField)
 
-        if (loteForm.litrosLeche < 1)
+        if (litros < 1)
             errors.set(field.litrosLeche, message.valZeroValue)
 
-        if (loteForm.numeroTina < 1)
+        if (numeroTina < 1)
             errors.set(field.numeroTina, message.valZeroValue)
-        else if (loteForm.numeroTina > 999)
+        else if (numeroTina > 999)
             errors.set(field.numeroTina, message.valLessThanThousand)
 
-        if (loteForm.cantHormas < 1)
+        if (cantHormas < 1)
             errors.set(field.cantidadHormas, message.valZeroValue)
 
-        if (loteForm.peso < 1)
+        if (peso < 1)
             errors.set(field.peso, message.valZeroValue)
 
-        if (loteForm.fechaElaboracion === '')
+        const currentDate = new Date();
+        const today = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+
+        if (fechaElaboracion === '')
             errors.set(field.fechaElaboracion, message.valEmptyFecha)
-        else if (validator.isBefore(date, loteForm.fechaElaboracion))
+        else if (validator.isBefore(today, fechaElaboracion))
             errors.set(field.fechaElaboracion, message.valOlderDate)
 
         if (errors.size > 0) {
@@ -99,22 +76,42 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
         return true;
     }
 
-    // --- VARIABLES ---
+    const onCargar = () => {
+        if (validateLote()) setDialogOpen(true);
+    }
+
+    const onCloseDialog = useCallback(() => setDialogOpen(false), []);
+
+    const submitLote = (trazabilidadLote) => {
+        const newLote = {
+            [field.backCodigoQueso]: selectCodigoQueso.value,
+            [field.backLitrosLeche]: litros,
+            [field.backNumeroTina]: numeroTina,
+            [field.backCantidadHormas]: cantHormas,
+            [field.backPeso]: peso,
+            [field.backFechaElaboracion]: fechaElaboracion,
+            [field.backLoteCuajo]: trazabilidadLote.loteCultivo,
+            [field.backLoteCuajo]: trazabilidadLote.loteColorante,
+            [field.backLoteCuajo]: trazabilidadLote.loteCalcio,
+            [field.backLoteCuajo]: trazabilidadLote.loteCuajo
+        }
+
+        if (validateLote())
+            handleSubmit(newLote);
+        setDialogOpen(false);
+    }
+
     const trazabilidad = useCallback(() => {
         return {
-            loteCultivo: loteForm.loteCultivo,
-            loteColorante: loteForm.loteColorante,
-            loteCalcio: loteForm.loteCalcio,
-            loteCuajo: loteForm.loteCuajo
+            loteCultivo: loteTrazabilidad.loteCultivo,
+            loteColorante: loteTrazabilidad.loteColorante,
+            loteCalcio: loteTrazabilidad.loteCalcio,
+            loteCuajo: loteTrazabilidad.loteCuajo
         }
-    }, [loteForm]);
+    }, [loteTrazabilidad]);
 
-    const labelCargar = useMemo(() => {
-        return isEditingLote ? 'Actualizar' : 'Cargar Lote'
-    }, [isEditingLote]);
-    const colorCargar = useMemo(() => {
-        return isEditingLote ? 'warning' : 'primary'
-    }, [isEditingLote]);
+    const labelCargar = useMemo(() => isEditingLote ? 'Actualizar' : 'Cargar Lote', [isEditingLote]);
+    const colorCargar = useMemo(() => isEditingLote ? 'warning' : 'primary', [isEditingLote]);
 
     return (
         <>
@@ -124,30 +121,30 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Autocomplete //TODO bug queda siempre algo seleccionado
+                <Autocomplete
                     id="autocomplete-tipoQueso"
                     name="codigoQueso"
                     options={quesos}
                     autoHighlight
-                    getOptionLabel={(option) => option.string || ''}
-                    renderOption={(props, option) => (
-                        <Box component="li"  {...props}>
-                            {option.string}
+                    getOptionLabel={(option) => option.label || ''}
+                    renderOption={(props, option) => {
+                        return <Box component="li"  {...props}>
+                            {option.label}
                         </Box>
-                    )}
+                    }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             label="Tipo de queso"/>
                     )}
-                    defaultValue={loteForm.codigoQueso}
-                    onChange={(evt, newValue) => {
-                        //-- lo paso asi para no chequear validez del campo
-                        updateStateLote('codigoQueso', newValue);
+                    value={selectCodigoQueso}
+                    onChange={(e, value) => {
+                        setSelectCodigoQueso(value)
                     }}
-                    isOptionEqualTodefaultValue={(option, value) =>
-                        value.label ? option.label === value.label : option.label === value
-                    }/>
+                    isOptionEqualToValue={(option, value) =>
+                        value.value ? option.value === value.value : option.value === value
+                    }
+                />
             </Grid>
             <Grid item xs={12} sm={8}>
                 <TextField
@@ -157,8 +154,10 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    defaultValue={loteForm.litrosLeche}
-                    onChange={handleChange}
+                    numeric={litros.toString()}
+                    value={litros}
+                    onChange={e => setLitros(e.target.value)}
+                    required
                 />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -169,8 +168,11 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    defaultValue={loteForm.numeroTina}
-                    onChange={handleChange}/>
+                    numeric={numeroTina.toString()}
+                    value={numeroTina}
+                    onChange={e => setNumeroTina(e.target.value)}
+                    required
+                />
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -180,8 +182,11 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    defaultValue={loteForm.cantHormas}
-                    onChange={handleChange}/>
+                    numeric={cantHormas.toString()}
+                    value={cantHormas}
+                    onChange={e => setCantHormas(e.target.value)}
+                    required
+                />
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -191,8 +196,11 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     fullWidth
                     type="number"
                     variant="outlined"
-                    defaultValue={loteForm.peso}
-                    onChange={handleChange}/>
+                    numeric={peso.toString()}
+                    value={peso}
+                    onChange={e => setPeso(e.target.value)}
+                    required
+                />
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -205,8 +213,10 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    defaultValue={loteForm.fechaElaboracion}
-                    onChange={handleChange}/>
+                    value={fechaElaboracion}
+                    onChange={e => setFechaElaboracion(e.target.value)}
+                    required
+                />
             </Grid>
             <Grid item xs={12} alignSelf="right" mb={0.5}>
                 <ButtonGroup fullWidth variant="contained">

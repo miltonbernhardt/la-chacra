@@ -1,4 +1,3 @@
-import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
@@ -8,7 +7,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
         return [
             {
                 field: 'fechaElaboracion',
-                headerName: 'Fecha de produccion',
+                headerName: 'Fecha de producción',
                 type: 'date',
                 valueFormatter: (params) => {
                     const valueFormatted =
@@ -27,11 +26,16 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                 flex: 0.75,
                 minWidth: 50,
                 valueFormatter: (params) => {
-                    return quesos
+                    console.log({params})
+                    let a = quesos
                         .filter(q => {
-                            return q.codigo === params.value
+                            // return q.codigo === params.value.value //todo 2
+                            return q.codigo === params.value //todo 1
                         })
                         .pop().tipoQueso
+
+                    console.log({a}) //todo
+                    return a
                 }
             },
             {
@@ -43,7 +47,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
             },
             {
                 field: 'litrosLeche',
-                headerName: 'Litros Procesados',
+                headerName: 'Litros procesados',
                 type: 'number',
                 flex: 0.5,
                 minWidth: 50,
@@ -65,6 +69,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
 
         ]
     }, [quesos]);
+
     return (
         <>
             <DataGrid
@@ -72,7 +77,10 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                 autoHeight={true}
                 rows={produccion}
                 columns={columns}
-                onCellDoubleClick={(params) => setSelection(params.id)}
+                onCellDoubleClick={(params) => {
+                    console.log({params2: params})
+                    setSelection(params.id)
+                }}
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}
