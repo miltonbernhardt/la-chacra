@@ -145,14 +145,9 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                         //-- lo paso asi para no chequear validez del campo
                         updateStateLote('codigoQueso', newValue);
                     }}
-                    isOptionEqualToValue={(option, value) => {
-                        if (value.label) {
-                            return option.label === value.label
-                        } else {
-                            return (option.label === value)
-                        }
-                        ;
-                    }}/>
+                    isOptionEqualToValue={(option, value) =>
+                        value.label ? option.label === value.label : option.label === value
+                    }/>
             </Grid>
             <Grid item xs={12} sm={8}>
                 <TextField
@@ -161,7 +156,6 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
                     label="Litros procesados"
                     fullWidth
                     type="number"
-                    numeric
                     variant="outlined"
                     value={loteForm.litrosLeche}
                     onChange={handleChange}
