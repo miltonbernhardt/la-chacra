@@ -9,6 +9,8 @@ export const queso = "Tipo de queso"
 export const codigo = "Código"
 export const nomenclatura = "Nomenclatura"
 export const tipoQueso = "Tipo de queso"
+export const cuit = "CUIT"
+export const razonSocial = "Razón Social"
 
 const backendFields = () => {
     const fields = new Map()
@@ -33,7 +35,7 @@ export const toastValidationErrors = (errors) => {
     errors.forEach(function (msg, field) {
         let realField = mapFields.get(field)
         realField = realField ?? field
-        toast.error(<><div style={{width: "100%"}}><b>{realField}</b>: {msg}</div></>)
+        toast.error(<><div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div></>)
     })
 }
 
