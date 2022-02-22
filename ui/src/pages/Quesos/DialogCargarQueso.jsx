@@ -9,9 +9,9 @@ import {
     TextField
 } from '@mui/material';
 import { useCallback, useEffect, useState, useMemo } from 'react';
-import { toastValidationErrors } from "../../fields";
-import * as message from "../../messages";
-import * as field from "../../fields";
+import { toastValidationErrors } from "../../resources/fields";
+import * as message from "../../resources/messages";
+import * as field from "../../resources/fields";
 
 const quesoInicial = {
     id: '',

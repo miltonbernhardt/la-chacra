@@ -2,10 +2,10 @@ import { Autocomplete, Box, Button, ButtonGroup, Grid, TextField, Typography, Pa
 import { useCallback, useEffect, useMemo, useState } from "react";
 import validator from "validator";
 import DialogCargarTrazabilidad from "./DialogCargarTrazabilidad";
-import * as message from "../../messages";
-import * as field from "../../fields";
-import { toastValidationErrors } from "../../fields";
-import { valLessThanThousand } from "../../messages";
+import * as message from "../../resources/messages";
+import * as field from "../../resources/fields";
+import { toastValidationErrors } from "../../resources/fields";
+import { valLessThanThousand } from "../../resources/messages";
 
 const loteInicial = {
     id: '',
