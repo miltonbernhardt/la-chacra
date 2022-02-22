@@ -1,7 +1,5 @@
 import { Autocomplete, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
-import { tiposDeCliente } from "../../data/data";
 import { useCallback, useState, useEffect, useMemo } from 'react';
-import toast from "react-hot-toast";
 import { toastValidationErrors } from "../../fields";
 import * as message from "../../messages";
 import * as field from "../../fields";
@@ -19,10 +17,11 @@ const clienteInicial = {
     email: '',
     telefono: '',
     fax: '',
-    celular: ''
+    celular: '',
+    idTipoCliente: ''
 }
 
-const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing }) => {
+const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposCliente }) => {
 
     const [clienteForm, setClienteForm] = useState(clienteInicial);
 
@@ -98,10 +97,24 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing }) => {
                                 <Grid item xs={12}>
                                     <Autocomplete
                                         disablePortal
-                                        id="combo-tipoCliente"
-                                        options={tiposDeCliente}
+                                        id="idTipoCliente"
+                                        name="idTipoCliente"
+                                        options={tiposCliente}
+                                        getOptionLabel={(option) => option.label || tiposCliente.filter(t => t.value === option).pop().label}
                                         renderInput={(params) => <TextField {...params} label="Tipo de cliente" />}
-                                    //TODO
+                                        renderOption={(props, option) => {
+                                            return <Box component="li"  {...props}>
+                                                {option.label}
+                                            </Box>
+                                        }}
+                                        value={clienteForm.idTipoCliente}
+                                        isOptionEqualToValue={(option, value) =>
+                                            value.value ? option.value === value.value : option.value === value
+                                        }
+                                        onChange={(e, value) => {
+                                            const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
+                                            setClienteForm(newCliente);
+                                        }}
                                     />
                                 </Grid>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>

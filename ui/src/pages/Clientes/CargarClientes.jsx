@@ -1,10 +1,10 @@
 import { Box, Button } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
 import { clientes } from "../../data/data";
-import { getAllClientes } from '../../services/RestServices';
+import { getAllClientes, getAllTipoClientes } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
@@ -24,23 +24,29 @@ const clienteInicial = {
     email: '',
     telefono: '',
     fax: '',
-    celular: ''
+    celular: '',
+    idTipoCliente: ''
 }
 
 const CargarClientes = () => {
 
     const [cliente, setCliente] = useState(clienteInicial);
     const [listaClientes, setListaClientes] = useState(clientes);
+    const [tiposClientes, setTiposClientes] = useState([]);
+
     const [isLoading, setLoading] = useState(true);
 
     const [isEditing, setEditing] = useState(false);
 
-    useEffect(() => fetchClientes(), [])
+    useEffect(() => fetchData(), [])
 
-    const fetchClientes = () => {
+    const fetchData = () => {
         getAllClientes().then(({ data }) => {
             setListaClientes(data)
-            setLoading(false);
+            getAllTipoClientes().then(({ data }) => {
+                setTiposClientes(data);
+                setLoading(false);
+            })
         });
     }
 
@@ -76,6 +82,11 @@ const CargarClientes = () => {
         setOpenDialogAlta(false);
     }
 
+    const valoresTiposClientes = useMemo(() =>
+        tiposClientes.map((c) => {
+            return { id: c.id, value: c.id, label: c.tipo }
+        }), [tiposClientes])
+
     if (isLoading) {
         return (
             <Box sx={{
@@ -108,7 +119,8 @@ const CargarClientes = () => {
                 onClose={onCloseDialog}
                 onSubmit={onSubmit}
                 open={openDialogAlta}
-                isEditing={isEditing} />
+                isEditing={isEditing}
+                tiposCliente={valoresTiposClientes} />
             <DialogBajaCliente
                 cliente={cliente}
                 onClose={onCloseDialog}

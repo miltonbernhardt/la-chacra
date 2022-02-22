@@ -2,6 +2,7 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.dtos.LoteDTO;
+import com.brikton.lachacra.dtos.TipoClienteDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ClienteService;
 import com.brikton.lachacra.services.LoteService;
@@ -26,6 +27,13 @@ public class ClienteController {
 
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<ClienteDTO>>> getAll() {
+        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
+    }
+
+    @GetMapping(value = "/tipo/")
+    public ResponseEntity<SuccessfulResponse<List<TipoClienteDTO>>> getAllTipoCliente() {
+        log.info("API::getAllTipoCliente");
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllTipoCliente()));
     }
 }
