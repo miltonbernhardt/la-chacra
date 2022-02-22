@@ -26,16 +26,11 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                 flex: 0.75,
                 minWidth: 50,
                 valueFormatter: (params) => {
-                    console.log({params})
-                    let a = quesos
+                    return quesos
                         .filter(q => {
-                            // return q.codigo === params.value.value //todo 2
-                            return q.codigo === params.value //todo 1
+                            return q.codigo === params.value
                         })
                         .pop().tipoQueso
-
-                    console.log({a}) //todo
-                    return a
                 }
             },
             {
@@ -78,7 +73,6 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                 rows={produccion}
                 columns={columns}
                 onCellDoubleClick={(params) => {
-                    console.log({params2: params})
                     setSelection(params.id)
                 }}
                 rowHeight={42}

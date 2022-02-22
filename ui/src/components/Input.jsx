@@ -1,11 +1,17 @@
 import { Grid, TextField } from "@mui/material";
-import { useState, forwardRef, useImperativeHandle } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
 const Input = forwardRef(({id, label, value, type = "number", required = false, sm}, ref) => {
     const [val, setVal] = useState(value);
     const [err, serErr] = useState(false);
 
-    const setValidField = (value) => serErr(!value);
+    const setFieldError = () => serErr(true);
+    const setValAndUpdate = (value) => {
+        setVal(value)
+        serErr(false)
+    }
+
+    useEffect(() => setValAndUpdate(value), [value]);
 
     useImperativeHandle(ref, () => ({
         value: () => val,
@@ -20,10 +26,10 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
                 if (func(val)) {
                     errors.set(id, msg)
                     isValid = false
+                    setFieldError()
                     return false
                 }
             });
-            setValidField(isValid)
             if (isValid && body != null && body instanceof Object)
                 body[id] = val
         }
@@ -42,7 +48,7 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
                 type === "date" ? {shrink: true} : {}
             }
             error={err}
-            onChange={e => setVal(e.target.value)}
+            onChange={e => setValAndUpdate(e.target.value)}
             required={required}
             ref={ref}
         />

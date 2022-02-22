@@ -33,9 +33,10 @@ export const themeOptions = {
             default: "#fafafa"
         },
         primary: {
-            light: "rgba(247, 85, 82, 1)",
-            main: "rgba(220, 48, 48, 1)",
-            dark: "rgba(192, 28, 29, 1)",
+            //todo cambiar de vuelta los colores como quieras, era para que no se confunda el rojo del error con el del tema
+            light: "rgb(247,181,82)",
+            main: "rgb(220,160,48)",
+            dark: "rgb(192,140,28)",
             contrastText: "#fff"
         },
         secondary: {
