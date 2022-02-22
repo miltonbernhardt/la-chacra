@@ -3,7 +3,6 @@ package com.brikton.lachacra.repositories;
 import com.brikton.lachacra.entities.Queso;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +16,5 @@ public interface QuesoRepository extends JpaRepository<Queso, Long> {
     Optional<Queso> findByCodigo(String codigo);
 
     @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Queso q WHERE q.fechaBaja IS NULL AND q.codigo=:codigo")
-    boolean existsQuesoByCodigo(@Param("codigo") String codigo);
+    boolean existsByCodigo(String codigo);
 }

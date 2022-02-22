@@ -6,13 +6,13 @@ VALUES (1, '003', 'S', 'Sardo', 53, null),
 
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, id_queso,
                          id_lote, peso, rendimiento, stock_lote, lote_cultivo, lote_colorante, lote_calcio,
-                         lote_cuajo)
+                         lote_cuajo, fecha_baja)
 VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210011', 526.7, 10.75, 20, 'cultivo1, cultivo2',
-        'colorante1, colorante2', 'calcio1, calcio2', 'cuajo1, cuajo2'),
-       ('2021-10-23', 2, 6500, 228, 2, '231020210022', 842.5, 12.96, 25, null, null, null, null),
+        'colorante1, colorante2', 'calcio1, calcio2', 'cuajo1, cuajo2', null),
+       ('2021-10-23', 2, 6500, 228, 2, '231020210022', 842.5, 12.96, 25, null, null, null, null, null),
        ('2021-10-24', 3, 6537, 242, 3, '241020210033', 938.8, 14.36, 30, 'cultivo1, cultivo2', null, null,
-        'cuajo1, cuajo2'),
-       ('2021-10-25', 4, 6537, 242, 4, '251020210045', 332, 12.6, 35, 'cultivo1', null, null, 'cuajo2');
+        'cuajo1, cuajo2', null),
+       ('2021-10-25', 4, 6537, 242, 4, '251020210045', 332, 12.6, 35, 'cultivo1', null, null, 'cuajo2', '2021-10-10');
 
 INSERT INTO public.tipo_cliente (id_tipo_cliente, tipo)
 VALUES (1, 'Mayorista'),

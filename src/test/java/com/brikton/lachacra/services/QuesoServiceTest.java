@@ -163,7 +163,7 @@ public class QuesoServiceTest {
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
 
-        when(repository.existsQuesoByCodigo("001")).thenReturn(false);
+        when(repository.existsByCodigo("001")).thenReturn(false);
         when(repository.save(any(Queso.class))).thenReturn(mockQueso);
         QuesoDTO dtoQuesoActual = quesoService.save(quesoToSave);
         assertEquals(dtoQuesoExpected, dtoQuesoActual);
@@ -174,7 +174,7 @@ public class QuesoServiceTest {
         QuesoDTO dto = new QuesoDTO();
         dto.setCodigo("001");
 
-        when(repository.existsQuesoByCodigo("001")).thenReturn(true);
+        when(repository.existsByCodigo("001")).thenReturn(true);
 
         CodigoQuesoAlreadyExistsException thrown = assertThrows(
                 CodigoQuesoAlreadyExistsException.class, () -> quesoService.save(dto)
@@ -206,7 +206,7 @@ public class QuesoServiceTest {
         expectedDTO.setStock(1);
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(repository.existsQuesoByCodigo("001")).thenReturn(false);
+        when(repository.existsByCodigo("001")).thenReturn(false);
         when(repository.save(any(Queso.class))).thenReturn(mockQueso);
         QuesoDTO actualDTO = quesoService.update(quesoTpUpdate);
         assertEquals(expectedDTO, actualDTO);
@@ -241,7 +241,7 @@ public class QuesoServiceTest {
         mockQueso.setStock(1);
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(repository.existsQuesoByCodigo("002")).thenReturn(true);
+        when(repository.existsByCodigo("002")).thenReturn(true);
         CodigoQuesoAlreadyExistsException thrown = assertThrows(
                 CodigoQuesoAlreadyExistsException.class, () -> quesoService.update(dto)
         );

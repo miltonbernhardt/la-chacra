@@ -57,7 +57,7 @@ public class QuesoService {
     }
 
     public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException {
-        if (repository.existsQuesoByCodigo(dto.getCodigo())) {
+        if (repository.existsByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
 
@@ -73,7 +73,7 @@ public class QuesoService {
 
         var oldQueso = oldQuesoOptional.get();
 
-        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsQuesoByCodigo(dto.getCodigo())) {
+        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
 

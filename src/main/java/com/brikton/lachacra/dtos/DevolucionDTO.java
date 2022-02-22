@@ -53,6 +53,6 @@ public class DevolucionDTO {
         this.setTemperatura(devolucion.getTemperatura());
         this.setPeso(devolucion.getPeso());
         this.setIdCliente(devolucion.getCliente().getId());
-        this.setIdLoteProducto(devolucion.getLoteProducto().getId());
+        this.setIdLoteProducto(devolucion.getLote().getId());
     }
 }
