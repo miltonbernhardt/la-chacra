@@ -32,7 +32,7 @@ const GridPrecios = ({precios}) => {
     return (
         <>
             <DataGrid
-                style={{height: "600px"}}
+                style={{minHeight: "600px"}}
                 autoHeight={true}
                 rows={precios}
                 columns={columns}

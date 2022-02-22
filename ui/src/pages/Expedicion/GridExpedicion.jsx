@@ -5,7 +5,7 @@ const GridExpedicion = () => {
     return (
         <>
             <DataGrid
-                style={{height: "600px"}}
+                style={{minHeight: "600px"}}
                 autoHeight={true}
                 rows={produccion}
                 rowHeight={42}

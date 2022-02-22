@@ -25,7 +25,7 @@ const columns = [
 const GridQuesos = ({listaQuesos, setSelection}) => {
     return (
         <DataGrid
-            style={{height: "600px"}}
+            style={{minHeight: "600px"}}
             autoHeight={true}
             rows={listaQuesos}
             rowHeight={42}

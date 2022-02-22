@@ -68,7 +68,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
     return (
         <>
             <DataGrid
-                style={{height: "600px"}}
+                style={{minHeight: "600px"}}
                 autoHeight={true}
                 rows={produccion}
                 columns={columns}

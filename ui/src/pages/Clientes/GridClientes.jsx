@@ -53,7 +53,7 @@ const GridClientes = () => {
         <DataGrid
             rows={clientes}
             columns={columns}
-            style={{height: "600px"}}
+            style={{minHeight: "600px"}}
             autoHeight={true}
             rowHeight={42}
             pageSize={15}
