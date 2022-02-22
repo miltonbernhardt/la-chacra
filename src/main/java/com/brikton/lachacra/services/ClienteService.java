@@ -71,6 +71,7 @@ public class ClienteService {
         c.setCelular(dto.getCelular());
         c.setFax(dto.getFax());
         c.setEmail(dto.getEmail());
+        c.setRazonSocial(dto.getRazonSocial());
 
         return c;
     }

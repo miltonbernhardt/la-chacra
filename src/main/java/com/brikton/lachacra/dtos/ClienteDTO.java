@@ -78,5 +78,9 @@ public class ClienteDTO {
         this.setTransporte(cliente.getTransporte());
         this.setSenasaUta(cliente.getSenasaUta());
         this.setIdTipoCliente(cliente.getTipoCliente().getId());
+        this.setEmail(cliente.getEmail());
+        this.setTelefono(cliente.getTelefono());
+        this.setCelular(cliente.getCelular());
+        this.setFax(cliente.getFax());
     }
 }
