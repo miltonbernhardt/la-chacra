@@ -9,7 +9,7 @@ import PageFormTable from "../../components/PageFormTable";
 const loteInicial = {
     id: '',
     fechaElaboracion: '',
-    numeroTina: '',//todo validar tina cantidad dig
+    numeroTina: '',
     litrosLeche: '',
     cantHormas: '',
     peso: '',

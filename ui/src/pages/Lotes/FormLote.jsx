@@ -5,6 +5,7 @@ import DialogCargarTrazabilidad from "./DialogCargarTrazabilidad";
 import * as message from "../../messages";
 import * as field from "../../fields";
 import { toastValidationErrors } from "../../fields";
+import { valLessThanThousand } from "../../messages";
 
 const loteInicial = {
     id: '',
@@ -77,6 +78,8 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
 
         if (loteForm.numeroTina < 1)
             errors.set(field.numeroTina, message.valZeroValue)
+        else if (loteForm.numeroTina > 999)
+            errors.set(field.numeroTina, message.valLessThanThousand)
 
         if (loteForm.cantHormas < 1)
             errors.set(field.cantidadHormas, message.valZeroValue)

@@ -17,6 +17,7 @@ public class LoteDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+    @Max(value = 999, message = ValidationMessages.MUST_BE_LESS_THAN_1000)
     private Integer numeroTina;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)

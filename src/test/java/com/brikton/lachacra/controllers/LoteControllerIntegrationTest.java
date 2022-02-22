@@ -262,7 +262,7 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Save__Invalid_Fields__Other_Validations() throws JsonProcessingException {
+    void Save__Invalid_Fields__Other_Validations_1() throws JsonProcessingException {
         LoteDTO dtoToSave = new LoteDTO();
         dtoToSave.setId("1");
         dtoToSave.setStockLote(1);
@@ -300,10 +300,10 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Save__Invalid_Fields__Codigo_Queso_Too_Short() throws JsonProcessingException {
+    void Save__Invalid_Fields__Other_Validations_2() throws JsonProcessingException {
         LoteDTO dtoToSave = new LoteDTO();
         dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-        dtoToSave.setNumeroTina(1);
+        dtoToSave.setNumeroTina(1000);
         dtoToSave.setCantHormas(1);
         dtoToSave.setLitrosLeche(20D);
         dtoToSave.setPeso(10D);
@@ -321,8 +321,9 @@ public class LoteControllerIntegrationTest {
         assertEquals(path, response.getPath());
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
-        assertEquals(1, response.getErrors().size());
+        assertEquals(2, response.getErrors().size());
         assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigoQueso"));
+        assertEquals(ValidationMessages.MUST_BE_LESS_THAN_1000, response.getErrors().get("numeroTina"));
     }
 
     @Test
@@ -437,36 +438,9 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Update__Invalid_Fields__Codigo_Queso_Too_Short() throws JsonProcessingException {
+    void Update__Invalid_Fields__Other_Validations_1() throws JsonProcessingException {
         LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
-        dtoToUpdate.setId("221020210011");
-        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 21));
-        dtoToUpdate.setNumeroTina(3);
-        dtoToUpdate.setCantHormas(2);
-        dtoToUpdate.setLitrosLeche(40D);
-        dtoToUpdate.setPeso(20D);
-        dtoToUpdate.setLoteCultivo("cultivo3, cultivo4");
-        dtoToUpdate.setLoteColorante("colorante3, colorante4");
-        dtoToUpdate.setLoteCalcio("calcio3, calcio4");
-        dtoToUpdate.setLoteCuajo("cuajo3, cuajo4");
-        dtoToUpdate.setCodigoQueso("02");
-
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-        );
-
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
-        assertEquals(1, response.getErrors().size());
-        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigoQueso"));
-    }
-
-    @Test
-    void Update__Invalid_Fields__Other_Validations() throws JsonProcessingException {
-        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
-        dtoToUpdate.setId("123");
+        dtoToUpdate.setId("11111111111");
         dtoToUpdate.setStockLote(1);
         dtoToUpdate.setRendimiento(1d);
         dtoToUpdate.setFechaElaboracion(LocalDate.of(3000, 10, 10));
@@ -500,6 +474,35 @@ public class LoteControllerIntegrationTest {
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCultivo"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCalcio"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("loteCuajo"));
+    }
+
+    @Test
+    void Update__Invalid_Fields__Other_Validations_2() throws JsonProcessingException {
+        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
+        dtoToUpdate.setId("111111111111111");
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 21));
+        dtoToUpdate.setNumeroTina(1000);
+        dtoToUpdate.setCantHormas(2);
+        dtoToUpdate.setLitrosLeche(40D);
+        dtoToUpdate.setPeso(20D);
+        dtoToUpdate.setLoteCultivo("cultivo3, cultivo4");
+        dtoToUpdate.setLoteColorante("colorante3, colorante4");
+        dtoToUpdate.setLoteCalcio("calcio3, calcio4");
+        dtoToUpdate.setLoteCuajo("cuajo3, cuajo4");
+        dtoToUpdate.setCodigoQueso("02");
+
+        HttpClientErrorException.BadRequest thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
+        assertEquals(3, response.getErrors().size());
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigoQueso"));
+        assertEquals(ValidationMessages.MUST_BE_LESS_THAN_1000, response.getErrors().get("numeroTina"));
     }
 
     //todo get all with one lote deleted
@@ -559,7 +562,7 @@ public class LoteControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
         assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
-        assertEquals(path.concat("111111111111"), response.getPath());
+        assertEquals(path.concat("11111111111"), response.getPath());
     }
 
     @Test
