@@ -16,23 +16,24 @@ public class LoteDTO {
     private LocalDate fechaElaboracion;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+    @Max(value = 999, message = ValidationMessages.MUST_BE_LESS_THAN_1000)
     private Integer numeroTina;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double litrosLeche;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Integer cantHormas;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 0, message = ValidationMessages.CANNOT_BE_LESS_THAN_0)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double peso;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
-    @Length(max = 3, message = ValidationMessages.MUST_NOT_EXCEED_3_CHARACTERS)
+    @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)
     private String codigoQueso;
 
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
@@ -84,5 +85,9 @@ public class LoteDTO {
         this.setLoteCalcio(dto.getLoteCalcio());
         this.setLoteCuajo(dto.getLoteCuajo());
         this.setCodigoQueso(dto.getCodigoQueso());
+    }
+
+    public String getCodigoQueso() {
+        return codigoQueso != null ? codigoQueso.toUpperCase() : null;
     }
 }

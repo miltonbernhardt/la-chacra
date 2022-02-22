@@ -29,9 +29,11 @@ public class Lote {
     private String loteColorante;
     private String loteCalcio;
     private String loteCuajo;
+    private LocalDate fechaBaja;
 
-    @ManyToOne
-    @JoinColumn(name = "codigo_queso")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_queso")
+    @ToString.Exclude
     private Queso queso;
 
     @Override

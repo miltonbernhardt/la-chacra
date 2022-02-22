@@ -2,10 +2,9 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.SuccessfulMessages;
-import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.NotFoundConflictException;
+import com.brikton.lachacra.dtos.QuesoUpdateDTO;
+import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.services.QuesoService;
 import org.junit.jupiter.api.Test;
@@ -14,13 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+
 
 @SpringBootTest(classes = {QuesoController.class})
 public class QuesoControllerTest {
@@ -32,63 +31,77 @@ public class QuesoControllerTest {
     QuesoService quesoService;
 
     @Test
-    void Get__OK() throws QuesoNotFoundException {
-        when(quesoService.get("001")).thenReturn(mockQuesoDTO());
-        var dtoActual = Objects.requireNonNull(quesoController.get("001").getBody()).getData();
-        QuesoDTO dtoExpected = mockQuesoDTO();
-        assertEquals(dtoExpected, dtoActual);
-    }
-
-    @Test
-    void Get__Queso_Not_Found() throws QuesoNotFoundException {
-        when(quesoService.get("001")).thenThrow(new QuesoNotFoundException());
-        QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoController.get("001")
-        );
-        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-    }
-
-    @Test
     void Get_All__OK() {
         when(quesoService.getAll()).thenReturn(List.of(mockQuesoDTO(), mockQuesoDTO()));
-        var actualDTOs = Objects.requireNonNull(quesoController.getAll().getBody()).getData();
+        var actualDTOs = requireNonNull(quesoController.getAll().getBody()).getData();
         assertEquals(mockQuesoDTO(), actualDTOs.get(0));
         assertEquals(mockQuesoDTO(), actualDTOs.get(1));
     }
 
     @Test
-    void Save__OK() {
+    void Save__OK() throws CodigoQuesoAlreadyExistsException {
         QuesoDTO dtoToSave = new QuesoDTO();
         dtoToSave.setCodigo("001");
         dtoToSave.setTipoQueso("tipoQueso");
         dtoToSave.setNomenclatura("tip");
         dtoToSave.setStock(1);
 
-        when(quesoService.save(any(QuesoDTO.class))).thenReturn(dtoToSave);
-        QuesoDTO dtoActual = requireNonNull(quesoController.save(dtoToSave).getBody()).getData();
-        String message = requireNonNull(quesoController.save(dtoToSave).getBody()).getMessage();
-        assertEquals(dtoToSave, dtoActual);
+        QuesoDTO dtoReturned = new QuesoDTO();
+        dtoToSave.setId(1L);
+        dtoToSave.setTipoQueso("tipoQueso");
+        dtoToSave.setNomenclatura("tip");
+        dtoToSave.setStock(1);
+
+        when(quesoService.save(any(QuesoDTO.class))).thenReturn(dtoReturned);
+
+        var response = requireNonNull(quesoController.save(dtoToSave).getBody());
+
+        QuesoDTO dtoActual = response.getData();
+        String message = response.getMessage();
+        assertEquals(dtoReturned, dtoActual);
         assertEquals(SuccessfulMessages.MSG_QUESO_CREATED, message);
     }
 
     @Test
-    void Update__OK() throws QuesoNotFoundException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+    void Save__Codigo_Queso_Already_Exists() throws CodigoQuesoAlreadyExistsException {
+        QuesoDTO dto = new QuesoDTO();
+        when(quesoService.save(dto)).thenThrow(new CodigoQuesoAlreadyExistsException());
+        CodigoQuesoAlreadyExistsException thrown = assertThrows(
+                CodigoQuesoAlreadyExistsException.class, () -> quesoController.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
+    }
+
+    @Test
+    void Update__OK() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+        var dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
         dtoToUpdate.setTipoQueso("tipoQueso");
         dtoToUpdate.setNomenclatura("tip");
         dtoToUpdate.setStock(1);
 
-        when(quesoService.update(any(QuesoDTO.class))).thenReturn(dtoToUpdate);
-        QuesoDTO dtoActual = requireNonNull(quesoController.update(dtoToUpdate).getBody()).getData();
-        String message = requireNonNull(quesoController.update(dtoToUpdate).getBody()).getMessage();
-        assertEquals(dtoToUpdate, dtoActual);
+        QuesoDTO dtoExpected = new QuesoDTO();
+        dtoExpected.setId(1L);
+        dtoExpected.setCodigo("001");
+        dtoExpected.setTipoQueso("tipoQueso");
+        dtoExpected.setNomenclatura("tip");
+        dtoExpected.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenReturn(dtoExpected);
+
+        var response = requireNonNull(quesoController.update(dtoToUpdate).getBody());
+
+        QuesoDTO dtoActual = response.getData();
+        String message = response.getMessage();
+        assertEquals(dtoExpected, dtoActual);
         assertEquals(SuccessfulMessages.MSG_QUESO_UPDATED, message);
     }
 
     @Test
-    void Update__Queso_Not_Found() throws QuesoNotFoundException {
-        QuesoDTO dtoToUpdate = new QuesoDTO();
+    void Update__Queso_Not_Found() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+        var dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(1L);
         dtoToUpdate.setCodigo("001");
         dtoToUpdate.setTipoQueso("tipoQueso");
         dtoToUpdate.setNomenclatura("tip");
@@ -102,17 +115,40 @@ public class QuesoControllerTest {
     }
 
     @Test
-    void Delete__OK() throws QuesoNotFoundException {
-        when(quesoService.delete("001")).thenReturn("001");
-        var actualID = Objects.requireNonNull(quesoController.delete("001").getBody()).getData();
-        assertEquals("001", actualID);
+    void Update__Codigo_Queso_Already_Exists() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+        var dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(1L);
+        dtoToUpdate.setCodigo("001");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(1);
+
+        when(quesoService.update(dtoToUpdate)).thenThrow(new CodigoQuesoAlreadyExistsException());
+        CodigoQuesoAlreadyExistsException thrown = assertThrows(
+                CodigoQuesoAlreadyExistsException.class, () -> quesoController.update(dtoToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
+    }
+
+    @Test
+    void Delete_Queso_WITH_Dependencies__OK() throws QuesoNotFoundException {
+        when(quesoService.delete(1L)).thenReturn("001");
+        var codigo = requireNonNull(quesoController.delete(1L).getBody()).getData();
+        assertEquals("001", codigo);
+    }
+
+    @Test
+    void Delete_Queso_WITHOUT_Dependencies__OK() throws QuesoNotFoundException {
+        when(quesoService.delete(1L)).thenReturn("");
+        var codigo = requireNonNull(quesoController.delete(1L).getBody()).getData();
+        assertEquals("", codigo);
     }
 
     @Test
     void Delete__Queso_Not_Found() throws QuesoNotFoundException {
-        when(quesoService.delete("001")).thenThrow(new QuesoNotFoundException());
+        when(quesoService.delete(1L)).thenThrow(new QuesoNotFoundException());
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoController.delete("001")
+                QuesoNotFoundException.class, () -> quesoController.delete(1L)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }

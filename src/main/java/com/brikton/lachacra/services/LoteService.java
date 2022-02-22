@@ -6,6 +6,7 @@ import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.LoteRepository;
+import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,64 +18,82 @@ import java.util.List;
 @Slf4j
 public class LoteService {
 
+    private final DateUtil dateUtil;
+    private final DevolucionService devolucionService;
+    private final ExpedicionService expedicionService;
     private final LoteRepository repository;
     private final QuesoService quesoService;
 
-    public LoteService(LoteRepository repository, QuesoService quesoService) {
+    public LoteService(
+            DateUtil dateUtil,
+            DevolucionService devolucionService,
+            ExpedicionService expedicionService,
+            LoteRepository repository,
+            QuesoService quesoService
+    ) {
+        this.dateUtil = dateUtil;
+        this.devolucionService = devolucionService;
+        this.expedicionService = expedicionService;
         this.repository = repository;
         this.quesoService = quesoService;
     }
 
-    public LoteDTO get(String id) throws LoteNotFoundException {
-        var lote = repository.findById(id);
-        if (lote.isPresent())
-            return new LoteDTO(lote.get());
-        else
-            throw new LoteNotFoundException();
+    public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
+        var id = generateID(dto);
+        if (repository.existsById(id)) {
+            throw new LoteAlreadyExistsException();
+        }
+        return persist(dto);
     }
 
-    public LoteDTO save(LoteDTO dto) throws NotFoundConflictException {
-        var id = dto.getId() == null || dto.getId().equals("") ? generateID(dto) : dto.getId();
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+    public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
+        var dto = new LoteDTO(dtpUpdate);
+        if (!repository.existsById(dto.getId())) {
+            throw new LoteNotFoundException();
         }
+        repository.deleteById(dto.getId());
+        return persist(dto);
+    }
 
+    private LoteDTO persist(LoteDTO dto) throws QuesoNotFoundConflictException {
         var lote = loteFromDTO(dto);
         var rendimiento = (dto.getPeso() / dto.getLitrosLeche()) * 100;
-        var stock = dto.getCantHormas(); //TODO si es un update no debería asignar directamente, sino que debería sumar/restar
+        var stock = dto.getCantHormas();
         lote.setRendimiento(rendimiento);
         lote.setStockLote(stock);
         lote = repository.save(lote);
         return new LoteDTO(lote);
     }
 
-    public LoteDTO update(LoteUpdateDTO dto) throws NotFoundConflictException, LoteNotFoundException {
-        delete(dto.getId());
-        return save(new LoteDTO(dto));
-    }
-
     public List<LoteDTO> getAll() {
         var lotesDTO = new ArrayList<LoteDTO>();
-        var lotes = repository.findAll();
+        var lotes = repository.findAllLotes();
         lotes.forEach(lote -> lotesDTO.add(new LoteDTO(lote)));
         return lotesDTO;
     }
 
     public String delete(String id) throws LoteNotFoundException {
-        //todo logica de borrar o dar de baja
-        if (repository.existsById(id))
-            repository.deleteById(id);
-        else
+        if (!repository.existsById(id))
             throw new LoteNotFoundException();
-        return id;
+
+        var lote = repository.getById(id);
+
+        if (expedicionService.existsByLote(lote) || devolucionService.existsByLote(lote)) {
+            lote.setFechaBaja(dateUtil.now());
+            repository.save(lote);
+            return id;
+        }
+
+        repository.deleteById(id);
+        return "";
     }
 
-    private Lote loteFromDTO(LoteDTO dto) throws NotFoundConflictException {
+    private Lote loteFromDTO(LoteDTO dto) throws QuesoNotFoundConflictException {
         Queso queso;
         try {
             queso = quesoService.getEntity(dto.getCodigoQueso());
         } catch (QuesoNotFoundException e) {
-            throw new NotFoundConflictException("Queso no encontrado", e.getCause());
+            throw new QuesoNotFoundConflictException(e.getCause());
         }
 
         var lote = new Lote();

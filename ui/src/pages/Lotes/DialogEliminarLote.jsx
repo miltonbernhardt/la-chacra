@@ -1,13 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-const EliminarLoteDialog = ({ open, onClose, onSubmit }) => {
+const DialogEliminarLote = ({ open, onClose, onSubmit, lote }) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>Borrar Lote</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Esta acción es irreversible ¿Desea borrar el lote?
+                        Esta acción es irreversible ¿Desea borrar el lote {lote.id}?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -19,4 +19,4 @@ const EliminarLoteDialog = ({ open, onClose, onSubmit }) => {
     );
 }
 
-export default EliminarLoteDialog;
+export default DialogEliminarLote;

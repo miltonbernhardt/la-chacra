@@ -1,19 +1,31 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
+import { useEffect, useState, useMemo } from 'react';
 
-const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLote }) => {
+const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazabilidad }) => {
+
+    const [trazabilidadForm, setTrazabilidad] = useState({});
+
+    useEffect(() => setTrazabilidad(trazabilidad), [trazabilidad])
 
     const handleChange = evt => {
-        const nombreAtributo = evt.target.name;
-        const valorAtributo = evt.target.value;
-        if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
+        const attribute = evt.target.name;
+        const value = evt.target.value;
+        if (evt.target.validity.valid) {
+            const newTrazabilidad = { ...trazabilidadForm, [attribute]: value }
+            setTrazabilidad(newTrazabilidad);
+        }
     }
+
+    const onCargar = () => submitLote(trazabilidadForm);
+
+    const labelCargar = useMemo(() => { return isEditing ? 'Actualizar' : 'Cargar Lote' }, [isEditing]);
 
     return (
         <div>
             <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>Trazabilidad</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText paddingBottom={2}>
                         Ingrese los datos de los insumos
                     </DialogContentText>
                     <Grid container spacing={2}>
@@ -24,7 +36,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de cultivo"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteCultivo}
+                                value={trazabilidadForm.loteCultivo}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -34,7 +46,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de colorante"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteColorante}
+                                value={trazabilidadForm.loteColorante}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -44,7 +56,7 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de calcio"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteCalcio}
+                                value={trazabilidadForm.loteCalcio}
                                 onChange={handleChange} />
                         </Grid>
                         <Grid item xs={12} >
@@ -54,18 +66,18 @@ const CargarTrazabilidadDialog = ({ open, onClose, onSubmit, lote, updateStateLo
                                 label="Lote de cuajo"
                                 fullWidth
                                 variant="outlined"
-                                value={lote.loteCuajo}
+                                value={trazabilidadForm.loteCuajo}
                                 onChange={handleChange} />
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onSubmit}>Cargar Lote</Button>
+                    <Button onClick={onCargar}>{labelCargar}</Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
 
-export default CargarTrazabilidadDialog;
+export default DialogCargarTrazabilidad;
