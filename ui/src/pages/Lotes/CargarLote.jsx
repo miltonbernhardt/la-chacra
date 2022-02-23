@@ -1,10 +1,12 @@
+import { Box } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useState } from "react";
 import toast from 'react-hot-toast';
+import PageFormTable from "../../components/PageFormTable";
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
 import DialogEliminarLote from "./DialogEliminarLote";
 import FormLote from "./FormLote";
 import GridLotes from "./GridLotes";
-import PageFormTable from "../../components/PageFormTable";
 
 const loteInicial = {
     id: '',
@@ -27,11 +29,15 @@ const CargarProduccion = () => {
 
     const [isEditingLote, setEditingLote] = useState(false);
     const [eliminarDialog, setEliminarDialog] = useState(false);
+    const [isLoading, setLoading] = useState(true);
 
     const fetchQuesos = useCallback(() => {
         getAllQuesos()
-            .then(data => setListaQuesos(data.data))
-            .catch(e => toast.error(e.response ? e : e.message));
+            .then(data => {
+                setListaQuesos(data.data);
+                setLoading(false)
+            })
+            .catch(e => { setLoading(false) });
     }, []);
 
     useEffect(() => fetchQuesos(), []);
@@ -45,7 +51,7 @@ const CargarProduccion = () => {
         setLote(loteSubmit);
         if (isEditingLote) {
             putLote(loteSubmit)
-                .then(({data}) => {
+                .then(({ data }) => {
                     const newList = listaLotes.filter((item) => item.id !== lote.id);
                     setListaLotes([...newList, data]);
                     setLote(loteInicial);
@@ -54,7 +60,7 @@ const CargarProduccion = () => {
             setEditingLote(false);
         } else {
             postLote(loteSubmit)
-                .then(({data}) => {
+                .then(({ data }) => {
                     setLote(loteInicial);
                     setListaLotes([...listaLotes, data]);
                 })
@@ -94,6 +100,20 @@ const CargarProduccion = () => {
         }
     });
 
+    if (isLoading) {
+        return (
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 3,
+            }}>
+                <CircularProgress />
+            </Box>
+        )
+    };
+
     return (
         <PageFormTable
             form={
@@ -105,13 +125,13 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit}/>
+                    handleSubmit={handleSubmit} />
             }
             table={
                 <GridLotes
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             }
             titleTable="Producción ingresada"
         >
@@ -119,7 +139,7 @@ const CargarProduccion = () => {
                 open={eliminarDialog}
                 lote={lote}
                 onClose={cancelEliminar}
-                onSubmit={handleEliminar}/>
+                onSubmit={handleEliminar} />
         </PageFormTable>
     )
 }

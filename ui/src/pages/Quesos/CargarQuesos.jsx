@@ -7,6 +7,8 @@ import DialogEliminarQueso from './DialogEliminarQueso';
 import GridQuesos from './GridQuesos';
 import * as message from "../../resources/messages";
 import PageTableButtonPane from "../../components/PageTableButtonPane";
+import { Box } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const quesoInicial = {
     id: '',
@@ -19,6 +21,7 @@ const CargarQuesos = () => {
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
 
+    const [isLoading, setLoading] = useState(true);
     // Dialogs
     const [isCargarQueso, setIsCargarQueso] = useState(false);
     const [isEditarQueso, setIsEditarQueso] = useState(false);
@@ -39,7 +42,8 @@ const CargarQuesos = () => {
                 }
             })
             setListaQuesos(listaAux)
-        }).catch(e => console.error(e.message));
+            setLoading(false);
+        }).catch(e => { setLoading(false) });
 
         setQueso(quesoInicial)
     }
@@ -98,6 +102,20 @@ const CargarQuesos = () => {
         setQueso(listaQuesos.filter(o => o.id === id).pop())
     }
 
+    if (isLoading) {
+        return (
+            <Box sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 3,
+            }}>
+                <CircularProgress />
+            </Box>
+        )
+    };
+
     return (
         <PageTableButtonPane
             title="Productos"
@@ -109,7 +127,7 @@ const CargarQuesos = () => {
             grid={
                 <GridQuesos
                     listaQuesos={listaQuesos}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             }
         >
             <DialogCargarQueso
@@ -123,7 +141,7 @@ const CargarQuesos = () => {
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
-                onBorrar={onDelete}/>
+                onBorrar={onDelete} />
         </PageTableButtonPane>
     );
 }
