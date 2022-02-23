@@ -33,10 +33,9 @@ export const themeOptions = {
             default: "#fafafa"
         },
         primary: {
-            //todo cambiar de vuelta los colores como quieras, era para que no se confunda el rojo del error con el del tema
-            light: "rgb(247,181,82)",
-            main: "rgb(220,160,48)",
-            dark: "rgb(192,140,28)",
+            light: "rgba(247, 85, 82, 1)",
+            main: "rgba(220, 48, 48, 1)",
+            dark: "rgba(192, 28, 29, 1)",
             contrastText: "#fff"
         },
         secondary: {
@@ -62,8 +61,8 @@ export const themeOptions = {
 
 const drawerWidth = 240;
 
-const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
-    ({theme, open}) => ({
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme, open }) => ({
         flexGrow: 1,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
@@ -82,7 +81,7 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})(({theme, open}) => ({
+})(({ theme, open }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -97,7 +96,7 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const DrawerHeader = styled('div')(({theme}) => ({
+const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
@@ -158,7 +157,7 @@ const App = () => {
             <ThemeProvider theme={theme}>
                 <Router>
                     <Box display="flex" height="98vh">
-                        <CssBaseline/>
+                        <CssBaseline />
                         <AppBar position="fixed" open={drawerOpen}>
                             <Toolbar>
                                 <IconButton
@@ -166,9 +165,9 @@ const App = () => {
                                     aria-label="open drawer"
                                     onClick={handleDrawerOpen}
                                     edge="start"
-                                    sx={{mr: 2, ...(drawerOpen && {display: 'none'})}}
+                                    sx={{ mr: 2, ...(drawerOpen && { display: 'none' }) }}
                                 >
-                                    <MenuIcon/>
+                                    <MenuIcon />
                                 </IconButton>
                                 <Typography variant="h6" noWrap component="div">
                                     La Chacra
@@ -182,25 +181,25 @@ const App = () => {
                             theme={theme}
                         />
                         <Main open={drawerOpen}>
-                            <DrawerHeader/>
+                            <DrawerHeader />
                             <Switch>
-                                <Route exact path="/" component={Home}/>
-                                <Route path="/clientes" component={CargarClientes}/>
-                                <Route path="/cargar/lotes" component={CargarProduccion}/>
-                                <Route path="/cargar/expedicion" component={CargarExpedicion}/>
-                                <Route path="/cargar/quesos" component={CargarQuesos}/>
-                                <Route path="/cargar/precios" component={CargarPrecios}/>
-                                <Route path="/ver/litros" component={VerLitrosElaborados}/>
-                                <Route path="/ver/produccion" component={VerProduccion}/>
-                                <Route path="/ver/ventas" component={VerVentas}/>
-                                <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>
-                                <Route path="/emitir/remito" component={EmitirRemito}/>
+                                <Route exact path="/" component={Home} />
+                                <Route path="/clientes" component={CargarClientes} />
+                                <Route path="/cargar/lotes" component={CargarProduccion} />
+                                <Route path="/cargar/expedicion" component={CargarExpedicion} />
+                                <Route path="/cargar/quesos" component={CargarQuesos} />
+                                <Route path="/cargar/precios" component={CargarPrecios} />
+                                <Route path="/ver/litros" component={VerLitrosElaborados} />
+                                <Route path="/ver/produccion" component={VerProduccion} />
+                                <Route path="/ver/ventas" component={VerVentas} />
+                                <Route path="/ver/trazabilidad" component={VerTrazabilidad} />
+                                <Route path="/emitir/remito" component={EmitirRemito} />
                             </Switch>
                         </Main>
                     </Box>
                 </Router>
             </ThemeProvider>
-            <Toast/>
+            <Toast />
         </>
     );
 }

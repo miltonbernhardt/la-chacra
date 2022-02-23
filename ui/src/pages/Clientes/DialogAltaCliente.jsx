@@ -1,8 +1,8 @@
 import { Autocomplete, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { toastValidationErrors } from "../../fields";
-import * as message from "../../messages";
-import * as field from "../../fields";
+import * as message from "../../resources/messages";
+import * as field from "../../resources/fields";
 const clienteInicial = {
     id: '',
     razonSocial: '',

@@ -34,6 +34,10 @@ export const codigo = "Código"
 export const nomenclatura = "Nomenclatura"
 export const tipoQueso = "Tipo de queso"
 
+// cliente
+export const cuit = "CUIT"
+export const razonSocial = "Razon Social"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -62,7 +66,7 @@ export const toastValidationErrors = (errors) => {
         let realField = mapFields.get(field)
         realField = realField ?? field
         toast.error(<>
-            <div style={{width: "100%"}}><b>{realField}</b>: {msg}</div>
+            <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>
         </>)
     })
 }
