@@ -7,7 +7,7 @@ const Select = forwardRef((
         label,
         value,
         required = false,
-        options = {id: null, label: null, value: null}
+        options = { id: null, label: null, value: null }
     }, ref) => {
 
     const [val, setVal] = useState(value);
@@ -23,7 +23,7 @@ const Select = forwardRef((
         if (value && value !== {})
             setValAndUpdate(options.filter((o) => o.value === value).pop())
         else
-            setValAndUpdate({id: null, label: null, value: null});
+            setValAndUpdate({ id: null, label: null, value: null });
     }, [value]);
 
     useImperativeHandle(ref, () => ({
@@ -35,7 +35,7 @@ const Select = forwardRef((
          */
         validate: (errors, body, functionsMsg) => {
             let isValid = true
-            functionsMsg.some(({func, msg}) => {
+            functionsMsg.some(({ func, msg }) => {
                 if (func(val)) {
                     errors.set(id, msg)
                     isValid = false
@@ -65,7 +65,7 @@ const Select = forwardRef((
                     error={err}
                     required={required}
                     {...params}
-                    label={label}/>
+                    label={label} />
             )}
             value={val}
             error={err}

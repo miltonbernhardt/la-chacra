@@ -1,9 +1,10 @@
-import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import { Box, Autocomplete, TextField, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
 import { createRef, useEffect, useMemo, useState } from 'react';
 import Input from "../../components/Input";
 import Select from "../../components/Select";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import { toastValidationErrors } from "../../resources/fields";
 const clienteInicial = {
     id: '',
     razonSocial: '',
@@ -26,6 +27,7 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
 
     const [clienteForm, setClienteForm] = useState(clienteInicial);
 
+
     const refRazonSocial = createRef(null)
     const refCuit = createRef(null)
     const refDomicilio = createRef(null)
@@ -39,7 +41,6 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
     const refTelefono = createRef(null)
     const refFax = createRef(null)
     const refCelular = createRef(null)
-    const refIdTipoCliente = createRef(null)
 
     useEffect(() => setClienteForm(cliente), [cliente]);
 
@@ -56,9 +57,17 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
             { func: validation.empty, msg: message.valEmptyField }
         ])
 
-        refIdTipoCliente.current.validate(errors, values, [
-            { func: validation.emptySelect, msg: message.valEmptyField }
-        ])
+        if (clienteForm.idTipoCliente === '') {
+            errors.set("Tipo de cliente", message.valEmptyField);
+        } else {
+            values["idTipoCliente"] = clienteForm.idTipoCliente;
+        }
+
+        if (errors.size > 0) {
+            console.error(errors)
+            toastValidationErrors(errors)
+            return
+        }
 
         refDomicilio.current.setValue(values)
         refCodPostal.current.setValue(values)
@@ -71,7 +80,7 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
         refTelefono.current.setValue(values)
         refFax.current.setValue(values)
         refCelular.current.setValue(values)
-        console.log(values);
+
         onSubmit(values)
     }
 
@@ -113,12 +122,30 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     value={clienteForm.cuit}
                                     required
                                     type="text" />
-                                <Select
-                                    id="idTipoCliente"
-                                    label="Tipo de cliente"
-                                    ref={refIdTipoCliente}
-                                    options={tiposCliente}
-                                    required />
+                                <Grid item xs={12}>
+                                    {/* Using Autocomplete bc select doesnt work here */}
+                                    <Autocomplete
+                                        disablePortal
+                                        id="idTipoCliente"
+                                        name="idTipoCliente"
+                                        options={tiposCliente}
+                                        autoHighlight
+                                        getOptionLabel={(option) => tiposCliente.filter(t => t.value === option).pop() ? tiposCliente.filter(t => t.value === option).pop().label : ''}
+                                        renderInput={(params) => <TextField {...params} label="Tipo de cliente" />}
+                                        renderOption={(props, option) => {
+                                            return <Box component="li"  {...props}>
+                                                {option.label}
+                                            </Box>
+                                        }}
+                                        value={clienteForm.idTipoCliente}
+                                        isOptionEqualToValue={(option, value) =>
+                                            value.value ? option.value === value.value : option.value === value
+                                        }
+                                        onChange={(e, value) => {
+                                            const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
+                                            setClienteForm(newCliente);
+                                        }} />
+                                </Grid>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Domicilio
                                 </Typography>
