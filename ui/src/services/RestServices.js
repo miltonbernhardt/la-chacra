@@ -8,6 +8,7 @@ const RAIZ_URL = `http://localhost:${PUERTO}`;
 const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'
 const API_CLIENTE = '/api/v1/clientes/'
+const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -32,9 +33,11 @@ export const postQueso = async (queso) => await POST(`${API_QUESO}`, queso);
 export const putQueso = async (queso) => await PUT(`${API_QUESO}`, queso);
 export const deleteQueso = async (codigo) => await DELETE(`${API_QUESO}${codigo}`);
 
+// --- TIPO CLIENTE METHODS ---
+export const getAllTipoClientes = async () => await GET(`${API_TIPO_CLIENTE}`);
+
 // --- CLIENTE METHODS ---
 export const getAllClientes = async () => await GET(`${API_CLIENTE}`);
-export const getAllTipoClientes = async () => await GET(`${API_CLIENTE}tipo/`);
 export const postCliente = async (cliente) => await POST(`${API_CLIENTE}`, cliente);
 
 // --- GENERAL METHODS ---
