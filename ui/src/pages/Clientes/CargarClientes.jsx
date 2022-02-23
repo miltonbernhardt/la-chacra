@@ -65,7 +65,6 @@ const CargarClientes = () => {
         setOpenDialogAlta(false);
         setCliente(clienteInicial);
         postCliente(clienteForm).then(() => fetchClientes());
-        // toast.error('not yet implemented')
     }, [])
 
     // --- DIALOGS ---
@@ -115,7 +114,7 @@ const CargarClientes = () => {
         <PageTableButtonPane
             title="Clientes"
             buttons={<>
-                <Button color="error" onClick={onOpenBaja}>Dar de baja</Button>
+                <Button color="warning" onClick={onOpenBaja}>Dar de baja</Button>
                 <Button color="info" onClick={onOpenActualizar}>Actualizar</Button>
                 <Button onClick={onOpenAlta}>Dar de alta</Button>
             </>}

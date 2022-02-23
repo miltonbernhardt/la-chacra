@@ -1,8 +1,9 @@
-import { Autocomplete, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
-import { useCallback, useState, useEffect, useMemo } from 'react';
-import { toastValidationErrors } from "../../fields";
+import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from "@mui/material";
+import { createRef, useEffect, useMemo, useState } from 'react';
+import Input from "../../components/Input";
+import Select from "../../components/Select";
 import * as message from "../../resources/messages";
-import * as field from "../../resources/fields";
+import * as validation from "../../resources/validations";
 const clienteInicial = {
     id: '',
     razonSocial: '',
@@ -25,28 +26,54 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
 
     const [clienteForm, setClienteForm] = useState(clienteInicial);
 
+    const refRazonSocial = createRef(null)
+    const refCuit = createRef(null)
+    const refDomicilio = createRef(null)
+    const refCodPostal = createRef(null)
+    const refLocalidad = createRef(null)
+    const refProvincia = createRef(null)
+    const refPais = createRef(null)
+    const refTransporte = createRef(null)
+    const refSenasaUta = createRef(null)
+    const refEmail = createRef(null)
+    const refTelefono = createRef(null)
+    const refFax = createRef(null)
+    const refCelular = createRef(null)
+    const refIdTipoCliente = createRef(null)
+
     useEffect(() => setClienteForm(cliente), [cliente]);
 
-    const handleChange = useCallback(evt => {
-        const nombreAtributo = evt.target.name;
-        const valorAtributo = evt.target.value;
-        const newCliente = { ...clienteForm, [nombreAtributo]: valorAtributo };
-        setClienteForm(newCliente);
-    }, [clienteForm])
-
-    const validarCliente = useCallback(() => {
+    const handleSubmit = () => {
         const errors = new Map();
-        if (clienteForm.razonSocial === '') errors.set(field.razonSocial, message.valEmptyField)
-        if (clienteForm.cuit === '') errors.set(field.cuit, message.valEmptyField)
-        if (errors.size > 0) {
-            console.error(errors)
-            toastValidationErrors(errors)
-            return false;
-        }
-        return true;
-    }, [clienteForm])
+        const values = {};
+        values["id"] = clienteForm.id
 
-    const handleSubmit = useCallback(() => { if (validarCliente()) onSubmit(clienteForm) }, [clienteForm, onSubmit, validarCliente]);
+        refRazonSocial.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
+
+        refCuit.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
+
+        refIdTipoCliente.current.validate(errors, values, [
+            { func: validation.emptySelect, msg: message.valEmptyField }
+        ])
+
+        refDomicilio.current.setValue(values)
+        refCodPostal.current.setValue(values)
+        refLocalidad.current.setValue(values)
+        refProvincia.current.setValue(values)
+        refPais.current.setValue(values)
+        refTransporte.current.setValue(values)
+        refSenasaUta.current.setValue(values)
+        refEmail.current.setValue(values)
+        refTelefono.current.setValue(values)
+        refFax.current.setValue(values)
+        refCelular.current.setValue(values)
+        console.log(values);
+        onSubmit(values)
+    }
 
     // --- VARIABLES ---
     const dialogTitle = useMemo(() => isEditing ? 'Actualizar Cliente' : 'Alta Cliente', [isEditing]);
@@ -72,177 +99,106 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                 <Typography variant="h6" paddingLeft={2}>
                                     {titleCliente}
                                 </Typography>
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="razonSocial"
-                                        name="razonSocial"
-                                        label="Razon Social"
-                                        fullWidth
-                                        type="text"
-                                        variant="outlined"
-                                        value={clienteForm.razonSocial}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="cuit"
-                                        name="cuit"
-                                        label="CUIT"
-                                        fullWidth
-                                        type="text"
-                                        variant="outlined"
-                                        value={clienteForm.cuit}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Autocomplete
-                                        disablePortal
-                                        id="idTipoCliente"
-                                        name="idTipoCliente"
-                                        options={tiposCliente}
-                                        getOptionLabel={(option) => tiposCliente.filter(t => t.value === option).pop() ? tiposCliente.filter(t => t.value === option).pop().label : ''}
-                                        renderInput={(params) => <TextField {...params} label="Tipo de cliente" />}
-                                        renderOption={(props, option) => {
-                                            return <Box component="li"  {...props}>
-                                                {option.label}
-                                            </Box>
-                                        }}
-                                        value={clienteForm.idTipoCliente}
-                                        isOptionEqualToValue={(option, value) =>
-                                            value.value ? option.value === value.value : option.value === value
-                                        }
-                                        onChange={(e, value) => {
-                                            const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
-                                            setClienteForm(newCliente);
-                                        }}
-                                    />
-                                </Grid>
+                                <Input
+                                    id="razonSocial"
+                                    label="Razon Social"
+                                    ref={refRazonSocial}
+                                    value={clienteForm.razonSocial}
+                                    required
+                                    type="text" />
+                                <Input
+                                    id="cuit"
+                                    label="CUIT"
+                                    ref={refCuit}
+                                    value={clienteForm.cuit}
+                                    required
+                                    type="text" />
+                                <Select
+                                    id="idTipoCliente"
+                                    label="Tipo de cliente"
+                                    ref={refIdTipoCliente}
+                                    options={tiposCliente}
+                                    required />
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Domicilio
                                 </Typography>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        id="domicilio"
-                                        name="domicilio"
-                                        label="Dirección"
-                                        fullWidth
-                                        type="text"
-                                        variant="outlined"
-                                        value={clienteForm.domicilio}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} sm={8} >
-                                    <TextField
-                                        id="localidad"
-                                        name="localidad"
-                                        label="Localidad"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.localidad}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <TextField
-                                        id="codigoPostal"
-                                        name="codPostal"
-                                        label="Código Postal"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.codPostal}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="provincia"
-                                        name="provincia"
-                                        label="Provincia"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.provincia}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="pais"
-                                        name="pais"
-                                        label="Pais"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.pais}
-                                        onChange={handleChange} />
-                                </Grid>
+                                <Input
+                                    id="domicilio"
+                                    label="Dirección"
+                                    ref={refDomicilio}
+                                    value={clienteForm.domicilio}
+                                    type="text" />
+                                <Input
+                                    id="localidad"
+                                    label="Localidad"
+                                    ref={refLocalidad}
+                                    value={clienteForm.localidad}
+                                    type="text"
+                                    sm={8} />
+                                <Input
+                                    id="codigoPostal"
+                                    label="Código Postal"
+                                    ref={refCodPostal}
+                                    value={clienteForm.codPostal}
+                                    sm={4} />
+                                <Input
+                                    id="provincia"
+                                    label="Provincia"
+                                    ref={refProvincia}
+                                    value={clienteForm.provincia}
+                                    type="text"
+                                    sm={6} />
+                                <Input
+                                    id="pais"
+                                    label="Pais"
+                                    ref={refPais}
+                                    value={clienteForm.pais}
+                                    type="text"
+                                    sm={6} />
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Datos de contacto
                                 </Typography>
 
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="email"
-                                        name="email"
-                                        label="E-mail"
-                                        type="email"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.email}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="telefono"
-                                        name="telefono"
-                                        label="Telefono"
-                                        type="tel"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.telefono}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="celular"
-                                        name="celular"
-                                        label="Celular"
-                                        type="tel"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.celular}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="fax"
-                                        name="fax"
-                                        label="Fax"
-                                        type="tel"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.fax}
-                                        onChange={handleChange} />
-                                </Grid>
+                                <Input
+                                    id="email"
+                                    label="E-mail"
+                                    type="email"
+                                    ref={refEmail}
+                                    value={clienteForm.email} />
+                                <Input
+                                    id="telefono"
+                                    label="Telefono"
+                                    type="tel"
+                                    ref={refTelefono}
+                                    value={clienteForm.telefono} />
+                                <Input
+                                    id="celular"
+                                    label="Celular"
+                                    type="tel"
+                                    ref={refCelular}
+                                    value={clienteForm.celular} />
+                                <Input
+                                    id="fax"
+                                    label="Fax"
+                                    type="tel"
+                                    ref={refFax}
+                                    value={clienteForm.fax} />
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Transporte
                                 </Typography>
 
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="transporte"
-                                        name="transporte"
-                                        label="Transporte"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.transporte}
-                                        onChange={handleChange} />
-                                </Grid>
-                                <Grid item xs={12} >
-                                    <TextField
-                                        id="senasaUta"
-                                        name="senasaUta"
-                                        label="SENASA/UTA"
-                                        fullWidth
-                                        variant="outlined"
-                                        value={clienteForm.senasaUta}
-                                        onChange={handleChange} />
-                                </Grid>
+                                <Input
+                                    id="transporte"
+                                    label="Transporte"
+                                    ref={refTransporte}
+                                    value={clienteForm.transporte}
+                                    type="text" />
+                                <Input
+                                    id="senasaUta"
+                                    label="SENASA/UTA"
+                                    ref={refSenasaUta}
+                                    value={clienteForm.senasaUta}
+                                    type="text" />
                             </Grid>
                         </Box>
                     </Container>
