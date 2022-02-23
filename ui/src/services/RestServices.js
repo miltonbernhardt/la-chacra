@@ -94,12 +94,16 @@ const processSuccessResponseWithMessage = (response) => {
 }
 
 const processResponseError = (err) => {
-    const { data, status } = err.response
-    console.error({ data, status })
-    toast.dismiss()
-    if (data["errors"])
-        toastValidationErrors(new Map(Object.entries(data.errors)))
-    else
-        toast.error(data.message)
-    throw new Error(data.message)
+    if (err.response) {
+        const { data, status } = err.response
+        console.error({ data, status })
+        toast.dismiss()
+        if (data["errors"])
+            toastValidationErrors(new Map(Object.entries(data.errors)))
+        else
+            toast.error(data.message)
+    } else {
+        toast.error(err.message)
+    }
+    throw new Error(err)
 }

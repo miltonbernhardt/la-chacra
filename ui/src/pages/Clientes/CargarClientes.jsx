@@ -41,14 +41,14 @@ const CargarClientes = () => {
     const fetchClientes = () => {
         getAllClientes().then(({ data }) => {
             setListaClientes(data)
-        });
+        }).catch();
     }
 
     const fetchTipoClientes = () => {
         getAllTipoClientes().then(({ data }) => {
             setTiposClientes(data);
             setLoading(false);
-        });
+        }).catch();
     }
 
     useEffect(() => {
