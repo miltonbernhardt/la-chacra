@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { createRef, useEffect, useMemo, useState } from 'react';
 import Input from "../../components/Input";
-import { toastValidationErrors } from "../../resources/fields";
+import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
 
@@ -53,7 +53,7 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
 
         if (errors.size > 0) {
             console.error(errors)
-            toastValidationErrors(errors)
+            field.toastValidationErrors(errors)
             return
         }
 
@@ -70,22 +70,22 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                     </DialogContentText>
                     <Grid container spacing={2}>
                         <Input
-                            id="tipoQueso"
-                            label="Tipo de queso"
+                            id={field.backTipoQueso}
+                            label={field.tipoQueso}
                             ref={refTipoQueso}
                             value={quesoForm.tipoQueso}
                             type="text"
                             required />
                         <Input
-                            id="nomenclatura"
-                            label="Nomenclatura"
+                            id={field.backNomenclatura}
+                            label={field.nomenclatura}
                             ref={refNomenclatura}
                             value={quesoForm.nomenclatura}
                             type="text"
                             required />
                         <Input
-                            id="codigo"
-                            label="Código"
+                            id={field.backCodigo}
+                            label={field.codigo}
                             ref={refCodigo}
                             value={quesoForm.codigo}
                             required />

@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
 import { createRef, useEffect, useMemo, useState } from 'react';
 import Input from "../../components/Input";
-import { toastValidationErrors } from "../../resources/fields";
+import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
 const clienteInicial = {
@@ -64,7 +64,7 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
 
         if (errors.size > 0) {
             console.error(errors)
-            toastValidationErrors(errors)
+            field.toastValidationErrors(errors)
             return
         }
 
@@ -108,15 +108,15 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     {titleCliente}
                                 </Typography>
                                 <Input
-                                    id="razonSocial"
-                                    label="Razon Social"
+                                    id={field.backRazonSocial}
+                                    label={field.razonSocial}
                                     ref={refRazonSocial}
                                     value={clienteForm.razonSocial}
                                     required
                                     type="text" />
                                 <Input
-                                    id="cuit"
-                                    label="CUIT"
+                                    id={field.backCuit}
+                                    label={field.cuit}
                                     ref={refCuit}
                                     value={clienteForm.cuit}
                                     required
@@ -125,12 +125,12 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     {/* Using Autocomplete bc select doesnt work here */}
                                     <Autocomplete
                                         disablePortal
-                                        id="idTipoCliente"
+                                        id={field.backIdTipoCliente}
                                         name="idTipoCliente"
                                         options={tiposCliente}
                                         autoHighlight
                                         getOptionLabel={(option) => tiposCliente.filter(t => t.value === option).pop() ? tiposCliente.filter(t => t.value === option).pop().label : ''}
-                                        renderInput={(params) => <TextField {...params} label="Tipo de cliente" />}
+                                        renderInput={(params) => <TextField {...params} label={field.idTipoCliente} />}
                                         renderOption={(props, option) => {
                                             return <Box component="li"  {...props}>
                                                 {option.label}
@@ -149,34 +149,34 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     Domicilio
                                 </Typography>
                                 <Input
-                                    id="domicilio"
-                                    label="Dirección"
+                                    id={field.backDomicilio}
+                                    label={field.domicilio}
                                     ref={refDomicilio}
                                     value={clienteForm.domicilio}
                                     type="text" />
                                 <Input
-                                    id="localidad"
-                                    label="Localidad"
+                                    id={field.backLocalidad}
+                                    label={field.localidad}
                                     ref={refLocalidad}
                                     value={clienteForm.localidad}
                                     type="text"
                                     sm={8} />
                                 <Input
-                                    id="codigoPostal"
-                                    label="Código Postal"
+                                    id={field.backCodPostal}
+                                    label={field.codPostal}
                                     ref={refCodPostal}
                                     value={clienteForm.codPostal}
                                     sm={4} />
                                 <Input
-                                    id="provincia"
-                                    label="Provincia"
+                                    id={field.backProvincia}
+                                    label={field.provincia}
                                     ref={refProvincia}
                                     value={clienteForm.provincia}
                                     type="text"
                                     sm={6} />
                                 <Input
-                                    id="pais"
-                                    label="Pais"
+                                    id={field.backPais}
+                                    label={field.pais}
                                     ref={refPais}
                                     value={clienteForm.pais}
                                     type="text"
@@ -186,26 +186,26 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                 </Typography>
 
                                 <Input
-                                    id="email"
-                                    label="E-mail"
+                                    id={field.backEmail}
+                                    label={field.email}
                                     type="email"
                                     ref={refEmail}
                                     value={clienteForm.email} />
                                 <Input
-                                    id="telefono"
-                                    label="Telefono"
+                                    id={field.backTelefono}
+                                    label={field.telefono}
                                     type="tel"
                                     ref={refTelefono}
                                     value={clienteForm.telefono} />
                                 <Input
-                                    id="celular"
-                                    label="Celular"
+                                    id={field.backCelular}
+                                    label={field.celular}
                                     type="tel"
                                     ref={refCelular}
                                     value={clienteForm.celular} />
                                 <Input
-                                    id="fax"
-                                    label="Fax"
+                                    id={field.backFax}
+                                    label={field.fax}
                                     type="tel"
                                     ref={refFax}
                                     value={clienteForm.fax} />
@@ -214,14 +214,14 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                 </Typography>
 
                                 <Input
-                                    id="transporte"
-                                    label="Transporte"
+                                    id={field.backTransporte}
+                                    label={field.transporte}
                                     ref={refTransporte}
                                     value={clienteForm.transporte}
                                     type="text" />
                                 <Input
-                                    id="senasaUta"
-                                    label="SENASA/UTA"
+                                    id={field.backSenasaUta}
+                                    label={field.senasaUta}
                                     ref={refSenasaUta}
                                     value={clienteForm.senasaUta}
                                     type="text" />

@@ -14,6 +14,20 @@ export const backLoteCultivo = "loteCultivo"
 export const backLoteColorante = "loteColorante"
 export const backLoteCalcio = "loteCalcio"
 export const backLoteCuajo = "loteCuajo"
+export const backCuit = "cuit"
+export const backRazonSocial = "razonSocial"
+export const backDomicilio = "domicilio"
+export const backCodPostal = "codPostal"
+export const backLocalidad = "localidad"
+export const backProvincia = "provincia"
+export const backPais = "pais"
+export const backTransporte = "transporte"
+export const backSenasaUta = "senasaUta"
+export const backEmail = "email"
+export const backTelefono = "telefono"
+export const backFax = "fax"
+export const backCelular = "celuluar"
+export const backIdTipoCliente = "idTipoCliente"
 
 export const ID = "ID"
 
@@ -37,6 +51,18 @@ export const tipoQueso = "Tipo de queso"
 // cliente
 export const cuit = "CUIT"
 export const razonSocial = "Razon Social"
+export const domicilio = "Domicilio"
+export const codPostal = "Código Postal"
+export const localidad = "Localidad"
+export const provincia = "Provincia"
+export const pais = "Pais"
+export const transporte = "Transporte"
+export const senasaUta = "Senasa/UTA"
+export const email = "E-mail"
+export const telefono = "Teléfono"
+export const fax = "Fax"
+export const celular = "Celular"
+export const idTipoCliente = "Tipo de Cliente"
 
 const backendFields = () => {
     const fields = new Map()
@@ -54,6 +80,20 @@ const backendFields = () => {
     fields.set(backLoteColorante, loteColorante)
     fields.set(backLoteCalcio, loteCalcio)
     fields.set(backLoteCuajo, loteCuajo)
+    fields.set(backCuit, cuit)
+    fields.set(backRazonSocial, razonSocial)
+    fields.set(backDomicilio, domicilio)
+    fields.set(backCodPostal, codPostal)
+    fields.set(backLocalidad, localidad)
+    fields.set(backProvincia, provincia)
+    fields.set(backPais, pais)
+    fields.set(backTransporte, transporte)
+    fields.set(backSenasaUta, senasaUta)
+    fields.set(backEmail, email)
+    fields.set(backTelefono, telefono)
+    fields.set(backFax, fax)
+    fields.set(backCelular, celular)
+    fields.set(backIdTipoCliente, idTipoCliente)
     return fields
 }
 

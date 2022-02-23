@@ -3,7 +3,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
-import { clientes } from "../../data/data";
 import { getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
@@ -31,7 +30,7 @@ const clienteInicial = {
 const CargarClientes = () => {
 
     const [cliente, setCliente] = useState(clienteInicial);
-    const [listaClientes, setListaClientes] = useState(clientes);
+    const [listaClientes, setListaClientes] = useState([]);
     const [tiposClientes, setTiposClientes] = useState([]);
 
     const [isLoading, setLoading] = useState(true);
