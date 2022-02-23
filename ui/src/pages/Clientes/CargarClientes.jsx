@@ -65,6 +65,7 @@ const CargarClientes = () => {
         setOpenDialogAlta(false);
         setCliente(clienteInicial);
         if (isEditing) {
+            setEditing(false);
             putCliente(clienteForm).then(() => fetchClientes());
         } else {
             postCliente(clienteForm).then(() => fetchClientes());
@@ -90,7 +91,6 @@ const CargarClientes = () => {
         }
     }
     const onCloseDialog = () => {
-        setEditing(false);
         setOpenDialogBaja(false);
         setOpenDialogAlta(false);
     }
