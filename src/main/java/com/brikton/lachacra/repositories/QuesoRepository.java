@@ -10,10 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface QuesoRepository extends JpaRepository<Queso, Long> {
-    @Query("SELECT q FROM Queso q WHERE q.fechaBaja = null ORDER BY q.codigo")
+    @Query("SELECT q FROM Queso q WHERE q.fechaBaja IS NULL ORDER BY q.codigo")
     List<Queso> findAllQuesos();
 
     Optional<Queso> findByCodigo(String codigo);
-    boolean existsQuesoByNomenclatura(String nomenclatura);
-    boolean existsQuesoByCodigo(String nomenclatura);
+
+    @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Queso q WHERE q.fechaBaja IS NULL AND q.codigo=:codigo")
+    boolean existsByCodigo(String codigo);
 }

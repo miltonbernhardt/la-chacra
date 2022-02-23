@@ -29,6 +29,7 @@ public class Lote {
     private String loteColorante;
     private String loteCalcio;
     private String loteCuajo;
+    private LocalDate fechaBaja;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_queso")

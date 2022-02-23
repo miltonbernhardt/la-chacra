@@ -33,7 +33,6 @@ const FormPrecios = () => {
                         label="Precio"
                         fullWidth
                         type="number"
-                        numeric
                         variant="outlined"/>
                 </Grid>
                 <Grid item xs={12} alignSelf="right" mb={0.5}>

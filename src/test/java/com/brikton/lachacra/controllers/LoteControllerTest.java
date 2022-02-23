@@ -99,23 +99,24 @@ public class LoteControllerTest {
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
-//    @Test
-//    void Delete__OK() throws LoteNotFoundException {
-//        when(loteService.delete("101020210011")).thenReturn("101020210011");
-//        var actualID = (String) requireNonNull(loteController.delete("101020210011").getBody()).getData();
-//        var message = (String) requireNonNull(loteController.delete("101020210011").getBody()).getMessage();
-//        assertEquals("101020210011", actualID);
-//        assertEquals(SuccessfulMessages.MSG_LOTE_DELETED, message);
-//    }
-//
-//    @Test
-//    void Delete__Lote_Not_Found() throws LoteNotFoundException {
-//        when(loteService.delete("101020210011")).thenThrow(new LoteNotFoundException());
-//        LoteNotFoundException thrown = assertThrows(
-//                LoteNotFoundException.class, () -> loteController.delete("101020210011")
-//        );
-//        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
-//    }
+    @Test
+    void Delete__OK() throws LoteNotFoundException {
+        when(loteService.delete("101020210011")).thenReturn("101020210011");
+        var response = requireNonNull(loteController.delete("101020210011").getBody());
+        var actualID = response.getData();
+        var message = response.getMessage();
+        assertEquals("101020210011", actualID);
+        assertEquals(SuccessfulMessages.MSG_LOTE_DELETED, message);
+    }
+
+    @Test
+    void Delete__Lote_Not_Found() throws LoteNotFoundException {
+        when(loteService.delete("101020210011")).thenThrow(new LoteNotFoundException());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> loteController.delete("101020210011")
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
+    }
 
     LoteUpdateDTO mockLoteUpdateDTO1() {
         LoteUpdateDTO dto = new LoteUpdateDTO();

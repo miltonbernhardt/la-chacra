@@ -154,24 +154,6 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Save__Nomenclatura_Queso_Already_Exists() throws JsonProcessingException {
-        QuesoDTO dtoToSave = new QuesoDTO();
-        dtoToSave.setCodigo("006");
-        dtoToSave.setTipoQueso("tipoQueso");
-        dtoToSave.setNomenclatura("B");
-        dtoToSave.setStock(10);
-
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
-        );
-
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, response.getMessage());
-    }
-
-    @Test
     void Save__Over_Queso_Deleted() throws JsonProcessingException {
         QuesoDTO dtoToSave = new QuesoDTO();
         dtoToSave.setCodigo("004");
@@ -179,14 +161,20 @@ public class QuesoControllerIntegrationTest {
         dtoToSave.setNomenclatura("tip");
         dtoToSave.setStock(10);
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
-        );
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setId(5L);
+        expectedDTO.setCodigo("004");
+        expectedDTO.setTipoQueso("TIPOQUESO");
+        expectedDTO.setNomenclatura("TIP");
+        expectedDTO.setStock(10);
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
     }
 
     @Test
@@ -313,25 +301,6 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Update__Nomenclatura_Queso_Already_Exists() throws JsonProcessingException {
-        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
-        dtoToUpdate.setId(3L);
-        dtoToUpdate.setCodigo("002");
-        dtoToUpdate.setTipoQueso("tipoQueso");
-        dtoToUpdate.setNomenclatura("C");
-        dtoToUpdate.setStock(10);
-
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-        );
-
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, response.getMessage());
-    }
-
-    @Test
     void Update__Over_Queso_Deleted__OK() throws JsonProcessingException {
         QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(4L);
@@ -343,9 +312,34 @@ public class QuesoControllerIntegrationTest {
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setId(4L);
         expectedDTO.setCodigo("004");
-        expectedDTO.setTipoQueso("tipoQueso");
-        expectedDTO.setNomenclatura("tip");
+        expectedDTO.setTipoQueso("TIPOQUESO");
+        expectedDTO.setNomenclatura("TIP");
         expectedDTO.setStock(0);
+
+        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+
+        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedQuesoString, actualQueso);
+    }
+
+    @Test
+    void Update_Same_Codigo_As_Deleted_Queso__OK() throws JsonProcessingException {
+        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
+        dtoToUpdate.setId(3L);
+        dtoToUpdate.setCodigo("004");
+        dtoToUpdate.setTipoQueso("tipoQueso");
+        dtoToUpdate.setNomenclatura("tip");
+        dtoToUpdate.setStock(30);
+
+        QuesoDTO expectedDTO = new QuesoDTO();
+        expectedDTO.setId(3L);
+        expectedDTO.setCodigo("004");
+        expectedDTO.setTipoQueso("TIPOQUESO");
+        expectedDTO.setNomenclatura("TIP");
+        expectedDTO.setStock(20);
 
         var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
 
@@ -452,7 +446,6 @@ public class QuesoControllerIntegrationTest {
         assertEquals(path.concat("0"), response.getPath());
     }
 
-
     @Test
     void Delete__Queso_Already_Deleted() throws JsonProcessingException {
         HttpClientErrorException.NotFound thrown = assertThrows(
@@ -475,7 +468,7 @@ public class QuesoControllerIntegrationTest {
         assertEquals(path.concat("11"), response.getPath());
     }
 
-    @Test //todo fix and amend commit
+    @Test
     void Delete__OK___After_That__Queso_Doesnt_Show_In_Get_All() throws JsonProcessingException {
         QuesoDTO mockQueso1 = new QuesoDTO();
         mockQueso1.setId(2L);

@@ -6,6 +6,7 @@ import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.LoteRepository;
+import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,22 @@ import java.util.List;
 @Slf4j
 public class LoteService {
 
+    private final DateUtil dateUtil;
+    private final DevolucionService devolucionService;
+    private final ExpedicionService expedicionService;
     private final LoteRepository repository;
     private final QuesoService quesoService;
 
-    public LoteService(LoteRepository repository, QuesoService quesoService) {
+    public LoteService(
+            DateUtil dateUtil,
+            DevolucionService devolucionService,
+            ExpedicionService expedicionService,
+            LoteRepository repository,
+            QuesoService quesoService
+    ) {
+        this.dateUtil = dateUtil;
+        this.devolucionService = devolucionService;
+        this.expedicionService = expedicionService;
         this.repository = repository;
         this.quesoService = quesoService;
     }
@@ -35,10 +48,7 @@ public class LoteService {
 
     public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
         var dto = new LoteDTO(dtpUpdate);
-        var id = dto.getId() == null || dto.getId().equals("")
-                ? generateID(dto)
-                : dto.getId();
-        if (!repository.existsById(id)) {
+        if (!repository.existsById(dto.getId())) {
             throw new LoteNotFoundException();
         }
         repository.deleteById(dto.getId());
@@ -57,24 +67,25 @@ public class LoteService {
 
     public List<LoteDTO> getAll() {
         var lotesDTO = new ArrayList<LoteDTO>();
-        var lotes = repository.findAll();
+        var lotes = repository.findAllLotes();
         lotes.forEach(lote -> lotesDTO.add(new LoteDTO(lote)));
         return lotesDTO;
     }
 
-    //todo dependencias de expedicion,
     public String delete(String id) throws LoteNotFoundException {
-        //todo logica de borrar o dar de baja
-        if (repository.existsById(id))
-            repository.deleteById(id);
-        else
+        if (!repository.existsById(id))
             throw new LoteNotFoundException();
-        return id;
-    }
 
-    //todo test
-    public boolean existsByQueso(Queso queso) {
-        return repository.existsByQueso(queso);
+        var lote = repository.getById(id);
+
+        if (expedicionService.existsByLote(lote) || devolucionService.existsByLote(lote)) {
+            lote.setFechaBaja(dateUtil.now());
+            repository.save(lote);
+            return id;
+        }
+
+        repository.deleteById(id);
+        return "";
     }
 
     private Lote loteFromDTO(LoteDTO dto) throws QuesoNotFoundConflictException {

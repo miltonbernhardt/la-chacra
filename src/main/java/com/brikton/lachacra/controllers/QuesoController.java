@@ -5,7 +5,6 @@ import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
@@ -37,13 +36,13 @@ public class QuesoController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto) throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> save(@RequestBody @Valid QuesoDTO dto) throws CodigoQuesoAlreadyExistsException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_CREATED, service.save(dto)));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoUpdateDTO dto) throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+    public ResponseEntity<SuccessfulResponse<QuesoDTO>> update(@RequestBody @Valid QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_UPDATED, service.update(dto)));
     }

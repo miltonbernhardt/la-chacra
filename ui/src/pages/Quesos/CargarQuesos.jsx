@@ -5,7 +5,7 @@ import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/R
 import DialogCargarQueso from './DialogCargarQueso';
 import DialogEliminarQueso from './DialogEliminarQueso';
 import GridQuesos from './GridQuesos';
-import * as message from "../../messages";
+import * as message from "../../resources/messages";
 import PageTableButtonPane from "../../components/PageTableButtonPane";
 
 const quesoInicial = {

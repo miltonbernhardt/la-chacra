@@ -4,7 +4,6 @@ import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
@@ -22,8 +21,8 @@ public class QuesoService {
 
     private final DateUtil dateUtil;
     private final QuesoRepository repository;
-    private final LoteRepository loteRepository; //todo ver de usar el service sin tener el problema de lo beans ciclicos
-    private final PrecioService precioService; //TODO por que tenes todo esto sin autowired?
+    private final LoteRepository loteRepository;
+    private final PrecioService precioService;
 
     public QuesoService(
             DateUtil dateUtil,
@@ -57,13 +56,9 @@ public class QuesoService {
         return listaDTO;
     }
 
-    public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
-        if (repository.existsQuesoByCodigo(dto.getCodigo())) {
+    public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException {
+        if (repository.existsByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
-        }
-
-        if (repository.existsQuesoByNomenclatura(dto.getNomenclatura())) {
-            throw new NomQuesoAlreadyExistsException();
         }
 
         var queso = quesoFromDTO(dto);
@@ -71,20 +66,15 @@ public class QuesoService {
         return new QuesoDTO(queso);
     }
 
-    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var oldQuesoOptional = repository.findById(dto.getId());
         if (oldQuesoOptional.isEmpty())
             throw new QuesoNotFoundException();
 
         var oldQueso = oldQuesoOptional.get();
 
-
-        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsQuesoByCodigo(dto.getCodigo())) {
+        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsByCodigo(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
-        }
-
-        if (!oldQueso.getNomenclatura().equals(dto.getNomenclatura()) && repository.existsQuesoByNomenclatura(dto.getNomenclatura())) {
-            throw new NomQuesoAlreadyExistsException();
         }
 
         oldQueso.setCodigo(dto.getCodigo());

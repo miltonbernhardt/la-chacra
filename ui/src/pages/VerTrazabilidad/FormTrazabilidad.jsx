@@ -58,7 +58,6 @@ const FormTrazabilidad = () => {
                     name="cantidadHormas"
                     label="Cantidad de hormas"
                     fullWidth
-
                     type="number"
                     variant="outlined"/>
             </Grid>

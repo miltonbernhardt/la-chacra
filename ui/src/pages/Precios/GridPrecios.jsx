@@ -1,4 +1,3 @@
-import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
@@ -32,7 +31,7 @@ const GridPrecios = ({precios}) => {
     return (
         <>
             <DataGrid
-                style={{height: "600px"}}
+                style={{minHeight: "600px"}}
                 autoHeight={true}
                 rows={precios}
                 columns={columns}

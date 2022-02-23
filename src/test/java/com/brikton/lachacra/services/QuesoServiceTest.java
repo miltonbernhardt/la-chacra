@@ -3,11 +3,8 @@ package com.brikton.lachacra.services;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
-import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.entities.TipoCliente;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.NomQuesoAlreadyExistsException;
 import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
@@ -145,7 +142,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__OK() throws CodigoQuesoAlreadyExistsException, NomQuesoAlreadyExistsException {
+    void Save__OK() throws CodigoQuesoAlreadyExistsException {
         QuesoDTO quesoToSave = new QuesoDTO();
         quesoToSave.setCodigo("001");
         quesoToSave.setTipoQueso("TIPO_QUESO");
@@ -166,8 +163,7 @@ public class QuesoServiceTest {
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
 
-        when(repository.existsQuesoByCodigo("001")).thenReturn(false);
-        when(repository.existsQuesoByNomenclatura("tip")).thenReturn(false);
+        when(repository.existsByCodigo("001")).thenReturn(false);
         when(repository.save(any(Queso.class))).thenReturn(mockQueso);
         QuesoDTO dtoQuesoActual = quesoService.save(quesoToSave);
         assertEquals(dtoQuesoExpected, dtoQuesoActual);
@@ -178,7 +174,7 @@ public class QuesoServiceTest {
         QuesoDTO dto = new QuesoDTO();
         dto.setCodigo("001");
 
-        when(repository.existsQuesoByCodigo("001")).thenReturn(true);
+        when(repository.existsByCodigo("001")).thenReturn(true);
 
         CodigoQuesoAlreadyExistsException thrown = assertThrows(
                 CodigoQuesoAlreadyExistsException.class, () -> quesoService.save(dto)
@@ -187,23 +183,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__Already_Exists_By_Nomenclatura() {
-        QuesoDTO dto = new QuesoDTO();
-        dto.setCodigo("001");
-        dto.setNomenclatura("Q");
-        dto.setTipoQueso("TIPO");
-
-        when(repository.existsQuesoByCodigo("001")).thenReturn(false);
-        when(repository.existsQuesoByNomenclatura("Q")).thenReturn(true);
-
-        NomQuesoAlreadyExistsException thrown = assertThrows(
-                NomQuesoAlreadyExistsException.class, () -> quesoService.save(dto)
-        );
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
-    }
-
-    @Test
-    void Update__OK() throws QuesoNotFoundException, NomQuesoAlreadyExistsException, CodigoQuesoAlreadyExistsException {
+    void Update__OK() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var quesoTpUpdate = new QuesoUpdateDTO();
         quesoTpUpdate.setId(1L);
         quesoTpUpdate.setCodigo("002");
@@ -226,8 +206,7 @@ public class QuesoServiceTest {
         expectedDTO.setStock(1);
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(repository.existsQuesoByCodigo("001")).thenReturn(false);
-        when(repository.existsQuesoByNomenclatura("001")).thenReturn(false);
+        when(repository.existsByCodigo("001")).thenReturn(false);
         when(repository.save(any(Queso.class))).thenReturn(mockQueso);
         QuesoDTO actualDTO = quesoService.update(quesoTpUpdate);
         assertEquals(expectedDTO, actualDTO);
@@ -262,37 +241,11 @@ public class QuesoServiceTest {
         mockQueso.setStock(1);
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(repository.existsQuesoByCodigo("002")).thenReturn(true);
+        when(repository.existsByCodigo("002")).thenReturn(true);
         CodigoQuesoAlreadyExistsException thrown = assertThrows(
                 CodigoQuesoAlreadyExistsException.class, () -> quesoService.update(dto)
         );
         assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
-    }
-
-    @Test
-    void Update__Nomenclatura_Queso_Already_Exists() {
-        var dto = new QuesoUpdateDTO();
-        dto.setId(1L);
-        dto.setCodigo("002");
-        dto.setTipoQueso("TIPO_QUESO2");
-        dto.setNomenclatura("tip2");
-        dto.setStock(1);
-        dto.setId(1L);
-
-        Queso mockQueso = new Queso();
-        mockQueso.setId(1L);
-        mockQueso.setCodigo("001");
-        mockQueso.setTipoQueso("TIPO_QUESO");
-        mockQueso.setNomenclatura("tip");
-        mockQueso.setStock(1);
-
-        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(repository.existsQuesoByCodigo("002")).thenReturn(false);
-        when(repository.existsQuesoByNomenclatura("TIP2")).thenReturn(true);
-        NomQuesoAlreadyExistsException thrown = assertThrows(
-                NomQuesoAlreadyExistsException.class, () -> quesoService.update(dto)
-        );
-        assertEquals(ErrorMessages.MSG_NOMENCLATURE_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
     @Test
@@ -304,7 +257,16 @@ public class QuesoServiceTest {
         mockQueso.setNomenclatura("tip");
         mockQueso.setStock(1);
 
+        Queso deletedQueso = new Queso();
+        deletedQueso.setId(1L);
+        deletedQueso.setCodigo("001");
+        deletedQueso.setTipoQueso("TIPO_QUESO");
+        deletedQueso.setNomenclatura("tip");
+        deletedQueso.setStock(1);
+        deletedQueso.setFechaBaja(LocalDate.of(2021, 10, 10));
+
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
+        when(repository.save(any(Queso.class))).thenReturn(deletedQueso);
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);

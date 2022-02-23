@@ -49,7 +49,7 @@ public class LoteController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<String>> delete(@Pattern(regexp = "^[0-9]{12,13}$", message = ValidationMessages.INVALID_FORMAT)
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
                                                              @PathVariable("id") String id) throws LoteNotFoundException {
         log.info("API::delete - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED, service.delete(id)));

@@ -32,7 +32,7 @@ public class Devolucion {
 
     @ManyToOne
     @JoinColumn(name = "id_lote")
-    private Lote loteProducto;
+    private Lote lote;
 
     @Override
     public boolean equals(Object o) {

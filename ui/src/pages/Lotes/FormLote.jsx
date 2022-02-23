@@ -1,230 +1,151 @@
-import { Autocomplete, Box, Button, ButtonGroup, Grid, TextField, Typography, Paper } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import validator from "validator";
-import DialogCargarTrazabilidad from "./DialogCargarTrazabilidad";
-import * as message from "../../messages";
-import * as field from "../../fields";
-import { toastValidationErrors } from "../../fields";
-
-const loteInicial = {
-    id: '',
-    fechaElaboracion: '',
-    numeroTina: '',
-    litrosLeche: '',
-    cantHormas: '',
-    peso: '',
-    loteCultivo: '',
-    loteColorante: '',
-    loteCalcio: '',
-    loteCuajo: '',
-    codigoQueso: ''
-}
+import { Button, ButtonGroup, Grid } from "@mui/material";
+import { useEffect, useMemo, useState, createRef } from "react";
+import * as message from "../../resources/messages";
+import * as field from "../../resources/fields";
+import * as validation from "../../resources/validations";
+import { toastValidationErrors } from "../../resources/fields";
+import Input from "../../components/Input";
+import TitleForm from "../../components/TitleForm";
+import Select from "../../components/Select";
 
 const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
+    const [loteForm, setLoteForm] = useState(lote)
 
-    const [loteForm, setLoteForm] = useState({});
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const refSelectQueso = createRef(null)
+    const refLitros = createRef(null)
+    const refNumTina = createRef(null)
+    const refCantHormas = createRef(null)
+    const refPeso = createRef(null)
+    const refFecha = createRef(null)
+
+    const refLoteCultivo = createRef(null)
+    const refLoteColorante = createRef(null)
+    const refLoteCalcio = createRef(null)
+    const refLoteCuajo = createRef(null)
 
     useEffect(() => {
         setLoteForm(lote)
     }, [lote]);
 
-    // --- STATES ---
-    const updateStateLote = useCallback((attribute, value) => {
-        const newLote = {...loteForm, [attribute]: value};
-        setLoteForm(newLote);
-    }, [loteForm]);
-
-    const handleChange = useCallback(evt => {
-        const nombreAtributo = evt.target.name;
-        const valorAtributo = evt.target.value;
-        if (evt.target.validity.valid) updateStateLote(nombreAtributo, valorAtributo);
-    }, [updateStateLote])
-
-    const onCargar = () => {
-        if (validateLote()) setDialogOpen(true);
-    }
-
-    const onCloseDialog = useCallback(() => setDialogOpen(false), []);
-
-    // --- SUBMIT ---
-    const submitLote = (trazabilidadLote) => {
-        const newLote = {
-            ...loteForm,
-            ['loteCultivo']: trazabilidadLote.loteCultivo,
-            ['loteColorante']: trazabilidadLote.loteColorante,
-            ['loteCalcio']: trazabilidadLote.loteCalcio,
-            ['loteCuajo']: trazabilidadLote.loteCuajo
-        }
-        if (validateLote()) {
-            handleSubmit(newLote);
-            setLoteForm(loteInicial);
-        }
-        setDialogOpen(false);
-    }
-
-    const validateLote = () => {
-        const current = new Date();
-        const date = `${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`;
-
+    const submitLote = () => {
         const errors = new Map();
+        const values = {};
+        values["id"] = loteForm.id
 
-        if (loteForm.codigoQueso === '')
-            errors.set(field.queso, message.valEmptyField)
+        refSelectQueso.current.validate(errors, values, [
+            {func: validation.emptySelect, msg: message.valEmptyField}
+        ])
 
-        if (loteForm.litrosLeche < 1)
-            errors.set(field.litrosLeche, message.valZeroValue)
+        refNumTina.current.validate(errors, values, [
+            {func: validation.minorToOne, msg: message.valZeroValue},
+            {func: validation.biggerThanThousand, msg: message.valBiggerThanThousand}
+        ])
 
-        if (loteForm.numeroTina < 1)
-            errors.set(field.numeroTina, message.valZeroValue)
+        refLitros.current.validate(errors, values, [
+            {func: validation.minorToOne, msg: message.valZeroValue}
+        ])
 
-        if (loteForm.cantHormas < 1)
-            errors.set(field.cantidadHormas, message.valZeroValue)
+        refCantHormas.current.validate(errors, values, [
+            {func: validation.minorToOne, msg: message.valZeroValue}
+        ])
 
-        if (loteForm.peso < 1)
-            errors.set(field.peso, message.valZeroValue)
+        refPeso.current.validate(errors, values, [
+            {func: validation.minorToOne, msg: message.valZeroValue}
+        ])
 
-        if (loteForm.fechaElaboracion === '')
-            errors.set(field.fechaElaboracion, message.valEmptyFecha)
-        else if (validator.isBefore(date, loteForm.fechaElaboracion))
-            errors.set(field.fechaElaboracion, message.valOlderDate)
+        refFecha.current.validate(errors, values, [
+            {func: validation.empty, msg: message.valEmptyFecha},
+            {func: validation.olderDate, msg: message.valOlderDate}
+        ])
 
         if (errors.size > 0) {
             console.error(errors)
             toastValidationErrors(errors)
-            return false;
+            return
         }
-        return true;
+
+        refLoteCultivo.current.setValue(values)
+        refLoteColorante.current.setValue(values)
+        refLoteCalcio.current.setValue(values)
+        refLoteCuajo.current.setValue(values)
+
+        handleSubmit(values)
     }
 
-    // --- VARIABLES ---
-    const trazabilidad = useCallback(() => {
-        return {
-            loteCultivo: loteForm.loteCultivo,
-            loteColorante: loteForm.loteColorante,
-            loteCalcio: loteForm.loteCalcio,
-            loteCuajo: loteForm.loteCuajo
-        }
-    }, [loteForm]);
-
-    const labelCargar = useMemo(() => {
-        return isEditingLote ? 'Actualizar' : 'Cargar Lote'
-    }, [isEditingLote]);
-    const colorCargar = useMemo(() => {
-        return isEditingLote ? 'warning' : 'primary'
-    }, [isEditingLote]);
+    const labelCargar = useMemo(() => isEditingLote ? 'Actualizar' : 'Cargar Lote', [isEditingLote]);
+    const colorCargar = useMemo(() => isEditingLote ? 'warning' : 'primary', [isEditingLote]);
 
     return (
         <>
-            <Grid item xs={12}>
-                <Typography variant="h6">
-                    Ingreso de producción
-                </Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <Autocomplete //TODO bug queda siempre algo seleccionado
-                    id="autocomplete-tipoQueso"
-                    name="codigoQueso"
-                    options={quesos}
-                    autoHighlight
-                    getOptionLabel={(option) => option.string || ''}
-                    renderOption={(props, option) => (
-                        <Box component="li"  {...props}>
-                            {option.string}
-                        </Box>
-                    )}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Tipo de queso"/>
-                    )}
+            <TitleForm value={"Ingreso de producción"}/>
+            <Select ref={refSelectQueso}
                     value={loteForm.codigoQueso}
-                    onChange={(evt, newValue) => {
-                        //-- lo paso asi para no chequear validez del campo
-                        updateStateLote('codigoQueso', newValue);
-                    }}
-                    isOptionEqualToValue={(option, value) => {
-                        if (value.label) {
-                            return option.label === value.label
-                        } else {
-                            return (option.label === value)
-                        }
-                        ;
-                    }}/>
-            </Grid>
-            <Grid item xs={12} sm={8}>
-                <TextField
-                    id="litrosProcesados"
-                    name="litrosLeche"
-                    label="Litros procesados"
-                    fullWidth
-                    type="number"
-                    numeric
-                    variant="outlined"
-                    value={loteForm.litrosLeche}
-                    onChange={handleChange}
-                />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                <TextField
-                    id="tina"
-                    name="numeroTina"
-                    label="Tina"
-                    fullWidth
-                    type="number"
-                    variant="outlined"
-                    value={loteForm.numeroTina}
-                    onChange={handleChange}/>
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    id="cantidadHormas"
-                    name="cantHormas"
-                    label="Cantidad de hormas"
-                    fullWidth
-                    type="number"
-                    variant="outlined"
-                    value={loteForm.cantHormas}
-                    onChange={handleChange}/>
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    id="pesoLote"
-                    name="peso"
-                    label="Peso del lote"
-                    fullWidth
-                    type="number"
-                    variant="outlined"
-                    value={loteForm.peso}
-                    onChange={handleChange}/>
-            </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    id="fechaLote"
-                    name="fechaElaboracion"
-                    label="Fecha de producción"
-                    fullWidth
-                    type="date"
-                    variant="outlined"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={loteForm.fechaElaboracion}
-                    onChange={handleChange}/>
-            </Grid>
+                    id={field.backCodigoQueso}
+                    label={field.queso}
+                    options={quesos}
+                    required/>
+            <Input ref={refLitros}
+                   id={field.backLitrosLeche}
+                   label={field.litrosLeche}
+                   value={loteForm.litrosLeche}
+                   sm={8}
+                   required/>
+            <Input ref={refNumTina}
+                   id={field.backNumeroTina}
+                   label={field.numeroTina}
+                   value={loteForm.numeroTina}
+                   sm={4}
+                   required/>
+            <Input ref={refCantHormas}
+                   id={field.backCantHormas}
+                   label={field.cantHormas}
+                   value={loteForm.cantHormas}
+                   required/>
+            <Input ref={refPeso}
+                   id={field.backPeso}
+                   label={field.peso}
+                   value={loteForm.peso}
+                   required/>
+            <Input ref={refFecha}
+                   id={field.backFechaElaboracion}
+                   label={field.fechaElaboracion}
+                   value={loteForm.fechaElaboracion}
+                   type="date"
+                   required/>
+            <Input ref={refLoteCultivo}
+                   id={field.backLoteCultivo}
+                   label={field.loteCultivo}
+                   value={loteForm.loteCultivo}
+                   type="text"/>
+            <Input ref={refLoteColorante}
+                   id={field.backLoteColorante}
+                   label={field.loteColorante}
+                   value={loteForm.loteColorante}
+                   type="text"/>
+            <Input ref={refLoteCalcio}
+                   id={field.backLoteCalcio}
+                   label={field.loteCalcio}
+                   value={loteForm.loteCalcio}
+                   type="text"/>
+            <Input ref={refLoteCuajo}
+                   id={field.backLoteCuajo}
+                   label={field.loteCuajo}
+                   value={loteForm.loteCuajo}
+                   type="text"/>
             <Grid item xs={12} alignSelf="right" mb={0.5}>
                 <ButtonGroup fullWidth variant="contained">
                     <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
                     <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
-                    <Button onClick={onCargar} color={colorCargar}>{labelCargar}</Button>
+                    <Button onClick={submitLote} color={colorCargar}>{labelCargar}</Button>
                 </ButtonGroup>
             </Grid>
-            <DialogCargarTrazabilidad
-                open={dialogOpen}
-                onClose={onCloseDialog}
-                trazabilidad={trazabilidad}
-                submitLote={submitLote}
-                isEditing={isEditingLote}/>
+            {/*<DialogCargarTrazabilidad*/}
+            {/*    open={dialogOpen}*/}
+            {/*    onClose={onCloseDialog}*/}
+            {/*    trazabilidad={trazabilidad}*/}
+            {/*    submitLote={submitLote}*/}
+            {/*    isEditing={isEditingLote}*/}
+            {/*/>*/}
         </>
     )
 }
