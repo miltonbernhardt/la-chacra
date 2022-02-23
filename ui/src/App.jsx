@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import CargarExpedicion from './pages/Expedicion/CargarExpedicion';
 import CargarProduccion from './pages/Lotes/CargarLote';
 import CargarQuesos from './pages/Quesos/CargarQuesos';
-import CargarClientes from './pages/Clientes/CargarClientes';
+import CargarClientes from './pages/Clientes/Clientes';
 import CustomDrawer from './components/CustomDrawer';
 import Home from './components/Home';
 import CargarPrecios from './pages/Precios/CargarPrecios';

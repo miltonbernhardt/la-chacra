@@ -40,6 +40,7 @@ export const getAllTipoClientes = async () => await GET(`${API_TIPO_CLIENTE}`);
 export const getAllClientes = async () => await GET(`${API_CLIENTE}`);
 export const postCliente = async (cliente) => await POST(`${API_CLIENTE}`, cliente);
 export const putCliente = async (cliente) => await PUT(`${API_CLIENTE}`, cliente);
+export const deleteCliente = async (id) => await DELETE(`${API_CLIENTE}${id}`);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {

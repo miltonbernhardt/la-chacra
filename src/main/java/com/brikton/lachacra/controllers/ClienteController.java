@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
@@ -12,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -27,7 +30,7 @@ public class ClienteController {
         this.service = service;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/")//TODO no devolver los que tienen fecha de baja
     public ResponseEntity<SuccessfulResponse<List<ClienteDTO>>> getAll() {
         log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
@@ -43,5 +46,12 @@ public class ClienteController {
     public ResponseEntity<SuccessfulResponse<ClienteDTO>> update(@RequestBody @Valid ClienteDTO dto) throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
         log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_UPDATED, service.update(dto)));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+                                                                     @PathVariable("id") Long id) throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
+        log.info("API::delete - id: {}", id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_DELETED, service.delete(id)));
     }
 }

@@ -7,6 +7,8 @@ import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.ClienteRepository;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
+import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,15 @@ import java.util.List;
 @Slf4j
 public class ClienteService {
 
+    private final DateUtil dateUtil;
     private final ClienteRepository repository;
+    private final ExpedicionRepository expedicionRepository;
     private final TipoClienteService tipoClienteService;
 
-    public ClienteService(ClienteRepository repository, TipoClienteService tipoClienteService) {
+    public ClienteService(DateUtil dateUtil, ClienteRepository repository, ExpedicionRepository expedicionRepository, TipoClienteService tipoClienteService) {
+        this.dateUtil = dateUtil;
         this.repository = repository;
+        this.expedicionRepository = expedicionRepository;
         this.tipoClienteService = tipoClienteService;
     }
 
@@ -29,6 +35,12 @@ public class ClienteService {
         List<ClienteDTO> result = new ArrayList<>();
         repository.findAll().forEach(c -> result.add(new ClienteDTO(c)));
         return result;
+    }
+
+    public Cliente getEntity(Long id) throws ClienteNotFoundException {
+        var cliente = repository.findById(id);
+        if (cliente.isEmpty()) throw new ClienteNotFoundException();
+        return cliente.get();
     }
 
     public ClienteDTO save(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
@@ -39,6 +51,17 @@ public class ClienteService {
         var cliente = repository.existsById(dto.getId());
         if (!cliente) throw new ClienteNotFoundException();
         return persist(dto);
+    }
+
+    public String delete(Long id) throws ClienteNotFoundException { //TODO yo confio en que esto anda
+        var cliente = getEntity(id);
+        if (expedicionRepository.existsByCliente(cliente)) {
+            cliente.setFechaBaja(dateUtil.now());
+            repository.save(cliente);
+            return String.valueOf(id);
+        }
+        else repository.deleteById(id);
+        return "";
     }
 
     private ClienteDTO persist(ClienteDTO dto) throws TipoClienteNotFoundConflictException {

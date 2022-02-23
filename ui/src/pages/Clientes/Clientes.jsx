@@ -3,7 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
-import { getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
+import { getAllClientes, getAllTipoClientes, postCliente, putCliente, deleteCliente } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
@@ -69,7 +69,15 @@ const CargarClientes = () => {
         } else {
             postCliente(clienteForm).then(() => fetchClientes());
         }
-    }, [])
+    }, [isEditing])
+
+    const onDelete = useCallback(() => {
+        deleteCliente(cliente.id).then(() => {
+            fetchClientes();
+            setCliente(clienteInicial);
+            onCloseDialog();
+        }).catch(e => { })
+    }, [cliente.id])
 
     // --- DIALOGS ---
     const [openDialogAlta, setOpenDialogAlta] = useState(false);
@@ -80,7 +88,10 @@ const CargarClientes = () => {
         setOpenDialogAlta(true);
     }
     const onOpenBaja = () => {
-        setOpenDialogBaja(true);
+        if (!cliente.id) toast.error("No se seleccionó ningún cliente");
+        else {
+            setOpenDialogBaja(true);
+        }
     }
     const onOpenActualizar = () => {
         if (!cliente.id) toast.error("No se seleccionó ningún cliente");
@@ -136,7 +147,8 @@ const CargarClientes = () => {
             <DialogBajaCliente
                 cliente={cliente}
                 onClose={onCloseDialog}
-                open={openDialogBaja} />
+                open={openDialogBaja}
+                onSubmit={onDelete} />
         </PageTableButtonPane>
     );
 }
