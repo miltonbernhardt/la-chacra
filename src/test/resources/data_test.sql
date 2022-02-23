@@ -20,14 +20,13 @@ VALUES (1, 'Mayorista'),
        (3, 'Particular');
 
 INSERT INTO public.cliente (nro_cliente, razon_social, id_tipo_cliente, cuit, domicilio, cod_postal, localidad,
-                            provincia,
-                            pais, transporte, senasa_uta)
-VALUES ('101', 'ABDALA, Gustavo', 1, '20-21641332-7', 'Jacob 2830', '3080', 'Esperanza', 'Santa Fe', 'Argentina',
-        'Familia Noroña S.A.', '113754'),
-       ('102', 'ALBERTINAZZI, Olga Pompeya', 1, '27-11295032-5', 'Hipólito Yrigoyen 1442', '3560', 'Reconquista',
-        'Santa Fe', 'Argentina', 'Cerutti, Pablo', '94265'),
-       ('103', 'ALEGRI, José César', 1, '20-11660282-3', 'Av. Centenario 4797', '', 'Espeleta',
-        'Buenos Aires', 'Argentina', 'Bianchi', '83200');
+                            provincia, pais, transporte, senasa_uta, telefono, celular, fax, email)
+VALUES (1, 'ABDALA, Gustavo', 1, '20-11111111-7', 'Jacob 2830', '3080', 'Esperanza', 'Santa Fe', 'Argentina',
+        'Familia Noroña S.A.', '113754', '233334444444', '233334444444', null, 'mail1@mail.com'),
+       (2, 'ALBERTINAZZI, Olga Pompeya', 2, '27-22222222-5', 'Hipólito Yrigoyen 1442', '3560', 'Reconquista',
+        'Santa Fe', 'Argentina', 'Cerutti, Pablo', '94265', '344445555555', '344445555555', '344445555555', 'mail2@mail.com'),
+       (3, 'ALEGRI, José César', 3, '20-33333333-3', 'Av. Centenario 4797', null, 'Espeleta',
+        'Buenos Aires', 'Argentina', 'Bianchi', '83200', '755556666666', '755556666666', '755556666666', 'mail3@mail.com');
 
 INSERT INTO public.precio (id_tipo_cliente, id_queso, precio, id_precio)
 VALUES (1, 1, 371.00, 1),

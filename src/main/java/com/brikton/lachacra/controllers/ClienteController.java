@@ -2,15 +2,9 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
-import com.brikton.lachacra.dtos.LoteDTO;
-import com.brikton.lachacra.dtos.TipoClienteDTO;
-import com.brikton.lachacra.exceptions.ClienteAlreadyExistsException;
-import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
-import com.brikton.lachacra.exceptions.QuesoNotFoundConflictException;
-import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
+import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ClienteService;
-import com.brikton.lachacra.services.LoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,14 +32,8 @@ public class ClienteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 
-    @GetMapping(value = "/tipo/")
-    public ResponseEntity<SuccessfulResponse<List<TipoClienteDTO>>> getAllTipoCliente() {
-        log.info("API::getAllTipoCliente");
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllTipoCliente()));
-    }
-
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<ClienteDTO>> save(@RequestBody @Valid ClienteDTO dto) throws TipoClienteNotFoundException, ClienteAlreadyExistsException {
+    public ResponseEntity<SuccessfulResponse<ClienteDTO>> save(@RequestBody @Valid ClienteDTO dto) throws TipoClienteNotFoundConflictException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_CREATED, service.save(dto)));
     }

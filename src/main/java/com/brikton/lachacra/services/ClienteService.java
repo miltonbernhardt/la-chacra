@@ -1,12 +1,11 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.ClienteDTO;
-import com.brikton.lachacra.dtos.TipoClienteDTO;
 import com.brikton.lachacra.entities.Cliente;
-import com.brikton.lachacra.exceptions.ClienteAlreadyExistsException;
+import com.brikton.lachacra.entities.TipoCliente;
+import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.ClienteRepository;
-import com.brikton.lachacra.repositories.TipoClienteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +17,11 @@ import java.util.List;
 public class ClienteService {
 
     private final ClienteRepository repository;
-    private final TipoClienteRepository tipoRepository;
+    private final TipoClienteService tipoClienteService;
 
-    public ClienteService(ClienteRepository repository, TipoClienteRepository tipoRepository) {
+    public ClienteService(ClienteRepository repository, TipoClienteService tipoClienteService) {
         this.repository = repository;
-        this.tipoRepository = tipoRepository;
+        this.tipoClienteService = tipoClienteService;
     }
 
     public List<ClienteDTO> getAll() {
@@ -31,48 +30,39 @@ public class ClienteService {
         return result;
     }
 
-    public List<TipoClienteDTO> getAllTipoCliente(){
-        List<TipoClienteDTO> result = new ArrayList<>();
-        tipoRepository.findAll().forEach(t -> result.add(new TipoClienteDTO(t)));
-        return result;
-    }
-
-    public ClienteDTO save(ClienteDTO dto) throws TipoClienteNotFoundException, ClienteAlreadyExistsException {
-        if ((dto.getId() != null) && repository.existsById(dto.getId())) {
-            throw new ClienteAlreadyExistsException();
-        }
+    public ClienteDTO save(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
         return persist(dto);
     }
 
-    private ClienteDTO persist(ClienteDTO dto) throws TipoClienteNotFoundException {
+    private ClienteDTO persist(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
         var cliente = clienteFromDTO(dto);
         return new ClienteDTO(repository.save(cliente));
     }
 
-    private Cliente clienteFromDTO(ClienteDTO dto) throws TipoClienteNotFoundException {
-        Cliente c = new Cliente();
+    private Cliente clienteFromDTO(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
+        var cliente = new Cliente();
+        TipoCliente tipoCliente;
+        try {
 
-        var tipoCliente = tipoRepository.findById(dto.getIdTipoCliente());
-        if (tipoCliente.isEmpty()) {
-            throw new TipoClienteNotFoundException();
+            tipoCliente = tipoClienteService.getEntity(dto.getIdTipoCliente());
+        } catch (TipoClienteNotFoundException exception) {
+            throw new TipoClienteNotFoundConflictException();
         }
-        c.setTipoCliente(tipoCliente.get());
-
-        c.setId(dto.getId());
-        c.setCuit(dto.getCuit());
-        c.setCodPostal(dto.getCodPostal());
-        c.setDomicilio(dto.getDomicilio());
-        c.setLocalidad(dto.getLocalidad());
-        c.setPais(dto.getPais());
-        c.setProvincia(dto.getProvincia());
-        c.setTransporte(dto.getTransporte());
-        c.setSenasaUta(dto.getSenasaUta());
-        c.setTelefono(dto.getTelefono());
-        c.setCelular(dto.getCelular());
-        c.setFax(dto.getFax());
-        c.setEmail(dto.getEmail());
-        c.setRazonSocial(dto.getRazonSocial());
-
-        return c;
+        cliente.setTipoCliente(tipoCliente);
+        cliente.setId(dto.getId());
+        cliente.setCuit(dto.getCuit());
+        cliente.setCodPostal(dto.getCodPostal());
+        cliente.setDomicilio(dto.getDomicilio());
+        cliente.setLocalidad(dto.getLocalidad());
+        cliente.setPais(dto.getPais());
+        cliente.setProvincia(dto.getProvincia());
+        cliente.setTransporte(dto.getTransporte());
+        cliente.setSenasaUta(dto.getSenasaUta());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setCelular(dto.getCelular());
+        cliente.setFax(dto.getFax());
+        cliente.setEmail(dto.getEmail());
+        cliente.setRazonSocial(dto.getRazonSocial());
+        return cliente;
     }
 }
