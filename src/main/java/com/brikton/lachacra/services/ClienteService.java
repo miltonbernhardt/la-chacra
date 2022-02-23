@@ -3,6 +3,7 @@ package com.brikton.lachacra.services;
 import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.TipoCliente;
+import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.ClienteRepository;
@@ -31,6 +32,12 @@ public class ClienteService {
     }
 
     public ClienteDTO save(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
+        return persist(dto);
+    }
+
+    public ClienteDTO update(ClienteDTO dto) throws ClienteNotFoundException, TipoClienteNotFoundConflictException {
+        var cliente = repository.existsById(dto.getId());
+        if (!cliente) throw new ClienteNotFoundException();
         return persist(dto);
     }
 
@@ -65,4 +72,6 @@ public class ClienteService {
         cliente.setRazonSocial(dto.getRazonSocial());
         return cliente;
     }
+
+
 }

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
 import { clientes } from "../../data/data";
-import { getAllClientes, getAllTipoClientes, postCliente } from '../../services/RestServices';
+import { getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
@@ -64,7 +64,11 @@ const CargarClientes = () => {
     const onSubmit = useCallback((clienteForm) => {
         setOpenDialogAlta(false);
         setCliente(clienteInicial);
-        postCliente(clienteForm).then(() => fetchClientes());
+        if (isEditing) {
+            putCliente(clienteForm).then(() => fetchClientes());
+        } else {
+            postCliente(clienteForm).then(() => fetchClientes());
+        }
     }, [])
 
     // --- DIALOGS ---

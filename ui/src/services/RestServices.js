@@ -39,6 +39,7 @@ export const getAllTipoClientes = async () => await GET(`${API_TIPO_CLIENTE}`);
 // --- CLIENTE METHODS ---
 export const getAllClientes = async () => await GET(`${API_CLIENTE}`);
 export const postCliente = async (cliente) => await POST(`${API_CLIENTE}`, cliente);
+export const putCliente = async (cliente) => await PUT(`${API_CLIENTE}`, cliente);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {

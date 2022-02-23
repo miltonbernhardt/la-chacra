@@ -2,6 +2,7 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
+import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ClienteService;
@@ -36,5 +37,11 @@ public class ClienteController {
     public ResponseEntity<SuccessfulResponse<ClienteDTO>> save(@RequestBody @Valid ClienteDTO dto) throws TipoClienteNotFoundConflictException {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_CREATED, service.save(dto)));
+    }
+
+    @PutMapping(value = "/")
+    public ResponseEntity<SuccessfulResponse<ClienteDTO>> update(@RequestBody @Valid ClienteDTO dto) throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
+        log.info("API::update - dto: {}", dto);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_UPDATED, service.update(dto)));
     }
 }
