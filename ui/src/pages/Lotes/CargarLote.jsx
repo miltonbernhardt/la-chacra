@@ -17,7 +17,7 @@ const loteInicial = {
     loteColorante: '',
     loteCalcio: '',
     loteCuajo: '',
-    codigoQueso: ""
+    codigoQueso: ''
 }
 
 const CargarProduccion = () => {
@@ -29,37 +29,34 @@ const CargarProduccion = () => {
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
     const fetchQuesos = useCallback(() => {
-        getAllQuesos().then(data => {
-            console.log({quesos: data.data})
-            setListaQuesos(data.data)
-        }).catch(e => toast.error(e.response ? e : e.message));
+        getAllQuesos()
+            .then(data => setListaQuesos(data.data))
+            .catch(e => toast.error(e.response ? e : e.message));
     }, []);
 
-    useEffect(() => {
-        fetchQuesos()
-    }, []);
+    useEffect(() => fetchQuesos(), []);
 
     const updateStateLote = useCallback((attribute, value) => {
-        const newLote = {...lote, [attribute]: value};
-        setLote(newLote);
+        lote[attribute] = value
+        setLote(lote);
     }, [lote]);
 
-    const handleSubmit = (newLote) => {
-        const loteSubmit = {...newLote, ['codigoQueso']: newLote.codigoQueso};
+    const handleSubmit = (loteSubmit) => {
         setLote(loteSubmit);
         if (isEditingLote) {
             putLote(loteSubmit)
                 .then(({data}) => {
                     const newList = listaLotes.filter((item) => item.id !== lote.id);
                     setListaLotes([...newList, data]);
+                    setLote(loteInicial);
                 })
                 .catch(e => console.error(e.message));
             setEditingLote(false);
         } else {
             postLote(loteSubmit)
                 .then(({data}) => {
-                    setListaLotes([...listaLotes, data]);
                     setLote(loteInicial);
+                    setListaLotes([...listaLotes, data]);
                 })
                 .catch(e => console.error(e.message));
         }

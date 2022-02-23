@@ -15,6 +15,10 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
 
     useImperativeHandle(ref, () => ({
         value: () => val,
+        setValue: (body) => {
+            if (body != null && body instanceof Object)
+                body[id] = val
+        },
         /* parameters;
             - map de errores: se debe inicializar previamente
             - object: valores a hacer submit
