@@ -8,7 +8,7 @@ import Input from "../../components/Input";
 import TitleForm from "../../components/TitleForm";
 import Select from "../../components/Select";
 
-const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit}) => {
+const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit }) => {
     const [loteForm, setLoteForm] = useState(lote)
 
     const refSelectQueso = createRef(null)
@@ -33,29 +33,29 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
         values["id"] = loteForm.id
 
         refSelectQueso.current.validate(errors, values, [
-            {func: validation.emptySelect, msg: message.valEmptyField}
+            { func: validation.emptySelect, msg: message.valEmptyField }
         ])
 
         refNumTina.current.validate(errors, values, [
-            {func: validation.minorToOne, msg: message.valZeroValue},
-            {func: validation.biggerThanThousand, msg: message.valBiggerThanThousand}
+            { func: validation.minorToOne, msg: message.valZeroValue },
+            { func: validation.biggerThanThousand, msg: message.valBiggerThanThousand }
         ])
 
         refLitros.current.validate(errors, values, [
-            {func: validation.minorToOne, msg: message.valZeroValue}
+            { func: validation.minorToOne, msg: message.valZeroValue }
         ])
 
         refCantHormas.current.validate(errors, values, [
-            {func: validation.minorToOne, msg: message.valZeroValue}
+            { func: validation.minorToOne, msg: message.valZeroValue }
         ])
 
         refPeso.current.validate(errors, values, [
-            {func: validation.minorToOne, msg: message.valZeroValue}
+            { func: validation.minorToOne, msg: message.valZeroValue }
         ])
 
         refFecha.current.validate(errors, values, [
-            {func: validation.empty, msg: message.valEmptyFecha},
-            {func: validation.olderDate, msg: message.valOlderDate}
+            { func: validation.empty, msg: message.valEmptyFecha },
+            { func: validation.olderDate, msg: message.valOlderDate }
         ])
 
         if (errors.size > 0) {
@@ -77,67 +77,68 @@ const FormLote = ({quesos, lote, cancelEditing, deleteLote, isEditingLote, handl
 
     return (
         <>
-            <TitleForm value={"Ingreso de producción"}/>
-            <Select ref={refSelectQueso}
+            <Grid container spacing={1.5}>
+                <Select ref={refSelectQueso}
                     value={loteForm.codigoQueso}
                     id={field.backCodigoQueso}
                     label={field.queso}
                     options={quesos}
-                    required/>
-            <Input ref={refLitros}
-                   id={field.backLitrosLeche}
-                   label={field.litrosLeche}
-                   value={loteForm.litrosLeche}
-                   sm={8}
-                   required/>
-            <Input ref={refNumTina}
-                   id={field.backNumeroTina}
-                   label={field.numeroTina}
-                   value={loteForm.numeroTina}
-                   sm={4}
-                   required/>
-            <Input ref={refCantHormas}
-                   id={field.backCantHormas}
-                   label={field.cantHormas}
-                   value={loteForm.cantHormas}
-                   required/>
-            <Input ref={refPeso}
-                   id={field.backPeso}
-                   label={field.peso}
-                   value={loteForm.peso}
-                   required/>
-            <Input ref={refFecha}
-                   id={field.backFechaElaboracion}
-                   label={field.fechaElaboracion}
-                   value={loteForm.fechaElaboracion}
-                   type="date"
-                   required/>
-            <Input ref={refLoteCultivo}
-                   id={field.backLoteCultivo}
-                   label={field.loteCultivo}
-                   value={loteForm.loteCultivo}
-                   type="text"/>
-            <Input ref={refLoteColorante}
-                   id={field.backLoteColorante}
-                   label={field.loteColorante}
-                   value={loteForm.loteColorante}
-                   type="text"/>
-            <Input ref={refLoteCalcio}
-                   id={field.backLoteCalcio}
-                   label={field.loteCalcio}
-                   value={loteForm.loteCalcio}
-                   type="text"/>
-            <Input ref={refLoteCuajo}
-                   id={field.backLoteCuajo}
-                   label={field.loteCuajo}
-                   value={loteForm.loteCuajo}
-                   type="text"/>
-            <Grid item xs={12} alignSelf="right" mb={0.5}>
-                <ButtonGroup fullWidth variant="contained">
-                    <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
-                    <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
-                    <Button onClick={submitLote} color={colorCargar}>{labelCargar}</Button>
-                </ButtonGroup>
+                    required />
+                <Input ref={refLitros}
+                    id={field.backLitrosLeche}
+                    label={field.litrosLeche}
+                    value={loteForm.litrosLeche}
+                    sm={8}
+                    required />
+                <Input ref={refNumTina}
+                    id={field.backNumeroTina}
+                    label={field.numeroTina}
+                    value={loteForm.numeroTina}
+                    sm={4}
+                    required />
+                <Input ref={refCantHormas}
+                    id={field.backCantHormas}
+                    label={field.cantHormas}
+                    value={loteForm.cantHormas}
+                    required />
+                <Input ref={refPeso}
+                    id={field.backPeso}
+                    label={field.peso}
+                    value={loteForm.peso}
+                    required />
+                <Input ref={refFecha}
+                    id={field.backFechaElaboracion}
+                    label={field.fechaElaboracion}
+                    value={loteForm.fechaElaboracion}
+                    type="date"
+                    required />
+                <Input ref={refLoteCultivo}
+                    id={field.backLoteCultivo}
+                    label={field.loteCultivo}
+                    value={loteForm.loteCultivo}
+                    type="text" />
+                <Input ref={refLoteColorante}
+                    id={field.backLoteColorante}
+                    label={field.loteColorante}
+                    value={loteForm.loteColorante}
+                    type="text" />
+                <Input ref={refLoteCalcio}
+                    id={field.backLoteCalcio}
+                    label={field.loteCalcio}
+                    value={loteForm.loteCalcio}
+                    type="text" />
+                <Input ref={refLoteCuajo}
+                    id={field.backLoteCuajo}
+                    label={field.loteCuajo}
+                    value={loteForm.loteCuajo}
+                    type="text" />
+                <Grid item xs={12} alignSelf="right" mb={0.5}>
+                    <ButtonGroup fullWidth variant="contained">
+                        <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
+                        <Button onClick={deleteLote} disabled={!isEditingLote} color="error">Borrar Lote</Button>
+                        <Button onClick={submitLote} color={colorCargar}>{labelCargar}</Button>
+                    </ButtonGroup>
+                </Grid>
             </Grid>
             {/*<DialogCargarTrazabilidad*/}
             {/*    open={dialogOpen}*/}

@@ -120,6 +120,7 @@ const CargarProduccion = () => {
                     setSelection={setSelection} />
             }
             titleTable="Producción ingresada"
+            titleForm="Ingreso de producción"
         >
             <DialogEliminarLote
                 open={eliminarDialog}

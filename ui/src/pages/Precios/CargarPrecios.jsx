@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PageFormTable from "../../components/PageFormTable";
+import Loading from "../../components/Loading"
 import { getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio } from "../../services/RestServices";
 import FormPrecios from "./FormPrecios";
 import GridPrecios from "./GridPrecios";
@@ -83,7 +84,7 @@ const CargarPrecios = () => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [listaTipoClientes])
 
-    if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos) { return <></> } //TODO
+    if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos) { return <Loading /> } //TODO
 
     return (
         <>
@@ -106,6 +107,7 @@ const CargarPrecios = () => {
                         setSelection={setSelection} />
                 }
                 titleTable="Precios"
+                titleForm="Ingreso de precios"
             />
         </>
     );
