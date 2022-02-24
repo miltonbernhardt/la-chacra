@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Grid, Typography } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import * as field from '../../resources/fields';
@@ -13,7 +13,7 @@ const precioInicial = {
     idQueso: ''
 }
 
-const FormPrecios = ({ precio, quesos, clientes, handleSubmit }) => {
+const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, isEditing }) => {
 
     const [precioForm, setPrecioForm] = useState(precioInicial);
 
@@ -45,7 +45,10 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit }) => {
             return
         }
         handleSubmit(values)
-    }, [precioForm.id]);
+    }, [handleSubmit, precioForm.id]);
+
+    // --- Variables
+    const labelCargar = useMemo(() => isEditing ? 'Actualizar Precio' : 'Cargar Precio', [isEditing]);
 
     return (
         <>
@@ -60,12 +63,14 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit }) => {
                     id={field.backIdQueso}
                     label={field.queso}
                     options={quesos}
+                    disabled={isEditing}
                     required />
                 <Select ref={refSelectCliente}
                     value={precioForm.idTipoCliente}
                     id={field.backIdTipoCliente}
                     label={field.idTipoCliente}
                     options={clientes}
+                    disabled={isEditing}
                     required />
                 <Input ref={refPrecio}
                     id={field.backPrecio}
@@ -74,7 +79,8 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit }) => {
                     required />
                 <Grid item xs={12} alignSelf="right" mb={0.5}>
                     <ButtonGroup fullWidth variant="contained">
-                        <Button onClick={handleCargar} color="primary">Cargar Precio</Button>
+                        <Button onClick={handleCancelar} disabled={!isEditing} color="info">Cancelar</Button>
+                        <Button onClick={handleCargar} color="primary">{labelCargar}</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>

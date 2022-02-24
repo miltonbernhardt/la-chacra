@@ -7,7 +7,8 @@ const Select = forwardRef((
         label,
         value,
         required = false,
-        options = { id: null, label: null, value: null }
+        options = { id: null, label: null, value: null },
+        disabled = false
     }, ref) => {
 
     const [val, setVal] = useState(value);
@@ -72,9 +73,11 @@ const Select = forwardRef((
             onChange={(e, value) => {
                 setValAndUpdate(value)
             }}
-            isOptionEqualToValue={(option, value) =>
-                value.value ? option.value === value.value : option.value === value
-            }
+            isOptionEqualToValue={(option, value) => {
+                console.log({ option: option, value: value })
+                return value.value ? option.value === value.value : option.value === value
+            }}
+            disabled={disabled}
         />
     </Grid>
 })
