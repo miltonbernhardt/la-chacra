@@ -4,15 +4,19 @@ import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.TipoCliente;
+import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.ClienteRepository;
+import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +33,13 @@ public class ClienteServiceTest {
     ClienteRepository repository;
 
     @MockBean
+    DateUtil dateUtil;
+
+    @MockBean
     TipoClienteService tipoClienteService;
+
+    @MockBean
+    ExpedicionService expedicionService;
 
     @Test
     void Get_All__OK() {
@@ -110,7 +120,7 @@ public class ClienteServiceTest {
         mockClienteDTO2.setRazonSocial("Razon social 2");
 
 
-        when(repository.findAll()).thenReturn(List.of(mockCliente1, mockCliente2));
+        when(repository.findAllClientes()).thenReturn(List.of(mockCliente1, mockCliente2));
         var tipoClientes = service.getAll();
         assertEquals(2, tipoClientes.size());
         assertEquals(mockClienteDTO1, tipoClientes.get(0));
@@ -173,8 +183,6 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-
-        when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
         when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
         when(repository.save(any(Cliente.class))).thenReturn(mockCliente);
         var dtoClienteActual = service.save(dtoClienteExpected);
@@ -183,7 +191,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Save__Tipo_Cliente_Exists() throws TipoClienteNotFoundException {
+    void Save__Tipo_Cliente_Not_Exists() throws TipoClienteNotFoundException {
         var mockToSave = new ClienteDTO();
         mockToSave.setIdTipoCliente(1L);
         when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
@@ -191,5 +199,189 @@ public class ClienteServiceTest {
                 TipoClienteNotFoundConflictException.class, () -> service.save(mockToSave)
         );
         assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Update__OK() throws TipoClienteNotFoundConflictException, TipoClienteNotFoundException, ClienteNotFoundException {
+        var mockTipoCliente = new TipoCliente();
+        mockTipoCliente.setId(1L);
+        mockTipoCliente.setTipo("tipo1");
+
+        var mockToUpdate = new ClienteDTO();
+        mockToUpdate.setIdTipoCliente(1L);
+        mockToUpdate.setCuit("99888888887");
+        mockToUpdate.setCodPostal("3000");
+        mockToUpdate.setDomicilio("Domicilio 1");
+        mockToUpdate.setLocalidad("Localidad 1");
+        mockToUpdate.setPais("Pais 1");
+        mockToUpdate.setProvincia("Provincia 1");
+        mockToUpdate.setTransporte("Provincia 1");
+        mockToUpdate.setSenasaUta("Senasa UTA 1");
+        mockToUpdate.setTelefono("233334444444");
+        mockToUpdate.setCelular("233334444444");
+        mockToUpdate.setFax("233334444444");
+        mockToUpdate.setEmail("mail1@mail.com");
+        mockToUpdate.setRazonSocial("Razon social 1");
+
+        var dtoClienteExpected = new ClienteDTO();
+        dtoClienteExpected.setId(1L);
+        dtoClienteExpected.setIdTipoCliente(1L);
+        dtoClienteExpected.setCuit("99888888887");
+        dtoClienteExpected.setCodPostal("3000");
+        dtoClienteExpected.setDomicilio("Domicilio 1");
+        dtoClienteExpected.setLocalidad("Localidad 1");
+        dtoClienteExpected.setPais("Pais 1");
+        dtoClienteExpected.setProvincia("Provincia 1");
+        dtoClienteExpected.setTransporte("Provincia 1");
+        dtoClienteExpected.setSenasaUta("Senasa UTA 1");
+        dtoClienteExpected.setTelefono("233334444444");
+        dtoClienteExpected.setCelular("233334444444");
+        dtoClienteExpected.setFax("233334444444");
+        dtoClienteExpected.setEmail("mail1@mail.com");
+        dtoClienteExpected.setRazonSocial("Razon social 1");
+
+        var mockCliente = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setTipoCliente(mockTipoCliente);
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+
+        when(repository.existsById(1L)).thenReturn(true);
+        when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
+        when(repository.save(any(Cliente.class))).thenReturn(mockCliente);
+        var dtoClienteActual = service.update(dtoClienteExpected);
+        assertEquals(dtoClienteExpected, dtoClienteActual);
+    }
+
+    @Test
+    void Update__Tipo_Cliente_Not_Exists() throws TipoClienteNotFoundException {
+        var mockToUpdate = new ClienteDTO();
+        mockToUpdate.setId(1L);
+        mockToUpdate.setIdTipoCliente(1L);
+        when(repository.existsById(1L)).thenReturn(true);
+        when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
+        TipoClienteNotFoundConflictException thrown = assertThrows(
+                TipoClienteNotFoundConflictException.class, () -> service.update(mockToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Update__Client_Not_Exists() {
+        var mockToUpdate = new ClienteDTO();
+        mockToUpdate.setId(1L);
+        mockToUpdate.setIdTipoCliente(1L);
+        when(repository.existsById(1L)).thenReturn(false);
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.update(mockToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Delete_With_Expedicion_Dependency__OK() throws ClienteNotFoundException {
+        var mockCliente = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+
+        var mockDeleted = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setFechaBaja(LocalDate.of(2020, 10, 10));
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockCliente));
+        when(expedicionService.existsByCliente(mockCliente)).thenReturn(true);
+        when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
+        when(repository.save(mockDeleted)).thenReturn(mockDeleted);
+
+        var actualID = service.delete(1L);
+        assertEquals(1L, actualID);
+    }
+
+    @Test
+    void Delete_Without_Dependency__OK() throws ClienteNotFoundException {
+        var mockCliente = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+
+        var mockDeleted = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setFechaBaja(LocalDate.of(2020, 10, 10));
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockCliente));
+        when(expedicionService.existsByCliente(mockCliente)).thenReturn(false);
+        when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
+
+        var actualID = service.delete(1L);
+        assertEquals(null, actualID);
+    }
+
+    @Test
+    void Delete__Client_Not_Exists() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
     }
 }
