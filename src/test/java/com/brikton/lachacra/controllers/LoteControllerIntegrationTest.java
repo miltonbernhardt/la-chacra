@@ -2,6 +2,7 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
@@ -160,12 +161,16 @@ public class LoteControllerIntegrationTest {
         expectedLote.setCodigoQueso("001");
 
         var expectedLoteString = mapper.writeValueAsString(expectedLote);
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_CREATED);
 
         var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedLoteString, actualLote);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -357,12 +362,16 @@ public class LoteControllerIntegrationTest {
         expectedLote.setCodigoQueso("002");
 
         var expectedLoteString = mapper.writeValueAsString(expectedLote);
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_UPDATED);
 
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedLoteString, actualLote);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -532,23 +541,31 @@ public class LoteControllerIntegrationTest {
     @Test
     void Delete_Lote_Without_Dependencies__OK() throws JsonProcessingException {
         var expectedID = mapper.writeValueAsString("");
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("231020210022"), SuccessfulResponse.class);
         var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedID, actualID);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Lote_With_Dependencies__OK() throws JsonProcessingException {
         var expectedID = mapper.writeValueAsString("241020210033");
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("241020210033"), SuccessfulResponse.class);
         var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedID, actualID);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test

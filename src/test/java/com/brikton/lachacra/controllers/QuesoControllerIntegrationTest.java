@@ -2,6 +2,7 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
@@ -127,12 +128,16 @@ public class QuesoControllerIntegrationTest {
         expectedDTO.setStock(10);
 
         var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_QUESO_CREATED);
 
         var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
         var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedQuesoString, actualQueso);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -254,12 +259,16 @@ public class QuesoControllerIntegrationTest {
         expectedDTO.setStock(53);
 
         var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_QUESO_UPDATED);
 
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
         var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedQuesoString, actualQueso);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -417,21 +426,31 @@ public class QuesoControllerIntegrationTest {
     @Test
     void Delete_Queso_WITH_Dependencies__OK() throws JsonProcessingException {
         String expectedID = mapper.writeValueAsString("001");
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_QUESO_DELETED);
+
         var response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
         var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedID, actualID);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Queso_WITHOUT_Dependencies__OK() throws JsonProcessingException {
-        String expectedID = mapper.writeValueAsString("");
+        var expectedID = mapper.writeValueAsString("");
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_QUESO_DELETED);
+
         var response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
         var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedID, actualID);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
