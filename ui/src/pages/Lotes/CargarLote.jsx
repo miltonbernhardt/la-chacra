@@ -1,6 +1,5 @@
-import { Box } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useState } from "react";
+import Loading from '../../components/Loading';
 import PageFormTable from "../../components/PageFormTable";
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
 import DialogEliminarLote from "./DialogEliminarLote";
@@ -99,19 +98,7 @@ const CargarProduccion = () => {
         }
     });
 
-    if (isLoading) {
-        return (
-            <Box sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                mt: 3,
-            }}>
-                <CircularProgress />
-            </Box>
-        )
-    }
+    if (isLoading) { return (<Loading />) };
 
     return (
         <PageFormTable
