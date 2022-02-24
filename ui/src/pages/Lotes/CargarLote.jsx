@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useState } from "react";
-import toast from 'react-hot-toast';
 import PageFormTable from "../../components/PageFormTable";
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
 import DialogEliminarLote from "./DialogEliminarLote";
@@ -112,7 +111,7 @@ const CargarProduccion = () => {
                 <CircularProgress />
             </Box>
         )
-    };
+    }
 
     return (
         <PageFormTable

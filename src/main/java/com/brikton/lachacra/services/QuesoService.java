@@ -49,7 +49,7 @@ public class QuesoService {
             return queso.get();
         throw new QuesoNotFoundException();
     }
-//TODO no devolver los que tienen fecha de baja
+
     public List<QuesoDTO> getAll() {
         var listaDTO = new ArrayList<QuesoDTO>();
         repository.findAllQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
@@ -113,6 +113,4 @@ public class QuesoService {
         queso.setStock(dto.getStock());
         return queso;
     }
-
-
 }
