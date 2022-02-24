@@ -141,8 +141,10 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                             value.value ? option.value === value.value : option.value === value
                                         }
                                         onChange={(e, value) => {
-                                            const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
-                                            setClienteForm(newCliente);
+                                            if (value) {
+                                                const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
+                                                setClienteForm(newCliente);
+                                            }
                                         }} />
                                 </Grid>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>

@@ -84,6 +84,7 @@ const CargarClientes = () => {
     const [openDialogBaja, setOpenDialogBaja] = useState(false);
 
     const onOpenAlta = () => {
+        setEditing(false);
         setCliente(clienteInicial);
         setOpenDialogAlta(true);
     }

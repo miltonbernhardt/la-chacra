@@ -7,6 +7,7 @@ export const backLitrosLeche = "litrosLeche"
 export const backNumeroTina = "numeroTina"
 export const backPeso = "peso"
 export const backCodigoQueso = "codigoQueso"
+export const backIdQueso = "idQueso"
 export const backCodigo = "codigo"
 export const backNomenclatura = "nomenclatura"
 export const backTipoQueso = "tipoQueso"
@@ -28,6 +29,7 @@ export const backTelefono = "telefono"
 export const backFax = "fax"
 export const backCelular = "celuluar"
 export const backIdTipoCliente = "idTipoCliente"
+export const backPrecio = "precio"
 
 export const ID = "ID"
 
@@ -62,7 +64,10 @@ export const email = "E-mail"
 export const telefono = "Teléfono"
 export const fax = "Fax"
 export const celular = "Celular"
-export const idTipoCliente = "Tipo de Cliente"
+export const idTipoCliente = "Tipo de cliente"
+
+// precio
+export const precio = "Precio"
 
 const backendFields = () => {
     const fields = new Map()
@@ -73,6 +78,7 @@ const backendFields = () => {
     fields.set(backNumeroTina, numeroTina)
     fields.set(backPeso, peso)
     fields.set(backCodigoQueso, queso)
+    fields.set(backIdQueso, queso)
     fields.set(backCodigo, codigo)
     fields.set(backNomenclatura, nomenclatura)
     fields.set(backTipoQueso, tipoQueso)
@@ -94,6 +100,7 @@ const backendFields = () => {
     fields.set(backFax, fax)
     fields.set(backCelular, celular)
     fields.set(backIdTipoCliente, idTipoCliente)
+    fields.set(backPrecio, precio)
     return fields
 }
 

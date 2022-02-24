@@ -6,6 +6,7 @@ import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.PrecioRepository;
+import com.brikton.lachacra.repositories.QuesoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,12 @@ import java.util.List;
 public class PrecioService {
 
     private final PrecioRepository precioRepository;
-    private final QuesoService quesoService;
+    private final QuesoRepository quesoRepository; // circular reference if use quesoService
     private final TipoClienteService tipoClienteService;
 
-    public PrecioService(PrecioRepository precioRepository, QuesoService quesoService, TipoClienteService tipoClienteService) {
+    public PrecioService(PrecioRepository precioRepository,  QuesoRepository quesoRepository, TipoClienteService tipoClienteService) {
         this.precioRepository = precioRepository;
-        this.quesoService = quesoService;
+        this.quesoRepository = quesoRepository;
         this.tipoClienteService = tipoClienteService;
     }
 
@@ -47,8 +48,9 @@ public class PrecioService {
         Precio precio = new Precio();
         var tipoCliente = tipoClienteService.getEntity(dto.getIdTipoCliente());
         precio.setTipoCliente(tipoCliente);
-        var queso = quesoService.getEntity(dto.getIdQueso());
-        precio.setQueso(queso);
+        var queso = quesoRepository.findById(dto.getIdQueso());
+        if (queso.isEmpty()) throw new QuesoNotFoundException();
+        precio.setQueso(queso.get());
         precio.setPrecio(dto.getPrecio());
         precio.setId(dto.getId());
         return precio;
