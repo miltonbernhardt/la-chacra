@@ -1,9 +1,9 @@
-import { Box, Button } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Button } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import Loading from '../../components/Loading';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
-import { getAllClientes, getAllTipoClientes, postCliente, putCliente, deleteCliente } from '../../services/RestServices';
+import { deleteCliente, getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
@@ -110,19 +110,7 @@ const CargarClientes = () => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [tiposClientes])
 
-    if (isLoading) {
-        return (
-            <Box sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                mt: 3,
-            }}>
-                <CircularProgress />
-            </Box>
-        )
-    };
+    if (isLoading) { return (<Loading />) };
 
     return (
         <PageTableButtonPane

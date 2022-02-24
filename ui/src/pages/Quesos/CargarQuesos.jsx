@@ -1,14 +1,13 @@
 import { Button } from '@mui/material';
 import { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
+import Loading from '../../components/Loading';
+import PageTableButtonPane from "../../components/PageTableButtonPane";
+import * as message from "../../resources/messages";
 import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
 import DialogCargarQueso from './DialogCargarQueso';
 import DialogEliminarQueso from './DialogEliminarQueso';
 import GridQuesos from './GridQuesos';
-import * as message from "../../resources/messages";
-import PageTableButtonPane from "../../components/PageTableButtonPane";
-import { Box } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
 
 const quesoInicial = {
     id: '',
@@ -102,19 +101,7 @@ const CargarQuesos = () => {
         setQueso(listaQuesos.filter(o => o.id === id).pop())
     }
 
-    if (isLoading) {
-        return (
-            <Box sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                mt: 3,
-            }}>
-                <CircularProgress />
-            </Box>
-        )
-    };
+    if (isLoading) { return (<Loading />) };
 
     return (
         <PageTableButtonPane
