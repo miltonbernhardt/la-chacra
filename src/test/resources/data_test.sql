@@ -20,14 +20,17 @@ VALUES (1, 'Mayorista'),
        (3, 'Particular');
 
 INSERT INTO public.cliente (nro_cliente, razon_social, id_tipo_cliente, cuit, domicilio, cod_postal, localidad,
-                            provincia,
-                            pais, transporte, senasa_uta)
-VALUES ('101', 'ABDALA, Gustavo', 1, '20-21641332-7', 'Jacob 2830', '3080', 'Esperanza', 'Santa Fe', 'Argentina',
-        'Familia Noroña S.A.', '113754'),
-       ('102', 'ALBERTINAZZI, Olga Pompeya', 1, '27-11295032-5', 'Hipólito Yrigoyen 1442', '3560', 'Reconquista',
-        'Santa Fe', 'Argentina', 'Cerutti, Pablo', '94265'),
-       ('103', 'ALEGRI, José César', 1, '20-11660282-3', 'Av. Centenario 4797', '', 'Espeleta',
-        'Buenos Aires', 'Argentina', 'Bianchi', '83200');
+                            provincia, pais, transporte, senasa_uta, telefono, celular, fax, email, fecha_baja)
+VALUES (1, 'ABDALA, Gustavo', 1, '20-11111111-7', 'Jacob 2830', '3080', 'Esperanza', 'Santa Fe', 'Argentina',
+        'Familia Noroña S.A.', '113754', '233334444444', '233334444444', null, 'mail1@mail.com', null),
+       (2, 'ALBERTINAZZI, Olga Pompeya', 2, '27-22222222-5', 'Hipólito Yrigoyen 1442', '3560', 'Reconquista',
+        'Santa Fe', 'Argentina', 'Cerutti, Pablo', '94265', '344445555555', '344445555555', '344445555555',
+        'mail2@mail.com', null),
+       (3, 'ALEGRI, José César', 3, '20-33333333-3', 'Av. Centenario 4797', null, 'Espeleta',
+        'Buenos Aires', 'Argentina', 'Bianchi', '83200', '755556666666', '755556666666', '755556666666',
+        'mail3@mail.com', null),
+       (4, 'NOMBRE', 3, '20-44444444-3', 'DIRECCION', 2000, 'LOCALIDAD',
+        'PROVINCIA', 'PAIS', 'TRANSPORTE', '11111', null, null, null, 'mail4@mail.com', '2020-10-10');
 
 INSERT INTO public.precio (id_tipo_cliente, id_queso, precio, id_precio)
 VALUES (1, 1, 371.00, 1),
@@ -42,7 +45,7 @@ VALUES (1, 1, 371.00, 1),
        (1, 4, 620.00, 10);
 
 INSERT INTO public.expedicion (id_expedicion, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
-VALUES (1, '2021-11-08', 216, 855.3, 62658.00, '101', '241020210033');
+VALUES (1, '2021-11-08', 216, 855.3, 62658.00, 1, '241020210033');
 -- agregar expedicion
 -- agregar remitos
 -- agregar devoluciones

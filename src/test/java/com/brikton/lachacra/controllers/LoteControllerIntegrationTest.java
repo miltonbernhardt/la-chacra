@@ -2,6 +2,7 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
@@ -160,12 +161,16 @@ public class LoteControllerIntegrationTest {
         expectedLote.setCodigoQueso("001");
 
         var expectedLoteString = mapper.writeValueAsString(expectedLote);
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_CREATED);
 
         var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedLoteString, actualLote);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -357,18 +362,46 @@ public class LoteControllerIntegrationTest {
         expectedLote.setCodigoQueso("002");
 
         var expectedLoteString = mapper.writeValueAsString(expectedLote);
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_UPDATED);
 
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
         var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedLoteString, actualLote);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Update__Lote_Not_Found() throws JsonProcessingException {
         LoteDTO dtoToUpdate = new LoteDTO();
         dtoToUpdate.setId("011020210011");
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToUpdate.setNumeroTina(1);
+        dtoToUpdate.setCantHormas(1);
+        dtoToUpdate.setLitrosLeche(20D);
+        dtoToUpdate.setPeso(10D);
+        dtoToUpdate.setLoteCultivo("cultivo1, cultivo2");
+        dtoToUpdate.setLoteColorante("colorante1, colorante2");
+        dtoToUpdate.setLoteCalcio("calcio1, calcio2");
+        dtoToUpdate.setLoteCuajo("cuajo1, cuajo2");
+        dtoToUpdate.setCodigoQueso("001");
+
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(path, response.getPath());
+    }
+
+    @Test
+    void Update__Lote_Deleted() throws JsonProcessingException {
+        LoteDTO dtoToUpdate = new LoteDTO();
+        dtoToUpdate.setId("251020210045");
         dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dtoToUpdate.setNumeroTina(1);
         dtoToUpdate.setCantHormas(1);
@@ -505,27 +538,34 @@ public class LoteControllerIntegrationTest {
         assertEquals(ValidationMessages.MUST_BE_LESS_THAN_1000, response.getErrors().get("numeroTina"));
     }
 
-    //todo get all with one lote deleted
     @Test
     void Delete_Lote_Without_Dependencies__OK() throws JsonProcessingException {
         var expectedID = mapper.writeValueAsString("");
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("231020210022"), SuccessfulResponse.class);
         var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedID, actualID);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Lote_With_Dependencies__OK() throws JsonProcessingException {
         var expectedID = mapper.writeValueAsString("241020210033");
+        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("241020210033"), SuccessfulResponse.class);
         var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedID, actualID);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -537,6 +577,17 @@ public class LoteControllerIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("1122333344455"), response.getPath());
+    }
+
+    @Test
+    void Delete__Lote_Already_Deleted() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("251020210045"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("251020210045"), response.getPath());
     }
 
     @Test

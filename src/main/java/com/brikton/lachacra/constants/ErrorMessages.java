@@ -9,4 +9,7 @@ public class ErrorMessages {
     public static final String MSG_PRECIO_NOT_FOUND = "Precio no encontrado";
     public static final String MSG_LOTE_ALREADY_EXIST = "Ya existe el lote";
     public static final String MSG_CODIGO_QUESO_ALREADY_EXIST = "Ya existe un queso con ese código";
+    public static final String MSG_NOMENCLATURE_QUESO_ALREADY_EXIST = "Ya existe un queso con esa nomenclatura";
+    public static final String MSG_TIPO_CLIENTE_NOT_FOUND = "Tipo de cliente no encontrado";
+    public static final String MSG_CLIENTE_NOT_FOUND = "Cliente no encontrado";
 }

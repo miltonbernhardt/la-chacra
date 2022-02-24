@@ -1,5 +1,6 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.repositories.ExpedicionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,11 @@ public class ExpedicionService {
         this.expedicionRepository = expedicionRepository;
     }
 
-    public boolean existsByLote(Lote lote){
+    public boolean existsByLote(Lote lote) {
         return expedicionRepository.existsByLote(lote);
+    }
+
+    public boolean existsByCliente(Cliente cliente) {
+        return expedicionRepository.existsByCliente(cliente);
     }
 }

@@ -48,7 +48,7 @@ public class LoteService {
 
     public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
         var dto = new LoteDTO(dtpUpdate);
-        if (!repository.existsById(dto.getId())) {
+        if (!repository.existsByIdNotFechaBaja(dto.getId())) {
             throw new LoteNotFoundException();
         }
         repository.deleteById(dto.getId());
@@ -67,13 +67,13 @@ public class LoteService {
 
     public List<LoteDTO> getAll() {
         var lotesDTO = new ArrayList<LoteDTO>();
-        var lotes = repository.findAllLotes();
+        var lotes = repository.findAllLotesNotFechaBaja();
         lotes.forEach(lote -> lotesDTO.add(new LoteDTO(lote)));
         return lotesDTO;
     }
 
     public String delete(String id) throws LoteNotFoundException {
-        if (!repository.existsById(id))
+        if (!repository.existsByIdNotFechaBaja(id))
             throw new LoteNotFoundException();
 
         var lote = repository.getById(id);

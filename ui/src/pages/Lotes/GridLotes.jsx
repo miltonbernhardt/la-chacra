@@ -1,4 +1,3 @@
-import { Typography, Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
@@ -8,7 +7,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
         return [
             {
                 field: 'fechaElaboracion',
-                headerName: 'Fecha de produccion',
+                headerName: 'Fecha de producción',
                 type: 'date',
                 valueFormatter: (params) => {
                     const valueFormatted =
@@ -43,7 +42,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
             },
             {
                 field: 'litrosLeche',
-                headerName: 'Litros Procesados',
+                headerName: 'Litros procesados',
                 type: 'number',
                 flex: 0.5,
                 minWidth: 50,
@@ -65,6 +64,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
 
         ]
     }, [quesos]);
+
     return (
         <>
             <DataGrid
@@ -72,7 +72,9 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
                 autoHeight={true}
                 rows={produccion}
                 columns={columns}
-                onCellDoubleClick={(params) => setSelection(params.id)}
+                onCellDoubleClick={(params) => {
+                    setSelection(params.id)
+                }}
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}

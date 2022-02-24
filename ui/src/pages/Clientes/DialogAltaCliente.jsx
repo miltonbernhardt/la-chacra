@@ -1,167 +1,240 @@
 import { Autocomplete, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
-import { tiposDeCliente } from "../../data/data";
+import { createRef, useEffect, useMemo, useState } from 'react';
+import Input from "../../components/Input";
+import * as field from "../../resources/fields";
+import * as message from "../../resources/messages";
+import * as validation from "../../resources/validations";
+const clienteInicial = {
+    id: '',
+    razonSocial: '',
+    cuit: '',
+    domicilio: '',
+    codPostal: '',
+    localidad: '',
+    provincia: '',
+    pais: '',
+    transporte: '',
+    senasaUta: '',
+    email: '',
+    telefono: '',
+    fax: '',
+    celular: '',
+    idTipoCliente: ''
+}
+
+const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposCliente }) => {
+
+    const [clienteForm, setClienteForm] = useState(clienteInicial);
 
 
-const DialogAltaCliente = ({ open, onClose, onSubmit }) => {
+    const refRazonSocial = createRef(null)
+    const refCuit = createRef(null)
+    const refDomicilio = createRef(null)
+    const refCodPostal = createRef(null)
+    const refLocalidad = createRef(null)
+    const refProvincia = createRef(null)
+    const refPais = createRef(null)
+    const refTransporte = createRef(null)
+    const refSenasaUta = createRef(null)
+    const refEmail = createRef(null)
+    const refTelefono = createRef(null)
+    const refFax = createRef(null)
+    const refCelular = createRef(null)
 
-    return (<>
-        <Dialog open={open} onClose={onClose} scroll="body">
-            <DialogTitle>Alta de Cliente</DialogTitle>
-            <DialogContent>
-                <Container maxWidth="sm">
-                    <Box
-                        sx={{
-                            marginTop: 8,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            mt: 3
-                        }}
-                    >
-                        <Grid container spacing={2}>
-                            <Typography variant="h6" paddingLeft={2}>
-                                Cliente
-                            </Typography>
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="razonSocial"
-                                    name="razonSocial"
-                                    label="Razon Social"
-                                    fullWidth
+    useEffect(() => setClienteForm(cliente), [cliente]);
+
+    const handleSubmit = () => {
+        const errors = new Map();
+        const values = {};
+        values["id"] = clienteForm.id
+
+        refRazonSocial.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
+
+        refCuit.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
+
+        if (clienteForm.idTipoCliente === '') {
+            errors.set("Tipo de cliente", message.valEmptyField);
+        } else {
+            values["idTipoCliente"] = clienteForm.idTipoCliente;
+        }
+
+        if (errors.size > 0) {
+            console.error(errors)
+            field.toastValidationErrors(errors)
+            return
+        }
+
+        refDomicilio.current.setValue(values)
+        refCodPostal.current.setValue(values)
+        refLocalidad.current.setValue(values)
+        refProvincia.current.setValue(values)
+        refPais.current.setValue(values)
+        refTransporte.current.setValue(values)
+        refSenasaUta.current.setValue(values)
+        refEmail.current.setValue(values)
+        refTelefono.current.setValue(values)
+        refFax.current.setValue(values)
+        refCelular.current.setValue(values)
+
+        onSubmit(values)
+    }
+
+    // --- VARIABLES ---
+    const dialogTitle = useMemo(() => isEditing ? 'Actualizar Cliente' : 'Alta Cliente', [isEditing]);
+    const titleCliente = useMemo(() => cliente.id ? `Cliente Número ${cliente.id}` : 'Cliente', [cliente]);
+    const labelSubmit = useMemo(() => isEditing ? 'Actualizar' : 'Dar de Alta', [isEditing]);
+
+    return (
+        <>
+            <Dialog open={open} onClose={onClose} scroll="body">
+                <DialogTitle>{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <Container maxWidth="sm">
+                        <Box
+                            sx={{
+                                marginTop: 8,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                mt: 3
+                            }}
+                        >
+                            <Grid container spacing={2}>
+                                <Typography variant="h6" paddingLeft={2}>
+                                    {titleCliente}
+                                </Typography>
+                                <Input
+                                    id={field.backRazonSocial}
+                                    label={field.razonSocial}
+                                    ref={refRazonSocial}
+                                    value={clienteForm.razonSocial}
+                                    required
+                                    type="text" />
+                                <Input
+                                    id={field.backCuit}
+                                    label={field.cuit}
+                                    ref={refCuit}
+                                    value={clienteForm.cuit}
+                                    required
+                                    type="text" />
+                                <Grid item xs={12}>
+                                    {/* Using Autocomplete bc select doesnt work here */}
+                                    <Autocomplete
+                                        disablePortal
+                                        id={field.backIdTipoCliente}
+                                        name="idTipoCliente"
+                                        options={tiposCliente}
+                                        autoHighlight
+                                        getOptionLabel={(option) => tiposCliente.filter(t => t.value === option).pop() ? tiposCliente.filter(t => t.value === option).pop().label : ''}
+                                        renderInput={(params) => <TextField {...params} label={field.idTipoCliente} />}
+                                        renderOption={(props, option) => {
+                                            return <Box component="li"  {...props}>
+                                                {option.label}
+                                            </Box>
+                                        }}
+                                        value={clienteForm.idTipoCliente}
+                                        isOptionEqualToValue={(option, value) =>
+                                            value.value ? option.value === value.value : option.value === value
+                                        }
+                                        onChange={(e, value) => {
+                                            const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
+                                            setClienteForm(newCliente);
+                                        }} />
+                                </Grid>
+                                <Typography variant="h6" paddingLeft={2} mt={2}>
+                                    Domicilio
+                                </Typography>
+                                <Input
+                                    id={field.backDomicilio}
+                                    label={field.domicilio}
+                                    ref={refDomicilio}
+                                    value={clienteForm.domicilio}
+                                    type="text" />
+                                <Input
+                                    id={field.backLocalidad}
+                                    label={field.localidad}
+                                    ref={refLocalidad}
+                                    value={clienteForm.localidad}
                                     type="text"
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="cuit"
-                                    name="cuit"
-                                    label="CUIT"
-                                    fullWidth
+                                    sm={8} />
+                                <Input
+                                    id={field.backCodPostal}
+                                    label={field.codPostal}
+                                    ref={refCodPostal}
+                                    value={clienteForm.codPostal}
+                                    sm={4} />
+                                <Input
+                                    id={field.backProvincia}
+                                    label={field.provincia}
+                                    ref={refProvincia}
+                                    value={clienteForm.provincia}
                                     type="text"
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Autocomplete
-                                    disablePortal
-                                    id="combo-tipoCliente"
-                                    options={tiposDeCliente}
-                                    renderInput={(params) => <TextField {...params} label="Tipo de cliente" />}
-                                />
-                            </Grid>
-                            <Typography variant="h6" paddingLeft={2} mt={2}>
-                                Domicilio
-                            </Typography>
-                            <Grid item xs={12}>
-                                <TextField
-                                    id="direccion"
-                                    name="direccion"
-                                    label="Dirección"
-                                    fullWidth
+                                    sm={6} />
+                                <Input
+                                    id={field.backPais}
+                                    label={field.pais}
+                                    ref={refPais}
+                                    value={clienteForm.pais}
                                     type="text"
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} sm={8} >
-                                <TextField
-                                    id="localidad"
-                                    name="localidad"
-                                    label="Localidad"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    id="codigoPostal"
-                                    name="codigoPostal"
-                                    label="Código Postal"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    id="provincia"
-                                    name="provincia"
-                                    label="Provincia"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    id="pais"
-                                    name="pais"
-                                    label="Pais"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Typography variant="h6" paddingLeft={2} mt={2}>
-                                Datos de contacto
-                            </Typography>
+                                    sm={6} />
+                                <Typography variant="h6" paddingLeft={2} mt={2}>
+                                    Datos de contacto
+                                </Typography>
 
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="email"
-                                    name="email"
-                                    label="E-mail"
+                                <Input
+                                    id={field.backEmail}
+                                    label={field.email}
                                     type="email"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="telefono"
-                                    name="telefono"
-                                    label="Telefono"
+                                    ref={refEmail}
+                                    value={clienteForm.email} />
+                                <Input
+                                    id={field.backTelefono}
+                                    label={field.telefono}
                                     type="tel"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="celular"
-                                    name="celular"
-                                    label="Celular"
+                                    ref={refTelefono}
+                                    value={clienteForm.telefono} />
+                                <Input
+                                    id={field.backCelular}
+                                    label={field.celular}
                                     type="tel"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="fax"
-                                    name="fax"
-                                    label="Fax"
+                                    ref={refCelular}
+                                    value={clienteForm.celular} />
+                                <Input
+                                    id={field.backFax}
+                                    label={field.fax}
                                     type="tel"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                            <Typography variant="h6" paddingLeft={2} mt={2}>
-                                Transporte
-                            </Typography>
+                                    ref={refFax}
+                                    value={clienteForm.fax} />
+                                <Typography variant="h6" paddingLeft={2} mt={2}>
+                                    Transporte
+                                </Typography>
 
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="transporte"
-                                    name="transporte"
-                                    label="Transporte"
-                                    fullWidth
-                                    variant="outlined" />
+                                <Input
+                                    id={field.backTransporte}
+                                    label={field.transporte}
+                                    ref={refTransporte}
+                                    value={clienteForm.transporte}
+                                    type="text" />
+                                <Input
+                                    id={field.backSenasaUta}
+                                    label={field.senasaUta}
+                                    ref={refSenasaUta}
+                                    value={clienteForm.senasaUta}
+                                    type="text" />
                             </Grid>
-                            <Grid item xs={12} >
-                                <TextField
-                                    id="habilitacionTransporte"
-                                    name="habilitacionTransporte"
-                                    label="SENASA/UTA"
-                                    fullWidth
-                                    variant="outlined" />
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Container>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancelar</Button>
-                <Button onClick={onSubmit}>Dar de alta</Button>
-            </DialogActions>
-        </Dialog>
-    </>
+                        </Box>
+                    </Container>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose}>Cancelar</Button>
+                    <Button onClick={handleSubmit}>{labelSubmit}</Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }
 

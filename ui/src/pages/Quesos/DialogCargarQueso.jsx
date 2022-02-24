@@ -5,13 +5,13 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Grid,
-    TextField
+    Grid
 } from '@mui/material';
-import { useCallback, useEffect, useState, useMemo } from 'react';
-import { toastValidationErrors } from "../../resources/fields";
-import * as message from "../../resources/messages";
+import { createRef, useEffect, useMemo, useState } from 'react';
+import Input from "../../components/Input";
 import * as field from "../../resources/fields";
+import * as message from "../../resources/messages";
+import * as validation from "../../resources/validations";
 
 const quesoInicial = {
     id: '',
@@ -26,46 +26,39 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
 
     useEffect(() => setQuesoForm(queso), [queso, isCargarQueso]);
 
-    const handleChange = evt => {
-        const attribute = evt.target.name;
-        const value = evt.target.value;
-        if (evt.target.validity.valid) {
-            const newQueso = { ...quesoForm, [attribute]: value };
-            setQuesoForm(newQueso);
-        }
-    }
+    const refCodigo = createRef(null)
+    const refTipoQueso = createRef(null)
+    const refNomenclatura = createRef(null)
 
     const labelCargar = useMemo(() => {
         return isEditarQueso ? 'Actualizar Producto' : 'Cargar Producto'
     }, [isEditarQueso]);
 
-    const validateQueso = useCallback(() => {
+    const onCargar = () => {
         const errors = new Map();
+        const values = {};
+        values["id"] = quesoForm.id
 
-        if (quesoForm.tipoQueso === '')
-            errors.set(field.tipoQueso, message.valEmptyField)
+        refTipoQueso.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
 
-        if (quesoForm.nomenclatura === '')
-            errors.set(field.nomenclatura, message.valEmptyField)
+        refCodigo.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
 
-        if (quesoForm.codigo === '')
-            errors.set(field.codigo, message.valEmptyField)
-        else if (quesoForm.codigo.length !== 3)
-            errors.set(field.codigo, message.val3Characters)
+        refNomenclatura.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyField }
+        ])
 
         if (errors.size > 0) {
             console.error(errors)
-            toastValidationErrors(errors)
-            return false;
+            field.toastValidationErrors(errors)
+            return
         }
-        return true;
-    }, [quesoForm.codigo, quesoForm.nomenclatura, quesoForm.tipoQueso]);
 
-    const onCargar = useCallback(() => {
-        if (validateQueso()) {
-            onSubmit(quesoForm);
-        }
-    }, [validateQueso, onSubmit, quesoForm]);
+        onSubmit(values)
+    }
 
     return (
         <>
@@ -76,37 +69,26 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                         Ingrese los datos del producto
                     </DialogContentText>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="tipoQueso"
-                                name="tipoQueso"
-                                label="Tipo de queso"
-                                fullWidth
-                                variant="outlined"
-                                defaultValue={quesoForm.tipoQueso}
-                                onChange={handleChange}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="nomenclatura"
-                                name="nomenclatura"
-                                label="Nomenclatura"
-                                fullWidth
-                                variant="outlined"
-                                defaultValue={quesoForm.nomenclatura}
-                                onChange={handleChange} />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                id="codigo"
-                                name="codigo"
-                                label="Código"
-                                fullWidth
-                                variant="outlined"
-                                defaultValue={quesoForm.codigo}
-                                onChange={handleChange} />
-                        </Grid>
+                        <Input
+                            id={field.backTipoQueso}
+                            label={field.tipoQueso}
+                            ref={refTipoQueso}
+                            value={quesoForm.tipoQueso}
+                            type="text"
+                            required />
+                        <Input
+                            id={field.backNomenclatura}
+                            label={field.nomenclatura}
+                            ref={refNomenclatura}
+                            value={quesoForm.nomenclatura}
+                            type="text"
+                            required />
+                        <Input
+                            id={field.backCodigo}
+                            label={field.codigo}
+                            ref={refCodigo}
+                            value={quesoForm.codigo}
+                            required />
                     </Grid>
                 </DialogContent>
                 <DialogActions>
