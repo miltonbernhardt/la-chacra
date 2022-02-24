@@ -15,4 +15,7 @@ public interface LoteRepository extends JpaRepository<Lote, String> {
     List<Lote> findAllLotes();
 
     boolean existsByQueso(Queso queso);
+
+    @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Lote l WHERE l.fechaBaja IS NULL AND l.id=:id")
+    boolean existsById(String id);
 }
