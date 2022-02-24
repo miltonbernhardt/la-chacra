@@ -1,6 +1,7 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.ClienteDTO;
+import com.brikton.lachacra.dtos.ClienteUpdateDTO;
 import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.TipoCliente;
 import com.brikton.lachacra.exceptions.ClienteNotFoundException;
@@ -45,7 +46,8 @@ public class ClienteService {
         return persist(dto);
     }
 
-    public ClienteDTO update(ClienteDTO dto) throws ClienteNotFoundException, TipoClienteNotFoundConflictException {
+    public ClienteDTO update(ClienteUpdateDTO dtoUpdate) throws ClienteNotFoundException, TipoClienteNotFoundConflictException {
+        var dto = new ClienteDTO(dtoUpdate);
         var exists = repository.existsById(dto.getId());
         if (!exists)
             throw new ClienteNotFoundException();
@@ -53,11 +55,11 @@ public class ClienteService {
     }
 
     public Long delete(Long id) throws ClienteNotFoundException {
-        var clienteOptional = repository.findById(id);
-        if (clienteOptional.isEmpty())
+        var exists = repository.existsById(id);
+        if (!exists)
             throw new ClienteNotFoundException();
 
-        var cliente = clienteOptional.get();
+        var cliente = repository.getById(id);
 
         if (expedicionService.existsByCliente(cliente)) {
             cliente.setFechaBaja(dateUtil.now());

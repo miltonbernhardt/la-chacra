@@ -3,6 +3,8 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
+import com.brikton.lachacra.dtos.ClienteUpdateDTO;
+import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.services.ClienteService;
 import org.junit.jupiter.api.Test;
@@ -71,7 +73,6 @@ public class ClienteControllerTest {
         assertEquals(mockCliente2, actualDTOs.get(1));
     }
 
-
     @Test
     void Save__OK() throws TipoClienteNotFoundConflictException {
         var mockReturned = new ClienteDTO();
@@ -127,4 +128,92 @@ public class ClienteControllerTest {
         );
         assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, thrown.getMessage());
     }
+
+    @Test
+    void Update__OK() throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
+        var mockReturned = new ClienteDTO();
+        mockReturned.setId(1L);
+        mockReturned.setIdTipoCliente(1L);
+        mockReturned.setCuit("99888888887");
+        mockReturned.setCodPostal("3000");
+        mockReturned.setDomicilio("Domicilio 1");
+        mockReturned.setLocalidad("Localidad 1");
+        mockReturned.setPais("Pais 1");
+        mockReturned.setProvincia("Provincia 1");
+        mockReturned.setTransporte("Provincia 1");
+        mockReturned.setSenasaUta("Senasa UTA 1");
+        mockReturned.setTelefono("233334444444");
+        mockReturned.setCelular("233334444444");
+        mockReturned.setFax("233334444444");
+        mockReturned.setEmail("mail1@mail.com");
+        mockReturned.setRazonSocial("Razon social 1");
+
+        var mockUpdated = new ClienteUpdateDTO();
+        mockUpdated.setId(1L);
+        mockUpdated.setIdTipoCliente(1L);
+        mockUpdated.setCuit("99888888887");
+        mockUpdated.setCodPostal("3000");
+        mockUpdated.setDomicilio("Domicilio 1");
+        mockUpdated.setLocalidad("Localidad 1");
+        mockUpdated.setPais("Pais 1");
+        mockUpdated.setProvincia("Provincia 1");
+        mockUpdated.setTransporte("Provincia 1");
+        mockUpdated.setSenasaUta("Senasa UTA 1");
+        mockUpdated.setTelefono("233334444444");
+        mockUpdated.setCelular("233334444444");
+        mockUpdated.setFax("233334444444");
+        mockUpdated.setEmail("mail1@mail.com");
+        mockUpdated.setRazonSocial("Razon social 1");
+
+        when(service.update(any(ClienteUpdateDTO.class))).thenReturn(mockReturned);
+
+        var response = requireNonNull(controller.update(mockUpdated).getBody());
+
+        var dtoActual = response.getData();
+        String message = response.getMessage();
+        assertEquals(mockReturned, dtoActual);
+        assertEquals(SuccessfulMessages.MSG_CLIENTE_UPDATED, message);
+    }
+
+    @Test
+    void Update__Tipo_Cliente_Not_Exists() throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
+        var dto = new ClienteUpdateDTO();
+        when(service.update(dto)).thenThrow(new TipoClienteNotFoundConflictException());
+        TipoClienteNotFoundConflictException thrown = assertThrows(
+                TipoClienteNotFoundConflictException.class, () -> controller.update(dto)
+        );
+        assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Update__Client_Not_Exists() throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
+        var mockToUpdate = new ClienteUpdateDTO();
+        mockToUpdate.setId(1L);
+        mockToUpdate.setIdTipoCliente(1L);
+        when(service.update(mockToUpdate)).thenThrow(new ClienteNotFoundException());
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.update(mockToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Delete__OK() throws ClienteNotFoundException {
+        when(service.delete(1L)).thenReturn(1L);
+        var response = requireNonNull(controller.delete(1L).getBody());
+        var actualID = response.getData();
+        var message = response.getMessage();
+        assertEquals(1L, actualID);
+        assertEquals(SuccessfulMessages.MSG_CLIENTE_DELETED, message);
+    }
+
+    @Test
+    void Delete__Client_Not_Found() throws ClienteNotFoundException {
+        when(service.delete(1L)).thenThrow(new ClienteNotFoundException());
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> controller.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
 }
