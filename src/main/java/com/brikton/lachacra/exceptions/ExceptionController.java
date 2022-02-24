@@ -1,7 +1,6 @@
-package com.brikton.lachacra.controllers;
+package com.brikton.lachacra.exceptions;
 
 import com.brikton.lachacra.constants.ErrorMessages;
-import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.responses.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
