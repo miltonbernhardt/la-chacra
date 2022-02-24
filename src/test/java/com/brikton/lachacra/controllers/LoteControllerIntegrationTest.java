@@ -390,6 +390,30 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
+    void Update__Lote_Deleted() throws JsonProcessingException {
+        LoteDTO dtoToUpdate = new LoteDTO();
+        dtoToUpdate.setId("251020210045");
+        dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        dtoToUpdate.setNumeroTina(1);
+        dtoToUpdate.setCantHormas(1);
+        dtoToUpdate.setLitrosLeche(20D);
+        dtoToUpdate.setPeso(10D);
+        dtoToUpdate.setLoteCultivo("cultivo1, cultivo2");
+        dtoToUpdate.setLoteColorante("colorante1, colorante2");
+        dtoToUpdate.setLoteCalcio("calcio1, calcio2");
+        dtoToUpdate.setLoteCuajo("cuajo1, cuajo2");
+        dtoToUpdate.setCodigoQueso("001");
+
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(path, response.getPath());
+    }
+
+    @Test
     void Update__Queso_Not_Found_Conflict() throws JsonProcessingException {
         LoteDTO dtoToUpdate = new LoteDTO();
         dtoToUpdate.setId("221020210011");
@@ -505,7 +529,6 @@ public class LoteControllerIntegrationTest {
         assertEquals(ValidationMessages.MUST_BE_LESS_THAN_1000, response.getErrors().get("numeroTina"));
     }
 
-    //todo get all with one lote deleted
     @Test
     void Delete_Lote_Without_Dependencies__OK() throws JsonProcessingException {
         var expectedID = mapper.writeValueAsString("");
@@ -537,6 +560,17 @@ public class LoteControllerIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("1122333344455"), response.getPath());
+    }
+
+    @Test
+    void Delete__Lote_Already_Deleted() throws JsonProcessingException {
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("251020210045"), SuccessfulResponse.class)
+        );
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(path.concat("251020210045"), response.getPath());
     }
 
     @Test
