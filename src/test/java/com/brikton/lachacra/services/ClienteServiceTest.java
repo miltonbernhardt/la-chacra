@@ -120,7 +120,7 @@ public class ClienteServiceTest {
         mockClienteDTO2.setRazonSocial("Razon social 2");
 
 
-        when(repository.findAllClientes()).thenReturn(List.of(mockCliente1, mockCliente2));
+        when(repository.findAllClientesNotFechaBaja()).thenReturn(List.of(mockCliente1, mockCliente2));
         var tipoClientes = service.getAll();
         assertEquals(2, tipoClientes.size());
         assertEquals(mockClienteDTO1, tipoClientes.get(0));
@@ -241,7 +241,7 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(repository.existsById(1L)).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
         when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
         when(repository.save(any(Cliente.class))).thenReturn(mockCliente);
         var dtoClienteActual = service.update(dtoClienteExpected);
@@ -253,7 +253,7 @@ public class ClienteServiceTest {
         var mockToUpdate = new ClienteUpdateDTO();
         mockToUpdate.setId(1L);
         mockToUpdate.setIdTipoCliente(1L);
-        when(repository.existsById(1L)).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
         when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
         TipoClienteNotFoundConflictException thrown = assertThrows(
                 TipoClienteNotFoundConflictException.class, () -> service.update(mockToUpdate)
@@ -266,7 +266,7 @@ public class ClienteServiceTest {
         var mockToUpdate = new ClienteUpdateDTO();
         mockToUpdate.setId(1L);
         mockToUpdate.setIdTipoCliente(1L);
-        when(repository.existsById(1L)).thenReturn(false);
+        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(false);
         ClienteNotFoundException thrown = assertThrows(
                 ClienteNotFoundException.class, () -> service.update(mockToUpdate)
         );
@@ -308,7 +308,7 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(repository.existsById(1L)).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
         when(repository.getById(1L)).thenReturn(mockCliente);
         when(expedicionService.existsByCliente(mockCliente)).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
@@ -336,7 +336,7 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(repository.existsById(1L)).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
         when(repository.getById(1L)).thenReturn(mockCliente);
         when(expedicionService.existsByCliente(mockCliente)).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
@@ -347,7 +347,7 @@ public class ClienteServiceTest {
 
     @Test
     void Delete__Client_Not_Exists() {
-        when(repository.existsById(1L)).thenReturn(false);
+        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(false);
         ClienteNotFoundException thrown = assertThrows(
                 ClienteNotFoundException.class, () -> service.delete(1L)
         );

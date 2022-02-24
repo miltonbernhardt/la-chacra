@@ -62,7 +62,7 @@ public class LoteServiceTest {
         dtoExpected.setLoteCuajo("cuajo1, cuajo2");
         dtoExpected.setCodigoQueso("001");
 
-        when(repository.findAllLotes()).thenReturn(List.of(mockLote(), mockLote()));
+        when(repository.findAllLotesNotFechaBaja()).thenReturn(List.of(mockLote(), mockLote()));
         var actualLotes = loteService.getAll();
         assertEquals(2, actualLotes.size());
         assertEquals(dtoExpected, actualLotes.get(0));
@@ -114,7 +114,7 @@ public class LoteServiceTest {
         expectedLote.setCodigoQueso("001");
 
         when(quesoService.getEntity("001")).thenReturn(mockQueso());
-        when(repository.existsById("101020210011")).thenReturn(false);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(false);
         when(repository.save(any(Lote.class))).thenReturn(savedLote);
 
         LoteDTO dtoActual = loteService.save(dtoToSave);
@@ -163,7 +163,7 @@ public class LoteServiceTest {
         dto.setCodigoQueso("001");
 
         when(quesoService.getEntity("001")).thenReturn(mockQueso());
-        when(repository.existsById("101020210011")).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         LoteAlreadyExistsException thrown = assertThrows(
                 LoteAlreadyExistsException.class, () -> loteService.save(dto)
         );
@@ -267,7 +267,7 @@ public class LoteServiceTest {
         expectedLote.setLoteCuajo("cuajo1, cuajo2");
         expectedLote.setCodigoQueso("001");
 
-        when(repository.existsById("101020210011")).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.save(any(Lote.class))).thenReturn(updatedLote);
         when(quesoService.getEntity("001")).thenReturn(mockQueso());
         LoteDTO dtoActual = loteService.update(dtoToUpdate);
@@ -291,7 +291,7 @@ public class LoteServiceTest {
         dto.setLoteCuajo("cuajo1, cuajo2");
         dto.setCodigoQueso("001");
 
-        when(repository.existsById("101020210011")).thenReturn(false);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(false);
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteService.update(dto)
         );
@@ -300,7 +300,7 @@ public class LoteServiceTest {
 
     @Test
     void Delete_Without_Dependencies__OK() throws LoteNotFoundException {
-        when(repository.existsById("101020210011")).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
         when(devolucionService.existsByLote(mockLote())).thenReturn(false);
         when(expedicionService.existsByLote(mockLote())).thenReturn(false);
@@ -311,7 +311,7 @@ public class LoteServiceTest {
 
     @Test
     void Delete_With_Devolucion_Dependency__OK() throws LoteNotFoundException {
-        when(repository.existsById("101020210011")).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
         when(devolucionService.existsByLote(mockLote())).thenReturn(true);
         when(expedicionService.existsByLote(mockLote())).thenReturn(false);
@@ -322,7 +322,7 @@ public class LoteServiceTest {
 
     @Test
     void Delete_With_Expedicion_Dependency__OK() throws LoteNotFoundException {
-        when(repository.existsById("101020210011")).thenReturn(true);
+        when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
         when(devolucionService.existsByLote(mockLote())).thenReturn(false);
         when(expedicionService.existsByLote(mockLote())).thenReturn(true);
@@ -333,7 +333,7 @@ public class LoteServiceTest {
 
     @Test
     void Delete__Lote_Not_Found() {
-        when(repository.existsById("1")).thenReturn(false);
+        when(repository.existsByIdNotFechaBaja("1")).thenReturn(false);
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> loteService.delete("101020210011")
         );

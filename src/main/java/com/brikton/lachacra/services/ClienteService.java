@@ -38,7 +38,7 @@ public class ClienteService {
 
     public List<ClienteDTO> getAll() {
         List<ClienteDTO> result = new ArrayList<>();
-        repository.findAllClientes().forEach(c -> result.add(new ClienteDTO(c)));
+        repository.findAllClientesNotFechaBaja().forEach(c -> result.add(new ClienteDTO(c)));
         return result;
     }
 
@@ -48,14 +48,14 @@ public class ClienteService {
 
     public ClienteDTO update(ClienteUpdateDTO dtoUpdate) throws ClienteNotFoundException, TipoClienteNotFoundConflictException {
         var dto = new ClienteDTO(dtoUpdate);
-        var exists = repository.existsById(dto.getId());
+        var exists = repository.existsByIdNotFechaBaja(dto.getId());
         if (!exists)
             throw new ClienteNotFoundException();
         return persist(dto);
     }
 
     public Long delete(Long id) throws ClienteNotFoundException {
-        var exists = repository.existsById(id);
+        var exists = repository.existsByIdNotFechaBaja(id);
         if (!exists)
             throw new ClienteNotFoundException();
 

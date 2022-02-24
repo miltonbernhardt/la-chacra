@@ -52,12 +52,12 @@ public class QuesoService {
 
     public List<QuesoDTO> getAll() {
         var listaDTO = new ArrayList<QuesoDTO>();
-        repository.findAllQuesos().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
+        repository.findAllQuesosNotFechaBaja().forEach(queso -> listaDTO.add(new QuesoDTO(queso)));
         return listaDTO;
     }
 
     public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException {
-        if (repository.existsByCodigo(dto.getCodigo())) {
+        if (repository.existsByCodigoNotFechaBaja(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
 
@@ -73,7 +73,7 @@ public class QuesoService {
 
         var oldQueso = oldQuesoOptional.get();
 
-        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsByCodigo(dto.getCodigo())) {
+        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsByCodigoNotFechaBaja(dto.getCodigo())) {
             throw new CodigoQuesoAlreadyExistsException();
         }
 
