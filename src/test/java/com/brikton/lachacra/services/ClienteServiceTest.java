@@ -207,7 +207,24 @@ public class ClienteServiceTest {
         mockTipoCliente.setId(1L);
         mockTipoCliente.setTipo("tipo1");
 
-        var dtoClienteExpected = new ClienteUpdateDTO();
+        var dtoClienteToUpdate = new ClienteUpdateDTO();
+        dtoClienteToUpdate.setId(1L);
+        dtoClienteToUpdate.setIdTipoCliente(1L);
+        dtoClienteToUpdate.setCuit("99888888887");
+        dtoClienteToUpdate.setCodPostal("3000");
+        dtoClienteToUpdate.setDomicilio("Domicilio 1");
+        dtoClienteToUpdate.setLocalidad("Localidad 1");
+        dtoClienteToUpdate.setPais("Pais 1");
+        dtoClienteToUpdate.setProvincia("Provincia 1");
+        dtoClienteToUpdate.setTransporte("Provincia 1");
+        dtoClienteToUpdate.setSenasaUta("Senasa UTA 1");
+        dtoClienteToUpdate.setTelefono("233334444444");
+        dtoClienteToUpdate.setCelular("233334444444");
+        dtoClienteToUpdate.setFax("233334444444");
+        dtoClienteToUpdate.setEmail("mail1@mail.com");
+        dtoClienteToUpdate.setRazonSocial("Razon social 1");
+
+        var dtoClienteExpected = new ClienteDTO();
         dtoClienteExpected.setId(1L);
         dtoClienteExpected.setIdTipoCliente(1L);
         dtoClienteExpected.setCuit("99888888887");
@@ -244,7 +261,7 @@ public class ClienteServiceTest {
         when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
         when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
         when(repository.save(any(Cliente.class))).thenReturn(mockCliente);
-        var dtoClienteActual = service.update(dtoClienteExpected);
+        var dtoClienteActual = service.update(dtoClienteToUpdate);
         assertEquals(dtoClienteExpected, dtoClienteActual);
     }
 
