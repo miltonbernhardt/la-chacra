@@ -5,6 +5,7 @@ import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from 
 import FormExpedicion from "./FormExpedicion";
 import GridExpedicion from "./GridExpedicion";
 import DialogEliminarExpedicion from './DialogEliminarExpedicion'
+import * as field from "../../resources/fields";
 
 const expedicionInicial = {
     id: '',
@@ -85,6 +86,20 @@ const CargarExpedicion = () => {
         return { id: c.id, value: c.id, label: c.razonSocial }
     }), [listaClientes])
 
+    const expedicionesFormatted = useMemo(() => listaExpediciones.map((e) => {
+        return {
+            id: e.id,
+            [field.backIdLote]: e.idLote,
+            [field.razonSocial]: listaClientes
+                .filter(c => c.id === e.idCliente).pop().razonSocial,
+            [field.backFechaExpedicion]: e.fechaExpedicion,
+            [field.backCantidad]: e.cantidad,
+            [field.backPesoExpedicion]: e.peso,
+            [field.backImporte]: e.importe
+
+        }
+    }), [listaClientes, listaExpediciones]);
+
     if (isLoading) { return <Loading /> }
 
     return (
@@ -105,6 +120,7 @@ const CargarExpedicion = () => {
             titleTable="Expediciones"
             titleForm="Ingreso de expediciones">
             <DialogEliminarExpedicion
+                expediciones={expedicionesFormatted}
                 open={openDialogEliminar}
                 onClose={cancelDelete}
                 onSubmit={submitDelete} />

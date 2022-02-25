@@ -28,4 +28,5 @@ public interface LoteRepository extends JpaRepository<Lote, String> {
      */
     @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Lote l WHERE l.fechaBaja IS NULL AND l.id=:id")
     boolean existsByIdNotFechaBaja(String id);
+
 }

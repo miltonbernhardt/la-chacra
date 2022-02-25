@@ -9,6 +9,7 @@ import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
@@ -24,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = LoteService.class)
+@SpringBootTest(classes = com.brikton.lachacra.services.LoteService.class)
 public class LoteServiceTest {
 
     @Autowired
-    LoteService loteService;
+    com.brikton.lachacra.services.LoteService loteService;
 
     @MockBean
     LoteRepository repository;
@@ -40,7 +41,7 @@ public class LoteServiceTest {
     DevolucionService devolucionService;
 
     @MockBean
-    ExpedicionService expedicionService;
+    ExpedicionRepository expedicionRepository;
 
     @MockBean
     QuesoService quesoService;
@@ -303,7 +304,7 @@ public class LoteServiceTest {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
         when(devolucionService.existsByLote(mockLote())).thenReturn(false);
-        when(expedicionService.existsByLote(mockLote())).thenReturn(false);
+        when(expedicionRepository.existsByLote(mockLote())).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String id = loteService.delete("101020210011");
         assertEquals("", id);
@@ -314,7 +315,7 @@ public class LoteServiceTest {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
         when(devolucionService.existsByLote(mockLote())).thenReturn(true);
-        when(expedicionService.existsByLote(mockLote())).thenReturn(false);
+        when(expedicionRepository.existsByLote(mockLote())).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String id = loteService.delete("101020210011");
         assertEquals("101020210011", id);
@@ -325,7 +326,7 @@ public class LoteServiceTest {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
         when(devolucionService.existsByLote(mockLote())).thenReturn(false);
-        when(expedicionService.existsByLote(mockLote())).thenReturn(true);
+        when(expedicionRepository.existsByLote(mockLote())).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String id = loteService.delete("101020210011");
         assertEquals("101020210011", id);

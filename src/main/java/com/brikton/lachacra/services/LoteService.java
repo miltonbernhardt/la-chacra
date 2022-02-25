@@ -5,6 +5,7 @@ import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.*;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,20 +21,20 @@ public class LoteService {
 
     private final DateUtil dateUtil;
     private final DevolucionService devolucionService;
-    private final ExpedicionService expedicionService;
+    private final ExpedicionRepository expedicionRepository;
     private final LoteRepository repository;
     private final QuesoService quesoService;
 
     public LoteService(
             DateUtil dateUtil,
             DevolucionService devolucionService,
-            ExpedicionService expedicionService,
+            ExpedicionRepository expedicionRepository,
             LoteRepository repository,
             QuesoService quesoService
     ) {
         this.dateUtil = dateUtil;
         this.devolucionService = devolucionService;
-        this.expedicionService = expedicionService;
+        this.expedicionRepository = expedicionRepository;
         this.repository = repository;
         this.quesoService = quesoService;
     }
@@ -72,13 +73,24 @@ public class LoteService {
         return lotesDTO;
     }
 
+    public void decrementStock(Lote lote,Integer cantidad){
+        lote.setStockLote(lote.getStockLote()-cantidad);
+        repository.save(lote);
+    }
+
+    public Lote getEntity(String id) throws LoteNotFoundException {
+        var lote = repository.findById(id);
+        if (lote.isEmpty()) throw new LoteNotFoundException();
+        return lote.get();
+    }
+
     public String delete(String id) throws LoteNotFoundException {
         if (!repository.existsByIdNotFechaBaja(id))
             throw new LoteNotFoundException();
 
         var lote = repository.getById(id);
 
-        if (expedicionService.existsByLote(lote) || devolucionService.existsByLote(lote)) {
+        if (expedicionRepository.existsByLote(lote) || devolucionService.existsByLote(lote)) {
             lote.setFechaBaja(dateUtil.now());
             repository.save(lote);
             return id;
