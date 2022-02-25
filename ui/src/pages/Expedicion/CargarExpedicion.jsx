@@ -1,10 +1,10 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Loading from "../../components/Loading";
+import PageFormTable from "../../components/PageFormTable";
+import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from '../../services/RestServices';
 import FormExpedicion from "./FormExpedicion";
 import GridExpedicion from "./GridExpedicion";
-import PageFormTable from "../../components/PageFormTable";
-import { useState, useEffect, useCallback } from "react";
-import { deleteCliente, getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
-import { useMemo } from "react";
-import Loading from "../../components/Loading";
+import DialogEliminarExpedicion from './DialogEliminarExpedicion'
 
 const expedicionInicial = {
     id: '',
@@ -20,8 +20,12 @@ const CargarExpedicion = () => {
 
     const [expedicion, setExpedicion] = useState(expedicionInicial);
     const [listaClientes, setListaClientes] = useState([]);
+    const [listaExpediciones, setListaExpediciones] = useState([]);
+
     const [isEditing, setEditing] = useState(false);
     const [isLoading, setLoading] = useState(true);
+
+    const [openDialogEliminar, setOpenDialogEliminar] = useState(false);
 
     useEffect(() => {
         fetchClientes();
@@ -33,7 +37,48 @@ const CargarExpedicion = () => {
         }).catch(e => { }).finally(() => { setLoading(false) });
     }
 
-    const handleSubmit = useCallback(() => alert('not yet implemented :)'), [])
+    const handleSubmit = useCallback((expedicionForm) => {
+        if (isEditing)
+            putExpedicion(expedicionForm)
+                .then(({ data }) => {
+                    setEditing(false);
+                    setExpedicion(expedicionInicial);
+                    setListaExpediciones(...listaExpediciones, data);
+                })
+                .catch(e => { })
+        else
+            postExpedicion(expedicionForm)
+                .then(({ data }) => {
+                    setExpedicion(expedicionInicial);
+                    setListaExpediciones(...listaExpediciones, data);
+                })
+                .catch(e => { })
+    }, [isEditing, listaExpediciones])
+
+    const submitDelete = useCallback(() => {
+        deleteExpedicion(expedicion.id)
+            .then(() => {
+                setEditing(false);
+                setExpedicion(expedicionInicial);
+                const newList = listaExpediciones.filter((item) => item.id !== expedicion.id);
+                setListaExpediciones(newList);
+            })
+            .catch(e => { })
+    }, [expedicion.id, listaExpediciones]);
+
+    const handleDelete = useCallback(() => setOpenDialogEliminar(true), [])
+
+    const handleSelect = useCallback((id) => {
+        setExpedicion(listaExpediciones.filter((o) => o.id === id).pop())
+        setEditing(true);
+    }, [listaExpediciones]);
+
+    const handleCancelar = useCallback(() => {
+        setEditing(false);
+        setExpedicion(expedicionInicial);
+    }, []);
+
+    const cancelDelete = useCallback(() => setOpenDialogEliminar(false), [])
 
     // --- Variables
     const clientesFormatted = useMemo(() => listaClientes.map((c) => {
@@ -49,14 +94,21 @@ const CargarExpedicion = () => {
                     expedicion={expedicion}
                     isEditing={isEditing}
                     clientes={clientesFormatted}
-                    handleSubmit={handleSubmit} />
+                    handleSubmit={handleSubmit}
+                    handleCancelar={handleCancelar}
+                    handleDelete={handleDelete} />
             }
             table={
-                <GridExpedicion />
+                <GridExpedicion
+                    setSelection={handleSelect} />
             }
             titleTable="Expediciones"
-            titleForm="Ingreso de expediciones"
-        />
+            titleForm="Ingreso de expediciones">
+            <DialogEliminarExpedicion
+                open={openDialogEliminar}
+                onClose={cancelDelete}
+                onSubmit={submitDelete} />
+        </PageFormTable>
     );
 }
 

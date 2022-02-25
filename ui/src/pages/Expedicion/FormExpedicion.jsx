@@ -1,16 +1,12 @@
-import { tiposDeQueso } from "../../data/data";
-import { Autocomplete, ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material";
-
-import { useEffect, useMemo, useState, createRef, useCallback } from "react";
-import * as message from "../../resources/messages";
-import * as field from "../../resources/fields";
-import * as validation from "../../resources/validations";
-import { toastValidationErrors } from "../../resources/fields";
+import { Button, ButtonGroup, Grid } from "@mui/material";
+import { createRef, useCallback, useEffect, useMemo, useState } from "react";
 import Input from "../../components/Input";
-import TitleForm from "../../components/TitleForm";
 import Select from "../../components/Select";
+import * as field from "../../resources/fields";
+import * as message from "../../resources/messages";
+import * as validation from "../../resources/validations";
 
-const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit }) => {
+const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete }) => {
 
     const [expedicionForm, setExpedicionForm] = useState(expedicion)
 
@@ -61,7 +57,8 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit }) => {
     }, [expedicionForm.id, handleSubmit, refCantidad, refFechaExpedicion, refIdLote, refImporte, refPeso, refSelectCliente]);
 
     // --- Variables
-    const labelCargar = useMemo(() => isEditing ? 'Actualizar Precio' : 'Cargar Precio', [isEditing]);
+    const labelCargar = useMemo(() => isEditing ? 'Actualizar Expedición' : 'Cargar Expedición', [isEditing]);
+    const colorCargar = useMemo(() => isEditing ? 'warning' : 'primary', [isEditing]);
 
     return (
         <>
@@ -102,8 +99,9 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit }) => {
                     required />
                 <Grid item xs={12} alignSelf="right" mb={0.5}>
                     <ButtonGroup fullWidth variant="contained">
-                        <Button onClick={handleCargar} disabled={!isEditing} color="primary">Cancelar</Button>
-                        <Button onClick={handleCargar} color="primary">{labelCargar}</Button>
+                        <Button onClick={handleCancelar} disabled={!isEditing} color="primary">Cancelar</Button>
+                        <Button onClick={handleDelete} disabled={!isEditing} color="error">Borrar Expedición</Button>
+                        <Button onClick={handleCargar} color={colorCargar}>{labelCargar}</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>

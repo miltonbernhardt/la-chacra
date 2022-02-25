@@ -140,13 +140,6 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
                     </ButtonGroup>
                 </Grid>
             </Grid>
-            {/*<DialogCargarTrazabilidad*/}
-            {/*    open={dialogOpen}*/}
-            {/*    onClose={onCloseDialog}*/}
-            {/*    trazabilidad={trazabilidad}*/}
-            {/*    submitLote={submitLote}*/}
-            {/*    isEditing={isEditingLote}*/}
-            {/*/>*/}
         </>
     )
 }

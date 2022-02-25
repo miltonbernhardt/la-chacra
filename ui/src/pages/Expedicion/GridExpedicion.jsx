@@ -1,18 +1,18 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { produccion } from "../../data/data";
 
-const GridExpedicion = () => {
+const GridExpedicion = ({ setSelection }) => {
     return (
         <>
             <DataGrid
-                style={{minHeight: "600px"}}
+                style={{ minHeight: "600px" }}
                 autoHeight={true}
                 rows={produccion}
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}
                 columns={[]}
-                // onCellClick={(params) => setSelection(params.id)}
+                onCellClick={(params) => setSelection(params.id)}
             />
         </>
     )
