@@ -92,7 +92,7 @@ const CargarPrecios = () => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [listaTipoClientes])
 
-    if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos) { return <Loading /> } //TODO
+    if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos) { return <Loading /> }
 
     // This needs to be called after all lists are loaded
     // or else lists are undefined
@@ -115,7 +115,6 @@ const CargarPrecios = () => {
 
     return (
         <>
-            {console.log(quesosAutocomplete)}
             <PageFormTable
                 form={
                     <FormPrecios
