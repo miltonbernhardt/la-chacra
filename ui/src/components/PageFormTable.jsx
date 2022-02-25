@@ -17,28 +17,6 @@ const PageFormTable = ({ form, table, titleTable, children, sizeForm, titleForm 
             }}>
 
             {/* FORM */}
-            {/* <Grid item container direction="column" xs={12} sm={12} md={4} lg={3}>
-                <Grid item container direction="row" xs={sizeForm === undefined ? 4 : sizeForm} spacing={1.5}>
-                    {form}
-                </Grid>
-            </Grid> */}
-
-            {/* TABLE */}
-            {/* <Grid item container direction="row" justifyContent="center" alignItems="flex-start" xs={12} sm={12} md={8}
-                lg={9}>
-                <Grid item container direction="column" xs={12} spacing={2}>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            {titleTable}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        {table}
-                    </Grid>
-                </Grid>
-            </Grid> */}
-
-            {/* FORM */}
             <Grid item xs={12} sm={12} md={4} lg={3} >
                 <Grid item xs={12}>
                     <Typography variant="h6" padding={0.5}>

@@ -4,7 +4,7 @@ const PageTableButtonPane = ({ title, buttons, grid, children }) => {
     return (
         <Grid container
             direction="row"
-            padding={2}
+            paddingRight={2}
             spacing={2}
             justifyContent="flex-start"
             alignItems="flex-start"
