@@ -1,7 +1,9 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.PrecioDTO;
+import com.brikton.lachacra.dtos.PrecioUpdateDTO;
 import com.brikton.lachacra.entities.Precio;
+import com.brikton.lachacra.exceptions.PrecioAlreadyExistsException;
 import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
@@ -37,6 +39,26 @@ public class PrecioService {
         return precioRepository.findAllByIdQueso(idQueso);
     }
 
+    public PrecioDTO save(PrecioDTO dto) throws TipoClienteNotFoundException, QuesoNotFoundException, PrecioAlreadyExistsException {
+        var precio = precioFromDTO(dto);
+        // precio is unique by queso and tipoCliente
+        if (precioRepository.existsByQuesoAndTipoCliente(precio.getQueso(),precio.getTipoCliente()))
+            throw new PrecioAlreadyExistsException();
+        return new PrecioDTO(precioRepository.save(precio));
+    }
+
+    public PrecioDTO update(PrecioUpdateDTO dto) throws PrecioNotFoundException, TipoClienteNotFoundException, QuesoNotFoundException {
+        var precio = precioRepository.findById(dto.getId());
+        if (precio.isEmpty())  throw new PrecioNotFoundException();
+        var precioUpdate = precioFromDTOUpdate(dto);
+        // queso and tipoCliente aren't updatable
+        if (precio.get().getQueso().getId() != precioUpdate.getQueso().getId() ||
+        precio.get().getTipoCliente().getId() != precioUpdate.getTipoCliente().getId())
+            // it's the same as bad ID as queso and cliente don't correspond
+            throw new PrecioNotFoundException();
+        return new PrecioDTO(precioRepository.save(precioUpdate));
+    }
+
     public Long delete(Long id) throws PrecioNotFoundException {
         if (!precioRepository.existsById(id))
             throw new PrecioNotFoundException();
@@ -45,6 +67,18 @@ public class PrecioService {
     }
 
     private Precio precioFromDTO(PrecioDTO dto) throws QuesoNotFoundException, TipoClienteNotFoundException {
+        Precio precio = new Precio();
+        var tipoCliente = tipoClienteService.getEntity(dto.getIdTipoCliente());
+        precio.setTipoCliente(tipoCliente);
+        var queso = quesoRepository.findById(dto.getIdQueso());
+        if (queso.isEmpty()) throw new QuesoNotFoundException();
+        precio.setQueso(queso.get());
+        precio.setPrecio(dto.getPrecio());
+        precio.setId(dto.getId());
+        return precio;
+    }
+
+    private Precio precioFromDTOUpdate(PrecioUpdateDTO dto) throws QuesoNotFoundException, TipoClienteNotFoundException {
         Precio precio = new Precio();
         var tipoCliente = tipoClienteService.getEntity(dto.getIdTipoCliente());
         precio.setTipoCliente(tipoCliente);

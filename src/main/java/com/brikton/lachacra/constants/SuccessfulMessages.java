@@ -10,4 +10,6 @@ public class SuccessfulMessages {
     public static final String MSG_CLIENTE_CREATED = "Se dió de alta el cliente correctamente";
     public static final String MSG_CLIENTE_UPDATED = "Se actualizó el cliente correctamente";
     public static final String MSG_CLIENTE_DELETED = "Se dió de baja el cliente correctamente";
+    public static final String MSG_PRECIO_CREATED = "Se cargó el precio correctamente";
+    public static final String MSG_PRECIO_UPDATED = "Se actualizó el precio correctamente";
 }
