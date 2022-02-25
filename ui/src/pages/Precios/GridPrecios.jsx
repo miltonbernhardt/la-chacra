@@ -1,38 +1,24 @@
 import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as fields from '../../resources/fields'
 
-const GridPrecios = ({ precios, tiposCliente, quesos, setSelection }) => {
+const GridPrecios = ({ precios, tiposCliente, quesos, setSelection, isLoading }) => {
 
     const columns = useMemo(() => {
         return [
             {
                 field: fields.backIdQueso,
                 headerName: 'Queso',
-                type: 'text',
+                // type: 'text',
                 flex: 1,
                 minWidth: 50,
-                valueFormatter: (params) => {
-                    return quesos
-                        .filter(q => {
-                            return q.id === params.value
-                        })
-                        .pop().tipoQueso
-                }
             },
             {
                 field: fields.backIdTipoCliente,
                 headerName: 'Cliente',
-                type: 'text',
+                // type: 'text',
                 flex: 1,
-                minWidth: 50,
-                valueFormatter: (params) => {
-                    return tiposCliente
-                        .filter(t => {
-                            return t.id === params.value
-                        })
-                        .pop().tipo
-                }
+                minWidth: 50
             },
             {
                 field: 'precio',
@@ -46,7 +32,7 @@ const GridPrecios = ({ precios, tiposCliente, quesos, setSelection }) => {
 
             }
         ]
-    }, [quesos, tiposCliente]);
+    }, []);
 
     return (
         <>

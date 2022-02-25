@@ -4,6 +4,7 @@ import Loading from "../../components/Loading"
 import { getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio } from "../../services/RestServices";
 import FormPrecios from "./FormPrecios";
 import GridPrecios from "./GridPrecios";
+import * as fields from '../../resources/fields'
 
 const precioInicial = {
     id: '',
@@ -54,9 +55,16 @@ const CargarPrecios = () => {
 
     const handleSubmit = useCallback((precioForm) => {
         if (precioForm.id === '') {
-            postPrecio(precioForm).then(() => fetchPrecios()).catch(e => { }).finally(setPrecio(precioInicial))
+            postPrecio(precioForm)
+                .then(() => fetchPrecios()).catch(e => { })
+                .finally(() => { setPrecio(precioInicial) })
         } else {
-            putPrecio(precioForm).then(() => fetchPrecios()).catch(e => { }).finally(setPrecio(precioInicial))
+            putPrecio(precioForm)
+                .then(() => fetchPrecios()).catch(e => { })
+                .finally(() => {
+                    setEditing(false);
+                    setPrecio(precioInicial)
+                })
         }
     }, [])
 
@@ -86,6 +94,25 @@ const CargarPrecios = () => {
 
     if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos) { return <Loading /> } //TODO
 
+    // This needs to be called after all lists are loaded
+    // or else lists are undefined
+    const preciosFormatted = listaPrecios.map(p => {
+        return {
+            [fields.backIdQueso]: listaQuesos
+                .filter(q => {
+                    return q.id === p.idQueso
+                })
+                .pop().tipoQueso,
+            [fields.backIdTipoCliente]: listaTipoClientes
+                .filter(t => {
+                    return t.id === p.idTipoCliente
+                })
+                .pop().tipo,
+            [fields.backPrecio]: p.precio,
+            id: p.id
+        }
+    })
+
     return (
         <>
             {console.log(quesosAutocomplete)}
@@ -101,9 +128,7 @@ const CargarPrecios = () => {
                 }
                 table={
                     <GridPrecios
-                        precios={listaPrecios}
-                        quesos={listaQuesos}
-                        tiposCliente={listaTipoClientes}
+                        precios={preciosFormatted}
                         setSelection={setSelection} />
                 }
                 titleTable="Precios"

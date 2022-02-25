@@ -53,11 +53,6 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, i
     return (
         <>
             <Grid container spacing={1.5}>
-                {/* <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Ingreso de precios
-                    </Typography>
-                </Grid> */}
                 <Select ref={refSelectQueso}
                     value={precioForm.idQueso}
                     id={field.backIdQueso}
