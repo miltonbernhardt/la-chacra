@@ -86,7 +86,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity_By_ID__OK() throws QuesoNotFoundException {
+    void Get_Entity_By_ID__OK() {
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity(1L);
         Queso quesoExpected = mockQueso();
@@ -114,7 +114,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity_By_Codigo__OK() throws QuesoNotFoundException {
+    void Get_Entity_By_Codigo__OK() {
         when(repository.findByCodigo("001")).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
@@ -142,7 +142,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__OK() throws CodigoQuesoAlreadyExistsException {
+    void Save__OK() {
         QuesoDTO quesoToSave = new QuesoDTO();
         quesoToSave.setCodigo("001");
         quesoToSave.setTipoQueso("TIPO_QUESO");
@@ -183,7 +183,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Update__OK() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+    void Update__OK() {
         var quesoTpUpdate = new QuesoUpdateDTO();
         quesoTpUpdate.setId(1L);
         quesoTpUpdate.setCodigo("002");
@@ -249,7 +249,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Delete_Queso_WITH_Dependencies__OK() throws QuesoNotFoundException {
+    void Delete_Queso_WITH_Dependencies__OK() {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
@@ -274,7 +274,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Delete_Queso_WITHOUT_Dependencies__OK() throws QuesoNotFoundException {
+    void Delete_Queso_WITHOUT_Dependencies__OK() {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
@@ -291,7 +291,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Delete_Queso_WITHOUT_Dependencies_Precio_Not_Found_OK() throws PrecioNotFoundException, QuesoNotFoundException {
+    void Delete_Queso_WITHOUT_Dependencies_Precio_Not_Found_OK() {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");

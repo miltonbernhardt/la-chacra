@@ -6,10 +6,7 @@ import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
 import com.brikton.lachacra.exceptions.PrecioNotFoundException;
-import com.brikton.lachacra.exceptions.QuesoNotFoundException;
-import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.PrecioRepository;
-import com.brikton.lachacra.repositories.TipoClienteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +44,7 @@ public class PrecioServiceTest {
     }
 
     @Test
-    void Delete__OK() throws PrecioNotFoundException {
+    void Delete__OK() {
         when(repository.existsById(1L)).thenReturn(true);
         var id = precioService.delete(1L);
         assertEquals(1L, id);
@@ -63,7 +60,7 @@ public class PrecioServiceTest {
     }
 
     @Test
-    void Get_All() throws QuesoNotFoundException, TipoClienteNotFoundException {
+    void Get_All()  {
         List<Precio> precios = new ArrayList<>();
         precios.add(precioMock());
         when(repository.findAll()).thenReturn(precios);
@@ -84,15 +81,6 @@ public class PrecioServiceTest {
         precio.setQueso(quesoMock());
         precio.setTipoCliente(tipoClienteMock());
         return precio;
-    }
-
-    private PrecioDTO precioDTOMock(){
-        PrecioDTO dto = new PrecioDTO();
-        dto.setId(1L);
-        dto.setPrecio(1000D);
-        dto.setIdQueso(1L);
-        dto.setIdTipoCliente(1L);
-        return dto;
     }
 
     private TipoCliente tipoClienteMock(){
