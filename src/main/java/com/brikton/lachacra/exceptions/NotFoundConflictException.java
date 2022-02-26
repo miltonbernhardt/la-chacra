@@ -1,6 +1,6 @@
 package com.brikton.lachacra.exceptions;
 
-public abstract class NotFoundConflictException extends Exception {
+public abstract class NotFoundConflictException extends RuntimeException {
 
     public NotFoundConflictException(String message, Throwable cause) {
         super(message, cause);
