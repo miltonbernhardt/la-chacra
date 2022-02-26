@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExpedicionRepository extends JpaRepository<Expedicion, Long> {
+
     boolean existsByLote(Lote idLote);
 
     boolean existsByCliente(Cliente cliente);
+
 }

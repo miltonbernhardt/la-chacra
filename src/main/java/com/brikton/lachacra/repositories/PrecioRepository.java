@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface PrecioRepository extends JpaRepository<Precio, Long> {
+
     @Query("SELECT p.id FROM Precio p WHERE p.queso.id = :idQueso")
     List<Long> findAllByIdQueso(Long idQueso);
+
 }
