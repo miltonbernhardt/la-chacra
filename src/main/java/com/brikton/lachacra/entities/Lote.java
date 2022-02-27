@@ -16,7 +16,7 @@ import java.util.Objects;
 public class Lote {
 
     @Id
-    @Column(name = "id_lote")
+    @Column
     private String id;
     private LocalDate fechaElaboracion;
     private Integer numeroTina;

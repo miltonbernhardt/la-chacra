@@ -5,7 +5,7 @@ VALUES (1, '003', 'S', 'Sardo', 53, null),
        (4, '004', 'R', 'Rojo', 0, '2021-10-10');
 
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, id_queso,
-                         id_lote, peso, rendimiento, stock_lote, lote_cultivo, lote_colorante, lote_calcio,
+                         id, peso, rendimiento, stock_lote, lote_cultivo, lote_colorante, lote_calcio,
                          lote_cuajo, fecha_baja)
 VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210011', 526.7, 10.75, 20, 'cultivo1, cultivo2',
         'colorante1, colorante2', 'calcio1, calcio2', 'cuajo1, cuajo2', null),

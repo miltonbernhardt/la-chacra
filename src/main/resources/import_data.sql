@@ -21,7 +21,7 @@ VALUES (1, '001', 'C', 'Cremoso', 70),
        (20, '020', 'Crema', 'Crema', 10);
 
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, id_queso,
-                         id_lote, peso, rendimiento, stock_lote)
+                         id, peso, rendimiento, stock_lote)
 VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210021', 526.7, 10.75, 0),
        ('2021-10-22', 2, 6500, 228, 1, '221020210012', 842.5, 12.96, 0),
        ('2021-10-22', 3, 6537, 242, 1, '221020210013', 938.8, 14.36, 0),
