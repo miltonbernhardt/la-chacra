@@ -1,9 +1,20 @@
-import { Autocomplete, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid, Typography
+} from "@mui/material";
 import { createRef, useEffect, useMemo, useState } from 'react';
 import Input from "../../components/Input";
+import Select from '../../components/Select';
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+
 const clienteInicial = {
     id: '',
     razonSocial: '',
@@ -26,7 +37,7 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
 
     const [clienteForm, setClienteForm] = useState(clienteInicial);
 
-
+    const refSelectCliente = createRef(null)
     const refRazonSocial = createRef(null)
     const refCuit = createRef(null)
     const refDomicilio = createRef(null)
@@ -56,11 +67,9 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
             { func: validation.empty, msg: message.valEmptyField }
         ])
 
-        if (clienteForm.idTipoCliente === '') {
-            errors.set("Tipo de cliente", message.valEmptyField);
-        } else {
-            values["idTipoCliente"] = clienteForm.idTipoCliente;
-        }
+        refSelectCliente.current.validate(errors, values, [
+            { func: validation.emptySelect, msg: message.valEmptyField }
+        ])
 
         if (errors.size > 0) {
             console.error(errors)
@@ -121,30 +130,12 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     value={clienteForm.cuit}
                                     required
                                     type="text" />
-                                <Grid item xs={12}>
-                                    {/* Using Autocomplete bc select doesnt work here */}
-                                    <Autocomplete
-                                        disablePortal
-                                        id={field.backIdTipoCliente}
-                                        name="idTipoCliente"
-                                        options={tiposCliente}
-                                        autoHighlight
-                                        getOptionLabel={(option) => tiposCliente.filter(t => t.value === option).pop() ? tiposCliente.filter(t => t.value === option).pop().label : ''}
-                                        renderInput={(params) => <TextField {...params} label={field.idTipoCliente} />}
-                                        renderOption={(props, option) => {
-                                            return <Box component="li"  {...props}>
-                                                {option.label}
-                                            </Box>
-                                        }}
-                                        value={clienteForm.idTipoCliente}
-                                        isOptionEqualToValue={(option, value) =>
-                                            value.value ? option.value === value.value : option.value === value
-                                        }
-                                        onChange={(e, value) => {
-                                            const newCliente = { ...clienteForm, ['idTipoCliente']: value.value };
-                                            setClienteForm(newCliente);
-                                        }} />
-                                </Grid>
+                                <Select ref={refSelectCliente}
+                                    value={clienteForm.idTipoCliente}
+                                    id={field.backIdTipoCliente}
+                                    label={field.idTipoCliente}
+                                    options={tiposCliente}
+                                    required />
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Domicilio
                                 </Typography>

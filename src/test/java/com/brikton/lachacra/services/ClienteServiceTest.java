@@ -128,7 +128,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Save__OK() throws TipoClienteNotFoundConflictException, TipoClienteNotFoundException {
+    void Save__OK() {
         var mockTipoCliente = new TipoCliente();
         mockTipoCliente.setId(1L);
         mockTipoCliente.setTipo("tipo1");
@@ -191,7 +191,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Save__Tipo_Cliente_Not_Exists() throws TipoClienteNotFoundException {
+    void Save__Tipo_Cliente_Not_Exists() {
         var mockToSave = new ClienteDTO();
         mockToSave.setIdTipoCliente(1L);
         when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
@@ -202,7 +202,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Update__OK() throws TipoClienteNotFoundConflictException, TipoClienteNotFoundException, ClienteNotFoundException {
+    void Update__OK() {
         var mockTipoCliente = new TipoCliente();
         mockTipoCliente.setId(1L);
         mockTipoCliente.setTipo("tipo1");
@@ -266,7 +266,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Update__Tipo_Cliente_Not_Exists() throws TipoClienteNotFoundException {
+    void Update__Tipo_Cliente_Not_Exists() {
         var mockToUpdate = new ClienteUpdateDTO();
         mockToUpdate.setId(1L);
         mockToUpdate.setIdTipoCliente(1L);
@@ -291,7 +291,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Delete_With_Expedicion_Dependency__OK() throws ClienteNotFoundException {
+    void Delete_With_Expedicion_Dependency__OK() {
         var mockCliente = new Cliente();
         mockCliente.setId(1L);
         mockCliente.setCuit("99888888887");
@@ -336,7 +336,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    void Delete_Without_Dependency__OK() throws ClienteNotFoundException {
+    void Delete_Without_Dependency__OK() {
         var mockCliente = new Cliente();
         mockCliente.setId(1L);
         mockCliente.setCuit("99888888887");

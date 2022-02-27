@@ -1,10 +1,17 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
+} from '@mui/material';
 
 
 const DialogEliminarQueso = ({ open, onClose, queso, onBorrar }) => {
     return (
         <>
-            <Dialog open={open} onClose={onClose} scroll="body" >
+            <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>Borrar Producto</DialogTitle>
                 <DialogContent>
                     <DialogContentText paddingBottom={2}>

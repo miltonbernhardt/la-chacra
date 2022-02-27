@@ -1,4 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@mui/material';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    TextField
+} from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 
 const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazabilidad }) => {
@@ -18,7 +27,7 @@ const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazab
 
     const onCargar = () => submitLote(trazabilidadForm);
 
-    const labelCargar = useMemo(() => { return isEditing ? 'Actualizar' : 'Cargar Lote' }, [isEditing]);
+    const labelCargar = useMemo(() => isEditing ? 'Actualizar' : 'Cargar Lote', [isEditing]);
 
     return (
         <div>
@@ -29,7 +38,7 @@ const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazab
                         Ingrese los datos de los insumos
                     </DialogContentText>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="loteCultivo"
                                 name="loteCultivo"
@@ -37,9 +46,9 @@ const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazab
                                 fullWidth
                                 variant="outlined"
                                 value={trazabilidadForm.loteCultivo}
-                                onChange={handleChange} />
+                                onChange={handleChange}/>
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="loteColorante"
                                 name="loteColorante"
@@ -47,9 +56,9 @@ const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazab
                                 fullWidth
                                 variant="outlined"
                                 value={trazabilidadForm.loteColorante}
-                                onChange={handleChange} />
+                                onChange={handleChange}/>
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="loteCalcio"
                                 name="loteCalcio"
@@ -57,9 +66,9 @@ const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazab
                                 fullWidth
                                 variant="outlined"
                                 value={trazabilidadForm.loteCalcio}
-                                onChange={handleChange} />
+                                onChange={handleChange}/>
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="loteCuajo"
                                 name="loteCuajo"
@@ -67,7 +76,7 @@ const DialogCargarTrazabilidad = ({ open, onClose, submitLote, isEditing, trazab
                                 fullWidth
                                 variant="outlined"
                                 value={trazabilidadForm.loteCuajo}
-                                onChange={handleChange} />
+                                onChange={handleChange}/>
                         </Grid>
                     </Grid>
                 </DialogContent>

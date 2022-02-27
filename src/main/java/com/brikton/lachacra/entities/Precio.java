@@ -10,17 +10,17 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"id_queso","id_tipo_cliente"})})
 public class Precio {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    @Column(name = "id_precio")
+    @Column
     private Long id;
 
-    private Double precio;
+    private Double valor;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_queso")
@@ -31,17 +31,4 @@ public class Precio {
     @JoinColumn(name = "id_tipo_cliente")
     @ToString.Exclude
     private TipoCliente tipoCliente;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Precio precio = (Precio) o;
-        return id != null && Objects.equals(id, precio.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

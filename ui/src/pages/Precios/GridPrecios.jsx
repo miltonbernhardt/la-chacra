@@ -1,41 +1,44 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
+import * as fields from '../../resources/fields'
 
-const GridPrecios = ({precios}) => {
+const GridPrecios = ({ precios, setSelection }) => {
+
     const columns = useMemo(() => {
         return [
             {
-                field: 'tipoQueso',
+                field: fields.backIdQueso,
                 headerName: 'Queso',
-                type: 'text',
                 flex: 1,
-                minWidth: 50
+                minWidth: 50,
             },
             {
-                field: 'tipoCliente',
+                field: fields.backIdTipoCliente,
                 headerName: 'Cliente',
-                type: 'text',
                 flex: 1,
                 minWidth: 50
             },
             {
-                field: 'precio',
+                field: fields.backPrecio,
                 headerName: 'Precio',
                 type: 'number',
                 flex: 1,
-                minWidth: 50
+                minWidth: 50,
+                valueFormatter: (params) => {
+                    return `$ ${params.value}`
+                }
+
             }
         ]
-    }, [precios]);
+    }, []);
 
     return (
         <>
             <DataGrid
-                style={{minHeight: "600px"}}
                 autoHeight={true}
                 rows={precios}
                 columns={columns}
-                // onCellDoubleClick={(params) => setSelection(params.id)}
+                onCellDoubleClick={(params) => setSelection(params.id)}
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}

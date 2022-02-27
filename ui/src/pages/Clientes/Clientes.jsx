@@ -3,11 +3,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import Loading from '../../components/Loading';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
-import { deleteCliente, getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
+import {
+    deleteCliente,
+    getAllClientes,
+    getAllTipoClientes,
+    postCliente,
+    putCliente
+} from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
-
 
 const clienteInicial = {
     id: '',
@@ -38,23 +43,26 @@ const CargarClientes = () => {
     const [isEditing, setEditing] = useState(false);
 
     const fetchClientes = () => {
-        getAllClientes().then(({ data }) => {
-            setListaClientes(data)
-        }).catch(e => { setLoading(false) });
+        getAllClientes()
+            .then(({ data }) => {
+                setListaClientes(data)
+            })
+            .catch(() => setLoading(false));
     }
 
     const fetchTipoClientes = () => {
-        getAllTipoClientes().then(({ data }) => {
-            setTiposClientes(data);
-            setLoading(false);
-        }).catch(e => { setLoading(false) });
+        getAllTipoClientes()
+            .then(({ data }) => {
+                setTiposClientes(data);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
     }
 
     useEffect(() => {
         fetchClientes();
         fetchTipoClientes();
     }, [])
-
 
     const setSelection = useCallback((id) => {
         setCliente(listaClientes.filter(c => c.id === id).pop())
@@ -63,20 +71,22 @@ const CargarClientes = () => {
     const onSubmit = useCallback((clienteForm) => {
         setOpenDialogAlta(false);
         setCliente(clienteInicial);
+
         if (isEditing) {
             setEditing(false);
             putCliente(clienteForm).then(() => fetchClientes());
-        } else {
+        } else
             postCliente(clienteForm).then(() => fetchClientes());
-        }
     }, [isEditing])
 
     const onDelete = useCallback(() => {
-        deleteCliente(cliente.id).then(() => {
-            fetchClientes();
-            setCliente(clienteInicial);
-            onCloseDialog();
-        }).catch(e => { })
+        deleteCliente(cliente.id)
+            .then(() => {
+                fetchClientes();
+                setCliente(clienteInicial);
+                onCloseDialog();
+            })
+            .catch(() => null)
     }, [cliente.id])
 
     // --- DIALOGS ---
@@ -84,22 +94,27 @@ const CargarClientes = () => {
     const [openDialogBaja, setOpenDialogBaja] = useState(false);
 
     const onOpenAlta = () => {
+        setEditing(false);
         setCliente(clienteInicial);
         setOpenDialogAlta(true);
     }
+
     const onOpenBaja = () => {
-        if (!cliente.id) toast.error("No se seleccionó ningún cliente");
-        else {
+        if (!cliente.id)
+            toast.error("No se seleccionó ningún cliente");
+        else
             setOpenDialogBaja(true);
-        }
     }
+
     const onOpenActualizar = () => {
-        if (!cliente.id) toast.error("No se seleccionó ningún cliente");
+        if (!cliente.id)
+            toast.error("No se seleccionó ningún cliente");
         else {
             setEditing(true);
             setOpenDialogAlta(true);
         }
     }
+
     const onCloseDialog = () => {
         setOpenDialogBaja(false);
         setOpenDialogAlta(false);
@@ -110,7 +125,8 @@ const CargarClientes = () => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [tiposClientes])
 
-    if (isLoading) { return (<Loading />) };
+    if (isLoading)
+        return (<Loading />)
 
     return (
         <PageTableButtonPane

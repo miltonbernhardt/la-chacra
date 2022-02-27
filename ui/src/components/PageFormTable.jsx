@@ -1,11 +1,11 @@
 import { Grid, Typography } from '@mui/material';
 
-const PageFormTable = ({ form, table, titleTable, children, sizeForm }) => {
+const PageFormTable = ({ form, table, titleTable, children, titleForm }) => {
     return (
         <Grid container
             direction="row"
             spacing={2}
-            padding={2}
+            paddingRight={2}
             style={{
                 minHeight: "92%",
                 maxWidth: "98%",
@@ -17,30 +17,29 @@ const PageFormTable = ({ form, table, titleTable, children, sizeForm }) => {
             }}>
 
             {/* FORM */}
-            <Grid item container direction="column" xs={12} sm={12} md={4} lg={3}>
-                <Grid item container direction="row" xs={sizeForm === undefined ? 4 : sizeForm} spacing={1.5}>
-                    {form}
+            <Grid item xs={12} sm={12} md={4} lg={3} >
+                <Grid item xs={12}>
+                    <Typography variant="h6" padding={0.5}>
+                        {titleForm}
+                    </Typography>
                 </Grid>
+                {form}
             </Grid>
 
             {/* TABLE */}
-            <Grid item container direction="row" justifyContent="center" alignItems="flex-start" xs={12} sm={12} md={8}
-                lg={9}>
-                <Grid item container direction="column" xs={12} spacing={1}>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            {titleTable}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        {table}
-                    </Grid>
+            <Grid item xs={12} sm={12} md={8} lg={9} >
+                <Grid item xs={12}>
+                    <Typography variant="h6" padding={0.5}>
+                        {titleTable}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    {table}
                 </Grid>
             </Grid>
 
             {/* DIALOGS */}
             {children}
-
         </Grid>
     )
 }

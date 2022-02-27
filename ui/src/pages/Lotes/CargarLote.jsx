@@ -35,7 +35,7 @@ const CargarProduccion = () => {
                 setListaQuesos(data.data);
                 setLoading(false)
             })
-            .catch(e => { setLoading(false) });
+            .catch(() => setLoading(false));
     }, []);
 
     useEffect(() => fetchQuesos(), []);
@@ -54,7 +54,7 @@ const CargarProduccion = () => {
                     setListaLotes([...newList, data]);
                     setLote(loteInicial);
                 })
-                .catch(e => console.error(e.message));
+                .catch(() => null);
             setEditingLote(false);
         } else {
             postLote(loteSubmit)
@@ -62,7 +62,7 @@ const CargarProduccion = () => {
                     setLote(loteInicial);
                     setListaLotes([...listaLotes, data]);
                 })
-                .catch(e => console.error(e.message));
+                .catch(() => null);
         }
     }
 
@@ -79,10 +79,13 @@ const CargarProduccion = () => {
     const eliminarLote = useCallback(() => setEliminarDialog(true), [])
 
     const handleEliminar = useCallback(() => {
-        deleteLote(lote.id).then(() => {
-            const newList = listaLotes.filter((item) => item.id !== lote.id);
-            setListaLotes(newList);
-        }).catch(e => console.error(e.message));
+        deleteLote(lote.id)
+            .then(() => {
+                const newList = listaLotes.filter((item) => item.id !== lote.id);
+                setListaLotes(newList);
+            })
+            .catch(() => null);
+
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
@@ -98,7 +101,8 @@ const CargarProduccion = () => {
         }
     });
 
-    if (isLoading) { return (<Loading />) };
+    if (isLoading)
+        return (<Loading/>)
 
     return (
         <PageFormTable
@@ -111,21 +115,22 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit} />
+                    handleSubmit={handleSubmit}/>
             }
             table={
                 <GridLotes
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection} />
+                    setSelection={setSelection}/>
             }
             titleTable="Producción ingresada"
+            titleForm="Ingreso de producción"
         >
             <DialogEliminarLote
                 open={eliminarDialog}
                 lote={lote}
                 onClose={cancelEliminar}
-                onSubmit={handleEliminar} />
+                onSubmit={handleEliminar}/>
         </PageFormTable>
     )
 }

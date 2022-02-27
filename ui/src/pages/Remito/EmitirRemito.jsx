@@ -50,14 +50,14 @@ const EmitirRemito = () => {
                         mt: 3
                     }}
                 >
-                    <Grid container spacing={2} justifyContent="right" >
+                    <Grid container spacing={2} justifyContent="right">
                         <Grid item xs={12}>
-                            <Typography variant="h6" >
+                            <Typography variant="h6">
                                 Emitir Remito
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h7" color="GrayText" >
+                            <Typography variant="h7" color="GrayText">
                                 Datos de Remito
                             </Typography>
                         </Grid>
@@ -66,7 +66,7 @@ const EmitirRemito = () => {
                                 disablePortal
                                 id="combo-tipoQueso"
                                 options={tiposDeQueso}
-                                renderInput={(params) => <TextField {...params} label="Cliente" />}
+                                renderInput={(params) => <TextField {...params} label="Cliente"/>}
                             /></Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -81,28 +81,28 @@ const EmitirRemito = () => {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12} >
+                        <Grid item xs={12}>
                             <TextField
                                 id="importeRemito"
                                 name="importeRemito"
                                 label="Importe Total"
                                 fullWidth
                                 type="number"
-                                variant="outlined" />
+                                variant="outlined"/>
                         </Grid>
                         <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
-                            <Button variant="contained" fullWidth >Emitir Remito</Button>
+                            <Button variant="contained" fullWidth>Emitir Remito</Button>
                         </Grid>
                     </Grid>
                 </Box>
             </Container>
             <Box height={600}
-                sx={{
-                    padding: 1,
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                 sx={{
+                     padding: 1,
+                     flexDirection: 'column',
+                     alignItems: 'center',
 
-                }}>
+                 }}>
                 <Typography variant="h6" color="GrayText" padding={1}>
                     Lista de expediciones
                 </Typography>

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<ErrorResponse> handlerLoteNotFoundException(HttpServletRequest req, NotFoundException ex) {
+    protected ResponseEntity<ErrorResponse> handlerNotFoundException(HttpServletRequest req, NotFoundException ex) {
         return response(ex, req, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 

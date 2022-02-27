@@ -6,12 +6,13 @@ const CargarExpedicion = () => {
     return (
         <PageFormTable
             form={
-                <FormExpedicion/>
+                <FormExpedicion />
             }
             table={
-                <GridExpedicion/>
+                <GridExpedicion />
             }
             titleTable="Expediciones"
+            titleForm="Ingreso de expediciones"
         />
     );
 }

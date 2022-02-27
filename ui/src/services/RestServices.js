@@ -9,6 +9,7 @@ const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'
 const API_CLIENTE = '/api/v1/clientes/'
 const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
+const API_PRECIO = '/api/v1/precios/'
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -41,6 +42,11 @@ export const getAllClientes = async () => await GET(`${API_CLIENTE}`);
 export const postCliente = async (cliente) => await POST(`${API_CLIENTE}`, cliente);
 export const putCliente = async (cliente) => await PUT(`${API_CLIENTE}`, cliente);
 export const deleteCliente = async (id) => await DELETE(`${API_CLIENTE}${id}`);
+
+// --- PRECIO METHODS ---
+export const getAllPrecios = async () => await GET(`${API_PRECIO}`);
+export const postPrecio = async (precio) => await POST(`${API_PRECIO}`, precio);
+export const putPrecio = async (precio) => await PUT(`${API_PRECIO}`, precio);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {
@@ -106,6 +112,7 @@ const processResponseError = (err) => {
             toast.error(data.message)
     } else {
         toast.error(err.message)
+        console.error(err.message)
     }
     throw new Error(err)
 }
