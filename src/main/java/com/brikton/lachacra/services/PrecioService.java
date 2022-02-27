@@ -37,10 +37,6 @@ public class PrecioService {
         return lista;
     }
 
-    public List<Long> getAllByQueso(Long idQueso) {
-        return repository.findAllByIdQueso(idQueso);
-    }
-
     public PrecioDTO save(PrecioDTO dto) throws PrecioNotFoundException {
         var precio = precioFromDTO(dto);
         precio = repository.save(precio);
@@ -53,13 +49,6 @@ public class PrecioService {
         if (!exists)
             throw new PrecioNotFoundException();
         return save(dto);
-    }
-
-    public Long delete(Long id) throws PrecioNotFoundException {
-        if (!repository.existsById(id))
-            throw new PrecioNotFoundException();
-        repository.deleteById(id);
-        return id;
     }
 
     private Precio precioFromDTO(PrecioDTO dto) throws TipoClienteNotFoundConflictException, QuesoNotFoundConflictException {
@@ -78,8 +67,13 @@ public class PrecioService {
 
         precio.setTipoCliente(tipoCliente);
         precio.setQueso(queso.get());
-        precio.setPrecio(dto.getPrecio());
+        precio.setValor(dto.getValor());
         precio.setId(dto.getId());
         return precio;
+    }
+
+    public void deletePreciosByQueso(Long idQueso) {
+        var allPrecioIDs = repository.findAllByIdQueso(idQueso);
+        repository.deleteAllById(allPrecioIDs);
     }
 }

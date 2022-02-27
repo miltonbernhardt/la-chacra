@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {PrecioService.class})
@@ -54,7 +55,7 @@ public class PrecioServiceTest {
 
         Precio precioMock = new Precio();
         precioMock.setId(1L);
-        precioMock.setPrecio(1000D);
+        precioMock.setValor(1000D);
         precioMock.setQueso(quesoMock);
         precioMock.setTipoCliente(tipoClienteMock);
 
@@ -66,39 +67,22 @@ public class PrecioServiceTest {
         assertEquals(1L, preciosDTO.get(0).getId());
         assertEquals(1L, preciosDTO.get(0).getIdTipoCliente());
         assertEquals(1L, preciosDTO.get(0).getIdQueso());
-        assertEquals(1000D, preciosDTO.get(0).getPrecio());
+        assertEquals(1000D, preciosDTO.get(0).getValor());
     }
 
     @Test
-    void Get_All_By_Queso__OK() {
+    void Delete_Precios_By_Queso__OK() {
         when(repository.findAllByIdQueso(1L)).thenReturn(List.of(1L, 2L, 3L));
-        var quesos = service.getAllByQueso(1L);
-        assertEquals(3, quesos.size());
-        assertEquals(1, quesos.get(0));
-        assertEquals(2, quesos.get(1));
-        assertEquals(3, quesos.get(2));
-    }
 
-    @Test
-    void Delete__OK() {
-        when(repository.existsById(1L)).thenReturn(true);
-        var id = service.delete(1L);
-        assertEquals(1L, id);
-    }
+        service.deletePreciosByQueso(1L);
 
-    @Test
-    void Delete__Precio_Not_Founds() {
-        when(repository.existsById(1L)).thenReturn(false);
-        PrecioNotFoundException thrown = assertThrows(
-                PrecioNotFoundException.class, () -> service.delete(1L)
-        );
-        assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, thrown.getMessage());
+        verify(repository).deleteAllById(List.of(1L, 2L, 3L));
     }
 
     @Test
     void Save__OK() {
         PrecioDTO precioDTOToSave = new PrecioDTO();
-        precioDTOToSave.setPrecio(1000D);
+        precioDTOToSave.setValor(1000D);
         precioDTOToSave.setIdTipoCliente(1L);
         precioDTOToSave.setIdQueso(1L);
 
@@ -114,13 +98,13 @@ public class PrecioServiceTest {
 
         Precio precioSaved = new Precio();
         precioSaved.setId(1L);
-        precioSaved.setPrecio(1000D);
+        precioSaved.setValor(1000D);
         precioSaved.setQueso(quesoMock);
         precioSaved.setTipoCliente(tipoClienteMock);
 
         var expectedPrecio = new PrecioDTO();
         expectedPrecio.setId(1L);
-        expectedPrecio.setPrecio(1000D);
+        expectedPrecio.setValor(1000D);
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
@@ -135,7 +119,7 @@ public class PrecioServiceTest {
     @Test
     void Save__Tipo_Cliente_Not_Found() {
         PrecioDTO precioDTOToSave = new PrecioDTO();
-        precioDTOToSave.setPrecio(1000D);
+        precioDTOToSave.setValor(1000D);
         precioDTOToSave.setIdTipoCliente(1L);
         precioDTOToSave.setIdQueso(1L);
 
@@ -149,7 +133,7 @@ public class PrecioServiceTest {
     @Test
     void Save__Queso_Not_Found() {
         PrecioDTO precioDTOToSave = new PrecioDTO();
-        precioDTOToSave.setPrecio(1000D);
+        precioDTOToSave.setValor(1000D);
         precioDTOToSave.setIdTipoCliente(1L);
         precioDTOToSave.setIdQueso(1L);
 
@@ -169,7 +153,7 @@ public class PrecioServiceTest {
     void Update__OK() {
         PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
         precioDTOToUpdate.setId(1L);
-        precioDTOToUpdate.setPrecio(1000D);
+        precioDTOToUpdate.setValor(1000D);
         precioDTOToUpdate.setIdTipoCliente(1L);
         precioDTOToUpdate.setIdQueso(1L);
 
@@ -185,13 +169,13 @@ public class PrecioServiceTest {
 
         Precio precioSaved = new Precio();
         precioSaved.setId(1L);
-        precioSaved.setPrecio(1000D);
+        precioSaved.setValor(1000D);
         precioSaved.setQueso(quesoMock);
         precioSaved.setTipoCliente(tipoClienteMock);
 
         var expectedPrecio = new PrecioDTO();
         expectedPrecio.setId(1L);
-        expectedPrecio.setPrecio(1000D);
+        expectedPrecio.setValor(1000D);
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
@@ -208,7 +192,7 @@ public class PrecioServiceTest {
     void Update__Precio_Not_Found() {
         PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
         precioDTOToUpdate.setId(1L);
-        precioDTOToUpdate.setPrecio(1000D);
+        precioDTOToUpdate.setValor(1000D);
         precioDTOToUpdate.setIdTipoCliente(1L);
         precioDTOToUpdate.setIdQueso(1L);
 
@@ -223,7 +207,7 @@ public class PrecioServiceTest {
     void Update__Tipo_Cliente_Not_Found() {
         PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
         precioDTOToUpdate.setId(1L);
-        precioDTOToUpdate.setPrecio(1000D);
+        precioDTOToUpdate.setValor(1000D);
         precioDTOToUpdate.setIdTipoCliente(1L);
         precioDTOToUpdate.setIdQueso(1L);
 
@@ -239,7 +223,7 @@ public class PrecioServiceTest {
     void Update__Queso_Not_Found() {
         PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
         precioDTOToUpdate.setId(1L);
-        precioDTOToUpdate.setPrecio(1000D);
+        precioDTOToUpdate.setValor(1000D);
         precioDTOToUpdate.setIdTipoCliente(1L);
         precioDTOToUpdate.setIdQueso(1L);
 

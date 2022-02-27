@@ -5,7 +5,6 @@ import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
@@ -284,7 +283,6 @@ public class QuesoServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
-        when(precioService.getAllByQueso(1L)).thenReturn(List.of(1L, 2L, 3L));
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);
         assertEquals("", actualID);
@@ -301,8 +299,6 @@ public class QuesoServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
-        when(precioService.getAllByQueso(1L)).thenReturn(List.of(3L));
-        when(precioService.delete(3L)).thenThrow(new PrecioNotFoundException());
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);
         assertEquals("", actualID);
