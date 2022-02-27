@@ -5,7 +5,6 @@ import * as field from "../../resources/fields";
 import * as validation from "../../resources/validations";
 import { toastValidationErrors } from "../../resources/fields";
 import Input from "../../components/Input";
-import TitleForm from "../../components/TitleForm";
 import Select from "../../components/Select";
 
 const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit }) => {
@@ -23,9 +22,7 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
     const refLoteCalcio = createRef(null)
     const refLoteCuajo = createRef(null)
 
-    useEffect(() => {
-        setLoteForm(lote)
-    }, [lote]);
+    useEffect(() => setLoteForm(lote), [lote]);
 
     const submitLote = () => {
         const errors = new Map();
@@ -79,59 +76,59 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
         <>
             <Grid container spacing={1.5}>
                 <Select ref={refSelectQueso}
-                    value={loteForm.codigoQueso}
-                    id={field.backCodigoQueso}
-                    label={field.queso}
-                    options={quesos}
-                    required />
+                        value={loteForm.codigoQueso}
+                        id={field.backCodigoQueso}
+                        label={field.queso}
+                        options={quesos}
+                        required/>
                 <Input ref={refLitros}
-                    id={field.backLitrosLeche}
-                    label={field.litrosLeche}
-                    value={loteForm.litrosLeche}
-                    sm={8}
-                    required />
+                       id={field.backLitrosLeche}
+                       label={field.litrosLeche}
+                       value={loteForm.litrosLeche}
+                       sm={8}
+                       required/>
                 <Input ref={refNumTina}
-                    id={field.backNumeroTina}
-                    label={field.numeroTina}
-                    value={loteForm.numeroTina}
-                    sm={4}
-                    required />
+                       id={field.backNumeroTina}
+                       label={field.numeroTina}
+                       value={loteForm.numeroTina}
+                       sm={4}
+                       required/>
                 <Input ref={refCantHormas}
-                    id={field.backCantHormas}
-                    label={field.cantHormas}
-                    value={loteForm.cantHormas}
-                    required />
+                       id={field.backCantHormas}
+                       label={field.cantHormas}
+                       value={loteForm.cantHormas}
+                       required/>
                 <Input ref={refPeso}
-                    id={field.backPeso}
-                    label={field.peso}
-                    value={loteForm.peso}
-                    required />
+                       id={field.backPeso}
+                       label={field.peso}
+                       value={loteForm.peso}
+                       required/>
                 <Input ref={refFecha}
-                    id={field.backFechaElaboracion}
-                    label={field.fechaElaboracion}
-                    value={loteForm.fechaElaboracion}
-                    type="date"
-                    required />
+                       id={field.backFechaElaboracion}
+                       label={field.fechaElaboracion}
+                       value={loteForm.fechaElaboracion}
+                       type="date"
+                       required/>
                 <Input ref={refLoteCultivo}
-                    id={field.backLoteCultivo}
-                    label={field.loteCultivo}
-                    value={loteForm.loteCultivo}
-                    type="text" />
+                       id={field.backLoteCultivo}
+                       label={field.loteCultivo}
+                       value={loteForm.loteCultivo}
+                       type="text"/>
                 <Input ref={refLoteColorante}
-                    id={field.backLoteColorante}
-                    label={field.loteColorante}
-                    value={loteForm.loteColorante}
-                    type="text" />
+                       id={field.backLoteColorante}
+                       label={field.loteColorante}
+                       value={loteForm.loteColorante}
+                       type="text"/>
                 <Input ref={refLoteCalcio}
-                    id={field.backLoteCalcio}
-                    label={field.loteCalcio}
-                    value={loteForm.loteCalcio}
-                    type="text" />
+                       id={field.backLoteCalcio}
+                       label={field.loteCalcio}
+                       value={loteForm.loteCalcio}
+                       type="text"/>
                 <Input ref={refLoteCuajo}
-                    id={field.backLoteCuajo}
-                    label={field.loteCuajo}
-                    value={loteForm.loteCuajo}
-                    type="text" />
+                       id={field.backLoteCuajo}
+                       label={field.loteCuajo}
+                       value={loteForm.loteCuajo}
+                       type="text"/>
                 <Grid item xs={12} alignSelf="right" mb={0.5}>
                     <ButtonGroup fullWidth variant="contained">
                         <Button onClick={cancelEditing} disabled={!isEditingLote} color="info">Cancelar</Button>
@@ -140,13 +137,6 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
                     </ButtonGroup>
                 </Grid>
             </Grid>
-            {/*<DialogCargarTrazabilidad*/}
-            {/*    open={dialogOpen}*/}
-            {/*    onClose={onCloseDialog}*/}
-            {/*    trazabilidad={trazabilidad}*/}
-            {/*    submitLote={submitLote}*/}
-            {/*    isEditing={isEditingLote}*/}
-            {/*/>*/}
         </>
     )
 }

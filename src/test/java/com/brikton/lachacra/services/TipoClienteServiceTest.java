@@ -53,7 +53,7 @@ public class TipoClienteServiceTest {
     }
 
     @Test
-    void Get_Entity__OK() throws TipoClienteNotFoundException {
+    void Get_Entity__OK() {
         var mockTipoCliente = new TipoCliente();
         mockTipoCliente.setId(1L);
         mockTipoCliente.setTipo("tipo1");

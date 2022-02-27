@@ -29,7 +29,7 @@ export const backTelefono = "telefono"
 export const backFax = "fax"
 export const backCelular = "celuluar"
 export const backIdTipoCliente = "idTipoCliente"
-export const backPrecio = "precio"
+export const backPrecio = "valor"
 
 export const ID = "ID"
 

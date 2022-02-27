@@ -5,7 +5,6 @@ import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
@@ -86,7 +85,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity_By_ID__OK() throws QuesoNotFoundException {
+    void Get_Entity_By_ID__OK() {
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity(1L);
         Queso quesoExpected = mockQueso();
@@ -114,7 +113,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity_By_Codigo__OK() throws QuesoNotFoundException {
+    void Get_Entity_By_Codigo__OK() {
         when(repository.findByCodigo("001")).thenReturn(Optional.of(mockQueso()));
         Queso quesoActual = quesoService.getEntity("001");
         Queso quesoExpected = mockQueso();
@@ -142,7 +141,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Save__OK() throws CodigoQuesoAlreadyExistsException {
+    void Save__OK() {
         QuesoDTO quesoToSave = new QuesoDTO();
         quesoToSave.setCodigo("001");
         quesoToSave.setTipoQueso("TIPO_QUESO");
@@ -183,7 +182,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Update__OK() throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+    void Update__OK() {
         var quesoTpUpdate = new QuesoUpdateDTO();
         quesoTpUpdate.setId(1L);
         quesoTpUpdate.setCodigo("002");
@@ -249,7 +248,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Delete_Queso_WITH_Dependencies__OK() throws QuesoNotFoundException {
+    void Delete_Queso_WITH_Dependencies__OK() {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
@@ -274,7 +273,7 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Delete_Queso_WITHOUT_Dependencies__OK() throws QuesoNotFoundException {
+    void Delete_Queso_WITHOUT_Dependencies__OK() {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
@@ -284,14 +283,13 @@ public class QuesoServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
-        when(precioService.getAllByQueso(1L)).thenReturn(List.of(1L, 2L, 3L));
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);
         assertEquals("", actualID);
     }
 
     @Test
-    void Delete_Queso_WITHOUT_Dependencies_Precio_Not_Found_OK() throws PrecioNotFoundException, QuesoNotFoundException {
+    void Delete_Queso_WITHOUT_Dependencies_Precio_Not_Found_OK() {
         Queso mockQueso = new Queso();
         mockQueso.setId(1L);
         mockQueso.setCodigo("001");
@@ -301,8 +299,6 @@ public class QuesoServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
-        when(precioService.getAllByQueso(1L)).thenReturn(List.of(3L));
-        when(precioService.delete(3L)).thenThrow(new PrecioNotFoundException());
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String actualID = quesoService.delete(1L);
         assertEquals("", actualID);

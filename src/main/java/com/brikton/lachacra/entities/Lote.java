@@ -10,13 +10,11 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class Lote {
 
     @Id
-    @Column(name = "id_lote")
+    @Column
     private String id;
     private LocalDate fechaElaboracion;
     private Integer numeroTina;
@@ -35,17 +33,4 @@ public class Lote {
     @JoinColumn(name = "id_queso")
     @ToString.Exclude
     private Queso queso;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Lote lote = (Lote) o;
-        return id != null && Objects.equals(id, lote.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

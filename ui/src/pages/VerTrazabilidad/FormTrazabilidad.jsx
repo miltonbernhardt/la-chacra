@@ -86,7 +86,8 @@ const FormTrazabilidad = () => {
             <Grid item xs={12} alignSelf="right">
                 <ButtonGroup fullWidth variant="contained">
                     <Button
-                        onClick={() => {}}
+                        onClick={() => {
+                        }}
                         color="primary">Buscar Lote</Button>
                 </ButtonGroup>
             </Grid>

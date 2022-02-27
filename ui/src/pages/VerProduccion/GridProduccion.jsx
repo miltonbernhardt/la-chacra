@@ -87,11 +87,11 @@ const columns = [
     // },
 ];
 
-const GridProduccion = ({data}) => {
+const GridProduccion = ({ data }) => {
     return (
         <>
             <DataGrid
-                style={{minHeight: "600px"}}
+                style={{ minHeight: "600px" }}
                 autoHeight={true}
                 rows={data}
                 columns={columns}

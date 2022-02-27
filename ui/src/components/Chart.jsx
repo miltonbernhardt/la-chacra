@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
