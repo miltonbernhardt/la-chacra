@@ -44,14 +44,14 @@ const CargarExpedicion = () => {
                 .then(({ data }) => {
                     setEditing(false);
                     setExpedicion(expedicionInicial);
-                    setListaExpediciones(...listaExpediciones, data);
+                    setListaExpediciones([...listaExpediciones, data]);
                 })
                 .catch(e => { })
         else
             postExpedicion(expedicionForm)
                 .then(({ data }) => {
                     setExpedicion(expedicionInicial);
-                    setListaExpediciones(...listaExpediciones, data);
+                    setListaExpediciones([...listaExpediciones, data]);
                 })
                 .catch(e => { })
     }, [isEditing, listaExpediciones])
@@ -88,9 +88,9 @@ const CargarExpedicion = () => {
 
     const expedicionesFormatted = useMemo(() => listaExpediciones.map((e) => {
         return {
-            id: e.id,
+            'id': e.id,
             [field.backIdLote]: e.idLote,
-            [field.razonSocial]: listaClientes
+            [field.backRazonSocial]: listaClientes
                 .filter(c => c.id === e.idCliente).pop().razonSocial,
             [field.backFechaExpedicion]: e.fechaExpedicion,
             [field.backCantidad]: e.cantidad,
@@ -115,12 +115,12 @@ const CargarExpedicion = () => {
             }
             table={
                 <GridExpedicion
+                    expediciones={expedicionesFormatted}
                     setSelection={handleSelect} />
             }
             titleTable="Expediciones"
             titleForm="Ingreso de expediciones">
             <DialogEliminarExpedicion
-                expediciones={expedicionesFormatted}
                 open={openDialogEliminar}
                 onClose={cancelDelete}
                 onSubmit={submitDelete} />

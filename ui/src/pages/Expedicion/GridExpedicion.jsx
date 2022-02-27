@@ -1,11 +1,6 @@
 import { DataGrid } from '@mui/x-data-grid';
-
-import { createRef, useCallback, useEffect, useMemo, useState } from "react";
-import Input from "../../components/Input";
-import Select from "../../components/Select";
+import { useMemo } from "react";
 import * as field from "../../resources/fields";
-import * as message from "../../resources/messages";
-import * as validation from "../../resources/validations";
 
 const GridExpedicion = ({ expediciones, setSelection }) => {
 
@@ -16,6 +11,8 @@ const GridExpedicion = ({ expediciones, setSelection }) => {
                 headerName: field.fechaExpedicion,
                 type: 'date',
                 valueFormatter: (params) => {
+                    if (params.value === undefined)
+                        return '';
                     const valueFormatted =
                         params.value.at(8) + params.value.at(9) + '-' +
                         params.value.at(5) + params.value.at(6) + '-' +
@@ -30,7 +27,7 @@ const GridExpedicion = ({ expediciones, setSelection }) => {
                 field: field.backRazonSocial,
                 headerName: field.razonSocial,
                 type: 'text',
-                flex: 0.5,
+                flex: 1,
                 minWidth: 50,
             },
             {
@@ -66,10 +63,9 @@ const GridExpedicion = ({ expediciones, setSelection }) => {
     return (
         <>
             <DataGrid
-                style={{ minHeight: "600px" }}
-                autoHeight={true}
                 rows={expediciones}
                 columns={columns}
+                autoHeight={true}
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}
