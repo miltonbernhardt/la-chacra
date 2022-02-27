@@ -36,7 +36,7 @@ public class PrecioDTO {
 
     public PrecioDTO(PrecioUpdateDTO precioUpdateDTO) {
         this.setId(precioUpdateDTO.getId());
-        this.setIdQueso(precioUpdateDTO.getId());
+        this.setIdQueso(precioUpdateDTO.getIdQueso());
         this.setIdTipoCliente(precioUpdateDTO.getIdTipoCliente());
         this.setValor(precioUpdateDTO.getValor());
     }

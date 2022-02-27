@@ -37,7 +37,7 @@ public class PrecioService {
         return lista;
     }
 
-    public PrecioDTO save(PrecioDTO dto) throws PrecioNotFoundException {
+    public PrecioDTO save(PrecioDTO dto) {
         var precio = precioFromDTO(dto);
         precio = repository.save(precio);
         return new PrecioDTO(precio);
