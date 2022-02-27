@@ -126,7 +126,7 @@ const CargarClientes = () => {
         }), [tiposClientes])
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
     return (
         <PageTableButtonPane
@@ -147,12 +147,12 @@ const CargarClientes = () => {
                 onSubmit={onSubmit}
                 open={openDialogAlta}
                 isEditing={isEditing}
-                tiposCliente={valoresTiposClientes}/>
+                tiposCliente={valoresTiposClientes} />
             <DialogBajaCliente
                 cliente={cliente}
                 onClose={onCloseDialog}
                 open={openDialogBaja}
-                onSubmit={onDelete}/>
+                onSubmit={onDelete} />
         </PageTableButtonPane>
     );
 }
