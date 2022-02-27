@@ -14,13 +14,14 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Precio {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    @Column(name = "id_precio")
+    @Column
     private Long id;
 
-    private Double precio;
+    private Double valor;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_queso")

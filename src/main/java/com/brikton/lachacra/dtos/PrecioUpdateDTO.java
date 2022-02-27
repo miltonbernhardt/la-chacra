@@ -15,7 +15,7 @@ public class PrecioUpdateDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-    private Double precio;
+    private Double valor;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)

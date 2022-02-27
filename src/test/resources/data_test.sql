@@ -32,7 +32,7 @@ VALUES (1, 'ABDALA, Gustavo', 1, '20-11111111-7', 'Jacob 2830', '3080', 'Esperan
        (4, 'NOMBRE', 3, '20-44444444-3', 'DIRECCION', 2000, 'LOCALIDAD',
         'PROVINCIA', 'PAIS', 'TRANSPORTE', '11111', null, null, null, 'mail4@mail.com', '2020-10-10');
 
-INSERT INTO public.precio (id_tipo_cliente, id_queso, precio, id_precio)
+INSERT INTO public.precio (id_tipo_cliente, id_queso, valor, id)
 VALUES (1, 1, 371.00, 1),
        (1, 2, 486.00, 2),
        (1, 3, 550.00, 3),

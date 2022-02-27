@@ -128,7 +128,7 @@ VALUES ('101', 'ABDALA, Gustavo', 1, '20-21641332-7', 'Jacob 2830', '3080', 'Esp
        ('160', 'HnroClienteALGO, Lucas', 1, '20-29115738-7', 'Italia 781', '3080', 'Esperanza', 'Santa Fe', 'Argentina',
         'HnroClienteALGO, Lucas', '115568');
 
-INSERT INTO public.precio (id_tipo_cliente, id_queso, precio, id_precio)
+INSERT INTO public.precio (id_tipo_cliente, id_queso, valor, id)
 VALUES (1, 001, 371.00, 1),
        (1, 002, 486.00, 2),
        (1, 003, 550.00, 3),
