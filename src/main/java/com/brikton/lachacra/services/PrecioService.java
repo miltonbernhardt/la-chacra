@@ -33,45 +33,19 @@ public class PrecioService {
 
     public List<PrecioDTO> getAll() {
         List<PrecioDTO> lista = new ArrayList<>();
-        repository.findAll().forEach(precio -> lista.add(new PrecioDTO(precio)));
+        repository.findAllByOrderByTipoClienteAscIdAsc().forEach(precio -> lista.add(new PrecioDTO(precio)));
         return lista;
     }
 
-    public PrecioDTO save(PrecioDTO dto) {
+    public PrecioDTO save(PrecioDTO dto) throws PrecioAlreadyExistsException {
         var precio = precioFromDTO(dto);
+
+        if (repository.existsByQuesoAndTipoCliente(precio.getQueso(), precio.getTipoCliente()))
+            throw new PrecioAlreadyExistsException();
+
         precio = repository.save(precio);
         return new PrecioDTO(precio);
     }
-
-    public PrecioDTO update(PrecioUpdateDTO dtoUpdate) throws PrecioNotFoundException {
-        var dto = new PrecioDTO(dtoUpdate);
-        var exists = repository.existsById(dto.getId());
-        if (!exists)
-            throw new PrecioNotFoundException();
-        return save(dto);
-    }
-    /*
-        public PrecioDTO save(PrecioDTO dto) throws TipoClienteNotFoundException, QuesoNotFoundException, PrecioAlreadyExistsException {
-        var precio = precioFromDTO(dto);
-        // precio is unique by queso and tipoCliente
-        if (precioRepository.existsByQuesoAndTipoCliente(precio.getQueso(),precio.getTipoCliente()))
-            throw new PrecioAlreadyExistsException();
-        return new PrecioDTO(precioRepository.save(precio));
-    }
-
-    public PrecioDTO update(PrecioUpdateDTO dto) throws PrecioNotFoundException, TipoClienteNotFoundException, QuesoNotFoundException {
-        var precio = precioRepository.findById(dto.getId());
-        if (precio.isEmpty())  throw new PrecioNotFoundException();
-        var precioUpdate = precioFromDTOUpdate(dto);
-        // queso and tipoCliente aren't updatable
-        if (precio.get().getQueso().getId() != precioUpdate.getQueso().getId() ||
-        precio.get().getTipoCliente().getId() != precioUpdate.getTipoCliente().getId())
-            // it's the same as bad ID as queso and cliente don't correspond
-            throw new PrecioNotFoundException();
-        return new PrecioDTO(precioRepository.save(precioUpdate));
-    }
-
-     */
 
     private Precio precioFromDTO(PrecioDTO dto) throws TipoClienteNotFoundConflictException, QuesoNotFoundConflictException {
         Precio precio = new Precio();
@@ -89,6 +63,29 @@ public class PrecioService {
 
         precio.setTipoCliente(tipoCliente);
         precio.setQueso(queso.get());
+        precio.setValor(dto.getValor());
+        precio.setId(dto.getId());
+        return precio;
+    }
+
+    public PrecioDTO update(PrecioUpdateDTO dto) throws PrecioNotFoundException {
+        if (!repository.existsByIdAndQuesoAndTipoCliente(dto.getId(), dto.getIdQueso(), dto.getIdTipoCliente()))
+            throw new PrecioNotFoundException();
+
+        var precio = precioFromDTO(dto);
+        precio = repository.save(precio);
+        return new PrecioDTO(precio);
+    }
+
+
+    private Precio precioFromDTO(PrecioUpdateDTO dto) {
+        var precio = new Precio();
+
+        var tipoCliente = tipoClienteService.getEntity(dto.getIdTipoCliente());
+        var queso = quesoRepository.getById(dto.getIdQueso());
+
+        precio.setTipoCliente(tipoCliente);
+        precio.setQueso(queso);
         precio.setValor(dto.getValor());
         precio.setId(dto.getId());
         return precio;

@@ -6,10 +6,7 @@ import com.brikton.lachacra.dtos.PrecioUpdateDTO;
 import com.brikton.lachacra.entities.Precio;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.entities.TipoCliente;
-import com.brikton.lachacra.exceptions.PrecioNotFoundException;
-import com.brikton.lachacra.exceptions.QuesoNotFoundConflictException;
-import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
-import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
+import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.PrecioRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import org.junit.jupiter.api.Test;
@@ -61,7 +58,7 @@ public class PrecioServiceTest {
 
         List<Precio> precios = List.of(precioMock);
 
-        when(repository.findAll()).thenReturn(precios);
+        when(repository.findAllByOrderByTipoClienteAscIdAsc()).thenReturn(precios);
         var preciosDTO = service.getAll();
         assertEquals(1, preciosDTO.size());
         assertEquals(1L, preciosDTO.get(0).getId());
@@ -110,6 +107,7 @@ public class PrecioServiceTest {
 
         when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
         when(quesoRepository.findById(1L)).thenReturn(Optional.of(quesoMock));
+        when(repository.existsByQuesoAndTipoCliente(quesoMock, tipoClienteMock)).thenReturn(false);
         when(repository.save(any(Precio.class))).thenReturn(precioSaved);
 
         var dtoActual = service.save(precioDTOToSave);
@@ -150,6 +148,44 @@ public class PrecioServiceTest {
     }
 
     @Test
+    void Save__Precio_Already_Exists() {
+        PrecioDTO precioDTOToSave = new PrecioDTO();
+        precioDTOToSave.setValor(1000D);
+        precioDTOToSave.setIdTipoCliente(1L);
+        precioDTOToSave.setIdQueso(1L);
+
+        TipoCliente tipoClienteMock = new TipoCliente();
+        tipoClienteMock.setTipo("tipo");
+        tipoClienteMock.setId(1L);
+
+        Queso quesoMock = new Queso();
+        quesoMock.setId(1L);
+        quesoMock.setTipoQueso("tipoQueso");
+        quesoMock.setNomenclatura("nomenclatura");
+        quesoMock.setCodigo("codigo");
+
+        Precio precioSaved = new Precio();
+        precioSaved.setId(1L);
+        precioSaved.setValor(1000D);
+        precioSaved.setQueso(quesoMock);
+        precioSaved.setTipoCliente(tipoClienteMock);
+
+        var expectedPrecio = new PrecioDTO();
+        expectedPrecio.setId(1L);
+        expectedPrecio.setValor(1000D);
+        expectedPrecio.setIdTipoCliente(1L);
+        expectedPrecio.setIdQueso(1L);
+
+        when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
+        when(quesoRepository.findById(1L)).thenReturn(Optional.of(quesoMock));
+        when(repository.existsByQuesoAndTipoCliente(quesoMock, tipoClienteMock)).thenReturn(true);
+        PrecioAlreadyExistsException thrown = assertThrows(
+                PrecioAlreadyExistsException.class, () -> service.save(precioDTOToSave)
+        );
+        assertEquals(ErrorMessages.MSG_PRECIO_ALREADY_EXISTS, thrown.getMessage());
+    }
+
+    @Test
     void Update__OK() {
         PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
         precioDTOToUpdate.setId(1L);
@@ -179,7 +215,7 @@ public class PrecioServiceTest {
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
-        when(repository.existsById(1L)).thenReturn(true);
+        when(repository.existsByIdAndQuesoAndTipoCliente(1L, 1L, 1L)).thenReturn(true);
         when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
         when(quesoRepository.findById(1L)).thenReturn(Optional.of(quesoMock));
         when(repository.save(any(Precio.class))).thenReturn(precioSaved);
@@ -196,47 +232,10 @@ public class PrecioServiceTest {
         precioDTOToUpdate.setIdTipoCliente(1L);
         precioDTOToUpdate.setIdQueso(1L);
 
-        when(repository.existsById(1L)).thenReturn(false);
+        when(repository.existsByIdAndQuesoAndTipoCliente(1L, 1L, 1L)).thenReturn(false);
         PrecioNotFoundException thrown = assertThrows(
                 PrecioNotFoundException.class, () -> service.update(precioDTOToUpdate)
         );
         assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, thrown.getMessage());
-    }
-
-    @Test
-    void Update__Tipo_Cliente_Not_Found() {
-        PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
-        precioDTOToUpdate.setId(1L);
-        precioDTOToUpdate.setValor(1000D);
-        precioDTOToUpdate.setIdTipoCliente(1L);
-        precioDTOToUpdate.setIdQueso(1L);
-
-        when(repository.existsById(1L)).thenReturn(true);
-        when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
-        TipoClienteNotFoundConflictException thrown = assertThrows(
-                TipoClienteNotFoundConflictException.class, () -> service.update(precioDTOToUpdate)
-        );
-        assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, thrown.getMessage());
-    }
-
-    @Test
-    void Update__Queso_Not_Found() {
-        PrecioUpdateDTO precioDTOToUpdate = new PrecioUpdateDTO();
-        precioDTOToUpdate.setId(1L);
-        precioDTOToUpdate.setValor(1000D);
-        precioDTOToUpdate.setIdTipoCliente(1L);
-        precioDTOToUpdate.setIdQueso(1L);
-
-        TipoCliente tipoClienteMock = new TipoCliente();
-        tipoClienteMock.setTipo("tipo");
-        tipoClienteMock.setId(1L);
-
-        when(repository.existsById(1L)).thenReturn(true);
-        when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
-        when(quesoRepository.findById(1L)).thenReturn(Optional.empty());
-        QuesoNotFoundConflictException thrown = assertThrows(
-                QuesoNotFoundConflictException.class, () -> service.update(precioDTOToUpdate)
-        );
-        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 }
