@@ -8,7 +8,7 @@ import * as fields from '../../resources/fields'
 
 const precioInicial = {
     id: '',
-    precio: '',
+    valor: '',
     idTipoCliente: '',
     idQueso: ''
 }
@@ -108,14 +108,13 @@ const CargarPrecios = () => {
                     return t.id === p.idTipoCliente
                 })
                 .pop().tipo,
-            [fields.backPrecio]: p.precio,
+            [fields.backPrecio]: p.valor,
             id: p.id
         }
     })
 
     return (
         <>
-            {console.log(quesosAutocomplete)}
             <PageFormTable
                 form={
                     <FormPrecios

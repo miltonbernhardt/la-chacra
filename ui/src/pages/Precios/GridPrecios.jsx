@@ -21,7 +21,7 @@ const GridPrecios = ({ precios, tiposCliente, quesos, setSelection, isLoading })
                 minWidth: 50
             },
             {
-                field: 'precio',
+                field: fields.backPrecio,
                 headerName: 'Precio',
                 type: 'number',
                 flex: 1,

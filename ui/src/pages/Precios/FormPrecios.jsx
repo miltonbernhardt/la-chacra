@@ -8,7 +8,7 @@ import * as validation from "../../resources/validations";
 
 const precioInicial = {
     id: '',
-    precio: '',
+    valor: '',
     idTipoCliente: '',
     idQueso: ''
 }
@@ -70,7 +70,7 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, i
                 <Input ref={refPrecio}
                     id={field.backPrecio}
                     label={field.precio}
-                    value={precioForm.precio}
+                    value={precioForm.valor}
                     required />
                 <Grid item xs={12} alignSelf="right" mb={0.5}>
                     <ButtonGroup fullWidth variant="contained">
