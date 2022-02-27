@@ -1,7 +1,7 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
-const GridLotes = ({produccion, quesos, setSelection}) => {
+const GridLotes = ({ produccion, quesos, setSelection }) => {
 
     const columns = useMemo(() => {
         return [
@@ -68,7 +68,7 @@ const GridLotes = ({produccion, quesos, setSelection}) => {
     return (
         <>
             <DataGrid
-                style={{minHeight: "600px"}}
+                style={{ minHeight: "600px" }}
                 autoHeight={true}
                 rows={produccion}
                 columns={columns}

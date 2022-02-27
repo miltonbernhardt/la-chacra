@@ -4,7 +4,7 @@ const GridTrazabilidad = () => {
     return (
         <>
             <DataGrid
-                style={{minHeight: "600px"}}
+                style={{ minHeight: "600px" }}
                 autoHeight={true}
                 rows={[]}
                 columns={[]}

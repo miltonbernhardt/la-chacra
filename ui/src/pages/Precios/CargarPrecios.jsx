@@ -26,25 +26,24 @@ const CargarPrecios = () => {
     const [isLoadingClientes, setLoadingClientes] = useState(true);
 
     const fetchPrecios = () => {
-        getAllPrecios().then(({ data }) => {
-            setListaPrecios(data);
-        }).catch(e => { }).finally(() =>
-            setLoadingPrecios(false))
+        getAllPrecios()
+            .then(({ data }) => setListaPrecios(data))
+            .catch(() => null)
+            .finally(() => setLoadingPrecios(false))
     }
 
     const fetchQuesos = () => {
-        getAllQuesos().then(({ data }) => {
-            setListaQuesos(data);
-        }).catch(e => { }).finally(() =>
-            setLoadingQuesos(false))
-
+        getAllQuesos()
+            .then(({ data }) => setListaQuesos(data))
+            .catch(() => null)
+            .finally(() => setLoadingQuesos(false))
     }
 
     const fetchTipoClientes = () => {
-        getAllTipoClientes().then(({ data }) => {
-            setListaTipoClientes(data);
-        }).catch(e => { }).finally(() =>
-            setLoadingClientes(false))
+        getAllTipoClientes()
+            .then(({ data }) => setListaTipoClientes(data))
+            .catch(() => null)
+            .finally(() => setLoadingClientes(false))
     }
 
     useEffect(() => {
@@ -56,11 +55,13 @@ const CargarPrecios = () => {
     const handleSubmit = useCallback((precioForm) => {
         if (precioForm.id === '') {
             postPrecio(precioForm)
-                .then(() => fetchPrecios()).catch(e => { })
-                .finally(() => { setPrecio(precioInicial) })
+                .then(() => fetchPrecios())
+                .catch(() => null)
+                .finally(() =>  setPrecio(precioInicial))
         } else {
             putPrecio(precioForm)
-                .then(() => fetchPrecios()).catch(e => { })
+                .then(() => fetchPrecios())
+                .catch(() => null)
                 .finally(() => {
                     setEditing(false);
                     setPrecio(precioInicial)
@@ -77,6 +78,7 @@ const CargarPrecios = () => {
         setEditing(false)
         setPrecio(precioInicial)
     }, []);
+
     // --- Variables
     const quesosAutocomplete = useMemo(() =>
         listaQuesos.map((q) => {
@@ -92,7 +94,8 @@ const CargarPrecios = () => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [listaTipoClientes])
 
-    if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos) { return <Loading /> } //TODO
+    if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos)
+        return <Loading/>
 
     // This needs to be called after all lists are loaded
     // or else lists are undefined
@@ -123,12 +126,12 @@ const CargarPrecios = () => {
                         precio={precio}
                         isEditing={isEditing}
                         handleSubmit={handleSubmit}
-                        handleCancelar={handleCancelar} />
+                        handleCancelar={handleCancelar}/>
                 }
                 table={
                     <GridPrecios
                         precios={preciosFormatted}
-                        setSelection={setSelection} />
+                        setSelection={setSelection}/>
                 }
                 titleTable="Precios"
                 titleForm="Ingreso de precios"

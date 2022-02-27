@@ -1,6 +1,7 @@
 import { tiposDeQueso } from "../../data/data";
-import { Autocomplete, ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material";
+import { Autocomplete, ButtonGroup, Button, Grid, TextField } from "@mui/material";
 
+//todo replace components for reusable components
 const FormExpedicion = () => {
     return (
         <>

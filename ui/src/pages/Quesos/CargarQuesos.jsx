@@ -21,28 +21,28 @@ const CargarQuesos = () => {
     const [listaQuesos, setListaQuesos] = useState([]);
 
     const [isLoading, setLoading] = useState(true);
-    // Dialogs
+
     const [isCargarQueso, setIsCargarQueso] = useState(false);
     const [isEditarQueso, setIsEditarQueso] = useState(false);
     const [isOpenEliminarProducto, setOpenEliminarProducto] = useState(false);
 
-    useEffect(() => {
-        fetchQuesos()
-    }, []);
+    useEffect(() => fetchQuesos(), []);
 
     const fetchQuesos = () => {
-        getAllQuesos().then(quesos => {
-            const listaAux = quesos.data.map((q) => {
-                return {
-                    id: q.id,
-                    codigo: q.codigo,
-                    nomenclatura: q.nomenclatura,
-                    tipoQueso: q.tipoQueso
-                }
+        getAllQuesos()
+            .then(quesos => {
+                const listaAux = quesos.data.map((q) => {
+                    return {
+                        id: q.id,
+                        codigo: q.codigo,
+                        nomenclatura: q.nomenclatura,
+                        tipoQueso: q.tipoQueso
+                    }
+                })
+                setListaQuesos(listaAux)
+                setLoading(false);
             })
-            setListaQuesos(listaAux)
-            setLoading(false);
-        }).catch(e => { setLoading(false) });
+            .catch(() => setLoading(false));
 
         setQueso(quesoInicial)
     }
@@ -54,14 +54,15 @@ const CargarQuesos = () => {
                     fetchQuesos()
                     setIsCargarQueso(false);
                 })
-                .catch(e => console.error(e.message));
-        } else
+                .catch(() => null);
+        } else {
             putQueso(quesoSubmit)
                 .then(() => {
                     fetchQuesos()
                     setIsEditarQueso(false);
                 })
-                .catch(e => console.error(e.message));
+                .catch(() => null);
+        }
     }
 
     const onDelete = () => {
@@ -69,12 +70,14 @@ const CargarQuesos = () => {
             .then(() => {
                 fetchQuesos()
             })
-            .catch(e => console.error(e.message));
+            .catch(() => null);
+
         closeEliminarDialog()
     }
 
     //--- EDIT QUESO METHODS ---
     const openCargarDialog = () => setIsCargarQueso(true);
+
     const openEditarDialog = () => {
         if (queso.id === '') {
             toast.dismiss()
@@ -101,7 +104,8 @@ const CargarQuesos = () => {
         setQueso(listaQuesos.filter(o => o.id === id).pop())
     }
 
-    if (isLoading) { return (<Loading />) };
+    if (isLoading)
+        return (<Loading/>)
 
     return (
         <PageTableButtonPane
@@ -114,7 +118,7 @@ const CargarQuesos = () => {
             grid={
                 <GridQuesos
                     listaQuesos={listaQuesos}
-                    setSelection={setSelection} />
+                    setSelection={setSelection}/>
             }
         >
             <DialogCargarQueso
@@ -128,7 +132,7 @@ const CargarQuesos = () => {
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
-                onBorrar={onDelete} />
+                onBorrar={onDelete}/>
         </PageTableButtonPane>
     );
 }
