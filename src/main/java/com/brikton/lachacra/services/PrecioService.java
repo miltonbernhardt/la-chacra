@@ -50,6 +50,28 @@ public class PrecioService {
             throw new PrecioNotFoundException();
         return save(dto);
     }
+    /*
+        public PrecioDTO save(PrecioDTO dto) throws TipoClienteNotFoundException, QuesoNotFoundException, PrecioAlreadyExistsException {
+        var precio = precioFromDTO(dto);
+        // precio is unique by queso and tipoCliente
+        if (precioRepository.existsByQuesoAndTipoCliente(precio.getQueso(),precio.getTipoCliente()))
+            throw new PrecioAlreadyExistsException();
+        return new PrecioDTO(precioRepository.save(precio));
+    }
+
+    public PrecioDTO update(PrecioUpdateDTO dto) throws PrecioNotFoundException, TipoClienteNotFoundException, QuesoNotFoundException {
+        var precio = precioRepository.findById(dto.getId());
+        if (precio.isEmpty())  throw new PrecioNotFoundException();
+        var precioUpdate = precioFromDTOUpdate(dto);
+        // queso and tipoCliente aren't updatable
+        if (precio.get().getQueso().getId() != precioUpdate.getQueso().getId() ||
+        precio.get().getTipoCliente().getId() != precioUpdate.getTipoCliente().getId())
+            // it's the same as bad ID as queso and cliente don't correspond
+            throw new PrecioNotFoundException();
+        return new PrecioDTO(precioRepository.save(precioUpdate));
+    }
+
+     */
 
     private Precio precioFromDTO(PrecioDTO dto) throws TipoClienteNotFoundConflictException, QuesoNotFoundConflictException {
         Precio precio = new Precio();

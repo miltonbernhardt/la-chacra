@@ -74,7 +74,6 @@ const Select = forwardRef((
                 setValAndUpdate(value)
             }}
             isOptionEqualToValue={(option, value) => {
-                console.log({ option: option, value: value })
                 return value.value ? option.value === value.value : option.value === value
             }}
             disabled={disabled}
