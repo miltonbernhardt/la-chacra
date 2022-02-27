@@ -60,7 +60,7 @@ VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210021', 526.7, 10.75, 0),
        ('2021-10-28', 10, 6500, 228, 1, '2810202100110', 896.75, 13.80, 0),
        ('2021-10-28', 11, 6420, 242, 1, '2810202100111', 912.45, 14.21, 0);
 
-INSERT INTO public.tipo_cliente (id_tipo_cliente, tipo)
+INSERT INTO public.tipo_cliente (id, tipo)
 VALUES (1, 'Mayorista'),
        (2, 'Minorista'),
        (3, 'Particular'),

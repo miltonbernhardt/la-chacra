@@ -17,7 +17,7 @@ public class TipoCliente {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    @Column(name = "id_tipo_cliente")
+    @Column
     private Long id;
 
     @Column(unique = true)
