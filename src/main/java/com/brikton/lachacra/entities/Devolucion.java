@@ -11,9 +11,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class Devolucion {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
@@ -33,17 +31,4 @@ public class Devolucion {
     @ManyToOne
     @JoinColumn(name = "id_lote")
     private Lote lote;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Devolucion that = (Devolucion) o;
-        return id != null && Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

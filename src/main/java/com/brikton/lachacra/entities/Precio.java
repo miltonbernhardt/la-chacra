@@ -10,9 +10,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"id_queso","id_tipo_cliente"})})
 public class Precio {
 
@@ -33,17 +31,4 @@ public class Precio {
     @JoinColumn(name = "id_tipo_cliente")
     @ToString.Exclude
     private TipoCliente tipoCliente;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Precio precio = (Precio) o;
-        return id != null && Objects.equals(id, precio.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
