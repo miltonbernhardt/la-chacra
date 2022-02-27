@@ -313,8 +313,8 @@ public class LoteServiceTest {
     void Delete_With_Devolucion_Dependency__OK() {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionService.existsByLote(mockLote())).thenReturn(true);
-        when(expedicionService.existsByLote(mockLote())).thenReturn(false);
+        when(devolucionService.existsByLote(any(Lote.class))).thenReturn(true);
+        when(expedicionService.existsByLote(any(Lote.class))).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String id = loteService.delete("101020210011");
         assertEquals("101020210011", id);
@@ -324,8 +324,8 @@ public class LoteServiceTest {
     void Delete_With_Expedicion_Dependency__OK() {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionService.existsByLote(mockLote())).thenReturn(false);
-        when(expedicionService.existsByLote(mockLote())).thenReturn(true);
+        when(devolucionService.existsByLote(any(Lote.class))).thenReturn(false);
+        when(expedicionService.existsByLote(any(Lote.class))).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
         String id = loteService.delete("101020210011");
         assertEquals("101020210011", id);
