@@ -5,15 +5,12 @@ import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
 import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.entities.Lote;
-import com.brikton.lachacra.entities.Remito;
 import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.ClienteRepository;
 import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.PrecioRepository;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,14 +23,14 @@ public class ExpedicionService {
     private final ExpedicionRepository expedicionRepository;
     private final ClienteRepository clienteRepository;
     private final PrecioRepository precioRepository;
-    //private final RemitoRepository remitoRepository;
+    private final RemitoRepository remitoRepository;
     private final LoteService loteService;
 
-    public ExpedicionService(ExpedicionRepository expedicionRepository, ClienteRepository clienteRepository, PrecioRepository precioRepository, LoteService loteService) {
+    public ExpedicionService(ExpedicionRepository expedicionRepository, ClienteRepository clienteRepository, PrecioRepository precioRepository, RemitoRepository remitoRepository, LoteService loteService) {
         this.expedicionRepository = expedicionRepository;
         this.clienteRepository = clienteRepository;
         this.precioRepository = precioRepository;
-        //this.remitoRepository = remitoRepository;
+        this.remitoRepository = remitoRepository;
         this.loteService = loteService;
     }
 
@@ -85,6 +82,10 @@ public class ExpedicionService {
         var expedicion = expedicionRepository.findById(id);
         if (expedicion.isEmpty()) throw new ExpedicionNotFoundException();
         //TODO check if don't exists remitos associated
+        if (remitoRepository.existsByExpedicionesContains(expedicion.get())) return id.toString();
+        // return stock to lote
+        loteService.decrementStock(expedicion.get().getLote(),-expedicion.get().getCantidad());
+        // delete expedicion
         expedicionRepository.delete(expedicion.get());
         return "";
     }
