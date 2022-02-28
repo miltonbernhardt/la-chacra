@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Loading from "../../components/Loading";
 import PageFormTable from "../../components/PageFormTable";
-import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from '../../services/RestServices';
+import { deleteExpedicion, getAllClientes, getAllPrecios, getLote, postExpedicion, putExpedicion } from '../../services/RestServices';
 import FormExpedicion from "./FormExpedicion";
 import GridExpedicion from "./GridExpedicion";
 import DialogEliminarExpedicion from './DialogEliminarExpedicion'
 import * as field from "../../resources/fields";
+import toast from "react-hot-toast";
 
 const expedicionInicial = {
     id: '',
@@ -22,20 +23,33 @@ const CargarExpedicion = () => {
     const [expedicion, setExpedicion] = useState(expedicionInicial);
     const [listaClientes, setListaClientes] = useState([]);
     const [listaExpediciones, setListaExpediciones] = useState([]);
+    const [listaPrecios, setListaPrecios] = useState([]);
 
     const [isEditing, setEditing] = useState(false);
-    const [isLoading, setLoading] = useState(true);
+    const [isLoadingClientes, setLoadingClientes] = useState(true);
+    const [isLoadingPrecios, setLoadingPrecios] = useState(true);
 
     const [openDialogEliminar, setOpenDialogEliminar] = useState(false);
 
     useEffect(() => {
         fetchClientes();
+        fetchPrecios();
     }, []);
 
     const fetchClientes = () => {
-        getAllClientes().then(({ data }) => {
-            setListaClientes(data)
-        }).catch(e => { }).finally(() => { setLoading(false) });
+        getAllClientes()
+            .then(({ data }) => {
+                setListaClientes(data)
+            })
+            .catch(() => toast.error("No se pudo cargar clientes"))
+            .finally(() => setLoadingClientes(false));
+    }
+
+    const fetchPrecios = () => {
+        getAllPrecios()
+            .then(({ data }) => { setListaPrecios(data) })
+            .catch(() => toast.error("No se pudo cargar precios"))
+            .finally(() => setLoadingPrecios(false))
     }
 
     const handleSubmit = useCallback((expedicionForm) => {
@@ -44,7 +58,8 @@ const CargarExpedicion = () => {
                 .then(({ data }) => {
                     setEditing(false);
                     setExpedicion(expedicionInicial);
-                    setListaExpediciones([...listaExpediciones, data]);
+                    const newList = listaExpediciones.filter((item) => item.id !== expedicion.id);
+                    setListaExpediciones([...newList, data]);
                 })
                 .catch(e => { })
         else
@@ -54,7 +69,8 @@ const CargarExpedicion = () => {
                     setListaExpediciones([...listaExpediciones, data]);
                 })
                 .catch(e => { })
-    }, [isEditing, listaExpediciones])
+                .finally()
+    }, [expedicion.id, isEditing, listaExpediciones])
 
     const submitDelete = useCallback(() => {
         deleteExpedicion(expedicion.id)
@@ -100,7 +116,8 @@ const CargarExpedicion = () => {
         }
     }), [listaClientes, listaExpediciones]);
 
-    if (isLoading) { return <Loading /> }
+    if (isLoadingClientes || isLoadingPrecios)
+        return <Loading />
 
     return (
         <PageFormTable

@@ -12,4 +12,7 @@ public class SuccessfulMessages {
     public static final String MSG_QUESO_DELETED = "Se borró el queso correctamente";
     public static final String MSG_QUESO_UPDATED = "Se actualizó el queso correctamente";
     public static final String MSG_QUESO_CREATED = "Se creó el queso correctamente";
+    public static final String MSG_EXPEDICION_DELETED = "Se borró la expedición correctamente";
+    public static final String MSG_EXPEDICION_UPDATED = "Se actualizó la expedición correctamente";
+    public static final String MSG_EXPEDICION_CREATED = "Se cargó la expedición correctamente";
 }

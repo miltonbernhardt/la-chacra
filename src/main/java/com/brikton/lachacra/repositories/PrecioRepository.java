@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PrecioRepository extends JpaRepository<Precio, Long> {
@@ -21,5 +22,7 @@ public interface PrecioRepository extends JpaRepository<Precio, Long> {
 
     @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Precio p WHERE p.queso.id=:idQueso AND p.tipoCliente.id=:idTipoCliente AND p.id=:id")
     boolean existsByIdAndQuesoAndTipoCliente(Long id, Long idQueso, Long idTipoCliente);
+
+    Optional<Precio> findByQuesoAndAndTipoCliente(Queso queso, TipoCliente tipoCliente);
 
 }

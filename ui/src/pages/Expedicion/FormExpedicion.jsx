@@ -39,8 +39,8 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
         refPeso.current.validate(errors, values, [
             { func: validation.minorToOne, msg: message.valZeroValue }])
 
-        refImporte.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
+        // refImporte.current.validate(errors, values, [
+        //     { func: validation.minorToOne, msg: message.valZeroValue }])
 
         refFechaExpedicion.current.validate(errors, values, [
             { func: validation.empty, msg: message.valEmptyFecha },
@@ -54,7 +54,7 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
         }
 
         handleSubmit(values)
-    }, [expedicionForm.id, handleSubmit, refCantidad, refFechaExpedicion, refIdLote, refImporte, refPeso, refSelectCliente]);
+    }, [expedicionForm.id, handleSubmit, refCantidad, refFechaExpedicion, refIdLote, refPeso, refSelectCliente]);
 
     // --- Variables
     const labelCargar = useMemo(() => isEditing ? 'Actualizar Expedición' : 'Cargar Expedición', [isEditing]);
@@ -86,11 +86,11 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
                     value={expedicionForm.peso}
                     sm={6}
                     required />
-                <Input ref={refImporte}
+                {/* <Input ref={refImporte}
                     id={field.backImporte}
                     label={field.importe}
                     value={expedicionForm.importe}
-                    required />
+                    required /> */}
                 <Input ref={refFechaExpedicion}
                     id={field.backFechaExpedicion}
                     label={field.fechaExpedicion}
