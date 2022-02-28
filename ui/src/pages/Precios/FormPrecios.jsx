@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Grid, Typography } from "@mui/material";
+import { Button, ButtonGroup, Grid } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -8,7 +8,7 @@ import * as validation from "../../resources/validations";
 
 const precioInicial = {
     id: '',
-    precio: '',
+    valor: '',
     idTipoCliente: '',
     idQueso: ''
 }
@@ -44,6 +44,7 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, i
             field.toastValidationErrors(errors)
             return
         }
+
         handleSubmit(values)
     }, [handleSubmit, precioForm.id]);
 
@@ -70,7 +71,7 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, i
                 <Input ref={refPrecio}
                     id={field.backPrecio}
                     label={field.precio}
-                    value={precioForm.precio}
+                    value={precioForm.valor}
                     required />
                 <Grid item xs={12} alignSelf="right" mb={0.5}>
                     <ButtonGroup fullWidth variant="contained">

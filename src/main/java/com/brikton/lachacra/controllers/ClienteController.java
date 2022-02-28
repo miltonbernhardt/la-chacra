@@ -4,8 +4,6 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.dtos.ClienteUpdateDTO;
-import com.brikton.lachacra.exceptions.ClienteNotFoundException;
-import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ClienteService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,19 +35,19 @@ public class ClienteController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<ClienteDTO>> save(@RequestBody @Valid ClienteDTO dto) throws TipoClienteNotFoundConflictException {
+    public ResponseEntity<SuccessfulResponse<ClienteDTO>> save(@RequestBody @Valid ClienteDTO dto) {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_CREATED, service.save(dto)));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<ClienteDTO>> update(@RequestBody @Valid ClienteUpdateDTO dto) throws TipoClienteNotFoundConflictException, ClienteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<ClienteDTO>> update(@RequestBody @Valid ClienteUpdateDTO dto) {
         log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_UPDATED, service.update(dto)));
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<Long>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) @PathVariable("id") Long id) throws ClienteNotFoundException {
+    public ResponseEntity<SuccessfulResponse<Long>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) @PathVariable("id") Long id) {
         log.info("API::delete - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_DELETED, service.delete(id)));
     }

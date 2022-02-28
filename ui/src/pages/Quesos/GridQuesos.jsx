@@ -1,4 +1,3 @@
-
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
@@ -22,10 +21,10 @@ const columns = [
     },
 ]
 
-const GridQuesos = ({listaQuesos, setSelection}) => {
+const GridQuesos = ({ listaQuesos, setSelection }) => {
     return (
         <DataGrid
-            style={{minHeight: "600px"}}
+            style={{ minHeight: "600px" }}
             autoHeight={true}
             rows={listaQuesos}
             rowHeight={42}

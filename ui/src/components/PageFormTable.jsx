@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 
-const PageFormTable = ({ form, table, titleTable, children, sizeForm, titleForm }) => {
+const PageFormTable = ({ form, table, titleTable, children, titleForm }) => {
     return (
         <Grid container
             direction="row"
@@ -37,9 +37,9 @@ const PageFormTable = ({ form, table, titleTable, children, sizeForm, titleForm 
                     {table}
                 </Grid>
             </Grid>
+
             {/* DIALOGS */}
             {children}
-
         </Grid>
     )
 }

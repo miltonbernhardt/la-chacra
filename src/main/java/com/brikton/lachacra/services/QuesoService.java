@@ -4,7 +4,6 @@ import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.PrecioNotFoundException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
@@ -88,17 +87,12 @@ public class QuesoService {
     public String delete(Long id) throws QuesoNotFoundException {
         var queso = getEntity(id);
 
+        precioService.deletePreciosByQueso(queso.getId());
+
         if (loteRepository.existsByQueso(queso)) {
             queso.setFechaBaja(dateUtil.now());
             queso = repository.save(queso);
             return queso.getCodigo();
-        }
-
-        for (Long idPrecio : precioService.getAllByQueso(queso.getId())) {
-            try {
-                precioService.delete(idPrecio);
-            } catch (PrecioNotFoundException ignored) {
-            }
         }
 
         repository.delete(queso);

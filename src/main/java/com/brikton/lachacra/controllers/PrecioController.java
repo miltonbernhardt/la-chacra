@@ -1,9 +1,8 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
-import com.brikton.lachacra.dtos.*;
-import com.brikton.lachacra.entities.Precio;
-import com.brikton.lachacra.exceptions.*;
+import com.brikton.lachacra.dtos.PrecioDTO;
+import com.brikton.lachacra.dtos.PrecioUpdateDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.PrecioService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +33,14 @@ public class PrecioController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<PrecioDTO>> save(@RequestBody @Valid PrecioDTO dto) throws TipoClienteNotFoundException, QuesoNotFoundException, PrecioAlreadyExistsException {
+    public ResponseEntity<SuccessfulResponse<PrecioDTO>> save(@RequestBody @Valid PrecioDTO dto) {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_PRECIO_CREATED, service.save(dto)));
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<PrecioDTO>> update(@RequestBody @Valid PrecioUpdateDTO dto) throws PrecioNotFoundException, TipoClienteNotFoundException, QuesoNotFoundException {
+    public ResponseEntity<SuccessfulResponse<PrecioDTO>> update(@RequestBody @Valid PrecioUpdateDTO dto) {
         log.info("API::update - dto: {}", dto);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_UPDATED, service.update(dto)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_PRECIO_UPDATED, service.update(dto)));
     }
 }

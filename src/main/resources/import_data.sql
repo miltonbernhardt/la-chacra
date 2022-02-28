@@ -21,7 +21,7 @@ VALUES (1, '001', 'C', 'Cremoso', 70),
        (20, '020', 'Crema', 'Crema', 10);
 
 INSERT INTO public.Lote (fecha_elaboracion, numero_tina, litros_leche, cant_hormas, id_queso,
-                         id_lote, peso, rendimiento, stock_lote)
+                         id, peso, rendimiento, stock_lote)
 VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210021', 526.7, 10.75, 0),
        ('2021-10-22', 2, 6500, 228, 1, '221020210012', 842.5, 12.96, 0),
        ('2021-10-22', 3, 6537, 242, 1, '221020210013', 938.8, 14.36, 0),
@@ -60,7 +60,7 @@ VALUES ('2021-10-22', 1, 4900, 124, 2, '221020210021', 526.7, 10.75, 0),
        ('2021-10-28', 10, 6500, 228, 1, '2810202100110', 896.75, 13.80, 0),
        ('2021-10-28', 11, 6420, 242, 1, '2810202100111', 912.45, 14.21, 0);
 
-INSERT INTO public.tipo_cliente (id_tipo_cliente, tipo)
+INSERT INTO public.tipo_cliente (id, tipo)
 VALUES (1, 'Mayorista'),
        (2, 'Minorista'),
        (3, 'Particular'),
@@ -128,7 +128,7 @@ VALUES ('101', 'ABDALA, Gustavo', 1, '20-21641332-7', 'Jacob 2830', '3080', 'Esp
        ('160', 'HnroClienteALGO, Lucas', 1, '20-29115738-7', 'Italia 781', '3080', 'Esperanza', 'Santa Fe', 'Argentina',
         'HnroClienteALGO, Lucas', '115568');
 
-INSERT INTO public.precio (id_tipo_cliente, id_queso, precio, id_precio)
+INSERT INTO public.precio (id_tipo_cliente, id_queso, valor, id)
 VALUES (1, 001, 371.00, 1),
        (1, 002, 486.00, 2),
        (1, 003, 550.00, 3),

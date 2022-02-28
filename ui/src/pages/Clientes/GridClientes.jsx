@@ -1,6 +1,4 @@
-import { Grid } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
-
 import { useMemo } from "react";
 
 const GridClientes = ({ setSelection, clientes }) => {

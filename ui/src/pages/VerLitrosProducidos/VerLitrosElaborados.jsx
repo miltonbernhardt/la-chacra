@@ -22,14 +22,14 @@ const columns = [{
     flex: 1,
     minWidth: 100
 },
-{
-    field: "total",
-    headerName: "Total",
-    type: 'number',
-    flex: 1,
-    minWidth: 100
-},
-...columns1
+    {
+        field: "total",
+        headerName: "Total",
+        type: 'number',
+        flex: 1,
+        minWidth: 100
+    },
+    ...columns1
 ];
 
 const VerLitrosElaborados = () => {
@@ -73,7 +73,7 @@ const VerLitrosElaborados = () => {
                                     variant="outlined"
                                     InputLabelProps={{
                                         shrink: true,
-                                    }} />
+                                    }}/>
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
@@ -85,10 +85,10 @@ const VerLitrosElaborados = () => {
                                     variant="outlined"
                                     InputLabelProps={{
                                         shrink: true,
-                                    }} />
+                                    }}/>
                             </Grid>
                             <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
-                                <Button variant="contained" fullWidth >Buscar</Button>
+                                <Button variant="contained" fullWidth>Buscar</Button>
                             </Grid>
                         </Grid>
                     </Paper>
@@ -104,9 +104,9 @@ const VerLitrosElaborados = () => {
                     padding: 1
                 }}
             >
-                <Grid container spacing={2} >
+                <Grid container spacing={2}>
                     {/* Chart */}
-                    <Grid item xs={12} >
+                    <Grid item xs={12}>
                         <Paper
                             sx={{
                                 p: 2,
@@ -124,31 +124,15 @@ const VerLitrosElaborados = () => {
                             />
                         </Paper>
                     </Grid>
-                    {/* <Grid item xs={12} sm={6}>
-                        <Paper
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                height: 600,
-                            }}
-                        >
-                            <GraficoBarras
-                                data={[litrosElaborados.at(3)]}
-                                xDataKey="semana"
-                                yDataKeyArray={quesos.map((q) => { return q.nomenclatura })}
-                            />
-                        </Paper>
-                    </Grid>*/}
                 </Grid>
             </Box>
             <Box height={600}
-                sx={{
-                    padding: 1,
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                 sx={{
+                     padding: 1,
+                     flexDirection: 'column',
+                     alignItems: 'center',
 
-                }}>
+                 }}>
                 <Grid item xs={12}>
                     <Paper
                         sx={{

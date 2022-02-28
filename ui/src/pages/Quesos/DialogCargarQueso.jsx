@@ -30,9 +30,7 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
     const refTipoQueso = createRef(null)
     const refNomenclatura = createRef(null)
 
-    const labelCargar = useMemo(() => {
-        return isEditarQueso ? 'Actualizar Producto' : 'Cargar Producto'
-    }, [isEditarQueso]);
+    const labelCargar = useMemo(() => isEditarQueso ? 'Actualizar Producto' : 'Cargar Producto', [isEditarQueso]);
 
     const onCargar = () => {
         const errors = new Map();
@@ -75,20 +73,20 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                             ref={refTipoQueso}
                             value={quesoForm.tipoQueso}
                             type="text"
-                            required />
+                            required/>
                         <Input
                             id={field.backNomenclatura}
                             label={field.nomenclatura}
                             ref={refNomenclatura}
                             value={quesoForm.nomenclatura}
                             type="text"
-                            required />
+                            required/>
                         <Input
                             id={field.backCodigo}
                             label={field.codigo}
                             ref={refCodigo}
                             value={quesoForm.codigo}
-                            required />
+                            required/>
                     </Grid>
                 </DialogContent>
                 <DialogActions>

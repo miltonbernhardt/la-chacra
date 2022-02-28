@@ -41,7 +41,7 @@ public class LoteService {
 
     public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
         var id = generateID(dto);
-        if (repository.existsById(id)) {
+        if (repository.existsByIdNotFechaBaja(id)) {
             throw new LoteAlreadyExistsException();
         }
         return persist(dto);

@@ -119,6 +119,7 @@ const processResponseError = (err) => {
             toast.error(data.message)
     } else {
         toast.error(err.message)
+        console.error(err.message)
     }
     throw new Error(err)
 }

@@ -12,7 +12,7 @@ public class PrecioDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-    private Double precio;
+    private Double valor;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
@@ -27,10 +27,17 @@ public class PrecioDTO {
     public PrecioDTO() {
     }
 
-    public PrecioDTO(Precio precio) {
-        this.setId(precio.getId());
-        this.setIdQueso(precio.getQueso().getId());
-        this.setIdTipoCliente(precio.getTipoCliente().getId());
-        this.setPrecio(precio.getPrecio());
+    public PrecioDTO(Precio valor) {
+        this.setId(valor.getId());
+        this.setIdQueso(valor.getQueso().getId());
+        this.setIdTipoCliente(valor.getTipoCliente().getId());
+        this.setValor(valor.getValor());
+    }
+
+    public PrecioDTO(PrecioUpdateDTO precioUpdateDTO) {
+        this.setId(precioUpdateDTO.getId());
+        this.setIdQueso(precioUpdateDTO.getIdQueso());
+        this.setIdTipoCliente(precioUpdateDTO.getIdTipoCliente());
+        this.setValor(precioUpdateDTO.getValor());
     }
 }
