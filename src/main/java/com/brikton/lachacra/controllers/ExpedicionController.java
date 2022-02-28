@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -45,5 +47,12 @@ public class ExpedicionController {
     public ResponseEntity<SuccessfulResponse<ExpedicionDTO>> save(@RequestBody @Valid ExpedicionUpdateDTO dto) throws ExpedicionNotFoundException, ExpedicionAlreadyExistsException, ClienteNotFoundException, LoteNotFoundException {
         log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_UPDATED, service.update(dto)));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+                                                             @PathVariable("id") Long id)  throws ExpedicionNotFoundException {
+        log.info("API::delete - id: {}", id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_DELETED, service.delete(id)));
     }
 }

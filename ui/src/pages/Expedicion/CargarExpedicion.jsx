@@ -23,17 +23,14 @@ const CargarExpedicion = () => {
     const [expedicion, setExpedicion] = useState(expedicionInicial);
     const [listaClientes, setListaClientes] = useState([]);
     const [listaExpediciones, setListaExpediciones] = useState([]);
-    const [listaPrecios, setListaPrecios] = useState([]);
 
     const [isEditing, setEditing] = useState(false);
     const [isLoadingClientes, setLoadingClientes] = useState(true);
-    const [isLoadingPrecios, setLoadingPrecios] = useState(true);
 
     const [openDialogEliminar, setOpenDialogEliminar] = useState(false);
 
     useEffect(() => {
         fetchClientes();
-        fetchPrecios();
     }, []);
 
     const fetchClientes = () => {
@@ -43,13 +40,6 @@ const CargarExpedicion = () => {
             })
             .catch(() => toast.error("No se pudo cargar clientes"))
             .finally(() => setLoadingClientes(false));
-    }
-
-    const fetchPrecios = () => {
-        getAllPrecios()
-            .then(({ data }) => { setListaPrecios(data) })
-            .catch(() => toast.error("No se pudo cargar precios"))
-            .finally(() => setLoadingPrecios(false))
     }
 
     const handleSubmit = useCallback((expedicionForm) => {
@@ -81,6 +71,7 @@ const CargarExpedicion = () => {
                 setListaExpediciones(newList);
             })
             .catch(e => { })
+            .finally(() => setOpenDialogEliminar(false))
     }, [expedicion.id, listaExpediciones]);
 
     const handleDelete = useCallback(() => setOpenDialogEliminar(true), [])
@@ -116,7 +107,7 @@ const CargarExpedicion = () => {
         }
     }), [listaClientes, listaExpediciones]);
 
-    if (isLoadingClientes || isLoadingPrecios)
+    if (isLoadingClientes)
         return <Loading />
 
     return (
