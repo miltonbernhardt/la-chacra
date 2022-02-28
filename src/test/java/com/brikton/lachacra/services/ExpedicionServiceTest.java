@@ -1,12 +1,12 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.ExpedicionDTO;
+import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.entities.*;
-import com.brikton.lachacra.repositories.ClienteRepository;
-import com.brikton.lachacra.repositories.ExpedicionRepository;
-import com.brikton.lachacra.repositories.LoteRepository;
+import com.brikton.lachacra.repositories.*;
 import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,8 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -29,13 +28,19 @@ public class ExpedicionServiceTest {
     ExpedicionRepository repository;
 
     @MockBean
-    LoteService loteService;
-
-    @MockBean
     LoteRepository loteRepository;
 
     @MockBean
+    PrecioRepository precioRepository;
+
+    @MockBean
     ClienteRepository clienteRepository;
+
+    @MockBean
+    RemitoRepository remitoRepository;
+
+    @MockBean
+    LoteService loteService;
 
     @MockBean
     QuesoService quesoService;
@@ -78,22 +83,40 @@ public class ExpedicionServiceTest {
 //TODO
     @Test
     void Save__OK(){
+        when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
         when(repository.existsById(any(Long.class))).thenReturn(false);
         when(clienteRepository.findById(any(Long.class))).thenReturn(Optional.of(mockCliente()));
         when(loteService.getEntity(any(String.class))).thenReturn(mockLote());
+        when(precioRepository.findByQuesoAndAndTipoCliente(any(Queso.class),any(TipoCliente.class))).thenReturn(Optional.of(mockPrecio()));
 
+        var expedicion = mockExpedicionDTO();
+        expedicion.setId(null);
+        var response = expedicionService.save(expedicion);
+        assertEquals(1500,response.getImporte());
     }
 
     private ExpedicionDTO mockExpedicionDTO(){
         var dto = new ExpedicionDTO();
         dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
-        dto.setPeso(1000D);
+        dto.setPeso(10D);
         dto.setCantidad(20);
         dto.setId(1L);
         dto.setImporte(900D);
         dto.setIdCliente(1L);
         dto.setIdLote("101020210011");
         return dto;
+    }
+
+    private Expedicion mockExpedicion(){
+        var exp = new Expedicion();
+        exp.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        exp.setPeso(10D);
+        exp.setCantidad(20);
+        exp.setId(1L);
+        exp.setImporte(900D);
+        exp.setCliente(mockCliente());
+        exp.setLote(mockLote());
+        return exp;
     }
 
     Lote mockLote() {
@@ -149,5 +172,14 @@ public class ExpedicionServiceTest {
         mockTipoCliente.setId(1L);
         mockTipoCliente.setTipo("tipo1");
         return mockTipoCliente;
+    }
+
+    Precio mockPrecio(){
+        var precio = new Precio();
+        precio.setId(1L);
+        precio.setQueso(mockQueso());
+        precio.setTipoCliente(mockTipoCliente());
+        precio.setValor(150d);
+        return precio;
     }
 }
