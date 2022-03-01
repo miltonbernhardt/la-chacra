@@ -22,7 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {QuesoService.class})
 public class QuesoServiceTest {
@@ -85,57 +85,57 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Get_Entity_By_ID__OK() {
+    void Get__OK() {
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso()));
-        Queso quesoActual = quesoService.getEntity(1L);
+        Queso quesoActual = quesoService.get(1L);
         Queso quesoExpected = mockQueso();
         assertEquals(quesoExpected, quesoActual);
     }
 
     @Test
-    void Get_Queso_By_ID__Deleted() {
+    void Get__Deleted() {
         var dto = mockQueso();
         dto.setFechaBaja(LocalDate.of(2021, 10, 10));
         when(repository.findById(1L)).thenReturn(Optional.of(dto));
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.getEntity(1L)
+                QuesoNotFoundException.class, () -> quesoService.get(1L)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
-    void Get_Entity_By_ID__Queso_Not_Found() {
+    void Get__Queso_Not_Found() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.getEntity(1L)
+                QuesoNotFoundException.class, () -> quesoService.get(1L)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
-    void Get_Entity_By_Codigo__OK() {
+    void Get_By_Codigo__OK() {
         when(repository.findByCodigo("001")).thenReturn(Optional.of(mockQueso()));
-        Queso quesoActual = quesoService.getEntity("001");
+        Queso quesoActual = quesoService.getByCodigo("001");
         Queso quesoExpected = mockQueso();
         assertEquals(quesoExpected, quesoActual);
     }
 
     @Test
-    void Get_Entity_By_Codigo__Deleted() {
+    void Get_By_Codigo__Deleted() {
         var dto = mockQueso();
         dto.setFechaBaja(LocalDate.of(2021, 10, 10));
         when(repository.findByCodigo("001")).thenReturn(Optional.of(dto));
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.getEntity("001")
+                QuesoNotFoundException.class, () -> quesoService.getByCodigo("001")
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
-    void Get_Entity_By_Codigo__Queso_Not_Found() {
+    void Get_By_Codigo__Queso_Not_Found() {
         when(repository.findByCodigo("001")).thenReturn(Optional.empty());
         QuesoNotFoundException thrown = assertThrows(
-                QuesoNotFoundException.class, () -> quesoService.getEntity("001")
+                QuesoNotFoundException.class, () -> quesoService.getByCodigo("001")
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
@@ -268,8 +268,12 @@ public class QuesoServiceTest {
         when(repository.save(any(Queso.class))).thenReturn(deletedQueso);
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-        String actualID = quesoService.delete(1L);
-        assertEquals("001", actualID);
+
+        quesoService.delete(1L);
+
+        verify(precioService).deletePreciosByQueso(1L);
+        verify(repository).save(any(Queso.class));
+        verify(repository, never()).delete(any(Queso.class));
     }
 
     @Test
@@ -284,24 +288,12 @@ public class QuesoServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
         when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-        String actualID = quesoService.delete(1L);
-        assertEquals("", actualID);
-    }
 
-    @Test
-    void Delete_Queso_WITHOUT_Dependencies_Precio_Not_Found_OK() {
-        Queso mockQueso = new Queso();
-        mockQueso.setId(1L);
-        mockQueso.setCodigo("001");
-        mockQueso.setTipoQueso("TIPO_QUESO");
-        mockQueso.setNomenclatura("tip");
-        mockQueso.setStock(1);
+        quesoService.delete(1L);
 
-        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(loteRepository.existsByQueso(any(Queso.class))).thenReturn(false);
-        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-        String actualID = quesoService.delete(1L);
-        assertEquals("", actualID);
+        verify(precioService).deletePreciosByQueso(1L);
+        verify(repository).delete(any(Queso.class));
+        verify(repository, never()).save(any(Queso.class));
     }
 
     @Test

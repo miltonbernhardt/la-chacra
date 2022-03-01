@@ -4,8 +4,6 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.QuesoUpdateDTO;
-import com.brikton.lachacra.exceptions.CodigoQuesoAlreadyExistsException;
-import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +47,9 @@ public class QuesoController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-                                                             @PathVariable("id") Long id)  {
+                                                             @PathVariable("id") Long id) {
         log.info("API::delete - id: {}", id);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_DELETED, service.delete(id)));
+        service.delete(id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_QUESO_DELETED));
     }
 }

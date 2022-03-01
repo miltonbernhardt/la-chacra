@@ -35,14 +35,14 @@ public class QuesoService {
         this.precioService = precioService;
     }
 
-    public Queso getEntity(Long id) throws QuesoNotFoundException {
+    public Queso get(Long id) throws QuesoNotFoundException {
         var queso = repository.findById(id);
         if (queso.isPresent() && queso.get().getFechaBaja() == null)
             return queso.get();
         throw new QuesoNotFoundException();
     }
 
-    public Queso getEntity(String codigo) throws QuesoNotFoundException {
+    public Queso getByCodigo(String codigo) throws QuesoNotFoundException {
         var queso = repository.findByCodigo(codigo);
         if (queso.isPresent() && queso.get().getFechaBaja() == null)
             return queso.get();
@@ -56,47 +56,12 @@ public class QuesoService {
     }
 
     public QuesoDTO save(QuesoDTO dto) throws CodigoQuesoAlreadyExistsException {
-        if (repository.existsByCodigoNotFechaBaja(dto.getCodigo())) {
+        if (repository.existsByCodigoNotFechaBaja(dto.getCodigo()))
             throw new CodigoQuesoAlreadyExistsException();
-        }
 
         var queso = quesoFromDTO(dto);
         queso = repository.save(queso);
         return new QuesoDTO(queso);
-    }
-
-    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
-        var oldQuesoOptional = repository.findById(dto.getId());
-        if (oldQuesoOptional.isEmpty())
-            throw new QuesoNotFoundException();
-
-        var oldQueso = oldQuesoOptional.get();
-
-        if (!oldQueso.getCodigo().equals(dto.getCodigo()) && repository.existsByCodigoNotFechaBaja(dto.getCodigo())) {
-            throw new CodigoQuesoAlreadyExistsException();
-        }
-
-        oldQueso.setCodigo(dto.getCodigo());
-        oldQueso.setNomenclatura(dto.getNomenclatura());
-        oldQueso.setTipoQueso(dto.getTipoQueso());
-        //todo que hacemos con el stock? para mi, no deberia actualizar porque se calcula a partir de expediciones y lotes
-        var queso = repository.save(oldQueso);
-        return new QuesoDTO(queso);
-    }
-
-    public String delete(Long id) throws QuesoNotFoundException {
-        var queso = getEntity(id);
-
-        precioService.deletePreciosByQueso(queso.getId());
-
-        if (loteRepository.existsByQueso(queso)) {
-            queso.setFechaBaja(dateUtil.now());
-            queso = repository.save(queso);
-            return queso.getCodigo();
-        }
-
-        repository.delete(queso);
-        return "";
     }
 
     private Queso quesoFromDTO(QuesoDTO dto) {
@@ -106,5 +71,40 @@ public class QuesoService {
         queso.setNomenclatura(dto.getNomenclatura());
         queso.setStock(dto.getStock());
         return queso;
+    }
+
+    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+        var oldQueso = get(dto.getId());
+
+        validateIfAlreadyExists(oldQueso.getCodigo(), dto.getCodigo());
+
+        oldQueso.setCodigo(dto.getCodigo());
+        oldQueso.setNomenclatura(dto.getNomenclatura());
+        oldQueso.setTipoQueso(dto.getTipoQueso());
+        //todo que hacemos con el stock? para mi, no deberia actualizar porque se calcula a partir de expediciones y lotes
+        var queso = repository.save(oldQueso);
+        return new QuesoDTO(queso);
+    }
+
+    private void validateIfAlreadyExists( String oldCodigo, String actualCodigo) {
+        if (!oldCodigo.equals(actualCodigo) && repository.existsByCodigoNotFechaBaja(actualCodigo)) {
+            throw new CodigoQuesoAlreadyExistsException();
+        }
+    }
+
+    public void delete(Long id) throws QuesoNotFoundException {
+        var queso = get(id);
+
+        precioService.deletePreciosByQueso(queso.getId());
+
+        if (loteRepository.existsByQueso(queso))
+            darBajaQueso(queso);
+        else
+            repository.delete(queso);
+    }
+
+    private void darBajaQueso(Queso queso) {
+        queso.setFechaBaja(dateUtil.now());
+        repository.save(queso);
     }
 }
