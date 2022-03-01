@@ -98,7 +98,10 @@ public class LoteService {
         var peso = BigDecimal.valueOf(pesoD);
         var litrosLeche = BigDecimal.valueOf(litrosLecheD);
         var mc = new MathContext(2);
-        var rendimiento = peso.multiply(litrosLeche).divide(BigDecimal.valueOf(100), mc);
+        var rendimiento = peso.divide(litrosLeche, mc);
+
+        rendimiento = rendimiento.multiply(BigDecimal.valueOf(100));
+
         return rendimiento.doubleValue();
     }
 

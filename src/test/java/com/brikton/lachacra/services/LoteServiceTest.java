@@ -150,34 +150,39 @@ public class LoteServiceTest {
         savedLote.setStockLote(90);
         savedLote.setLitrosLeche(20D);
         savedLote.setPeso(10D);
-        savedLote.setRendimiento(20D);
+        savedLote.setRendimiento(50D);
         savedLote.setLoteCultivo("cultivo1, cultivo2");
         savedLote.setLoteColorante("colorante1, colorante2");
         savedLote.setLoteCalcio("calcio1, calcio2");
         savedLote.setLoteCuajo("cuajo1, cuajo2");
         savedLote.setQueso(mockQueso());
 
-        LoteDTO expectedLote = new LoteDTO();
-        expectedLote.setId("101020210011");
-        expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-        expectedLote.setNumeroTina(1);
-        expectedLote.setCantHormas(1);
-        expectedLote.setLitrosLeche(20D);
-        expectedLote.setPeso(10D);
-        expectedLote.setStockLote(90);
-        expectedLote.setRendimiento(20D);
-        expectedLote.setLoteCultivo("cultivo1, cultivo2");
-        expectedLote.setLoteColorante("colorante1, colorante2");
-        expectedLote.setLoteCalcio("calcio1, calcio2");
-        expectedLote.setLoteCuajo("cuajo1, cuajo2");
-        expectedLote.setCodigoQueso("001");
+        LoteDTO expectedDTO = new LoteDTO();
+        expectedDTO.setId("101020210011");
+        expectedDTO.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        expectedDTO.setNumeroTina(1);
+        expectedDTO.setCantHormas(1);
+        expectedDTO.setLitrosLeche(20D);
+        expectedDTO.setPeso(10D);
+        expectedDTO.setStockLote(90);
+        expectedDTO.setRendimiento(50D);
+        expectedDTO.setLoteCultivo("cultivo1, cultivo2");
+        expectedDTO.setLoteColorante("colorante1, colorante2");
+        expectedDTO.setLoteCalcio("calcio1, calcio2");
+        expectedDTO.setLoteCuajo("cuajo1, cuajo2");
+        expectedDTO.setCodigoQueso("001");
 
         when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(false);
         when(repository.save(any(Lote.class))).thenReturn(savedLote);
 
-        LoteDTO dtoActual = service.save(dtoToSave);
-        assertEquals(expectedLote, dtoActual);
+        LoteDTO actualDTO = service.save(dtoToSave);
+
+        ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
+        verify(repository).save(captor.capture());
+
+        assertEquals(expectedDTO, actualDTO);
+        assertEquals(50.0, captor.getValue().getRendimiento());
     }
 
     @Test
@@ -289,7 +294,7 @@ public class LoteServiceTest {
         dtoToUpdate.setNumeroTina(1);
         dtoToUpdate.setCantHormas(1);
         dtoToUpdate.setLitrosLeche(20D);
-        dtoToUpdate.setPeso(10D);
+        dtoToUpdate.setPeso(5D);
         dtoToUpdate.setLoteCultivo("cultivo1, cultivo2");
         dtoToUpdate.setLoteColorante("colorante1, colorante2");
         dtoToUpdate.setLoteCalcio("calcio1, calcio2");
@@ -303,8 +308,8 @@ public class LoteServiceTest {
         updatedLote.setCantHormas(1);
         updatedLote.setStockLote(1);
         updatedLote.setLitrosLeche(20D);
-        updatedLote.setPeso(10D);
-        updatedLote.setRendimiento(20D);
+        updatedLote.setPeso(5D);
+        updatedLote.setRendimiento(25D);
         updatedLote.setLoteCultivo("cultivo1, cultivo2");
         updatedLote.setLoteColorante("colorante1, colorante2");
         updatedLote.setLoteCalcio("calcio1, calcio2");
@@ -317,9 +322,9 @@ public class LoteServiceTest {
         expectedLote.setNumeroTina(1);
         expectedLote.setCantHormas(1);
         expectedLote.setLitrosLeche(20D);
-        expectedLote.setPeso(10D);
+        expectedLote.setPeso(5D);
         expectedLote.setStockLote(1);
-        expectedLote.setRendimiento(20D);
+        expectedLote.setRendimiento(25D);
         expectedLote.setLoteCultivo("cultivo1, cultivo2");
         expectedLote.setLoteColorante("colorante1, colorante2");
         expectedLote.setLoteCalcio("calcio1, calcio2");
@@ -329,8 +334,13 @@ public class LoteServiceTest {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.save(any(Lote.class))).thenReturn(updatedLote);
         when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
+
         LoteDTO dtoActual = service.update(dtoToUpdate);
+        ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
+        verify(repository).save(captor.capture());
+
         assertEquals(expectedLote, dtoActual);
+        assertEquals(25.0, captor.getValue().getRendimiento());
     }
 
     @Test
