@@ -49,6 +49,7 @@ public class LoteController {
     public ResponseEntity<SuccessfulResponse<String>> delete(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
                                                              @PathVariable("id") String id) {
         log.info("API::delete - id: {}", id);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED, service.delete(id)));
+        service.delete(id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED));
     }
 }

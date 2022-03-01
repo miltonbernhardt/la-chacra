@@ -9,26 +9,29 @@ import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
 import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.exceptions.NotFoundConflictException;
 import com.brikton.lachacra.exceptions.QuesoNotFoundException;
+import com.brikton.lachacra.repositories.DevolucionRepository;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = LoteService.class)
 public class LoteServiceTest {
 
     @Autowired
-    LoteService loteService;
+    LoteService service;
 
     @MockBean
     LoteRepository repository;
@@ -37,10 +40,10 @@ public class LoteServiceTest {
     DateUtil dateUtil;
 
     @MockBean
-    DevolucionService devolucionService;
+    DevolucionRepository devolucionRepository;
 
     @MockBean
-    ExpedicionService expedicionService;
+    ExpedicionRepository expedicionRepository;
 
     @MockBean
     QuesoService quesoService;
@@ -63,10 +66,66 @@ public class LoteServiceTest {
         dtoExpected.setCodigoQueso("001");
 
         when(repository.findAllLotesNotFechaBaja()).thenReturn(List.of(mockLote(), mockLote()));
-        var actualLotes = loteService.getAll();
+        var actualLotes = service.getAll();
         assertEquals(2, actualLotes.size());
         assertEquals(dtoExpected, actualLotes.get(0));
         assertEquals(dtoExpected, actualLotes.get(1));
+    }
+
+    @Test
+    void Decrementar_Stock__OK() {
+        Lote lote = new Lote();
+        lote.setId("101020210011");
+        lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        lote.setNumeroTina(1);
+        lote.setLitrosLeche(1D);
+        lote.setCantHormas(1);
+        lote.setStockLote(10);
+        lote.setPeso(1D);
+        lote.setRendimiento(1D);
+        lote.setLoteCultivo("cultivo1, cultivo2");
+        lote.setLoteColorante("colorante1, colorante2");
+        lote.setLoteCalcio("calcio1, calcio2");
+        lote.setLoteCuajo("cuajo1, cuajo2");
+
+        service.decrementarStock(lote, 5);
+
+        ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
+        verify(repository).save(captor.capture());
+
+        assertEquals(5, captor.getValue().getStockLote());
+    }
+
+    @Test
+    void Get__OK() {
+        Lote expectedLote = new Lote();
+        expectedLote.setId("101020210011");
+        expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        expectedLote.setNumeroTina(1);
+        expectedLote.setLitrosLeche(1D);
+        expectedLote.setCantHormas(1);
+        expectedLote.setStockLote(10);
+        expectedLote.setPeso(1D);
+        expectedLote.setRendimiento(1D);
+        expectedLote.setLoteCultivo("cultivo1, cultivo2");
+        expectedLote.setLoteColorante("colorante1, colorante2");
+        expectedLote.setLoteCalcio("calcio1, calcio2");
+        expectedLote.setLoteCuajo("cuajo1, cuajo2");
+
+        when(repository.findById("101020210011")).thenReturn(Optional.of(expectedLote));
+
+        var actualLote = service.get("101020210011");
+
+        assertEquals(expectedLote, actualLote);
+    }
+
+    @Test
+    void Get__Not_Found() {
+        when(repository.findById("101020210011")).thenReturn(Optional.empty());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> service.get("101020210011")
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
@@ -113,11 +172,11 @@ public class LoteServiceTest {
         expectedLote.setLoteCuajo("cuajo1, cuajo2");
         expectedLote.setCodigoQueso("001");
 
-        when(quesoService.getEntity("001")).thenReturn(mockQueso());
+        when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(false);
         when(repository.save(any(Lote.class))).thenReturn(savedLote);
 
-        LoteDTO dtoActual = loteService.save(dtoToSave);
+        LoteDTO dtoActual = service.save(dtoToSave);
         assertEquals(expectedLote, dtoActual);
     }
 
@@ -138,9 +197,9 @@ public class LoteServiceTest {
         dto.setLoteCuajo("cuajo1, cuajo2");
         dto.setCodigoQueso("001");
 
-        when(quesoService.getEntity("001")).thenThrow(QuesoNotFoundException.class);
+        when(quesoService.getByCodigo("001")).thenThrow(QuesoNotFoundException.class);
         NotFoundConflictException thrown = assertThrows(
-                NotFoundConflictException.class, () -> loteService.save(dto)
+                NotFoundConflictException.class, () -> service.save(dto)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
     }
@@ -162,10 +221,10 @@ public class LoteServiceTest {
         dto.setLoteCuajo("cuajo1, cuajo2");
         dto.setCodigoQueso("001");
 
-        when(quesoService.getEntity("001")).thenReturn(mockQueso());
+        when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         LoteAlreadyExistsException thrown = assertThrows(
-                LoteAlreadyExistsException.class, () -> loteService.save(dto)
+                LoteAlreadyExistsException.class, () -> service.save(dto)
         );
         assertEquals(ErrorMessages.MSG_LOTE_ALREADY_EXIST, thrown.getMessage());
     }
@@ -215,10 +274,10 @@ public class LoteServiceTest {
         expectedLote.setLoteCuajo("cuajo1, cuajo2");
         expectedLote.setCodigoQueso("001");
 
-        when(quesoService.getEntity("001")).thenReturn(mockQueso());
+        when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
         when(repository.save(any(Lote.class))).thenReturn(savedLote);
 
-        LoteDTO dtoActual = loteService.save(dtoToSave);
+        LoteDTO dtoActual = service.save(dtoToSave);
         assertEquals(expectedLote, dtoActual);
     }
 
@@ -269,8 +328,8 @@ public class LoteServiceTest {
 
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.save(any(Lote.class))).thenReturn(updatedLote);
-        when(quesoService.getEntity("001")).thenReturn(mockQueso());
-        LoteDTO dtoActual = loteService.update(dtoToUpdate);
+        when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
+        LoteDTO dtoActual = service.update(dtoToUpdate);
         assertEquals(expectedLote, dtoActual);
     }
 
@@ -293,49 +352,73 @@ public class LoteServiceTest {
 
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(false);
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteService.update(dto)
+                LoteNotFoundException.class, () -> service.update(dto)
         );
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Delete_Without_Dependencies__OK() throws LoteNotFoundException {
+        Lote lote = new Lote();
+        lote.setId("101020210011");
+        lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        lote.setNumeroTina(1);
+        lote.setLitrosLeche(1D);
+        lote.setCantHormas(1);
+        lote.setStockLote(1);
+        lote.setPeso(1D);
+        lote.setRendimiento(1D);
+        lote.setLoteCultivo("cultivo1, cultivo2");
+        lote.setLoteColorante("colorante1, colorante2");
+        lote.setLoteCalcio("calcio1, calcio2");
+        lote.setLoteCuajo("cuajo1, cuajo2");
+
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
-        when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionService.existsByLote(mockLote())).thenReturn(false);
-        when(expedicionService.existsByLote(mockLote())).thenReturn(false);
-        when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-        String id = loteService.delete("101020210011");
-        assertEquals("", id);
+        when(devolucionRepository.existsByIdLote("101020210011")).thenReturn(false);
+        when(expedicionRepository.existsByIdLote("101020210011")).thenReturn(false);
+
+        service.delete("101020210011");
+
+        verify(repository).deleteById("101020210011");
+        verify(repository, never()).getById("101020210011");
+        verify(repository, never()).save(any(Lote.class));
     }
 
     @Test
     void Delete_With_Devolucion_Dependency__OK() throws LoteNotFoundException {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionService.existsByLote(any(Lote.class))).thenReturn(true);
-        when(expedicionService.existsByLote(any(Lote.class))).thenReturn(false);
+        when(devolucionRepository.existsByIdLote("101020210011")).thenReturn(true);
+        when(expedicionRepository.existsByIdLote("101020210011")).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-        String id = loteService.delete("101020210011");
-        assertEquals("101020210011", id);
+
+        service.delete("101020210011");
+
+        verify(repository, never()).deleteById("101020210011");
+        verify(repository).getById("101020210011");
+        verify(repository).save(any(Lote.class));
     }
 
     @Test
     void Delete_With_Expedicion_Dependency__OK() throws LoteNotFoundException {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionService.existsByLote(any(Lote.class))).thenReturn(false);
-        when(expedicionService.existsByLote(any(Lote.class))).thenReturn(true);
+        when(devolucionRepository.existsByIdLote("101020210011")).thenReturn(false);
+        when(expedicionRepository.existsByIdLote("101020210011")).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
-        String id = loteService.delete("101020210011");
-        assertEquals("101020210011", id);
+
+        service.delete("101020210011");
+
+        verify(repository, never()).deleteById("101020210011");
+        verify(repository).getById("101020210011");
+        verify(repository).save(any(Lote.class));
     }
 
     @Test
     void Delete__Lote_Not_Found() {
         when(repository.existsByIdNotFechaBaja("1")).thenReturn(false);
         LoteNotFoundException thrown = assertThrows(
-                LoteNotFoundException.class, () -> loteService.delete("101020210011")
+                LoteNotFoundException.class, () -> service.delete("101020210011")
         );
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
