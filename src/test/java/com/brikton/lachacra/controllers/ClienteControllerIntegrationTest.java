@@ -445,29 +445,25 @@ public class ClienteControllerIntegrationTest {
 
     @Test
     void Delete_Client_Without_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString(null);
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Client_With_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString(1);
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
@@ -477,6 +473,7 @@ public class ClienteControllerIntegrationTest {
                 HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("5"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("5"), response.getPath());
@@ -488,6 +485,7 @@ public class ClienteControllerIntegrationTest {
                 HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("4"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("4"), response.getPath());
@@ -499,6 +497,7 @@ public class ClienteControllerIntegrationTest {
                 HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
         assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
@@ -567,20 +566,14 @@ public class ClienteControllerIntegrationTest {
         assertEquals(expectedClientes, actualClientes);
 
         //cliente dado de baja
-        var expectedID = mapper.writeValueAsString(1);
         response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
 
         //cliente borrado
-        expectedID = mapper.writeValueAsString(null);
         response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
 
         expectedClientes = mapper.writeValueAsString(List.of(dto3));
         response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
