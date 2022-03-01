@@ -59,7 +59,7 @@ public class TipoClienteServiceTest {
         mockTipoCliente.setTipo("tipo1");
 
         when(repository.findById(1L)).thenReturn(Optional.of(mockTipoCliente));
-        var tipoClienteActual = service.getEntity(1L);
+        var tipoClienteActual = service.get(1L);
 
         assertEquals(mockTipoCliente, tipoClienteActual);
     }
@@ -70,7 +70,7 @@ public class TipoClienteServiceTest {
         dto.setId(1L);
         when(repository.findById(1L)).thenReturn(Optional.empty());
         TipoClienteNotFoundException thrown = assertThrows(
-                TipoClienteNotFoundException.class, () -> service.getEntity(1L)
+                TipoClienteNotFoundException.class, () -> service.get(1L)
         );
         assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, thrown.getMessage());
     }
