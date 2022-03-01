@@ -51,16 +51,25 @@ public class LoteService {
         return lotesDTO;
     }
 
-    public void decrementarStock(Lote lote, Integer cantidad) {
-        lote.setStockLote(lote.getStockLote() - cantidad);
-        repository.save(lote);
-    }
-
     public Lote get(String id) throws LoteNotFoundException {
         var lote = repository.findById(id);
         if (lote.isPresent() && lote.get().getFechaBaja() == null)
             return lote.get();
         throw new LoteNotFoundException();
+    }
+
+    public Lote decreaseStock(Lote lote, Integer cantidad) {
+        var oldStock = lote.getStockLote();
+        var actualStock = oldStock - cantidad;
+        lote.setStockLote(actualStock);
+        return repository.save(lote);
+    }
+
+    public Lote increaseStock(Lote lote, Integer cantidad) {
+        var oldStock = lote.getStockLote();
+        var actualStock = oldStock + cantidad;
+        lote.setStockLote(actualStock);
+        return repository.save(lote);
     }
 
     public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
@@ -94,7 +103,7 @@ public class LoteService {
         return new LoteDTO(lote);
     }
 
-    private Double calculateRendimiento(Double pesoD, Double litrosLecheD){
+    private Double calculateRendimiento(Double pesoD, Double litrosLecheD) {
         var peso = BigDecimal.valueOf(pesoD);
         var litrosLeche = BigDecimal.valueOf(litrosLecheD);
         var mc = new MathContext(2);

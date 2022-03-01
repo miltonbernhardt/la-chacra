@@ -2,17 +2,16 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
-import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
-import com.brikton.lachacra.entities.Lote;
-import com.brikton.lachacra.exceptions.*;
-import com.brikton.lachacra.repositories.ClienteRepository;
+import com.brikton.lachacra.exceptions.ClienteNotFoundException;
+import com.brikton.lachacra.exceptions.ExpedicionNotFoundException;
+import com.brikton.lachacra.exceptions.LoteNotFoundException;
 import com.brikton.lachacra.repositories.ExpedicionRepository;
-import com.brikton.lachacra.repositories.PrecioRepository;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,105 +20,113 @@ import java.util.List;
 public class ExpedicionService {
 
     private final ExpedicionRepository expedicionRepository;
-    private final ClienteRepository clienteRepository;
-    private final PrecioRepository precioRepository;
+    private final ClienteService clienteService;
+    private final PrecioService precioService;
     private final RemitoRepository remitoRepository;
     private final LoteService loteService;
 
-    public ExpedicionService(ExpedicionRepository expedicionRepository, ClienteRepository clienteRepository, PrecioRepository precioRepository, RemitoRepository remitoRepository, LoteService loteService) {
+    public ExpedicionService(
+            ExpedicionRepository expedicionRepository,
+            ClienteService clienteService,
+            PrecioService precioService,
+            RemitoRepository remitoRepository,
+            LoteService loteService
+    ) {
         this.expedicionRepository = expedicionRepository;
-        this.clienteRepository = clienteRepository;
-        this.precioRepository = precioRepository;
+        this.clienteService = clienteService;
+        this.precioService = precioService;
         this.remitoRepository = remitoRepository;
         this.loteService = loteService;
     }
 
-    public boolean existsByLote(Lote lote) {
-        return expedicionRepository.existsByLote(lote);
-    }
-
-    public boolean existsByCliente(Cliente cliente) {
-        return expedicionRepository.existsByCliente(cliente);
-    }
-
     public List<ExpedicionDTO> getAll() {
         List<ExpedicionDTO> response = new ArrayList<>();
-        expedicionRepository.findAll().forEach(e -> response.add(new ExpedicionDTO(e)));
+        expedicionRepository.findAll().forEach(expedicion -> response.add(new ExpedicionDTO(expedicion)));
         return response;
     }
 
-    public ExpedicionDTO save(ExpedicionDTO dto) throws ClienteNotFoundException, LoteNotFoundException, ExpedicionAlreadyExistsException {
-        if (dto.getId() != null && expedicionRepository.existsById(dto.getId())) throw new ExpedicionAlreadyExistsException();
+    public ExpedicionDTO save(ExpedicionDTO dto) throws ClienteNotFoundException, LoteNotFoundException {
         var expedicion = expedicionFromDTO(dto);
-         // decrement stock lote
-        loteService.decrementStock(expedicion.getLote(),expedicion.getCantidad());
-        return new ExpedicionDTO(expedicionRepository.save(expedicion));
+
+        loteService.decreaseStock(expedicion.getLote(), expedicion.getCantidad());
+
+        double importe = getImporte(dto, expedicion);
+        expedicion.setImporte(importe);
+
+        expedicion = expedicionRepository.save(expedicion);
+        return new ExpedicionDTO(expedicion);
     }
 
-    public ExpedicionDTO update(ExpedicionUpdateDTO dto) throws ExpedicionNotFoundException {
-        var expedicion = expedicionRepository.findById(dto.getId());
-        if (expedicion.isEmpty()) throw new ExpedicionNotFoundException();
-        // if lote is the same and updates cantidad
-        if (dto.getIdLote().equals(expedicion.get().getLote().getId()) &&
-                !dto.getCantidad().equals(expedicion.get().getCantidad())) {
-            // return the difference to stock lote
-            var diff = dto.getCantidad() - expedicion.get().getCantidad();
-            loteService.decrementStock(expedicion.get().getLote(),diff);
-        }
-        // if lote is not the same
-        if (!dto.getIdLote().equals(expedicion.get().getLote().getId())){
-            // return all stock to lote and change lote (decrement -cantidad)
-            loteService.decrementStock(expedicion.get().getLote(),-expedicion.get().getCantidad());
-            // decrement stock of new lote
-            var lote = loteService.getEntity(dto.getIdLote());
-            loteService.decrementStock(lote,dto.getCantidad());
-        }
-        var updatedExpedicion = expedicionRepository.save(expedicionFromDTO(dto));
-        return new ExpedicionDTO(updatedExpedicion);
+    public ExpedicionDTO update(ExpedicionUpdateDTO updateDTO) throws ExpedicionNotFoundException {
+        var dto = new ExpedicionDTO(updateDTO);
+
+        var expedicion = this.get(dto.getId());
+        var expedicionUpdated = expedicionFromDTO(dto);
+
+        updateStockLotes(expedicion, expedicionUpdated);
+
+        var importe = getImporte(dto, expedicionUpdated);
+        expedicionUpdated.setImporte(importe);
+
+        expedicionUpdated = expedicionRepository.save(expedicionUpdated);
+        return new ExpedicionDTO(expedicionUpdated);
     }
 
-    public String delete(Long id) throws ExpedicionNotFoundException{
-        var expedicion = expedicionRepository.findById(id);
-        if (expedicion.isEmpty()) throw new ExpedicionNotFoundException();
+    private void updateStockLotes(Expedicion expedicion, Expedicion expedicionUpdated) {
+        if (isDifferentLote(expedicion, expedicionUpdated)) {
+            loteService.increaseStock(expedicion.getLote(), expedicion.getCantidad());
+            loteService.decreaseStock(expedicionUpdated.getLote(), expedicionUpdated.getCantidad());
+        } else if (isSameLoteAndDifferentQuantity(expedicion, expedicionUpdated)) {
+            var diff = expedicionUpdated.getCantidad() - expedicion.getCantidad();
+            loteService.decreaseStock(expedicionUpdated.getLote(), diff);
+        }
+    }
+
+    private boolean isSameLoteAndDifferentQuantity(Expedicion expedicion, Expedicion expedicionUpdated) {
+        return expedicion.getLote().getId().equals(expedicionUpdated.getLote().getId()) &&
+                !expedicion.getCantidad().equals(expedicionUpdated.getCantidad());
+    }
+
+    private boolean isDifferentLote(Expedicion expedicion, Expedicion expedicionUpdated) {
+        return !expedicion.getLote().getId().equals(expedicionUpdated.getLote().getId());
+    }
+
+    private double getImporte(ExpedicionDTO dto, Expedicion expedicion) {
+        var precio = BigDecimal.valueOf(precioService.getPrecioValue(expedicion.getLote().getQueso(), expedicion.getCliente().getTipoCliente()));
+        var peso = BigDecimal.valueOf(dto.getPeso());
+        return precio.multiply(peso).doubleValue();
+    }
+
+    public void delete(Long id) throws ExpedicionNotFoundException {
+        var expedicion = get(id);
+
         //TODO check if don't exists remitos associated
-        if (remitoRepository.existsByExpedicionesContains(expedicion.get())) return id.toString();
-        // return stock to lote
-        loteService.decrementStock(expedicion.get().getLote(),-expedicion.get().getCantidad());
-        // delete expedicion
-        expedicionRepository.delete(expedicion.get());
-        return "";
+        if (remitoRepository.existsByExpedicionesContains(expedicion))
+            return;
+
+        loteService.increaseStock(expedicion.getLote(), expedicion.getCantidad());
+        expedicionRepository.delete(expedicion);
     }
 
-    private Expedicion expedicionFromDTO(ExpedicionDTO dto) throws PrecioNotFoundException,LoteNotFoundException, ClienteNotFoundException {
+    private Expedicion get(Long id) {
+        var expedicion = expedicionRepository.findById(id);
+        if (expedicion.isEmpty())
+            throw new ExpedicionNotFoundException();
+        return expedicion.get();
+    }
+
+    private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
         var expedicion = new Expedicion();
-        var cliente = clienteRepository.findById(dto.getIdCliente());
-        if (cliente.isEmpty()) throw new ClienteNotFoundException();
-        expedicion.setCliente(cliente.get());
-        var lote = loteService.getEntity(dto.getIdLote());
+
+        var cliente = clienteService.get(dto.getIdCliente());
+        expedicion.setCliente(cliente);
+
+        var lote = loteService.get(dto.getIdLote());
         expedicion.setLote(lote);
+
         expedicion.setFechaExpedicion(dto.getFechaExpedicion());
         expedicion.setId(dto.getId());
         expedicion.setCantidad(dto.getCantidad());
-        var precio = precioRepository.findByQuesoAndAndTipoCliente(lote.getQueso(),cliente.get().getTipoCliente());
-        if (precio.isEmpty()) throw new PrecioNotFoundException();
-        expedicion.setImporte(precio.get().getValor() * dto.getPeso());
-        expedicion.setPeso(dto.getPeso());
-        return expedicion;
-    }
-
-    private Expedicion expedicionFromDTO(ExpedicionUpdateDTO dto) throws PrecioNotFoundException, LoteNotFoundException, ClienteNotFoundException {
-        var expedicion = new Expedicion();
-        var cliente = clienteRepository.findById(dto.getIdCliente());
-        if (cliente.isEmpty()) throw new ClienteNotFoundException();
-        expedicion.setCliente(cliente.get());
-        var lote = loteService.getEntity(dto.getIdLote());
-        expedicion.setLote(lote);
-        expedicion.setFechaExpedicion(dto.getFechaExpedicion());
-        expedicion.setId(dto.getId());
-        expedicion.setCantidad(dto.getCantidad());
-        var precio = precioRepository.findByQuesoAndAndTipoCliente(lote.getQueso(),cliente.get().getTipoCliente());
-        if (precio.isEmpty()) throw new PrecioNotFoundException();
-        expedicion.setImporte(precio.get().getValor() * dto.getPeso());
         expedicion.setPeso(dto.getPeso());
         return expedicion;
     }

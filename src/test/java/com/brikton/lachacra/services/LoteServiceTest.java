@@ -66,34 +66,12 @@ public class LoteServiceTest {
         dtoExpected.setCodigoQueso("001");
 
         when(repository.findAllLotesNotFechaBaja()).thenReturn(List.of(mockLote(), mockLote()));
+
         var actualLotes = service.getAll();
+
         assertEquals(2, actualLotes.size());
         assertEquals(dtoExpected, actualLotes.get(0));
         assertEquals(dtoExpected, actualLotes.get(1));
-    }
-
-    @Test
-    void Decrementar_Stock__OK() {
-        Lote lote = new Lote();
-        lote.setId("101020210011");
-        lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
-        lote.setNumeroTina(1);
-        lote.setLitrosLeche(1D);
-        lote.setCantHormas(1);
-        lote.setStockLote(10);
-        lote.setPeso(1D);
-        lote.setRendimiento(1D);
-        lote.setLoteCultivo("cultivo1, cultivo2");
-        lote.setLoteColorante("colorante1, colorante2");
-        lote.setLoteCalcio("calcio1, calcio2");
-        lote.setLoteCuajo("cuajo1, cuajo2");
-
-        service.decrementarStock(lote, 5);
-
-        ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
-        verify(repository).save(captor.capture());
-
-        assertEquals(5, captor.getValue().getStockLote());
     }
 
     @Test
@@ -126,6 +104,89 @@ public class LoteServiceTest {
                 LoteNotFoundException.class, () -> service.get("101020210011")
         );
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Decrease_Stock__OK() {
+        Lote lote = new Lote();
+        lote.setId("101020210011");
+        lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        lote.setNumeroTina(1);
+        lote.setLitrosLeche(1D);
+        lote.setCantHormas(1);
+        lote.setStockLote(10);
+        lote.setPeso(1D);
+        lote.setRendimiento(1D);
+        lote.setLoteCultivo("cultivo1, cultivo2");
+        lote.setLoteColorante("colorante1, colorante2");
+        lote.setLoteCalcio("calcio1, calcio2");
+        lote.setLoteCuajo("cuajo1, cuajo2");
+
+        Lote savedLote = new Lote();
+        savedLote.setId("101020210011");
+        savedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        savedLote.setNumeroTina(1);
+        savedLote.setLitrosLeche(1D);
+        savedLote.setCantHormas(1);
+        savedLote.setStockLote(5);
+        savedLote.setPeso(1D);
+        savedLote.setRendimiento(1D);
+        savedLote.setLoteCultivo("cultivo1, cultivo2");
+        savedLote.setLoteColorante("colorante1, colorante2");
+        savedLote.setLoteCalcio("calcio1, calcio2");
+        savedLote.setLoteCuajo("cuajo1, cuajo2");
+
+        when(repository.save(any(Lote.class))).thenReturn(savedLote);
+
+        var actualLote = service.decreaseStock(lote, 5);
+
+        ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
+        verify(repository).save(captor.capture());
+
+        assertEquals(savedLote, actualLote);
+        assertEquals(5, captor.getValue().getStockLote());
+    }
+
+    @Test
+    void Increase_Stock__OK() {
+        Lote lote = new Lote();
+        lote.setId("101020210011");
+        lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        lote.setNumeroTina(1);
+        lote.setLitrosLeche(1D);
+        lote.setCantHormas(1);
+        lote.setStockLote(10);
+        lote.setPeso(1D);
+        lote.setRendimiento(1D);
+        lote.setLoteCultivo("cultivo1, cultivo2");
+        lote.setLoteColorante("colorante1, colorante2");
+        lote.setLoteCalcio("calcio1, calcio2");
+        lote.setLoteCuajo("cuajo1, cuajo2");
+
+        Lote savedLote = new Lote();
+        savedLote.setId("101020210011");
+        savedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        savedLote.setNumeroTina(1);
+        savedLote.setLitrosLeche(1D);
+        savedLote.setCantHormas(1);
+        savedLote.setStockLote(15);
+        savedLote.setPeso(1D);
+        savedLote.setRendimiento(1D);
+        savedLote.setLoteCultivo("cultivo1, cultivo2");
+        savedLote.setLoteColorante("colorante1, colorante2");
+        savedLote.setLoteCalcio("calcio1, calcio2");
+        savedLote.setLoteCuajo("cuajo1, cuajo2");
+
+        when(repository.findById("101020210011")).thenReturn(Optional.of(lote));
+        when(repository.save(any(Lote.class))).thenReturn(savedLote);
+
+        var actualLote = service.increaseStock(lote, 5);
+
+        ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
+        verify(repository).save(captor.capture());
+
+        assertEquals(savedLote, actualLote);
+        assertEquals(15, captor.getValue().getStockLote());
     }
 
     @Test

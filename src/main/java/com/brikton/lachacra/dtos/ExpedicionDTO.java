@@ -26,11 +26,6 @@ public class ExpedicionDTO {
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double peso;
 
-    //@NotNull(message = ValidationMessages.NOT_FOUND)
-    //@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-    // commented because importe is computed in backend
-    private Double importe;
-
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Long idCliente;
@@ -39,8 +34,8 @@ public class ExpedicionDTO {
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String idLote;
 
+    private Double importe;
     private Long id;
-
 
     public ExpedicionDTO() {
     }
@@ -53,5 +48,15 @@ public class ExpedicionDTO {
         this.setImporte(expedicion.getImporte());
         this.setIdCliente(expedicion.getCliente().getId());
         this.setIdLote(expedicion.getLote().getId());
+    }
+
+    public ExpedicionDTO(ExpedicionUpdateDTO expedicion) {
+        this.setId(expedicion.getId());
+        this.setFechaExpedicion(expedicion.getFechaExpedicion());
+        this.setCantidad(expedicion.getCantidad());
+        this.setPeso(expedicion.getPeso());
+        this.setImporte(expedicion.getImporte());
+        this.setIdCliente(expedicion.getIdCliente());
+        this.setIdLote(expedicion.getIdLote());
     }
 }

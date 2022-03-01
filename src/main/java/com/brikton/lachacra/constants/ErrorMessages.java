@@ -11,9 +11,7 @@ public class ErrorMessages {
     public static final String MSG_CLIENTE_NOT_FOUND = "Cliente no encontrado";
     public static final String MSG_EXPEDICION_NOT_FOUND = "Expedición no encontrada";
     public static final String MSG_PRECIO_ALREADY_EXISTS = "Ya existe el precio";
-    public static final String MSG_EXPEDICION_ALREADY_EXISTS = "Ya existe la expedición";
     public static final String MSG_LOTE_ALREADY_EXIST = "Ya existe el lote";
     public static final String MSG_CODIGO_QUESO_ALREADY_EXIST = "Ya existe un queso con ese código";
-    public static final String MSG_NOMENCLATURE_QUESO_ALREADY_EXIST = "Ya existe un queso con esa nomenclatura";
 
 }
