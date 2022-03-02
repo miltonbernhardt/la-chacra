@@ -43,6 +43,7 @@ const CargarExpedicion = () => {
     }
 
     const handleSubmit = useCallback((expedicionForm) => {
+        setExpedicion(expedicionForm);
         if (isEditing)
             putExpedicion(expedicionForm)
                 .then(({ data }) => {
@@ -52,6 +53,7 @@ const CargarExpedicion = () => {
                     setListaExpediciones([...newList, data]);
                 })
                 .catch(e => { })
+                .finally()
         else
             postExpedicion(expedicionForm)
                 .then(({ data }) => {
@@ -60,7 +62,7 @@ const CargarExpedicion = () => {
                 })
                 .catch(e => { })
                 .finally()
-    }, [expedicion.id, isEditing, listaExpediciones])
+    }, [expedicion, isEditing, listaExpediciones])
 
     const submitDelete = useCallback(() => {
         deleteExpedicion(expedicion.id)

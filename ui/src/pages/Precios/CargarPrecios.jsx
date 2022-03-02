@@ -53,11 +53,12 @@ const CargarPrecios = () => {
     }, []);
 
     const handleSubmit = useCallback((precioForm) => {
+        setPrecio(precioForm);
         if (precioForm.id === '') {
             postPrecio(precioForm)
                 .then(() => fetchPrecios())
                 .catch(() => null)
-                .finally(() =>  setPrecio(precioInicial))
+                .finally(() => setPrecio(precioInicial))
         } else {
             putPrecio(precioForm)
                 .then(() => fetchPrecios())
@@ -95,7 +96,7 @@ const CargarPrecios = () => {
         }), [listaTipoClientes])
 
     if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos)
-        return <Loading/>
+        return <Loading />
 
     // This needs to be called after all lists are loaded
     // or else lists are undefined
@@ -126,12 +127,12 @@ const CargarPrecios = () => {
                         precio={precio}
                         isEditing={isEditing}
                         handleSubmit={handleSubmit}
-                        handleCancelar={handleCancelar}/>
+                        handleCancelar={handleCancelar} />
                 }
                 table={
                     <GridPrecios
                         precios={preciosFormatted}
-                        setSelection={setSelection}/>
+                        setSelection={setSelection} />
                 }
                 titleTable="Precios"
                 titleForm="Ingreso de precios"

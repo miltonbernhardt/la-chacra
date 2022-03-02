@@ -10,16 +10,15 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
 
     const [expedicionForm, setExpedicionForm] = useState(expedicion)
 
-    useEffect(() => {
-        setExpedicionForm(expedicion)
-    }, [expedicion]);
-
     const refIdLote = createRef(null);
     const refSelectCliente = createRef(null);
     const refFechaExpedicion = createRef(null);
     const refCantidad = createRef(null);
     const refPeso = createRef(null);
-    const refImporte = createRef(null);
+
+    useEffect(() => {
+        setExpedicionForm(expedicion)
+    }, [expedicion]);
 
     const handleCargar = useCallback(() => {
         const errors = new Map();
@@ -38,9 +37,6 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
 
         refPeso.current.validate(errors, values, [
             { func: validation.minorToOne, msg: message.valZeroValue }])
-
-        // refImporte.current.validate(errors, values, [
-        //     { func: validation.minorToOne, msg: message.valZeroValue }])
 
         refFechaExpedicion.current.validate(errors, values, [
             { func: validation.empty, msg: message.valEmptyFecha },
@@ -61,51 +57,44 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
     const colorCargar = useMemo(() => isEditing ? 'warning' : 'primary', [isEditing]);
 
     return (
-        <>
-            <Grid container spacing={1.5}>
-                <Select ref={refSelectCliente}
-                    value={expedicionForm.codigoQueso}
-                    id={field.backIdCliente}
-                    label={field.cliente}
-                    options={clientes}
-                    required />
-                <Input ref={refIdLote}
-                    id={field.backIdLote}
-                    label={field.numeroLote}
-                    value={expedicionForm.idLote}
-                    required />
-                <Input ref={refCantidad}
-                    id={field.backCantidad}
-                    label={field.cantidad}
-                    value={expedicionForm.cantidad}
-                    sm={6}
-                    required />
-                <Input ref={refPeso}
-                    id={field.backPesoExpedicion}
-                    label={field.pesoExpedicion}
-                    value={expedicionForm.peso}
-                    sm={6}
-                    required />
-                {/* <Input ref={refImporte}
-                    id={field.backImporte}
-                    label={field.importe}
-                    value={expedicionForm.importe}
-                    required /> */}
-                <Input ref={refFechaExpedicion}
-                    id={field.backFechaExpedicion}
-                    label={field.fechaExpedicion}
-                    value={expedicionForm.fechaExpedicion}
-                    type="date"
-                    required />
-                <Grid item xs={12} alignSelf="right" mb={0.5}>
-                    <ButtonGroup fullWidth variant="contained">
-                        <Button onClick={handleCancelar} disabled={!isEditing} color="primary">Cancelar</Button>
-                        <Button onClick={handleDelete} disabled={!isEditing} color="error">Borrar Expedición</Button>
-                        <Button onClick={handleCargar} color={colorCargar}>{labelCargar}</Button>
-                    </ButtonGroup>
-                </Grid>
+        <Grid container spacing={1.5}>
+            <Select ref={refSelectCliente}
+                value={expedicionForm.codigoQueso}
+                id={field.backIdCliente}
+                label={field.cliente}
+                options={clientes}
+                required />
+            <Input ref={refIdLote}
+                id={field.backIdLote}
+                label={field.numeroLote}
+                value={expedicionForm.idLote}
+                required />
+            <Input ref={refCantidad}
+                id={field.backCantidad}
+                label={field.cantidad}
+                value={expedicionForm.cantidad}
+                sm={6}
+                required />
+            <Input ref={refPeso}
+                id={field.backPesoExpedicion}
+                label={field.pesoExpedicion}
+                value={expedicionForm.peso}
+                sm={6}
+                required />
+            <Input ref={refFechaExpedicion}
+                id={field.backFechaExpedicion}
+                label={field.fechaExpedicion}
+                value={expedicionForm.fechaExpedicion}
+                type="date"
+                required />
+            <Grid item xs={12} alignSelf="right" mb={0.5}>
+                <ButtonGroup fullWidth variant="contained">
+                    <Button onClick={handleCancelar} disabled={!isEditing} color="primary">Cancelar</Button>
+                    <Button onClick={handleDelete} disabled={!isEditing} color="error">Borrar Expedición</Button>
+                    <Button onClick={handleCargar} color={colorCargar}>{labelCargar}</Button>
+                </ButtonGroup>
             </Grid>
-        </>
+        </Grid>
     )
 }
 
