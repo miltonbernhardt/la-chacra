@@ -1,7 +1,10 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.dtos.ExpedicionDTO;
+import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
 import com.brikton.lachacra.entities.*;
+import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.RemitoRepository;
@@ -12,8 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +53,17 @@ public class ExpedicionServiceTest {
 
     @Test
     void Get_All__OK() {
-        //TODO
+        var expedicion = mockExpedicion();
+
+        List<Expedicion> expedicionList = new ArrayList<>();
+
+        expedicionList.add(expedicion);
+        expedicionList.add(expedicion);
+
+        when(repository.findAll()).thenReturn(expedicionList);
+
+        var response = service.getAll();
+        assertEquals(2,response.size());
     }
 
     @Test
@@ -69,27 +86,101 @@ public class ExpedicionServiceTest {
 
     @Test
     void Save__Cliente_Not_Found() {
-        //TODO
+        var dto = new ExpedicionDTO();
+
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+
+        when(clienteService.get(1L)).thenThrow(new ClienteNotFoundException());
+
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Save__Lote_Not_Found() {
-        //TODO
+        var dto = new ExpedicionDTO();
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenThrow(new LoteNotFoundException());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> service.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Save__Precio_Not_Found() {
-        //TODO
+        var dto = new ExpedicionDTO();
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenThrow(new PrecioNotFoundException());
+
+        PrecioNotFoundException thrown = assertThrows(
+                PrecioNotFoundException.class, () -> service.save(dto)
+        );
+        assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Update_Same_Lote_Same_Quantity__OK() {
-        //TODO
+
+        var dtoUpdate = new ExpedicionUpdateDTO();
+        dtoUpdate.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dtoUpdate.setPeso(20D);
+        dtoUpdate.setCantidad(20);
+        dtoUpdate.setImporte(900D);
+        dtoUpdate.setIdCliente(1L);
+        dtoUpdate.setIdLote("101020210011");
+        dtoUpdate.setId(1L);
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenReturn(150.0);
+        when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
+        when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        var response = service.update(dtoUpdate);
+        assertEquals(3000, response.getImporte());
     }
 
     @Test
     void Update_Same_Lote_Different_Quantity__OK() {
-        //TODO
+                var expedicion = mockExpedicion();
+        expedicion.setCantidad(50);
+
+        var dtoUpdate = new ExpedicionUpdateDTO();
+        dtoUpdate.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dtoUpdate.setPeso(20D);
+        dtoUpdate.setCantidad(20);
+        dtoUpdate.setImporte(900D);
+        dtoUpdate.setIdCliente(1L);
+        dtoUpdate.setIdLote("101020210011");
+        dtoUpdate.setId(1L);
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenReturn(150.0);
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicion));
+        when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        var response = service.update(dtoUpdate);
+        assertEquals(20, response.getCantidad());
     }
 
     @Test
@@ -99,22 +190,81 @@ public class ExpedicionServiceTest {
 
     @Test
     void Update__Expedicion_Not_Found() {
-        //TODO
+        var dto = new ExpedicionUpdateDTO();
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+        dto.setId(1L);
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenThrow(new PrecioNotFoundException());
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        ExpedicionNotFoundException thrown = assertThrows(
+                ExpedicionNotFoundException.class, () -> service.update(dto)
+        );
+        assertEquals(ErrorMessages.MSG_EXPEDICION_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Update__Cliente_Not_Found() {
-        //TODO
+        var dto = new ExpedicionUpdateDTO();
+
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+
+        when(clienteService.get(1L)).thenThrow(new ClienteNotFoundException());
+
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.update(dto)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Update__Lote_Not_Found() {
-        //TODO
+        var dto = new ExpedicionUpdateDTO();
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+        dto.setId(1L);
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+       when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
+         when(loteService.get("101020210011")).thenThrow(new LoteNotFoundException());
+        LoteNotFoundException thrown = assertThrows(
+                LoteNotFoundException.class, () -> service.update(dto)
+        );
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
     void Update__Precio_Not_Found() {
-        //TODO
+        var dto = new ExpedicionUpdateDTO();
+        dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dto.setPeso(10D);
+        dto.setCantidad(20);
+        dto.setImporte(900D);
+        dto.setIdCliente(1L);
+        dto.setIdLote("101020210011");
+        dto.setId(1L);
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenThrow(new PrecioNotFoundException());
+
+        PrecioNotFoundException thrown = assertThrows(
+                PrecioNotFoundException.class, () -> service.update(dto)
+        );
+        assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, thrown.getMessage());
     }
 
     @Test
@@ -150,7 +300,7 @@ public class ExpedicionServiceTest {
         lote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         lote.setNumeroTina(1);
         lote.setLitrosLeche(1D);
-        lote.setCantHormas(1);
+        lote.setCantHormas(100);
         lote.setStockLote(1);
         lote.setPeso(1D);
         lote.setRendimiento(1D);
