@@ -199,7 +199,7 @@ public class QuesoServiceTest {
 
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setId(1L);
-        expectedDTO.setCodigo("002");
+        expectedDTO.setCodigo("001");
         expectedDTO.setTipoQueso("TIPO_QUESO2");
         expectedDTO.setNomenclatura("tip2");
         expectedDTO.setStock(1);
@@ -220,31 +220,6 @@ public class QuesoServiceTest {
                 QuesoNotFoundException.class, () -> quesoService.update(dto)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
-    }
-
-    @Test
-    void Update__Codigo_Queso_Already_Exists() {
-        var dto = new QuesoUpdateDTO();
-        dto.setId(1L);
-        dto.setCodigo("002");
-        dto.setTipoQueso("TIPO_QUESO2");
-        dto.setNomenclatura("tip2");
-        dto.setStock(1);
-        dto.setId(1L);
-
-        Queso mockQueso = new Queso();
-        mockQueso.setId(1L);
-        mockQueso.setCodigo("001");
-        mockQueso.setTipoQueso("TIPO_QUESO");
-        mockQueso.setNomenclatura("tip");
-        mockQueso.setStock(1);
-
-        when(repository.findById(1L)).thenReturn(Optional.of(mockQueso));
-        when(repository.existsByCodigoNotFechaBaja("002")).thenReturn(true);
-        CodigoQuesoAlreadyExistsException thrown = assertThrows(
-                CodigoQuesoAlreadyExistsException.class, () -> quesoService.update(dto)
-        );
-        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, thrown.getMessage());
     }
 
     @Test
