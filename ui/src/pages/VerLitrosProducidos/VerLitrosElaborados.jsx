@@ -3,8 +3,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import Chart from '../../components/Chart';
 import { litrosElaborados, quesos } from "../../data/data";
 
-//TODO este chart anda feo, cambiar por https://devexpress.github.io/devextreme-reactive/react/chart/demos/line/spline/
-
 const columns1 = quesos.map((queso, index) => {
     return {
         field: queso.nomenclatura,
