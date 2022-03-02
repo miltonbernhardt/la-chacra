@@ -60,7 +60,7 @@ public class ExpedicionService {
     public ExpedicionDTO update(ExpedicionUpdateDTO updateDTO) throws ExpedicionNotFoundException {
         var dto = new ExpedicionDTO(updateDTO);
 
-        var expedicion = this.get(dto.getId());
+        var expedicion = get(dto.getId());//todo
         var expedicionUpdated = expedicionFromDTO(dto);
 
         updateStockLotes(expedicion, expedicionUpdated);
@@ -70,6 +70,22 @@ public class ExpedicionService {
 
         expedicionUpdated = expedicionRepository.save(expedicionUpdated);
         return new ExpedicionDTO(expedicionUpdated);
+    }
+
+    private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
+        var expedicion = new Expedicion();
+
+        var cliente = clienteService.get(dto.getIdCliente());
+        expedicion.setCliente(cliente);
+
+        var lote = loteService.get(dto.getIdLote());
+        expedicion.setLote(lote);
+
+        expedicion.setFechaExpedicion(dto.getFechaExpedicion());
+        expedicion.setId(dto.getId());
+        expedicion.setCantidad(dto.getCantidad());
+        expedicion.setPeso(dto.getPeso());
+        return expedicion;
     }
 
     private void updateStockLotes(Expedicion expedicion, Expedicion expedicionUpdated) {
@@ -113,21 +129,5 @@ public class ExpedicionService {
         if (expedicion.isEmpty())
             throw new ExpedicionNotFoundException();
         return expedicion.get();
-    }
-
-    private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
-        var expedicion = new Expedicion();
-
-        var cliente = clienteService.get(dto.getIdCliente());
-        expedicion.setCliente(cliente);
-
-        var lote = loteService.get(dto.getIdLote());
-        expedicion.setLote(lote);
-
-        expedicion.setFechaExpedicion(dto.getFechaExpedicion());
-        expedicion.setId(dto.getId());
-        expedicion.setCantidad(dto.getCantidad());
-        expedicion.setPeso(dto.getPeso());
-        return expedicion;
     }
 }

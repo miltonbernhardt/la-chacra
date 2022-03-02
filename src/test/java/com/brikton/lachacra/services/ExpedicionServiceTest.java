@@ -67,8 +67,70 @@ public class ExpedicionServiceTest {
         assertEquals(1500, response.getImporte());
     }
 
+    @Test
+    void Save__Cliente_Not_Found() {
+        //TODO
+    }
 
+    @Test
+    void Save__Lote_Not_Found() {
+        //TODO
+    }
 
+    @Test
+    void Save__Precio_Not_Found() {
+        //TODO
+    }
+
+    @Test
+    void Update_Same_Lote_Same_Quantity__OK() {
+        //TODO
+    }
+
+    @Test
+    void Update_Same_Lote_Different_Quantity__OK() {
+        //TODO
+    }
+
+    @Test
+    void Update_Different_Lote__OK() {
+        //TODO
+    }
+
+    @Test
+    void Update__Expedicion_Not_Found() {
+        //TODO
+    }
+
+    @Test
+    void Update__Cliente_Not_Found() {
+        //TODO
+    }
+
+    @Test
+    void Update__Lote_Not_Found() {
+        //TODO
+    }
+
+    @Test
+    void Update__Precio_Not_Found() {
+        //TODO
+    }
+
+    @Test
+    void Delete_Without_Dependencies__OK() {
+        //TODO
+    }
+
+    @Test
+    void Delete_With_Dependency_Of_Remito__OK() {
+        //TODO
+    }
+
+    @Test
+    void Delete__Expedicion_Not_Found() {
+        //TODO
+    }
 
     private Expedicion mockExpedicion() {
         var exp = new Expedicion();

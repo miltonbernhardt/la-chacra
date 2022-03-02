@@ -42,12 +42,8 @@ VALUES (1, 1, 1, 371.00),
        (1, 3, 7, 431.00),
        (2, 3, 8, 850.00);
 
-INSERT INTO expedicion (id_expedicion, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
-VALUES (1, '2021-11-08', 216, 855.3, 62658.00, 1, '241020210033');
--- agregar expedicion
--- agregar remitos
--- agregar devoluciones
--- agregar 	lote_lote_calcio
--- agregar	lote_lote_colorante
--- agregar	lote_lote_cuajo
--- agregar	lote_lote_cultivo
+INSERT INTO expedicion (id, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
+VALUES (1, '2021-11-08', 100, 600.3, 62658.00, 1, '221020210011'),
+       (2, '2021-11-09', 150, 700.4, 62658.00, 2, '231020210022'),
+       (3, '2021-11-10', 200, 800.5, 62658.00, 3, '241020210033');
+
