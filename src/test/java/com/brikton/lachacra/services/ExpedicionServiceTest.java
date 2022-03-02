@@ -64,7 +64,7 @@ public class ExpedicionServiceTest {
         when(repository.findAll()).thenReturn(expedicionList);
 
         var response = service.getAll();
-        assertEquals(2,response.size());
+        assertEquals(2, response.size());
     }
 
     @Test
@@ -140,7 +140,6 @@ public class ExpedicionServiceTest {
 
     @Test
     void Update_Same_Lote_Same_Quantity__OK() {
-
         var dtoUpdate = new ExpedicionUpdateDTO();
         dtoUpdate.setFechaExpedicion(LocalDate.of(2021, 10, 11));
         dtoUpdate.setPeso(20D);
@@ -157,12 +156,15 @@ public class ExpedicionServiceTest {
         when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
 
         var response = service.update(dtoUpdate);
+
         assertEquals(3000, response.getImporte());
+        verify(loteService, never()).increaseStock(any(Lote.class), any(Integer.class));
+        verify(loteService, never()).decreaseStock(any(Lote.class), any(Integer.class));
     }
 
     @Test
     void Update_Same_Lote_Different_Quantity__OK() {
-                var expedicion = mockExpedicion();
+        var expedicion = mockExpedicion();
         expedicion.setCantidad(50);
 
         var dtoUpdate = new ExpedicionUpdateDTO();
@@ -182,11 +184,36 @@ public class ExpedicionServiceTest {
 
         var response = service.update(dtoUpdate);
         assertEquals(20, response.getCantidad());
+        assertEquals(3000, response.getImporte());
+        verify(loteService, never()).increaseStock(any(Lote.class), any(Integer.class));
+        verify(loteService).decreaseStock(any(Lote.class), any(Integer.class));
     }
 
     @Test
     void Update_Different_Lote__OK() {
-        //TODO
+        var expedicion = mockExpedicion();
+        expedicion.getLote().setId("101020210013");
+        expedicion.setCantidad(50);
+
+        var dtoUpdate = new ExpedicionUpdateDTO();
+        dtoUpdate.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dtoUpdate.setPeso(20D);
+        dtoUpdate.setCantidad(20);
+        dtoUpdate.setImporte(900D);
+        dtoUpdate.setIdCliente(1L);
+        dtoUpdate.setIdLote("101020210011");
+        dtoUpdate.setId(1L);
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenReturn(150.0);
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicion));
+        when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        var response = service.update(dtoUpdate);
+        assertEquals(20, response.getCantidad());
+        verify(loteService).increaseStock(any(Lote.class), any(Integer.class));
+        verify(loteService).decreaseStock(any(Lote.class), any(Integer.class));
     }
 
     @Test
@@ -238,8 +265,8 @@ public class ExpedicionServiceTest {
         dto.setIdLote("101020210011");
         dto.setId(1L);
         when(clienteService.get(1L)).thenReturn(mockCliente());
-       when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
-         when(loteService.get("101020210011")).thenThrow(new LoteNotFoundException());
+        when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
+        when(loteService.get("101020210011")).thenThrow(new LoteNotFoundException());
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> service.update(dto)
         );
