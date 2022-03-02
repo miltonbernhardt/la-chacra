@@ -59,7 +59,7 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
     return (
         <Grid container spacing={1.5}>
             <Select ref={refSelectCliente}
-                value={expedicionForm.codigoQueso}
+                value={expedicionForm.idCliente}
                 id={field.backIdCliente}
                 label={field.cliente}
                 options={clientes}
