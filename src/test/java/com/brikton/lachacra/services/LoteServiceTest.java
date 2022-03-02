@@ -180,12 +180,11 @@ public class LoteServiceTest {
         when(repository.findById("101020210011")).thenReturn(Optional.of(lote));
         when(repository.save(any(Lote.class))).thenReturn(savedLote);
 
-        var actualLote = service.increaseStock(lote, 5);
+        service.increaseStock(lote, 5);
 
         ArgumentCaptor<Lote> captor = ArgumentCaptor.forClass(Lote.class);
         verify(repository).save(captor.capture());
 
-        assertEquals(savedLote, actualLote);
         assertEquals(15, captor.getValue().getStockLote());
     }
 

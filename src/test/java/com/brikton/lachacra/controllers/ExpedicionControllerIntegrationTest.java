@@ -151,12 +151,12 @@ public class ExpedicionControllerIntegrationTest {
     }
 
     @Test
-    void Delete_Without_Dependencies__OK() {
+    void Delete__OK() {
         //TODO
     }
 
     @Test
-    void Delete_With_Dependency_Of_Remito__OK() {
+    void Delete_Remito_Dependency__Cannot_Be_Deleted() {
         //TODO
     }
 

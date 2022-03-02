@@ -54,7 +54,6 @@ public class ClienteUpdateDTO {
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String fax;
 
-    @Email
     @Length(max = 255, message = ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS)
     private String email;
 

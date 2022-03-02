@@ -20,7 +20,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, queso }) => {//todo queso
+const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, queso }) => {
 
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 

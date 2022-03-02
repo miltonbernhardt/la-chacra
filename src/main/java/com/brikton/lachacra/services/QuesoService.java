@@ -73,24 +73,12 @@ public class QuesoService {
         return queso;
     }
 
-    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
+    public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException {
         var oldQueso = get(dto.getId());
-
-        //todo no deberia cambiarse el codigo de queso
-        validateIfAlreadyExists(oldQueso.getCodigo(), dto.getCodigo());
-
-        oldQueso.setCodigo(dto.getCodigo());
         oldQueso.setNomenclatura(dto.getNomenclatura());
         oldQueso.setTipoQueso(dto.getTipoQueso());
-        //todo que hacemos con el stock? para mi, no deberia actualizar porque se calcula a partir de expediciones y lotes
         var queso = repository.save(oldQueso);
         return new QuesoDTO(queso);
-    }
-
-    private void validateIfAlreadyExists( String oldCodigo, String actualCodigo) {
-        if (!oldCodigo.equals(actualCodigo) && repository.existsByCodigoNotFechaBaja(actualCodigo)) {
-            throw new CodigoQuesoAlreadyExistsException();
-        }
     }
 
     public void delete(Long id) throws QuesoNotFoundException {

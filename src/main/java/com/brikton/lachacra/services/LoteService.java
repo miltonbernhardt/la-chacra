@@ -65,11 +65,11 @@ public class LoteService {
         return repository.save(lote);
     }
 
-    public Lote increaseStock(Lote lote, Integer cantidad) {
+    public void increaseStock(Lote lote, Integer cantidad) {
         var oldStock = lote.getStockLote();
         var actualStock = oldStock + cantidad;
         lote.setStockLote(actualStock);
-        return repository.save(lote);
+        repository.save(lote);
     }
 
     public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {

@@ -253,7 +253,7 @@ public class QuesoControllerIntegrationTest {
 
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setId(1L);
-        expectedDTO.setCodigo("005");
+        expectedDTO.setCodigo("003");
         expectedDTO.setTipoQueso("tipoQueso2");
         expectedDTO.setNomenclatura("tip2");
         expectedDTO.setStock(53);
@@ -291,25 +291,6 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Update__Codigo_Queso_Already_Exists() throws JsonProcessingException {
-        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
-        dtoToUpdate.setId(3L);
-        dtoToUpdate.setCodigo("001");
-        dtoToUpdate.setTipoQueso("tipoQueso");
-        dtoToUpdate.setNomenclatura("tip");
-        dtoToUpdate.setStock(10);
-
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-        );
-
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
-    }
-
-    @Test
     void Update__Over_Queso_Deleted__Not_Found() throws JsonProcessingException {
         QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(4L);
@@ -324,8 +305,6 @@ public class QuesoControllerIntegrationTest {
         expectedDTO.setTipoQueso("TIPOQUESO");
         expectedDTO.setNomenclatura("TIP");
         expectedDTO.setStock(0);
-
-        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
 
         HttpClientErrorException.NotFound thrown = assertThrows(
                 HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
@@ -348,7 +327,7 @@ public class QuesoControllerIntegrationTest {
 
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setId(3L);
-        expectedDTO.setCodigo("004");
+        expectedDTO.setCodigo("002");
         expectedDTO.setTipoQueso("TIPOQUESO");
         expectedDTO.setNomenclatura("TIP");
         expectedDTO.setStock(20);
@@ -518,7 +497,6 @@ public class QuesoControllerIntegrationTest {
         assertEquals(expectedQuesos, actualQuesos);
 
         //queso dado de baja
-        String expectedCode = mapper.writeValueAsString("001");
         response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());

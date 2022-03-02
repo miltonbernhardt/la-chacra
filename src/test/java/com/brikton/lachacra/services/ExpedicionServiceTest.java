@@ -10,6 +10,7 @@ import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {ExpedicionService.class})
 public class ExpedicionServiceTest {
@@ -63,7 +64,7 @@ public class ExpedicionServiceTest {
         when(repository.findAll()).thenReturn(expedicionList);
 
         var response = service.getAll();
-        assertEquals(2,response.size());
+        assertEquals(2, response.size());
     }
 
     @Test
@@ -139,7 +140,6 @@ public class ExpedicionServiceTest {
 
     @Test
     void Update_Same_Lote_Same_Quantity__OK() {
-
         var dtoUpdate = new ExpedicionUpdateDTO();
         dtoUpdate.setFechaExpedicion(LocalDate.of(2021, 10, 11));
         dtoUpdate.setPeso(20D);
@@ -156,12 +156,15 @@ public class ExpedicionServiceTest {
         when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
 
         var response = service.update(dtoUpdate);
+
         assertEquals(3000, response.getImporte());
+        verify(loteService, never()).increaseStock(any(Lote.class), any(Integer.class));
+        verify(loteService, never()).decreaseStock(any(Lote.class), any(Integer.class));
     }
 
     @Test
     void Update_Same_Lote_Different_Quantity__OK() {
-                var expedicion = mockExpedicion();
+        var expedicion = mockExpedicion();
         expedicion.setCantidad(50);
 
         var dtoUpdate = new ExpedicionUpdateDTO();
@@ -181,11 +184,36 @@ public class ExpedicionServiceTest {
 
         var response = service.update(dtoUpdate);
         assertEquals(20, response.getCantidad());
+        assertEquals(3000, response.getImporte());
+        verify(loteService, never()).increaseStock(any(Lote.class), any(Integer.class));
+        verify(loteService).decreaseStock(any(Lote.class), any(Integer.class));
     }
 
     @Test
     void Update_Different_Lote__OK() {
-        //TODO
+        var expedicion = mockExpedicion();
+        expedicion.getLote().setId("101020210013");
+        expedicion.setCantidad(50);
+
+        var dtoUpdate = new ExpedicionUpdateDTO();
+        dtoUpdate.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        dtoUpdate.setPeso(20D);
+        dtoUpdate.setCantidad(20);
+        dtoUpdate.setImporte(900D);
+        dtoUpdate.setIdCliente(1L);
+        dtoUpdate.setIdLote("101020210011");
+        dtoUpdate.setId(1L);
+
+        when(clienteService.get(1L)).thenReturn(mockCliente());
+        when(loteService.get("101020210011")).thenReturn(mockLote());
+        when(precioService.getPrecioValue(any(Queso.class), any(TipoCliente.class))).thenReturn(150.0);
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicion));
+        when(repository.save(any(Expedicion.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        var response = service.update(dtoUpdate);
+        assertEquals(20, response.getCantidad());
+        verify(loteService).increaseStock(any(Lote.class), any(Integer.class));
+        verify(loteService).decreaseStock(any(Lote.class), any(Integer.class));
     }
 
     @Test
@@ -237,8 +265,8 @@ public class ExpedicionServiceTest {
         dto.setIdLote("101020210011");
         dto.setId(1L);
         when(clienteService.get(1L)).thenReturn(mockCliente());
-       when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
-         when(loteService.get("101020210011")).thenThrow(new LoteNotFoundException());
+        when(repository.findById(1L)).thenReturn(Optional.of(mockExpedicion()));
+        when(loteService.get("101020210011")).thenThrow(new LoteNotFoundException());
         LoteNotFoundException thrown = assertThrows(
                 LoteNotFoundException.class, () -> service.update(dto)
         );
@@ -269,17 +297,57 @@ public class ExpedicionServiceTest {
 
     @Test
     void Delete_Without_Dependencies__OK() {
-        //TODO
+        var expedicionToDelete = new Expedicion();
+        expedicionToDelete.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        expedicionToDelete.setPeso(10D);
+        expedicionToDelete.setCantidad(5);
+        expedicionToDelete.setImporte(900D);
+        expedicionToDelete.setLote(new Lote());
+
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicionToDelete));
+        when(remitoRepository.existsByExpedicionesContains(any(Expedicion.class))).thenReturn(false);
+
+        service.delete(1L);
+
+        ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
+        verify(loteService).increaseStock(any(Lote.class), captor.capture());
+        verify(repository).delete(any(Expedicion.class));
+        assertEquals(5, captor.getValue());
     }
 
     @Test
-    void Delete_With_Dependency_Of_Remito__OK() {
-        //TODO
+    void Delete_With_Dependency_Of_Remito__Cannot_Delete() {
+        var expedicionToDelete = new Expedicion();
+        expedicionToDelete.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        expedicionToDelete.setPeso(10D);
+        expedicionToDelete.setCantidad(5);
+        expedicionToDelete.setImporte(900D);
+        expedicionToDelete.setLote(new Lote());
+
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicionToDelete));
+        when(remitoRepository.existsByExpedicionesContains(any(Expedicion.class))).thenReturn(true);
+
+        ExpedicionCannotDeleteException thrown = assertThrows(
+                ExpedicionCannotDeleteException.class, () -> service.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_EXPEDICION_CANNOT_BE_DELETED, thrown.getMessage());
     }
 
     @Test
     void Delete__Expedicion_Not_Found() {
-        //TODO
+        var expedicionToDelete = new Expedicion();
+        expedicionToDelete.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        expedicionToDelete.setPeso(10D);
+        expedicionToDelete.setCantidad(5);
+        expedicionToDelete.setImporte(900D);
+        expedicionToDelete.setLote(new Lote());
+
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        ExpedicionNotFoundException thrown = assertThrows(
+                ExpedicionNotFoundException.class, () -> service.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_EXPEDICION_NOT_FOUND, thrown.getMessage());
     }
 
     private Expedicion mockExpedicion() {
