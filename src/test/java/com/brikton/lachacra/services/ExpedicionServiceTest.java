@@ -10,6 +10,7 @@ import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {ExpedicionService.class})
 public class ExpedicionServiceTest {
@@ -269,17 +270,57 @@ public class ExpedicionServiceTest {
 
     @Test
     void Delete_Without_Dependencies__OK() {
-        //TODO
+        var expedicionToDelete = new Expedicion();
+        expedicionToDelete.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        expedicionToDelete.setPeso(10D);
+        expedicionToDelete.setCantidad(5);
+        expedicionToDelete.setImporte(900D);
+        expedicionToDelete.setLote(new Lote());
+
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicionToDelete));
+        when(remitoRepository.existsByExpedicionesContains(any(Expedicion.class))).thenReturn(false);
+
+        service.delete(1L);
+
+        ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
+        verify(loteService).increaseStock(any(Lote.class), captor.capture());
+        verify(repository).delete(any(Expedicion.class));
+        assertEquals(5, captor.getValue());
     }
 
     @Test
-    void Delete_With_Dependency_Of_Remito__OK() {
-        //TODO
+    void Delete_With_Dependency_Of_Remito__Cannot_Delete() {
+        var expedicionToDelete = new Expedicion();
+        expedicionToDelete.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        expedicionToDelete.setPeso(10D);
+        expedicionToDelete.setCantidad(5);
+        expedicionToDelete.setImporte(900D);
+        expedicionToDelete.setLote(new Lote());
+
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicionToDelete));
+        when(remitoRepository.existsByExpedicionesContains(any(Expedicion.class))).thenReturn(true);
+
+        ExpedicionCannotDeleteException thrown = assertThrows(
+                ExpedicionCannotDeleteException.class, () -> service.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_EXPEDICION_CANNOT_BE_DELETED, thrown.getMessage());
     }
 
     @Test
     void Delete__Expedicion_Not_Found() {
-        //TODO
+        var expedicionToDelete = new Expedicion();
+        expedicionToDelete.setFechaExpedicion(LocalDate.of(2021, 10, 11));
+        expedicionToDelete.setPeso(10D);
+        expedicionToDelete.setCantidad(5);
+        expedicionToDelete.setImporte(900D);
+        expedicionToDelete.setLote(new Lote());
+
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        ExpedicionNotFoundException thrown = assertThrows(
+                ExpedicionNotFoundException.class, () -> service.delete(1L)
+        );
+        assertEquals(ErrorMessages.MSG_EXPEDICION_NOT_FOUND, thrown.getMessage());
     }
 
     private Expedicion mockExpedicion() {
