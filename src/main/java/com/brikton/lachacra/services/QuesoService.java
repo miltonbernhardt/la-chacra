@@ -76,6 +76,7 @@ public class QuesoService {
     public QuesoDTO update(QuesoUpdateDTO dto) throws QuesoNotFoundException, CodigoQuesoAlreadyExistsException {
         var oldQueso = get(dto.getId());
 
+        //todo no deberia cambiarse el codigo de queso
         validateIfAlreadyExists(oldQueso.getCodigo(), dto.getCodigo());
 
         oldQueso.setCodigo(dto.getCodigo());

@@ -13,5 +13,4 @@ public class ErrorMessages {
     public static final String MSG_PRECIO_ALREADY_EXISTS = "Ya existe el precio";
     public static final String MSG_LOTE_ALREADY_EXIST = "Ya existe el lote";
     public static final String MSG_CODIGO_QUESO_ALREADY_EXIST = "Ya existe un queso con ese código";
-
 }

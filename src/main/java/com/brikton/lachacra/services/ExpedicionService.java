@@ -60,7 +60,7 @@ public class ExpedicionService {
     public ExpedicionDTO update(ExpedicionUpdateDTO updateDTO) throws ExpedicionNotFoundException {
         var dto = new ExpedicionDTO(updateDTO);
 
-        var expedicion = get(dto.getId());//todo
+        var expedicion = get(dto.getId());
         var expedicionUpdated = expedicionFromDTO(dto);
 
         updateStockLotes(expedicion, expedicionUpdated);

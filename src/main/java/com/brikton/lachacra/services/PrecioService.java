@@ -52,7 +52,7 @@ public class PrecioService {
 
     public PrecioDTO update(PrecioUpdateDTO dto) throws PrecioNotFoundException {
         validateExistencePrecio(dto.getId(), dto.getIdQueso(), dto.getIdTipoCliente());
-        var precio = precioFromDTO(new PrecioDTO(dto)); //todo test exceptions
+        var precio = precioFromDTO(new PrecioDTO(dto));
         precio = repository.save(precio);
         return new PrecioDTO(precio);
     }
