@@ -251,7 +251,7 @@ public class ExpedicionServiceTest {
         dto.setIdCliente(1L);
         dto.setIdLote("101020210011");
         dto.setId(1L);
-        
+
         when(clienteService.get(1L)).thenThrow(new ClienteNotFoundException());
         when(repository.findById(1L)).thenReturn(Optional.of(expedicion));
 

@@ -39,7 +39,7 @@ const CargarProduccion = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    useEffect(() => fetchQuesos(), []);
+    useEffect(() => fetchQuesos(), [fetchQuesos]);
 
     const updateStateLote = useCallback((attribute, value) => {
         lote[attribute] = value

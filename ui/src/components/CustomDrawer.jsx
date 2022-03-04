@@ -117,6 +117,30 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     </ListItemIcon>
                     <ListItemText primary="Ventas" />
                 </ListItem>
+                <ListItem button component={Link} to="/">
+                    <ListItemIcon>
+                        <SellIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Stock Productos" />
+                </ListItem>
+                <ListItem button component={Link} to="/">
+                    <ListItemIcon>
+                        <SellIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Rendimiento" />
+                </ListItem>
+                <ListItem button component={Link} to="/">
+                    <ListItemIcon>
+                        <SellIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Stock Embalaje" />
+                </ListItem>
+                <ListItem button component={Link} to="/">
+                    <ListItemIcon>
+                        <SellIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Mantenimiento" />
+                </ListItem>
                 <ListItem button component={Link} to="/ver/trazabilidad">
                     <ListItemIcon>
                         <HistoryIcon />

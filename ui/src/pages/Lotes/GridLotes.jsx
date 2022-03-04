@@ -54,13 +54,6 @@ const GridLotes = ({ produccion, quesos, setSelection }) => {
                 flex: 0.5,
                 minWidth: 50,
             },
-            {
-                field: 'peso',
-                headerName: 'Peso',
-                type: 'number',
-                flex: 0.5,
-                minWidth: 50,
-            },
 
         ]
     }, [quesos]);
