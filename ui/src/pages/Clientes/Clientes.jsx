@@ -38,7 +38,8 @@ const CargarClientes = () => {
     const [listaClientes, setListaClientes] = useState([]);
     const [tiposClientes, setTiposClientes] = useState([]);
 
-    const [isLoading, setLoading] = useState(true);
+    const [isLoadingClientes, setLoadingClientes] = useState(true);
+    const [isLoadingTipoClientes, setLoadingTipoClientes] = useState(true);
 
     const [isEditing, setEditing] = useState(false);
 
@@ -47,16 +48,17 @@ const CargarClientes = () => {
             .then(({ data }) => {
                 setListaClientes(data)
             })
-            .catch(() => setLoading(false));
+            .catch(() => toast.error("No se pudo cargar clientes"))
+            .finally(() => setLoadingClientes(false))
     }
 
     const fetchTipoClientes = () => {
         getAllTipoClientes()
             .then(({ data }) => {
                 setTiposClientes(data);
-                setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch(() => toast.error("No se pudo cargar tipos de cliente"))
+            .finally(() => setLoadingTipoClientes(false));
     }
 
     useEffect(() => {
@@ -125,7 +127,7 @@ const CargarClientes = () => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [tiposClientes])
 
-    if (isLoading)
+    if (isLoadingClientes || isLoadingTipoClientes)
         return (<Loading />)
 
     return (

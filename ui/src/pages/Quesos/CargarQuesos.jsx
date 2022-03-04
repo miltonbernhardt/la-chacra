@@ -17,6 +17,7 @@ const quesoInicial = {
 }
 
 const CargarQuesos = () => {
+
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
 
@@ -42,7 +43,8 @@ const CargarQuesos = () => {
                 setListaQuesos(listaAux)
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch(() => toast.error("No se pudo cargar productos"))
+            .finally(() => setLoading(false));
 
         setQueso(quesoInicial)
     }
@@ -105,7 +107,7 @@ const CargarQuesos = () => {
     }
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
     return (
         <PageTableButtonPane
@@ -118,7 +120,7 @@ const CargarQuesos = () => {
             grid={
                 <GridQuesos
                     listaQuesos={listaQuesos}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             }
         >
             <DialogCargarQueso
@@ -132,7 +134,7 @@ const CargarQuesos = () => {
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
-                onBorrar={onDelete}/>
+                onBorrar={onDelete} />
         </PageTableButtonPane>
     );
 }

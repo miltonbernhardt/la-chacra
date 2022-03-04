@@ -5,6 +5,7 @@ import { getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio 
 import FormPrecios from "./FormPrecios";
 import GridPrecios from "./GridPrecios";
 import * as fields from '../../resources/fields'
+import toast from "react-hot-toast";
 
 const precioInicial = {
     id: '',
@@ -28,21 +29,21 @@ const CargarPrecios = () => {
     const fetchPrecios = () => {
         getAllPrecios()
             .then(({ data }) => setListaPrecios(data))
-            .catch(() => null)
+            .catch(() => toast.error("No se pudo cargar precios"))
             .finally(() => setLoadingPrecios(false))
     }
 
     const fetchQuesos = () => {
         getAllQuesos()
             .then(({ data }) => setListaQuesos(data))
-            .catch(() => null)
+            .catch(() => toast.error("No se pudo cargar quesos"))
             .finally(() => setLoadingQuesos(false))
     }
 
     const fetchTipoClientes = () => {
         getAllTipoClientes()
             .then(({ data }) => setListaTipoClientes(data))
-            .catch(() => null)
+            .catch(() => toast.error("No se pudo cargar tipos de cliente"))
             .finally(() => setLoadingClientes(false))
     }
 

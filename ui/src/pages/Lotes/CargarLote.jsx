@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Loading from '../../components/Loading';
 import PageFormTable from "../../components/PageFormTable";
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
@@ -33,9 +34,9 @@ const CargarProduccion = () => {
         getAllQuesos()
             .then(data => {
                 setListaQuesos(data.data);
-                setLoading(false)
             })
-            .catch(() => setLoading(false));
+            .catch(() => toast.error("No se pudo cargar quesos"))
+            .finally(() => setLoading(false));
     }, []);
 
     useEffect(() => fetchQuesos(), []);
@@ -102,7 +103,7 @@ const CargarProduccion = () => {
     });
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
     return (
         <PageFormTable
@@ -115,13 +116,13 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit}/>
+                    handleSubmit={handleSubmit} />
             }
             table={
                 <GridLotes
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             }
             titleTable="Producción ingresada"
             titleForm="Ingreso de producción"
@@ -130,7 +131,7 @@ const CargarProduccion = () => {
                 open={eliminarDialog}
                 lote={lote}
                 onClose={cancelEliminar}
-                onSubmit={handleEliminar}/>
+                onSubmit={handleEliminar} />
         </PageFormTable>
     )
 }
