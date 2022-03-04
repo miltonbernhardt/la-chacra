@@ -105,9 +105,9 @@ public class PrecioServiceTest {
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
-        when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
+        when(tipoClienteService.get(1L)).thenReturn(tipoClienteMock);
         when(quesoRepository.findById(1L)).thenReturn(Optional.of(quesoMock));
-        when(repository.existsByQuesoAndTipoCliente(quesoMock, tipoClienteMock)).thenReturn(false);
+        when(repository.existsByQuesoAndTipoCliente(1L, 1L)).thenReturn(false);
         when(repository.save(any(Precio.class))).thenReturn(precioSaved);
 
         var dtoActual = service.save(precioDTOToSave);
@@ -121,7 +121,7 @@ public class PrecioServiceTest {
         precioDTOToSave.setIdTipoCliente(1L);
         precioDTOToSave.setIdQueso(1L);
 
-        when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
+        when(tipoClienteService.get(1L)).thenThrow(new TipoClienteNotFoundException());
         TipoClienteNotFoundConflictException thrown = assertThrows(
                 TipoClienteNotFoundConflictException.class, () -> service.save(precioDTOToSave)
         );
@@ -139,7 +139,7 @@ public class PrecioServiceTest {
         tipoClienteMock.setTipo("tipo");
         tipoClienteMock.setId(1L);
 
-        when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
+        when(tipoClienteService.get(1L)).thenReturn(tipoClienteMock);
         when(quesoRepository.findById(1L)).thenReturn(Optional.empty());
         QuesoNotFoundConflictException thrown = assertThrows(
                 QuesoNotFoundConflictException.class, () -> service.save(precioDTOToSave)
@@ -176,9 +176,9 @@ public class PrecioServiceTest {
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
-        when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
+        when(tipoClienteService.get(1L)).thenReturn(tipoClienteMock);
         when(quesoRepository.findById(1L)).thenReturn(Optional.of(quesoMock));
-        when(repository.existsByQuesoAndTipoCliente(quesoMock, tipoClienteMock)).thenReturn(true);
+        when(repository.existsByQuesoAndTipoCliente(1L, 1L)).thenReturn(true);
         PrecioAlreadyExistsException thrown = assertThrows(
                 PrecioAlreadyExistsException.class, () -> service.save(precioDTOToSave)
         );
@@ -216,7 +216,7 @@ public class PrecioServiceTest {
         expectedPrecio.setIdQueso(1L);
 
         when(repository.existsByIdAndQuesoAndTipoCliente(1L, 1L, 1L)).thenReturn(true);
-        when(tipoClienteService.getEntity(1L)).thenReturn(tipoClienteMock);
+        when(tipoClienteService.get(1L)).thenReturn(tipoClienteMock);
         when(quesoRepository.findById(1L)).thenReturn(Optional.of(quesoMock));
         when(repository.save(any(Precio.class))).thenReturn(precioSaved);
 
@@ -235,6 +235,42 @@ public class PrecioServiceTest {
         when(repository.existsByIdAndQuesoAndTipoCliente(1L, 1L, 1L)).thenReturn(false);
         PrecioNotFoundException thrown = assertThrows(
                 PrecioNotFoundException.class, () -> service.update(precioDTOToUpdate)
+        );
+        assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Get_Precio_Values__OK() {
+        var queso = new Queso();
+        var tipoCliente = new TipoCliente();
+
+        var mockPrecio = new Precio();
+        mockPrecio.setId(1L);
+        mockPrecio.setValor(5.0);
+        mockPrecio.setQueso(queso);
+        mockPrecio.setTipoCliente(tipoCliente);
+
+        when(repository.findByQuesoAndAndTipoCliente(queso, tipoCliente)).thenReturn(Optional.of(mockPrecio));
+
+        var actualValue = service.getPrecioValue(queso, tipoCliente);
+
+        assertEquals(5.0, actualValue);
+    }
+
+    @Test
+    void Get_Precio_Values__Not_Found() {
+        var queso = new Queso();
+        var tipoCliente = new TipoCliente();
+
+        var mockPrecio = new Precio();
+        mockPrecio.setId(1L);
+        mockPrecio.setValor(5.0);
+        mockPrecio.setQueso(queso);
+        mockPrecio.setTipoCliente(tipoCliente);
+
+        when(repository.findByQuesoAndAndTipoCliente(queso, tipoCliente)).thenReturn(Optional.empty());
+        PrecioNotFoundException thrown = assertThrows(
+                PrecioNotFoundException.class, () -> service.getPrecioValue(queso, tipoCliente)
         );
         assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, thrown.getMessage());
     }

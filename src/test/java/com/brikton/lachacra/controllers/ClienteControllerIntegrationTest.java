@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -245,21 +246,20 @@ public class ClienteControllerIntegrationTest {
 
     @Test
     void Save__Invalid_Fields__Fields_Too_Large() throws JsonProcessingException {
-        //todo tira un error de timestamp nqv
         var dtoToSave = new ClienteDTO();
-        dtoToSave.setRazonSocial("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setCuit("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setCodPostal("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setDomicilio("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setLocalidad("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW" );
-        dtoToSave.setPais("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setProvincia("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setTransporte("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setSenasaUta("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setTelefono("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setCelular("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setFax("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToSave.setEmail("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
+        dtoToSave.setRazonSocial(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setCuit(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setCodPostal(RandomStringUtils.randomAlphabetic(7));
+        dtoToSave.setDomicilio(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setLocalidad(RandomStringUtils.randomAlphabetic(256) );
+        dtoToSave.setPais(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setProvincia(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setTransporte(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setSenasaUta(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setTelefono(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setCelular(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setFax(RandomStringUtils.randomAlphabetic(256));
+        dtoToSave.setEmail(RandomStringUtils.randomAlphabetic(256));
         dtoToSave.setIdTipoCliente(0L);
 
         HttpClientErrorException.BadRequest thrown = assertThrows(
@@ -273,7 +273,7 @@ public class ClienteControllerIntegrationTest {
         assertEquals(14, response.getErrors().size());
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("razonSocial"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("cuit"));
-        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("codPostal"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_6_CHARACTERS, response.getErrors().get("codPostal"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("domicilio"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("localidad"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("pais"));
@@ -396,21 +396,20 @@ public class ClienteControllerIntegrationTest {
 
     @Test
     void Update__Invalid_Fields__Fields_Too_Large() throws JsonProcessingException {
-        //todo tira un error de timestamp nqv
         var dtoToUpdate = new ClienteUpdateDTO();
-        dtoToUpdate.setRazonSocial("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setCuit("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setCodPostal("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setDomicilio("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setLocalidad("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW" );
-        dtoToUpdate.setPais("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setProvincia("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setTransporte("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setSenasaUta("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setTelefono("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setCelular("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setFax("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
-        dtoToUpdate.setEmail("W04M0N7K13Zh0fSWnnY37iQ1Z12m9aS93oPeew2Zz57odQeY5vd8F77kaNiMxj1Sw40srLc1yDJd8bN6dI9XH8viRyt1z4mmL7n1StiZ5WfOi3LD5brP404Ys97KMSc8i1l7kZxYIkcFoTGh0Rsi08Yhyhu4F5BOb21zr0zV61ZX270Laf25Gi8HEti9zG9fs8NN40q5tNYyJKqp2enG9AD7VMs358Vbg3z7Y90kkGY50bb7tSOvYuxrKrcSo5J25cjQm5tW");
+        dtoToUpdate.setRazonSocial(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setCuit(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setCodPostal(RandomStringUtils.randomAlphabetic(7));
+        dtoToUpdate.setDomicilio(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setLocalidad(RandomStringUtils.randomAlphabetic(256) );
+        dtoToUpdate.setPais(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setProvincia(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setTransporte(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setSenasaUta(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setTelefono(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setCelular(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setFax(RandomStringUtils.randomAlphabetic(256));
+        dtoToUpdate.setEmail(RandomStringUtils.randomAlphabetic(256));
         dtoToUpdate.setId(0L);
         dtoToUpdate.setIdTipoCliente(0L);
 
@@ -425,7 +424,7 @@ public class ClienteControllerIntegrationTest {
         assertEquals(15, response.getErrors().size());
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("razonSocial"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("cuit"));
-        assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("codPostal"));
+        assertEquals(ValidationMessages.MUST_NOT_EXCEED_6_CHARACTERS, response.getErrors().get("codPostal"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("domicilio"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("localidad"));
         assertEquals(ValidationMessages.MUST_NOT_EXCEED_255_CHARACTERS, response.getErrors().get("pais"));
@@ -442,29 +441,25 @@ public class ClienteControllerIntegrationTest {
 
     @Test
     void Delete_Client_Without_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString(null);
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Client_With_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString(1);
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
@@ -474,6 +469,7 @@ public class ClienteControllerIntegrationTest {
                 HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("5"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("5"), response.getPath());
@@ -485,6 +481,7 @@ public class ClienteControllerIntegrationTest {
                 HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("4"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("4"), response.getPath());
@@ -496,6 +493,7 @@ public class ClienteControllerIntegrationTest {
                 HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
         assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
@@ -564,20 +562,14 @@ public class ClienteControllerIntegrationTest {
         assertEquals(expectedClientes, actualClientes);
 
         //cliente dado de baja
-        var expectedID = mapper.writeValueAsString(1);
         response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
 
         //cliente borrado
-        expectedID = mapper.writeValueAsString(null);
         response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
 
         expectedClientes = mapper.writeValueAsString(List.of(dto3));
         response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);

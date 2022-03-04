@@ -8,6 +8,7 @@ import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.ClienteRepository;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,69 +22,50 @@ public class ClienteService {
 
     private final DateUtil dateUtil;
     private final ClienteRepository repository;
-    private final ExpedicionService expedicionService;
+    private final ExpedicionRepository expedicionRepository;
     private final TipoClienteService tipoClienteService;
 
     public ClienteService(
             DateUtil dateUtil,
             ClienteRepository repository,
-            ExpedicionService expedicionRepository,
+            ExpedicionRepository expedicionRepository,
             TipoClienteService tipoClienteService
     ) {
         this.dateUtil = dateUtil;
         this.repository = repository;
-        this.expedicionService = expedicionRepository;
+        this.expedicionRepository = expedicionRepository;
         this.tipoClienteService = tipoClienteService;
+    }
+
+    public Cliente get(Long id) throws ClienteNotFoundException {
+        var cliente = repository.findById(id);
+        if (cliente.isPresent() && cliente.get().getFechaBaja() == null)
+            return cliente.get();
+        throw new ClienteNotFoundException();
     }
 
     public List<ClienteDTO> getAll() {
         List<ClienteDTO> result = new ArrayList<>();
-        repository.findAllClientesNotFechaBaja().forEach(c -> result.add(new ClienteDTO(c)));
+        repository.findAllClientesNotDadoBaja().forEach(cliente -> result.add(new ClienteDTO(cliente)));
         return result;
     }
 
     public ClienteDTO save(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
-        return persist(dto);
-    }
-
-    public ClienteDTO update(ClienteUpdateDTO dtoUpdate) throws ClienteNotFoundException, TipoClienteNotFoundConflictException {
-        var dto = new ClienteDTO(dtoUpdate);
-        var exists = repository.existsByIdNotFechaBaja(dto.getId());
-        if (!exists)
-            throw new ClienteNotFoundException();
-        return persist(dto);
-    }
-
-    public Long delete(Long id) throws ClienteNotFoundException {
-        var exists = repository.existsByIdNotFechaBaja(id);
-        if (!exists)
-            throw new ClienteNotFoundException();
-
-        var cliente = repository.getById(id);
-
-        if (expedicionService.existsByCliente(cliente)) {
-            cliente.setFechaBaja(dateUtil.now());
-            repository.save(cliente);
-            return id;
-        }
-
-        repository.deleteById(id);
-        return null;
-    }
-
-    private ClienteDTO persist(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
         var cliente = clienteFromDTO(dto);
-        return new ClienteDTO(repository.save(cliente));
+        cliente = repository.save(cliente);
+        return new ClienteDTO(cliente);
     }
 
     private Cliente clienteFromDTO(ClienteDTO dto) throws TipoClienteNotFoundConflictException {
         var cliente = new Cliente();
+
         TipoCliente tipoCliente;
         try {
-            tipoCliente = tipoClienteService.getEntity(dto.getIdTipoCliente());
+            tipoCliente = tipoClienteService.get(dto.getIdTipoCliente());
         } catch (TipoClienteNotFoundException exception) {
             throw new TipoClienteNotFoundConflictException();
         }
+
         cliente.setTipoCliente(tipoCliente);
         cliente.setId(dto.getId());
         cliente.setCuit(dto.getCuit());
@@ -100,5 +82,31 @@ public class ClienteService {
         cliente.setEmail(dto.getEmail());
         cliente.setRazonSocial(dto.getRazonSocial());
         return cliente;
+    }
+
+    public ClienteDTO update(ClienteUpdateDTO dtoUpdate) throws ClienteNotFoundException, TipoClienteNotFoundConflictException {
+        var dto = new ClienteDTO(dtoUpdate);
+        existsCliente(dto.getId());
+        return save(dto);
+    }
+
+    public void delete(Long id) throws ClienteNotFoundException {
+        existsCliente(id);
+        if (expedicionRepository.existsByIdCliente(id))
+            darBajaCliente(id);
+        else
+            repository.deleteById(id);
+    }
+
+    private void existsCliente(Long id) {
+        var exists = repository.existsByIdAndNotDadoBaja(id);
+        if (!exists)
+            throw new ClienteNotFoundException();
+    }
+
+    private void darBajaCliente(Long id) {
+        var cliente = repository.getById(id);
+        cliente.setFechaBaja(dateUtil.now());
+        repository.save(cliente);
     }
 }

@@ -1,12 +1,12 @@
 package com.brikton.lachacra.entities;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -17,7 +17,7 @@ public class Expedicion {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    @Column(name = "id_expedicion")
+    @Column
     private Long id;
     private LocalDate fechaExpedicion;
     private Integer cantidad;

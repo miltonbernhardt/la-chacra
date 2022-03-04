@@ -540,31 +540,25 @@ public class LoteControllerIntegrationTest {
 
     @Test
     void Delete_Lote_Without_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString("");
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("231020210022"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Lote_With_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString("241020210033");
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("241020210033"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
@@ -678,21 +672,15 @@ public class LoteControllerIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedQuesos, actualQuesos);
 
-        //queso dado de baja
-        String expectedCode = mapper.writeValueAsString("241020210033");
+        //lote dado de baja
         response = deleteForEntity(baseUrl.concat("241020210033"), SuccessfulResponse.class);
-        var actualCode = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedCode, actualCode);
 
-        //queso borrado
-        expectedCode = mapper.writeValueAsString("");
+        //lote borrado
         response = deleteForEntity(baseUrl.concat("231020210022"), SuccessfulResponse.class);
-        actualCode = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedCode, actualCode);
 
         expectedQuesos = mapper.writeValueAsString(List.of(dto1));
         response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);

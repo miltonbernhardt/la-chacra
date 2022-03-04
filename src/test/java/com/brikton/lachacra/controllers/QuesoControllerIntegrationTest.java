@@ -253,7 +253,7 @@ public class QuesoControllerIntegrationTest {
 
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setId(1L);
-        expectedDTO.setCodigo("005");
+        expectedDTO.setCodigo("003");
         expectedDTO.setTipoQueso("tipoQueso2");
         expectedDTO.setNomenclatura("tip2");
         expectedDTO.setStock(53);
@@ -291,26 +291,7 @@ public class QuesoControllerIntegrationTest {
     }
 
     @Test
-    void Update__Codigo_Queso_Already_Exists() throws JsonProcessingException {
-        QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
-        dtoToUpdate.setId(3L);
-        dtoToUpdate.setCodigo("001");
-        dtoToUpdate.setTipoQueso("tipoQueso");
-        dtoToUpdate.setNomenclatura("tip");
-        dtoToUpdate.setStock(10);
-
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
-        );
-
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
-        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
-        assertEquals(ErrorMessages.MSG_CODIGO_QUESO_ALREADY_EXIST, response.getMessage());
-    }
-
-    @Test
-    void Update__Over_Queso_Deleted__OK() throws JsonProcessingException {
+    void Update__Over_Queso_Deleted__Not_Found() throws JsonProcessingException {
         QuesoUpdateDTO dtoToUpdate = new QuesoUpdateDTO();
         dtoToUpdate.setId(4L);
         dtoToUpdate.setCodigo("004");
@@ -325,13 +306,14 @@ public class QuesoControllerIntegrationTest {
         expectedDTO.setNomenclatura("TIP");
         expectedDTO.setStock(0);
 
-        var expectedQuesoString = mapper.writeValueAsString(expectedDTO);
+        HttpClientErrorException.NotFound thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        );
 
-        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-        var actualQueso = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-        assertNotNull(response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedQuesoString, actualQueso);
+        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(path, response.getPath());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
     }
 
     @Test
@@ -345,7 +327,7 @@ public class QuesoControllerIntegrationTest {
 
         QuesoDTO expectedDTO = new QuesoDTO();
         expectedDTO.setId(3L);
-        expectedDTO.setCodigo("004");
+        expectedDTO.setCodigo("002");
         expectedDTO.setTipoQueso("TIPOQUESO");
         expectedDTO.setNomenclatura("TIP");
         expectedDTO.setStock(20);
@@ -425,31 +407,25 @@ public class QuesoControllerIntegrationTest {
 
     @Test
     void Delete_Queso_WITH_Dependencies__OK() throws JsonProcessingException {
-        String expectedID = mapper.writeValueAsString("001");
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_QUESO_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void Delete_Queso_WITHOUT_Dependencies__OK() throws JsonProcessingException {
-        var expectedID = mapper.writeValueAsString("");
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_QUESO_DELETED);
 
         var response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        var actualID = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedID, actualID);
         assertEquals(expectedMessage, actualMessage);
     }
 
@@ -459,6 +435,7 @@ public class QuesoControllerIntegrationTest {
                 HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
         assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
@@ -471,6 +448,7 @@ public class QuesoControllerIntegrationTest {
                 HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("4"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("4"), response.getPath());
@@ -482,6 +460,7 @@ public class QuesoControllerIntegrationTest {
                 HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("11"), SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
         assertEquals(path.concat("11"), response.getPath());
@@ -518,20 +497,14 @@ public class QuesoControllerIntegrationTest {
         assertEquals(expectedQuesos, actualQuesos);
 
         //queso dado de baja
-        String expectedCode = mapper.writeValueAsString("001");
         response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        var actualCode = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedCode, actualCode);
 
         //queso borrado
-        expectedCode = mapper.writeValueAsString("");
         response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        actualCode = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedCode, actualCode);
 
         expectedQuesos = mapper.writeValueAsString(List.of(mockQueso2));
         response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);

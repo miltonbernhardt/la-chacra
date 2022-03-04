@@ -1,16 +1,17 @@
 package com.brikton.lachacra.repositories;
 
-import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
-import com.brikton.lachacra.entities.Lote;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExpedicionRepository extends JpaRepository<Expedicion, Long> {
 
-    boolean existsByLote(Lote idLote);
+    @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Expedicion e WHERE e.lote.id=:idLote")
+    boolean existsByIdLote(String idLote);
 
-    boolean existsByCliente(Cliente cliente);
+    @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Expedicion e WHERE e.cliente.id=:idCliente")
+    boolean existsByIdCliente(Long idCliente);
 
 }

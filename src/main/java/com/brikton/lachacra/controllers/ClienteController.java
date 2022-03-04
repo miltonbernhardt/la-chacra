@@ -49,6 +49,7 @@ public class ClienteController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<Long>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) @PathVariable("id") Long id) {
         log.info("API::delete - id: {}", id);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_DELETED, service.delete(id)));
+        service.delete(id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_CLIENTE_DELETED));
     }
 }

@@ -40,6 +40,11 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return response(ex, req, HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    @ExceptionHandler(CannotDeleteException.class)
+    protected ResponseEntity<ErrorResponse> handlerCannotDeleteException(HttpServletRequest req, CannotDeleteException ex) {
+        return response(ex, req, HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<ErrorResponse> handleValidationError(HttpServletRequest req, ConstraintViolationException ex) {
         Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(n -> ((PathImpl) n.getPropertyPath()).getLeafNode().toString(), ConstraintViolation::getMessage));

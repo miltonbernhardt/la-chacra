@@ -9,6 +9,7 @@ import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundConflictException;
 import com.brikton.lachacra.exceptions.TipoClienteNotFoundException;
 import com.brikton.lachacra.repositories.ClienteRepository;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {ClienteService.class})
 public class ClienteServiceTest {
@@ -39,7 +41,66 @@ public class ClienteServiceTest {
     TipoClienteService tipoClienteService;
 
     @MockBean
-    ExpedicionService expedicionService;
+    ExpedicionRepository expedicionRepository;
+
+    @Test
+    void Get__OK() {
+        var mockCliente = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockCliente));
+        var actualCliente = service.get(1L);
+        assertEquals(mockCliente, actualCliente);
+    }
+
+    @Test
+    void Get__Deleted() {
+        var mockCliente = new Cliente();
+        mockCliente.setId(1L);
+        mockCliente.setCuit("99888888887");
+        mockCliente.setCodPostal("3000");
+        mockCliente.setDomicilio("Domicilio 1");
+        mockCliente.setLocalidad("Localidad 1");
+        mockCliente.setPais("Pais 1");
+        mockCliente.setProvincia("Provincia 1");
+        mockCliente.setTransporte("Provincia 1");
+        mockCliente.setSenasaUta("Senasa UTA 1");
+        mockCliente.setTelefono("233334444444");
+        mockCliente.setCelular("233334444444");
+        mockCliente.setFax("233334444444");
+        mockCliente.setEmail("mail1@mail.com");
+        mockCliente.setRazonSocial("Razon social 1");
+        mockCliente.setFechaBaja(LocalDate.of(2021, 10, 10));
+
+        when(repository.findById(1L)).thenReturn(Optional.of(mockCliente));
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.get(1L)
+        );
+
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Get__Queso_Not_Found() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        ClienteNotFoundException thrown = assertThrows(
+                ClienteNotFoundException.class, () -> service.get(1L)
+        );
+        assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, thrown.getMessage());
+    }
 
     @Test
     void Get_All__OK() {
@@ -120,7 +181,7 @@ public class ClienteServiceTest {
         mockClienteDTO2.setRazonSocial("Razon social 2");
 
 
-        when(repository.findAllClientesNotFechaBaja()).thenReturn(List.of(mockCliente1, mockCliente2));
+        when(repository.findAllClientesNotDadoBaja()).thenReturn(List.of(mockCliente1, mockCliente2));
         var tipoClientes = service.getAll();
         assertEquals(2, tipoClientes.size());
         assertEquals(mockClienteDTO1, tipoClientes.get(0));
@@ -183,7 +244,7 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
+        when(tipoClienteService.get(1L)).thenReturn(mockTipoCliente);
         when(repository.save(any(Cliente.class))).thenReturn(mockCliente);
         var dtoClienteActual = service.save(dtoClienteExpected);
 
@@ -194,7 +255,7 @@ public class ClienteServiceTest {
     void Save__Tipo_Cliente_Not_Exists() {
         var mockToSave = new ClienteDTO();
         mockToSave.setIdTipoCliente(1L);
-        when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
+        when(tipoClienteService.get(1L)).thenThrow(new TipoClienteNotFoundException());
         TipoClienteNotFoundConflictException thrown = assertThrows(
                 TipoClienteNotFoundConflictException.class, () -> service.save(mockToSave)
         );
@@ -258,8 +319,8 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
-        when(tipoClienteService.getEntity(1L)).thenReturn(mockTipoCliente);
+        when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(true);
+        when(tipoClienteService.get(1L)).thenReturn(mockTipoCliente);
         when(repository.save(any(Cliente.class))).thenReturn(mockCliente);
         var dtoClienteActual = service.update(dtoClienteToUpdate);
         assertEquals(dtoClienteExpected, dtoClienteActual);
@@ -270,8 +331,8 @@ public class ClienteServiceTest {
         var mockToUpdate = new ClienteUpdateDTO();
         mockToUpdate.setId(1L);
         mockToUpdate.setIdTipoCliente(1L);
-        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
-        when(tipoClienteService.getEntity(1L)).thenThrow(new TipoClienteNotFoundException());
+        when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(true);
+        when(tipoClienteService.get(1L)).thenThrow(new TipoClienteNotFoundException());
         TipoClienteNotFoundConflictException thrown = assertThrows(
                 TipoClienteNotFoundConflictException.class, () -> service.update(mockToUpdate)
         );
@@ -283,7 +344,7 @@ public class ClienteServiceTest {
         var mockToUpdate = new ClienteUpdateDTO();
         mockToUpdate.setId(1L);
         mockToUpdate.setIdTipoCliente(1L);
-        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(false);
+        when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(false);
         ClienteNotFoundException thrown = assertThrows(
                 ClienteNotFoundException.class, () -> service.update(mockToUpdate)
         );
@@ -325,14 +386,15 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
+        when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(true);
+        when(expedicionRepository.existsByIdCliente(1L)).thenReturn(true);
         when(repository.getById(1L)).thenReturn(mockCliente);
-        when(expedicionService.existsByCliente(mockCliente)).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
         when(repository.save(mockDeleted)).thenReturn(mockDeleted);
 
-        var actualID = service.delete(1L);
-        assertEquals(1L, actualID);
+        service.delete(1L);
+        verify(repository).save(any(Cliente.class));
+        verify(repository, never()).deleteById(1L);
     }
 
     @Test
@@ -353,18 +415,19 @@ public class ClienteServiceTest {
         mockCliente.setEmail("mail1@mail.com");
         mockCliente.setRazonSocial("Razon social 1");
 
-        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(true);
+        when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(true);
         when(repository.getById(1L)).thenReturn(mockCliente);
-        when(expedicionService.existsByCliente(mockCliente)).thenReturn(false);
+        when(expedicionRepository.existsByIdCliente(1L)).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
 
-        var actualID = service.delete(1L);
-        assertEquals(null, actualID);
+        service.delete(1L);
+        verify(repository).deleteById(1L);
+        verify(repository, never()).save(any(Cliente.class));
     }
 
     @Test
     void Delete__Client_Not_Exists() {
-        when(repository.existsByIdNotFechaBaja(1L)).thenReturn(false);
+        when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(false);
         ClienteNotFoundException thrown = assertThrows(
                 ClienteNotFoundException.class, () -> service.delete(1L)
         );

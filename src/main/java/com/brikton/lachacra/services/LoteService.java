@@ -4,12 +4,19 @@ import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
-import com.brikton.lachacra.exceptions.*;
+import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
+import com.brikton.lachacra.exceptions.LoteNotFoundException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundConflictException;
+import com.brikton.lachacra.exceptions.QuesoNotFoundException;
+import com.brikton.lachacra.repositories.DevolucionRepository;
+import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,86 +26,101 @@ import java.util.List;
 public class LoteService {
 
     private final DateUtil dateUtil;
-    private final DevolucionService devolucionService;
-    private final ExpedicionService expedicionService;
+    private final DevolucionRepository devolucionRepository;
+    private final ExpedicionRepository expedicionRepository;
     private final LoteRepository repository;
     private final QuesoService quesoService;
 
     public LoteService(
             DateUtil dateUtil,
-            DevolucionService devolucionService,
-            ExpedicionService expedicionService,
+            DevolucionRepository devolucionRepository,
+            ExpedicionRepository expedicionRepository,
             LoteRepository repository,
             QuesoService quesoService
     ) {
         this.dateUtil = dateUtil;
-        this.devolucionService = devolucionService;
-        this.expedicionService = expedicionService;
+        this.devolucionRepository = devolucionRepository;
+        this.expedicionRepository = expedicionRepository;
         this.repository = repository;
         this.quesoService = quesoService;
     }
 
+    public List<LoteDTO> getAll() {
+        var lotesDTO = new ArrayList<LoteDTO>();
+        repository.findAllLotesNotFechaBaja().forEach(lote -> lotesDTO.add(new LoteDTO(lote)));
+        return lotesDTO;
+    }
+
+    public Lote get(String id) throws LoteNotFoundException {
+        var lote = repository.findById(id);
+        if (lote.isPresent() && lote.get().getFechaBaja() == null)
+            return lote.get();
+        throw new LoteNotFoundException();
+    }
+
+    public Lote decreaseStock(Lote lote, Integer cantidad) {
+        var oldStock = lote.getStockLote();
+        var actualStock = oldStock - cantidad;
+        lote.setStockLote(actualStock);
+        return repository.save(lote);
+    }
+
+    public void increaseStock(Lote lote, Integer cantidad) {
+        var oldStock = lote.getStockLote();
+        var actualStock = oldStock + cantidad;
+        lote.setStockLote(actualStock);
+        repository.save(lote);
+    }
+
     public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
         var id = generateID(dto);
-        if (repository.existsByIdNotFechaBaja(id)) {
-            throw new LoteAlreadyExistsException();
-        }
+        checkAlreadyExistenceLote(id);
         return persist(dto);
     }
 
-    public LoteDTO update(LoteUpdateDTO dtpUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
-        var dto = new LoteDTO(dtpUpdate);
-        if (!repository.existsByIdNotFechaBaja(dto.getId())) {
-            throw new LoteNotFoundException();
+    private void checkAlreadyExistenceLote(String id) {
+        if (repository.existsByIdNotFechaBaja(id)) {
+            throw new LoteAlreadyExistsException();
         }
-        repository.deleteById(dto.getId());
+    }
+
+    public LoteDTO update(LoteUpdateDTO dtoUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
+        var dto = new LoteDTO(dtoUpdate);
+        checkExistenceLote(dto.getId());
         return persist(dto);
     }
 
     private LoteDTO persist(LoteDTO dto) throws QuesoNotFoundConflictException {
         var lote = loteFromDTO(dto);
-        var rendimiento = (dto.getPeso() / dto.getLitrosLeche()) * 100;
-        var stock = dto.getCantHormas();
+
+        var rendimiento = calculateRendimiento(dto.getPeso(), dto.getLitrosLeche());
         lote.setRendimiento(rendimiento);
+
+        var stock = dto.getCantHormas();
         lote.setStockLote(stock);
+
         lote = repository.save(lote);
         return new LoteDTO(lote);
     }
 
-    public List<LoteDTO> getAll() {
-        var lotesDTO = new ArrayList<LoteDTO>();
-        var lotes = repository.findAllLotesNotFechaBaja();
-        lotes.forEach(lote -> lotesDTO.add(new LoteDTO(lote)));
-        return lotesDTO;
-    }
+    private Double calculateRendimiento(Double pesoD, Double litrosLecheD) {
+        var peso = BigDecimal.valueOf(pesoD);
+        var litrosLeche = BigDecimal.valueOf(litrosLecheD);
+        var mc = new MathContext(2);
+        var rendimiento = peso.divide(litrosLeche, mc);
 
-    public String delete(String id) throws LoteNotFoundException {
-        if (!repository.existsByIdNotFechaBaja(id))
-            throw new LoteNotFoundException();
+        rendimiento = rendimiento.multiply(BigDecimal.valueOf(100));
 
-        var lote = repository.getById(id);
-
-        if (expedicionService.existsByLote(lote) || devolucionService.existsByLote(lote)) {
-            lote.setFechaBaja(dateUtil.now());
-            repository.save(lote);
-            return id;
-        }
-
-        repository.deleteById(id);
-        return "";
+        return rendimiento.doubleValue();
     }
 
     private Lote loteFromDTO(LoteDTO dto) throws QuesoNotFoundConflictException {
-        Queso queso;
-        try {
-            queso = quesoService.getEntity(dto.getCodigoQueso());
-        } catch (QuesoNotFoundException e) {
-            throw new QuesoNotFoundConflictException(e.getCause());
-        }
-
         var lote = new Lote();
-        lote.setId(generateID(dto));
+
+        var queso = getQueso(dto.getCodigoQueso());
         lote.setQueso(queso);
+
+        lote.setId(generateID(dto));
         lote.setFechaElaboracion(dto.getFechaElaboracion());
         lote.setNumeroTina(dto.getNumeroTina());
         lote.setLitrosLeche(dto.getLitrosLeche());
@@ -113,8 +135,37 @@ public class LoteService {
         return lote;
     }
 
+    private Queso getQueso(String codigoQueso) {
+        try {
+            return quesoService.getByCodigo(codigoQueso);
+        } catch (QuesoNotFoundException e) {
+            throw new QuesoNotFoundConflictException();
+        }
+    }
+
     private String generateID(LoteDTO dto) {
         String dateString = dto.getFechaElaboracion().format(DateTimeFormatter.ofPattern("ddMMyyyy"));
         return dateString + dto.getCodigoQueso() + dto.getNumeroTina().toString();
+    }
+
+    public void delete(String id) throws LoteNotFoundException {
+        checkExistenceLote(id);
+
+        if (expedicionRepository.existsByIdLote(id) || devolucionRepository.existsByIdLote(id))
+            darBajaLote(id);
+        else
+            repository.deleteById(id);
+    }
+
+    private void checkExistenceLote(String id) {
+        if (!repository.existsByIdNotFechaBaja(id)) {
+            throw new LoteNotFoundException();
+        }
+    }
+
+    private void darBajaLote(String id) {
+        var lote = repository.getById(id);
+        lote.setFechaBaja(dateUtil.now());
+        repository.save(lote);
     }
 }

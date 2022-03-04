@@ -11,9 +11,9 @@ import java.util.List;
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     @Query("SELECT c FROM Cliente c WHERE c.fechaBaja IS NULL")
-    List<Cliente> findAllClientesNotFechaBaja();
+    List<Cliente> findAllClientesNotDadoBaja();
 
     @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Cliente c WHERE c.fechaBaja IS NULL AND c.id=:id")
-    boolean existsByIdNotFechaBaja(Long id);
+    boolean existsByIdAndNotDadoBaja(Long id);
 
 }

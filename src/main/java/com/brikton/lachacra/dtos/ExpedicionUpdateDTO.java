@@ -1,8 +1,7 @@
 package com.brikton.lachacra.dtos;
 
-import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.constants.ValidationMessages;
-import lombok.*;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -12,7 +11,11 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
-public class ExpedicionDTO {
+public class ExpedicionUpdateDTO {
+
+    @NotNull(message = ValidationMessages.NOT_FOUND)
+    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+    private Long id;
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
@@ -35,28 +38,7 @@ public class ExpedicionDTO {
     private String idLote;
 
     private Double importe;
-    private Long id;
 
-    public ExpedicionDTO() {
-    }
-
-    public ExpedicionDTO(Expedicion expedicion) {
-        this.setId(expedicion.getId());
-        this.setFechaExpedicion(expedicion.getFechaExpedicion());
-        this.setCantidad(expedicion.getCantidad());
-        this.setPeso(expedicion.getPeso());
-        this.setImporte(expedicion.getImporte());
-        this.setIdCliente(expedicion.getCliente().getId());
-        this.setIdLote(expedicion.getLote().getId());
-    }
-
-    public ExpedicionDTO(ExpedicionUpdateDTO expedicion) {
-        this.setId(expedicion.getId());
-        this.setFechaExpedicion(expedicion.getFechaExpedicion());
-        this.setCantidad(expedicion.getCantidad());
-        this.setPeso(expedicion.getPeso());
-        this.setImporte(expedicion.getImporte());
-        this.setIdCliente(expedicion.getIdCliente());
-        this.setIdLote(expedicion.getIdLote());
+    public ExpedicionUpdateDTO() {
     }
 }

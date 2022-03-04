@@ -195,7 +195,7 @@ VALUES (1, 001, 371.00, 1),
        (2, 018, 319.00, 69),
        (2, 012, 320.00, 70);
 
-INSERT INTO public.expedicion (id_expedicion, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
+INSERT INTO public.expedicion (id, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
 VALUES (1, '2021-11-08', 216, 855.3, 62658.00, '118', '2610202100110');
 
 -- agregar remitos

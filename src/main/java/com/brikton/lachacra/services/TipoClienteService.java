@@ -20,7 +20,7 @@ public class TipoClienteService {
         this.repository = repository;
     }
 
-    public TipoCliente getEntity(Long id) throws TipoClienteNotFoundException {
+    public TipoCliente get(Long id) throws TipoClienteNotFoundException {
         var tipoCliente = repository.findById(id);
         if (tipoCliente.isEmpty())
             throw new TipoClienteNotFoundException();

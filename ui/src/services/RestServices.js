@@ -10,6 +10,7 @@ const API_QUESO = '/api/v1/quesos/'
 const API_CLIENTE = '/api/v1/clientes/'
 const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
 const API_PRECIO = '/api/v1/precios/'
+const API_EXPEDICION = '/api/v1/expediciones/'
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -27,6 +28,7 @@ const getNewHeader = () => {
 export const postLote = async (lote) => await POST(`${API_LOTE}`, lote);
 export const putLote = async (lote) => await PUT(`${API_LOTE}`, lote);
 export const deleteLote = async (id) => await DELETE(`${API_LOTE}${id}`);
+export const getLote = async (id) => await GET(`${API_LOTE}${id}`);
 
 // --- QUESO METHODS ---
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);
@@ -47,6 +49,12 @@ export const deleteCliente = async (id) => await DELETE(`${API_CLIENTE}${id}`);
 export const getAllPrecios = async () => await GET(`${API_PRECIO}`);
 export const postPrecio = async (precio) => await POST(`${API_PRECIO}`, precio);
 export const putPrecio = async (precio) => await PUT(`${API_PRECIO}`, precio);
+
+// --- EXPEDICION METHODS ---
+export const getAllExpediciones = async () => await GET(`${API_EXPEDICION}`);
+export const postExpedicion = async (expedicion) => await POST(`${API_EXPEDICION}`, expedicion);
+export const putExpedicion = async (expedicion) => await PUT(`${API_EXPEDICION}`, expedicion);
+export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${id}`);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {

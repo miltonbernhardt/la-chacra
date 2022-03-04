@@ -29,6 +29,12 @@ export const backTelefono = "telefono"
 export const backFax = "fax"
 export const backCelular = "celuluar"
 export const backIdTipoCliente = "idTipoCliente"
+export const backIdCliente = "idCliente"
+export const backIdLote = "idLote"
+export const backPesoExpedicion = "peso"
+export const backCantidad = "cantidad"
+export const backImporte = "importe"
+export const backFechaExpedicion = "fechaExpedicion"
 export const backPrecio = "valor"
 
 export const ID = "ID"
@@ -69,6 +75,14 @@ export const idTipoCliente = "Tipo de cliente"
 // precio
 export const precio = "Precio"
 
+// expedicion
+export const cliente = "Cliente"
+export const numeroLote = "Número de lote"
+export const cantidad = "Cantidad"
+export const pesoExpedicion = "Peso"
+export const importe = "Importe"
+export const fechaExpedicion = "Fecha de expedición"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -101,6 +115,12 @@ const backendFields = () => {
     fields.set(backCelular, celular)
     fields.set(backIdTipoCliente, idTipoCliente)
     fields.set(backPrecio, precio)
+    fields.set(backIdCliente, cliente)
+    fields.set(backIdLote, numeroLote)
+    fields.set(backPesoExpedicion, pesoExpedicion)
+    fields.set(backCantidad, cantidad)
+    fields.set(backImporte, importe)
+    fields.set(backFechaExpedicion, fechaExpedicion)
     return fields
 }
 
