@@ -8,7 +8,8 @@ import * as validation from "../../resources/validations";
 
 const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete }) => {
 
-    const [expedicionForm, setExpedicionForm] = useState(expedicion)
+    const [expedicionForm, setExpedicionForm] = useState(expedicion);
+    const [fechaExpedicion, setFechaExpedicion] = useState('');
 
     const refIdLote = createRef(null);
     const refSelectCliente = createRef(null);
@@ -18,6 +19,7 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
 
     useEffect(() => {
         setExpedicionForm(expedicion)
+        if (expedicion.fechaExpedicion !== '') setFechaExpedicion(expedicion.fechaExpedicion);
     }, [expedicion]);
 
     const handleCargar = useCallback(() => {
@@ -58,6 +60,12 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
 
     return (
         <Grid container spacing={1.5}>
+            <Input ref={refFechaExpedicion}
+                id={field.backFechaExpedicion}
+                label={field.fechaExpedicion}
+                value={fechaExpedicion}
+                type="date"
+                required />
             <Select ref={refSelectCliente}
                 value={expedicionForm.idCliente}
                 id={field.backIdCliente}
@@ -80,12 +88,6 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
                 label={field.pesoExpedicion}
                 value={expedicionForm.peso}
                 sm={6}
-                required />
-            <Input ref={refFechaExpedicion}
-                id={field.backFechaExpedicion}
-                label={field.fechaExpedicion}
-                value={expedicionForm.fechaExpedicion}
-                type="date"
                 required />
             <Grid item xs={12} alignSelf="right" mb={0.5}>
                 <ButtonGroup fullWidth variant="contained">
