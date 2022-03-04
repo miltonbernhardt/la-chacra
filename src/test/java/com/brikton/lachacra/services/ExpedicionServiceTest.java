@@ -239,6 +239,10 @@ public class ExpedicionServiceTest {
 
     @Test
     void Update__Cliente_Not_Found() {
+        var expedicion = mockExpedicion();
+        expedicion.getLote().setId("101020210013");
+        expedicion.setCantidad(50);
+
         var dto = new ExpedicionUpdateDTO();
 
         dto.setFechaExpedicion(LocalDate.of(2021, 10, 11));
@@ -246,8 +250,10 @@ public class ExpedicionServiceTest {
         dto.setImporte(900D);
         dto.setIdCliente(1L);
         dto.setIdLote("101020210011");
-
+        dto.setId(1L);
+        
         when(clienteService.get(1L)).thenThrow(new ClienteNotFoundException());
+        when(repository.findById(1L)).thenReturn(Optional.of(expedicion));
 
         ClienteNotFoundException thrown = assertThrows(
                 ClienteNotFoundException.class, () -> service.update(dto)
