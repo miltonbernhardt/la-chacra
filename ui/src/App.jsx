@@ -21,6 +21,7 @@ import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
 import { Toaster } from 'react-hot-toast';
 import './App.css';
+import StockProductos from './pages/StockProductos/StockProductos';
 
 export const themeOptions = {
     palette: {
@@ -198,6 +199,7 @@ const App = () => {
                                 <Route path="/ver/ventas" component={VerVentas} />
                                 <Route path="/ver/trazabilidad" component={VerTrazabilidad} />
                                 <Route path="/emitir/remito" component={EmitirRemito} />
+                                <Route path="/stock/productos" component={StockProductos} />
                             </Switch>
                         </Main>
                     </Box>
