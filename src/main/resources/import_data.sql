@@ -198,9 +198,28 @@ VALUES (1, 001, 371.00, 1),
 INSERT INTO public.expedicion (id, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
 VALUES (1, '2021-11-08', 216, 855.3, 62658.00, '118', '2610202100110');
 
--- agregar remitos
--- agregar devoluciones
--- agregar 	lote_lote_calcio
--- agregar	lote_lote_colorante
--- agregar	lote_lote_cuajo
--- agregar	lote_lote_cultivo
+
+-- las passwords son iguales al firstname/lastname
+INSERT INTO public.user_details (id, username, enabled, firstname, lastname, password, token_expired)
+VALUES (1, 'admin.admin', true, 'admin', 'admin', '$2a$10$Mb/e2EKEO8KLsLI6y4mD1.9qTwWRBlxbOoJ.soJe5hQQ/4Dk8iJhi', true),
+       (2, 'user.user', true, 'user', 'user', '$2a$10$PavuoaQiLp5uPtwrhpTcUOBE9CZDnncSUQpCJpIyz42dge5lUuFbG', true);
+
+INSERT INTO public.role (id, "name")
+VALUES (1, 'ROLE_ADMIN'),
+       (2, 'ROLE_USER');
+
+INSERT INTO public.privilege(id, "name")
+VALUES (1, 'write'),
+       (2, 'read');
+
+INSERT INTO public.user_roles (user_id, role_id)
+VALUES (1, 1),
+       (2, 2);
+
+INSERT INTO public.rol_privileges (role_id, privilege_id)
+VALUES (1, 1),
+       (2, 2);
+
+
+
+

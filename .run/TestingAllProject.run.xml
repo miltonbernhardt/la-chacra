@@ -8,7 +8,7 @@
         <option name="INCLUDE" value="false" />
       </pattern>
       <pattern>
-        <option name="PATTERN" value="com.brikton.lachacra.configs.*" />
+        <option name="PATTERN" value="com.brikton.lachacra.security.examples.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <pattern>

@@ -1,4 +1,4 @@
-package com.brikton.lachacra.entities;
+package com.brikton.lachacra.security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,8 @@ import java.util.Collection;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class Privilegio {
+//todo por ahora los privilegios no se usan
+public class Privilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
@@ -21,6 +22,6 @@ public class Privilegio {
 
     private String name;
 
-    @ManyToMany(mappedBy = "privilegios")
-    private Collection<Rol> roles;
+    @ManyToMany(mappedBy = "privileges")
+    private Collection<Role> roles;
 }

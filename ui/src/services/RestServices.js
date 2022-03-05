@@ -21,7 +21,8 @@ const headers = {
 const getNewHeader = () => {
     // const token = localStorage.getItem('token');
     // return {...headers, Authorization: `Bearer ${token}`}
-    return { ...headers }
+    // return { ...headers }
+    return { ...headers, username: 'user', password: 'pass' }
 }
 
 // --- LOTE METHODS ---
@@ -110,6 +111,7 @@ const processSuccessResponseWithMessage = (response) => {
 }
 
 const processResponseError = (err) => {
+    console.log({ err })
     if (err.response) {
         const { data, status } = err.response
         console.error({ data, status })
