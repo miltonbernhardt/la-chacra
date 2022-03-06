@@ -1,7 +1,10 @@
+import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PercentIcon from '@mui/icons-material/Percent';
@@ -9,18 +12,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import SellIcon from '@mui/icons-material/Sell';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Divider, Drawer, IconButton, ListItemText, List, ListItem, ListItemIcon } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
 import { Link } from "react-router-dom";
 import HistoryIcon from '@mui/icons-material/History';
-import HomeIcon from '@mui/icons-material/Home';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -30,8 +25,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-
-const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
+const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme, logout }) => {
     return (
         <Drawer
             sx={{
@@ -48,91 +42,110 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
         >
             <DrawerHeader>
                 <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                 </IconButton>
             </DrawerHeader>
-            <Divider />
+            <Divider/>
+
             <List>
                 <ListItem button component={Link} to="/">
                     <ListItemIcon>
-                        <HomeIcon />
+                        <HomeIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Inicio" />
+                    <ListItemText primary="Inicio"/>
                 </ListItem>
             </List>
-            <Divider />
+            <Divider/>
             <List>
                 <ListItem button component={Link} to="/cargar/lotes">
                     <ListItemIcon>
-                        <AddIcon />
+                        <AddIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Cargar Producción" />
+                    <ListItemText primary="Cargar Producción"/>
                 </ListItem>
                 <ListItem button component={Link} to="/cargar/expedicion">
                     <ListItemIcon>
-                        <LocalShippingIcon />
+                        <LocalShippingIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Cargar Expediciones" />
+                    <ListItemText primary="Cargar Expediciones"/>
                 </ListItem>
             </List>
-            <Divider />
+            <Divider/>
             <List>
                 <ListItem button component={Link} to="/cargar/quesos">
                     <ListItemIcon>
-                        <MenuBookIcon />
+                        <MenuBookIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Productos" />
+                    <ListItemText primary="Productos"/>
                 </ListItem>
                 <ListItem button component={Link} to="/cargar/precios">
                     <ListItemIcon>
-                        <AttachMoneyIcon />
+                        <AttachMoneyIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Precios" />
+                    <ListItemText primary="Precios"/>
                 </ListItem>
                 <ListItem button component={Link} to="/clientes">
                     <ListItemIcon>
-                        <PersonIcon />
+                        <PersonIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Clientes" />
+                    <ListItemText primary="Clientes"/>
                 </ListItem>
 
             </List>
-            <Divider />
+            <Divider/>
             <List>
                 <ListItem button component={Link} to="/ver/produccion">
                     <ListItemIcon>
-                        <TimelineIcon />
+                        <TimelineIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Ver producción" />
+                    <ListItemText primary="Ver producción"/>
                 </ListItem>
                 <ListItem button component={Link} to="/ver/litros">
                     <ListItemIcon>
-                        <PercentIcon />
+                        <PercentIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Litros elaborados" />
+                    <ListItemText primary="Litros elaborados"/>
                 </ListItem>
                 <ListItem button component={Link} to="/ver/ventas">
                     <ListItemIcon>
-                        <SellIcon />
+                        <SellIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Ventas" />
+                    <ListItemText primary="Ventas"/>
                 </ListItem>
                 <ListItem button component={Link} to="/ver/trazabilidad">
                     <ListItemIcon>
-                        <HistoryIcon />
+                        <HistoryIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Trazabilidad" />
+                    <ListItemText primary="Trazabilidad"/>
                 </ListItem>
             </List>
-            <Divider />
+            <Divider/>
             <List>
                 <ListItem button component={Link} to="/emitir/remito">
                     <ListItemIcon>
-                        <PointOfSaleIcon />
+                        <PointOfSaleIcon/>
                     </ListItemIcon>
-                    <ListItemText primary="Emitir remito" />
+                    <ListItemText primary="Emitir remito"/>
                 </ListItem>
-            </List >
+            </List>
+            <Divider/>
+            <List>
+                <ListItem button component={Link} to="/emitir/remito">
+                    <ListItemIcon>
+                        <PointOfSaleIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Emitir remito"/>
+                </ListItem>
+            </List>
+            <Divider/>
+            <List>
+                <ListItem button onClick={logout}>
+                    <ListItemIcon>
+                        <LogoutIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Cerrar Sesión"/>
+                </ListItem>
+            </List>
         </Drawer>
     );
 }

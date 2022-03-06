@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { Box, CssBaseline } from '@mui/material';
 import { createTheme, styled } from '@mui/material/styles';
@@ -20,7 +21,7 @@ import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
 import { Toaster } from 'react-hot-toast';
 import './App.css';
-
+import { existsLoginCookie } from "./services/loginService";
 
 export const themeOptions = {
     palette: {
@@ -143,7 +144,21 @@ const Toast = () => {
 
 const App = () => {
     const theme = createTheme(themeOptions);
-    const [drawerOpen, setDrawerOpen] = React.useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [isLogged, setIsLogged] = useState(false);
+
+    const logout = () => {
+        //TODO mas bien seria una acción hacia el backend y que luego dirija a la página por default de alguien no logged
+        console.log("logout")
+        localStorage.removeItem("username");
+        //todo mostrar dialogo de confirmación de cierre de sesión
+        setIsLogged(false);
+    };
+
+    useEffect(() => {
+        console.log("use effect con is logged")
+        setIsLogged(existsLoginCookie())
+    }, [isLogged]);
 
     const handleDrawerOpen = () => {
         setDrawerOpen(true);
@@ -153,40 +168,45 @@ const App = () => {
         setDrawerOpen(false);
     };
 
+    //todo se podrían hacer componentes por roles y que muestren los diferentes menus
+    const PageWhenLogged = () => {
+        return <Router>
+            <Box display="flex" height="98vh">
+                <CssBaseline/>
+                <AppBar position="fixed" open={drawerOpen}>
+                    <AppToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
+                </AppBar>
+                <CustomDrawer
+                    drawerWidth={drawerWidth}
+                    open={drawerOpen}
+                    handleDrawerClose={handleDrawerClose}
+                    theme={theme}
+                    logout={logout}
+                />
+                <Main open={drawerOpen}>
+                    <DrawerHeader/>
+                    <Switch>
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/clientes" component={CargarClientes}/>
+                        <Route path="/cargar/lotes" component={CargarProduccion}/>
+                        <Route path="/cargar/expedicion" component={CargarExpedicion}/>
+                        <Route path="/cargar/quesos" component={CargarQuesos}/>
+                        <Route path="/cargar/precios" component={CargarPrecios}/>
+                        <Route path="/ver/litros" component={VerLitrosElaborados}/>
+                        <Route path="/ver/produccion" component={VerProduccion}/>
+                        <Route path="/ver/ventas" component={VerVentas}/>
+                        <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>
+                        <Route path="/emitir/remito" component={EmitirRemito}/>
+                    </Switch>
+                </Main>
+            </Box>
+        </Router>
+    }
+
     return (
         <>
             <ThemeProvider theme={theme}>
-                <Router>
-                    <Box display="flex" height="98vh">
-                        <CssBaseline/>
-                        <AppBar position="fixed" open={drawerOpen}>
-                            <AppToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
-                        </AppBar>
-                        <CustomDrawer
-                            drawerWidth={drawerWidth}
-                            open={drawerOpen}
-                            handleDrawerClose={handleDrawerClose}
-                            theme={theme}
-                        />
-                        <Main open={drawerOpen}>
-                            <DrawerHeader/>
-                            <Switch>
-                                <Route exact path="/" component={Home}/>
-                                <Route path="/clientes" component={CargarClientes}/>
-                                <Route path="/cargar/lotes" component={CargarProduccion}/>
-                                <Route path="/cargar/expedicion" component={CargarExpedicion}/>
-                                <Route path="/cargar/quesos" component={CargarQuesos}/>
-                                <Route path="/cargar/precios" component={CargarPrecios}/>
-                                <Route path="/ver/litros" component={VerLitrosElaborados}/>
-                                <Route path="/ver/produccion" component={VerProduccion}/>
-                                <Route path="/ver/ventas" component={VerVentas}/>
-                                <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>
-                                <Route path="/emitir/remito" component={EmitirRemito}/>
-                                <Route path="/login" component={Login}/>
-                            </Switch>
-                        </Main>
-                    </Box>
-                </Router>
+                {isLogged ? <PageWhenLogged/> : <Login setLogged={setIsLogged}/>}
             </ThemeProvider>
             <Toast/>
         </>

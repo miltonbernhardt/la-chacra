@@ -13,7 +13,7 @@ const loginForm = {
     password: ''
 }
 
-const Login = () => {
+const Login = ({ setLogged }) => {
     const refUsername = createRef(null)
     const refPassword = createRef(null)
 
@@ -36,8 +36,12 @@ const Login = () => {
         if (errors.size > 0) {
             console.error(errors)
             toastValidationErrors(errors)
-            // return
+            return
         }
+
+        localStorage.setItem("username", values.username)
+        localStorage.setItem("password", values.password)
+        setLogged(true)
 
         // todo enviar los datos al backend
         // todo si el envio es exitoso, setear la cookie y reenviar al home
@@ -56,6 +60,7 @@ const Login = () => {
                 }}
             >
                 <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+                    {/* todo usar icon de la chacra */}
                     <SecurityIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
@@ -73,7 +78,7 @@ const Login = () => {
                            id={field.backPassword}
                            label={field.password}
                            value={loginForm.password}
-                           type="text"
+                           type="password"
                            fullWidth
                            required/>
                     <Grid item xs={12}>

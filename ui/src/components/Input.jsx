@@ -1,6 +1,7 @@
 import { Grid, TextField } from "@mui/material";
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
+// todo: buscar crear la funcion de que  si un input es el ultimo input de un form, que envie el form
 const Input = forwardRef(({id, label, value, type = "number", required = false, sm}, ref) => {
     const [val, setVal] = useState(value);
     const [err, serErr] = useState(false);

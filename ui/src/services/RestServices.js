@@ -1,6 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { toastValidationErrors } from "../resources/fields";
+import { getAuthHeader } from "./loginService";
 
 const PUERTO = '8000';
 const RAIZ_URL = `http://localhost:${PUERTO}`;
@@ -19,10 +20,8 @@ const headers = {
 }
 
 const getNewHeader = () => {
-    // const token = localStorage.getItem('token');
-    // return {...headers, Authorization: `Bearer ${token}`}
-    // return { ...headers }
-    return { ...headers, username: 'user.user', password: 'user' }
+    const authHeader = getAuthHeader();
+    return { ...headers, ...authHeader }
 }
 
 // --- LOTE METHODS ---
