@@ -30,7 +30,6 @@ public class ClienteController {
 
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<ClienteDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 

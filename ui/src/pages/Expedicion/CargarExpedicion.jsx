@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Loading from "../../components/Loading";
 import PageFormTable from "../../components/PageFormTable";
-import { deleteExpedicion, getAllClientes, getAllPrecios, getLote, postExpedicion, putExpedicion } from '../../services/RestServices';
+import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from '../../services/RestServices';
 import FormExpedicion from "./FormExpedicion";
 import GridExpedicion from "./GridExpedicion";
 import DialogEliminarExpedicion from './DialogEliminarExpedicion'
@@ -52,7 +52,8 @@ const CargarExpedicion = () => {
                     const newList = listaExpediciones.filter((item) => item.id !== expedicion.id);
                     setListaExpediciones([...newList, data]);
                 })
-                .catch(e => { })
+                .catch(e => {
+                })
                 .finally()
         else
             postExpedicion(expedicionForm)
@@ -60,7 +61,8 @@ const CargarExpedicion = () => {
                     setExpedicion(expedicionInicial);
                     setListaExpediciones([...listaExpediciones, data]);
                 })
-                .catch(e => { })
+                .catch(e => {
+                })
                 .finally()
     }, [expedicion, isEditing, listaExpediciones])
 
@@ -72,7 +74,8 @@ const CargarExpedicion = () => {
                 const newList = listaExpediciones.filter((item) => item.id !== expedicion.id);
                 setListaExpediciones(newList);
             })
-            .catch(e => { })
+            .catch(e => {
+            })
             .finally(() => setOpenDialogEliminar(false))
     }, [expedicion.id, listaExpediciones]);
 
@@ -110,7 +113,7 @@ const CargarExpedicion = () => {
     }), [listaClientes, listaExpediciones]);
 
     if (isLoadingClientes)
-        return <Loading />
+        return <Loading/>
 
     return (
         <PageFormTable
@@ -121,19 +124,19 @@ const CargarExpedicion = () => {
                     clientes={clientesFormatted}
                     handleSubmit={handleSubmit}
                     handleCancelar={handleCancelar}
-                    handleDelete={handleDelete} />
+                    handleDelete={handleDelete}/>
             }
             table={
                 <GridExpedicion
                     expediciones={expedicionesFormatted}
-                    setSelection={handleSelect} />
+                    setSelection={handleSelect}/>
             }
             titleTable="Expediciones"
             titleForm="Ingreso de expediciones">
             <DialogEliminarExpedicion
                 open={openDialogEliminar}
                 onClose={cancelDelete}
-                onSubmit={submitDelete} />
+                onSubmit={submitDelete}/>
         </PageFormTable>
     );
 }

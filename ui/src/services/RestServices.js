@@ -22,7 +22,7 @@ const getNewHeader = () => {
     // const token = localStorage.getItem('token');
     // return {...headers, Authorization: `Bearer ${token}`}
     // return { ...headers }
-    return { ...headers, username: 'user', password: 'pass' }
+    return { ...headers, username: 'user.user', password: 'user' }
 }
 
 // --- LOTE METHODS ---
@@ -112,10 +112,10 @@ const processSuccessResponseWithMessage = (response) => {
 
 const processResponseError = (err) => {
     console.log({ err })
+    toast.dismiss()
     if (err.response) {
         const { data, status } = err.response
         console.error({ data, status })
-        toast.dismiss()
         if (data["errors"])
             toastValidationErrors(new Map(Object.entries(data.errors)))
         else

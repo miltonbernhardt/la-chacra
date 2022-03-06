@@ -30,7 +30,6 @@ public class ExpedicionController {
 
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 
