@@ -3,7 +3,7 @@ import { Typography, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 
-const AppToolbar = ({ drawerOpen, handleDrawerOpen }) => {
+const CustomToolbar = ({ drawerOpen, handleDrawerOpen }) => {
     return <Toolbar>
         <IconButton
             color="inherit"
@@ -20,4 +20,4 @@ const AppToolbar = ({ drawerOpen, handleDrawerOpen }) => {
     </Toolbar>
 }
 
-export default AppToolbar
+export default CustomToolbar

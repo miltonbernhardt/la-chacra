@@ -83,7 +83,6 @@ const Login = ({ setLogged }) => {
                            required/>
                     <Grid item xs={12}>
                         <Button
-                            type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}

@@ -5,7 +5,7 @@ import { Box, CssBaseline } from '@mui/material';
 import { createTheme, styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import AppToolbar from "./components/AppToolbar";
+import CustomToolbar from "./components/CustomToolbar";
 import CargarExpedicion from './pages/Expedicion/CargarExpedicion';
 import Login from "./pages/Login/Login";
 import CargarProduccion from './pages/Lotes/CargarLote';
@@ -174,7 +174,7 @@ const App = () => {
             <Box display="flex" height="98vh">
                 <CssBaseline/>
                 <AppBar position="fixed" open={drawerOpen}>
-                    <AppToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
+                    <CustomToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
                 </AppBar>
                 <CustomDrawer
                     drawerWidth={drawerWidth}
