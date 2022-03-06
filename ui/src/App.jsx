@@ -1,13 +1,12 @@
-import { ThemeProvider } from '@emotion/react';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Box, CssBaseline, Typography } from '@mui/material';
-import MuiAppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
-import { createTheme, styled } from '@mui/material/styles';
-import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
+import { ThemeProvider } from '@emotion/react';
+import { Box, CssBaseline } from '@mui/material';
+import { createTheme, styled } from '@mui/material/styles';
+import MuiAppBar from '@mui/material/AppBar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import AppToolbar from "./components/AppToolbar";
 import CargarExpedicion from './pages/Expedicion/CargarExpedicion';
+import Login from "./pages/Login/Login";
 import CargarProduccion from './pages/Lotes/CargarLote';
 import CargarQuesos from './pages/Quesos/CargarQuesos';
 import CargarClientes from './pages/Clientes/Clientes';
@@ -21,6 +20,7 @@ import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
 import { Toaster } from 'react-hot-toast';
 import './App.css';
+
 
 export const themeOptions = {
     palette: {
@@ -61,6 +61,24 @@ export const themeOptions = {
 
 const drawerWidth = 240;
 
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
         flexGrow: 1,
@@ -78,23 +96,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         }),
     }),
 );
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -118,9 +119,8 @@ const Toast = () => {
                     primary: 'black',
                 },
                 style: {
-                    // border: '1px solid #713200',
                     width: '100%',
-                    fontSize: '0.95em',
+                    fontSize: '0.85em',
                     color: 'white',
                     boxShadow: '2px 2px 5px #b2b2b2'
                 },
@@ -128,15 +128,12 @@ const Toast = () => {
                     duration: 5000,
                     style: {
                         background: '#2e7d32',
-                        fontWeight: 'bold'
                     },
                 },
                 error: {
                     duration: 5000,
                     style: {
-                        background: '#d32f2f',
-                        color: 'white',
-                        fontWeight: 'bold'
+                        background: '#e57373',
                     },
                 },
             }}
@@ -161,22 +158,9 @@ const App = () => {
             <ThemeProvider theme={theme}>
                 <Router>
                     <Box display="flex" height="98vh">
-                        <CssBaseline />
+                        <CssBaseline/>
                         <AppBar position="fixed" open={drawerOpen}>
-                            <Toolbar>
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="open drawer"
-                                    onClick={handleDrawerOpen}
-                                    edge="start"
-                                    sx={{ mr: 2, ...(drawerOpen && { display: 'none' }) }}
-                                >
-                                    <MenuIcon />
-                                </IconButton>
-                                <Typography variant="h6" noWrap component="div">
-                                    La Chacra
-                                </Typography>
-                            </Toolbar>
+                            <AppToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
                         </AppBar>
                         <CustomDrawer
                             drawerWidth={drawerWidth}
@@ -185,25 +169,26 @@ const App = () => {
                             theme={theme}
                         />
                         <Main open={drawerOpen}>
-                            <DrawerHeader />
+                            <DrawerHeader/>
                             <Switch>
-                                <Route exact path="/" component={Home} />
-                                <Route path="/clientes" component={CargarClientes} />
-                                <Route path="/cargar/lotes" component={CargarProduccion} />
-                                <Route path="/cargar/expedicion" component={CargarExpedicion} />
-                                <Route path="/cargar/quesos" component={CargarQuesos} />
-                                <Route path="/cargar/precios" component={CargarPrecios} />
-                                <Route path="/ver/litros" component={VerLitrosElaborados} />
-                                <Route path="/ver/produccion" component={VerProduccion} />
-                                <Route path="/ver/ventas" component={VerVentas} />
-                                <Route path="/ver/trazabilidad" component={VerTrazabilidad} />
-                                <Route path="/emitir/remito" component={EmitirRemito} />
+                                <Route exact path="/" component={Home}/>
+                                <Route path="/clientes" component={CargarClientes}/>
+                                <Route path="/cargar/lotes" component={CargarProduccion}/>
+                                <Route path="/cargar/expedicion" component={CargarExpedicion}/>
+                                <Route path="/cargar/quesos" component={CargarQuesos}/>
+                                <Route path="/cargar/precios" component={CargarPrecios}/>
+                                <Route path="/ver/litros" component={VerLitrosElaborados}/>
+                                <Route path="/ver/produccion" component={VerProduccion}/>
+                                <Route path="/ver/ventas" component={VerVentas}/>
+                                <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>
+                                <Route path="/emitir/remito" component={EmitirRemito}/>
+                                <Route path="/login" component={Login}/>
                             </Switch>
                         </Main>
                     </Box>
                 </Router>
             </ThemeProvider>
-            <Toast />
+            <Toast/>
         </>
     );
 }

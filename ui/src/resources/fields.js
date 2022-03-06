@@ -36,6 +36,8 @@ export const backCantidad = "cantidad"
 export const backImporte = "importe"
 export const backFechaExpedicion = "fechaExpedicion"
 export const backPrecio = "valor"
+export const backUsername = "username"
+export const backPassword = "password"
 
 export const ID = "ID"
 
@@ -83,6 +85,10 @@ export const pesoExpedicion = "Peso"
 export const importe = "Importe"
 export const fechaExpedicion = "Fecha de expedición"
 
+//login
+export const username = "Nombre de usuario"
+export const password = "Contraseña"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -121,10 +127,13 @@ const backendFields = () => {
     fields.set(backCantidad, cantidad)
     fields.set(backImporte, importe)
     fields.set(backFechaExpedicion, fechaExpedicion)
+    fields.set(backUsername, username)
+    fields.set(backPassword, password)
     return fields
 }
 
 export const toastValidationErrors = (errors) => {
+    console.log("aaaaaa")
     if (errors == null && !errors instanceof Map)
         return
     toast.dismiss()
