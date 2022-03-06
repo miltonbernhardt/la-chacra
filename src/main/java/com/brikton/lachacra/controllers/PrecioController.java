@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/v1/precios")
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class PrecioController {
 
     private final PrecioService service;

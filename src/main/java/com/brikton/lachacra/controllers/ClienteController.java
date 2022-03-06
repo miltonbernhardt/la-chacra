@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/v1/clientes")
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class ClienteController {
 
     private final ClienteService service;

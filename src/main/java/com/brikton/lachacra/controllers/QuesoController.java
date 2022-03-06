@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/v1/quesos")
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class QuesoController {
 
     private final QuesoService service;

@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/v1/expediciones")
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class ExpedicionController {
 
     private final ExpedicionService service;

@@ -6,7 +6,6 @@ import com.brikton.lachacra.services.TipoClienteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/v1/tipos_cliente")
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class TipoClienteController {
 
     private final TipoClienteService service;
