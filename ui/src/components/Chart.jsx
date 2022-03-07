@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from './Title';
 
-export default function Chart({ title, data, yLabel, xDataKey, yDataKey }) {
+export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2 }) {
     const theme = useTheme();
 
     return (
@@ -44,10 +44,21 @@ export default function Chart({ title, data, yLabel, xDataKey, yDataKey }) {
                     <Line
                         isAnimationActive={true}
                         type="monotone"
-                        dataKey={yDataKey}
-                        stroke={theme.palette.primary.main}
-                        dot={true}
-                    />
+                        dataKey={dataKey}
+                        stroke="#dc3030"
+                        dot={true} />
+                    <Line
+                        isAnimationActive={true}
+                        type="monotone"
+                        dataKey={dataKey1}
+                        stroke="#0288d1"
+                        dot={true} />
+                    <Line
+                        isAnimationActive={true}
+                        type="monotone"
+                        dataKey={dataKey2}
+                        stroke="#ed6c02"
+                        dot={true} />
                 </LineChart>
             </ResponsiveContainer>
         </React.Fragment>

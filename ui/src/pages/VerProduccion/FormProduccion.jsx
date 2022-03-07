@@ -2,11 +2,8 @@ import { ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material"
 
 const FormProduccion = () => {
     return (
-        <>
+        <Grid container spacing={1.5}>
             <Grid item xs={12}>
-                <Typography variant="h6">
-                    Producción
-                </Typography>
                 <Typography variant="h7" color="GrayText">
                     Rango de fechas
                 </Typography>
@@ -21,7 +18,7 @@ const FormProduccion = () => {
                     variant="outlined"
                     InputLabelProps={{
                         shrink: true,
-                    }}/>
+                    }} />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -33,7 +30,7 @@ const FormProduccion = () => {
                     variant="outlined"
                     InputLabelProps={{
                         shrink: true,
-                    }}/>
+                    }} />
             </Grid>
             <Grid item xs={12} alignSelf="right" mb={0.5}>
                 <ButtonGroup fullWidth variant="contained">
@@ -41,7 +38,7 @@ const FormProduccion = () => {
                     }} color="primary">Buscar</Button>
                 </ButtonGroup>
             </Grid>
-        </>
+        </Grid >
     )
 }
 

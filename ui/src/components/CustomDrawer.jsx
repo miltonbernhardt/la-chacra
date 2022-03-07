@@ -127,7 +127,7 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     </ListItemIcon>
                     <ListItemText primary="Stock Productos" />
                 </ListItem>
-                <ListItem button component={Link} to="/">
+                <ListItem button component={Link} to="/rendimiento">
                     <ListItemIcon>
                         <AnalyticsIcon />
                     </ListItemIcon>

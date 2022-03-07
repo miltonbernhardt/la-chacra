@@ -8,14 +8,32 @@ const FormTrazabilidad = () => {
                     Buscar Lote
                 </Typography>
             </Grid>
-            <Grid item xs={12}>
-                <TextField
-                    id="numeroLote"
-                    name="numeroLote"
-                    label="Lote"
-                    fullWidth
-                    type="text"
-                    variant="outlined" />
+            <Grid container
+                style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: 10
+                }}
+                spacing={2}>
+
+                <Grid item xs={9}>
+                    <TextField
+                        id="numeroLote"
+                        name="numeroLote"
+                        label="Lote"
+                        fullWidth
+                        type="text"
+                        variant="outlined"
+                    />
+                </Grid>
+                <Grid item xs={3} alignSelf="flex-center">
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={() => {
+                        }}
+                        color="primary">Buscar</Button>
+                </Grid>
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="h7" color="GrayText">
@@ -113,14 +131,6 @@ const FormTrazabilidad = () => {
                     fullWidth
                     type="number"
                     variant="outlined" />
-            </Grid>
-            <Grid item xs={12} alignSelf="right">
-                <ButtonGroup fullWidth variant="contained">
-                    <Button
-                        onClick={() => {
-                        }}
-                        color="primary">Buscar Lote</Button>
-                </ButtonGroup>
             </Grid>
         </Grid>
     )

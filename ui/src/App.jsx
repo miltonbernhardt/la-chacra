@@ -24,6 +24,7 @@ import './App.css';
 import StockProductos from './pages/StockProductos/StockProductos';
 import StockEmbalaje from './pages/StockEmbalaje/StockEmbalaje';
 import Mantenimiento from './pages/Mantenimiento/Mantenimiento';
+import Rendimiento from './pages/Rendimiento/Rendimiento';
 
 export const themeOptions = {
     palette: {
@@ -204,6 +205,7 @@ const App = () => {
                                 <Route path="/stock/productos" component={StockProductos} />
                                 <Route path="/stock/embalaje" component={StockEmbalaje} />
                                 <Route path="/mantenimiento" component={Mantenimiento} />
+                                <Route path="/rendimiento" component={Rendimiento} />
                             </Switch>
                         </Main>
                     </Box>

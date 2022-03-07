@@ -12,7 +12,9 @@ export default function StockCard({ tipoQueso, stockQueso, nomenclatura }) {
             sx={{
                 height: '100%',
                 // display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'
             }}
         >
             <CardActionArea onClick={() => alert('queso')}>
@@ -33,8 +35,13 @@ export default function StockCard({ tipoQueso, stockQueso, nomenclatura }) {
                         </Avatar>
                     }
                     title={tipoQueso} />
-                <CardContent sx={{ flexGrow: 1, alignSelf: 'center' }}>
-                    <Typography gutterBottom variant="h3" component="h2" alignContent='center'>
+                <CardContent sx={{
+                    flexGrow: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                }}>
+                    <Typography gutterBottom variant="h3" component="h2" >
                         {stockQueso}
                     </Typography>
                 </CardContent>

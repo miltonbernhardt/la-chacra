@@ -1,4 +1,4 @@
-import { Box, Grid, Container } from "@material-ui/core";
+import { Box, Grid, Container, Typography } from "@material-ui/core";
 import { Button, TextField } from "@mui/material";
 import { maxWidth } from "@mui/system";
 import { quesos } from "../../data/data";
@@ -15,11 +15,22 @@ const StockProductos = () => {
                 boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px',
                 boxSizing: "border-box",
             }} >
-                <Grid item xs={12} sm={8}>
-                    <TextField fullWidth />
-                </Grid>
-                <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
-                    <Button variant="contained" fullWidth>Buscar</Button>
+                <Grid container
+                    style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 10
+                    }}
+                    spacing={2}>
+                    <Grid item xs={12} sm={2} >
+                        <Typography variant='h6' style={{ paddingLeft: 2 }}>Stock Productos</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField fullWidth />
+                    </Grid>
+                    <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
+                        <Button variant="contained" fullWidth>Buscar</Button>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} alignSelf={"center"}>
 

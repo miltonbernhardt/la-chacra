@@ -8,12 +8,13 @@ const VerProduccion = () => {
     return (
         <>
             <PageFormTable
+                titleForm={"Producción"}
                 form={
-                    <FormProduccion/>
+                    <FormProduccion />
                 }
                 sizeForm={3}
                 table={
-                    <GridProduccion data={data}/>
+                    <GridProduccion data={data} />
                 }
             />
         </>
