@@ -142,7 +142,7 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
             </List>
             <Divider />
             <List>
-                <ListItem button component={Link} to="/">
+                <ListItem button component={Link} to="/stock/embalaje">
                     <ListItemIcon>
                         <Inventory2Icon />
                     </ListItemIcon>

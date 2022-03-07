@@ -1,25 +1,38 @@
-import { Box, Grid, Container } from "@material-ui/core";
-import { Button, TextField } from "@mui/material";
+import { Box, Grid, Container, Typography } from "@material-ui/core";
+import { Autocomplete, Button, ButtonGroup, Stack, TextField } from "@mui/material";
 import { maxWidth } from "@mui/system";
 import { quesos } from "../../data/data";
 import StockCard from "./StockCard";
-const StockProductos = () => {
+
+const StockEmbalaje = () => {
     const cards = quesos;
     return (
-        <Container maxWidth="xl">
-            <Grid container spacing={2} style={{
+        <Grid container
+            direction="row"
+            spacing={2}
+            paddingRight={2}
+            style={{
+                minHeight: "92%",
                 maxWidth: "98%",
                 backgroundColor: "white",
                 margin: "1%",
                 borderRadius: "8px",
                 boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px',
                 boxSizing: "border-box",
-            }} >
-                <Grid item xs={12} sm={8}>
+            }}>
+
+            <Grid item container spacing={2} >
+                <Grid item xs={12} sm={2} >
+                    <Typography variant='h6' style={{ paddingLeft: 2 }}>Embalaje</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <TextField fullWidth />
                 </Grid>
-                <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
-                    <Button variant="contained" fullWidth>Buscar</Button>
+                <Grid item xs={12} sm={4} mb={0.5}>
+                    <ButtonGroup variant="contained" fullWidth>
+                        <Button variant="contained" color="info" fullWidth>Buscar</Button>
+                        <Button variant="contained" fullWidth>Nuevo Item</Button>
+                    </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} alignSelf={"center"}>
 
@@ -42,10 +55,8 @@ const StockProductos = () => {
                     </Box>
                 </Grid>
             </Grid>
-
-        </Container>
-
+        </Grid>
     );
 }
 
-export default StockProductos;
+export default StockEmbalaje;

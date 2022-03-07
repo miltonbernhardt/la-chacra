@@ -22,6 +22,7 @@ import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
 import { Toaster } from 'react-hot-toast';
 import './App.css';
 import StockProductos from './pages/StockProductos/StockProductos';
+import StockEmbalaje from './pages/StockEmbalaje/StockEmbalaje';
 
 export const themeOptions = {
     palette: {
@@ -200,6 +201,7 @@ const App = () => {
                                 <Route path="/ver/trazabilidad" component={VerTrazabilidad} />
                                 <Route path="/emitir/remito" component={EmitirRemito} />
                                 <Route path="/stock/productos" component={StockProductos} />
+                                <Route path="/stock/embalaje" component={StockEmbalaje} />
                             </Switch>
                         </Main>
                     </Box>
