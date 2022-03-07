@@ -1,5 +1,5 @@
 cd ui || exit
 npm run build
 cd ..
-rm -r -f target/classes/static
-cp -r ui/build/ target/classes/static/
+rm -r -f src/main/resources/front
+cp -r ui/build/ src/main/resources/front

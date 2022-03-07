@@ -45,6 +45,8 @@ public class LoteController {
     }
 
     @DeleteMapping(value = "/{id}")
+//    @RolesAllowed({ "ROLE_ADMIN", "ROLE_USER" }) // todo: otra forma de decir que roles pueden usar según que
+//    @PreAuthorize(“hasRole(‘ROLE_VIEWER') or hasRole(‘ROLE_EDITOR')”):
     public ResponseEntity<SuccessfulResponse<String>> delete(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
                                                              @PathVariable("id") String id) {
         log.info("API::delete - id: {}", id);
