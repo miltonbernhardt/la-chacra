@@ -23,6 +23,7 @@ import { Toaster } from 'react-hot-toast';
 import './App.css';
 import StockProductos from './pages/StockProductos/StockProductos';
 import StockEmbalaje from './pages/StockEmbalaje/StockEmbalaje';
+import Mantenimiento from './pages/Mantenimiento/Mantenimiento';
 
 export const themeOptions = {
     palette: {
@@ -202,6 +203,7 @@ const App = () => {
                                 <Route path="/emitir/remito" component={EmitirRemito} />
                                 <Route path="/stock/productos" component={StockProductos} />
                                 <Route path="/stock/embalaje" component={StockEmbalaje} />
+                                <Route path="/mantenimiento" component={Mantenimiento} />
                             </Switch>
                         </Main>
                     </Box>

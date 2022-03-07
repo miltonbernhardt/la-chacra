@@ -2,12 +2,7 @@ import { ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material"
 
 const FormTrazabilidad = () => {
     return (
-        <>
-            <Grid item xs={12}>
-                <Typography variant="h6">
-                    Trazabilidad
-                </Typography>
-            </Grid>
+        <Grid container spacing={1.5}>
             <Grid item xs={12}>
                 <Typography variant="h7" color="GrayText">
                     Buscar Lote
@@ -20,7 +15,7 @@ const FormTrazabilidad = () => {
                     label="Lote"
                     fullWidth
                     type="text"
-                    variant="outlined"/>
+                    variant="outlined" />
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="h7" color="GrayText">
@@ -34,7 +29,7 @@ const FormTrazabilidad = () => {
                     label="Tipo de Queso"
                     fullWidth
                     contentEditable={false}
-                    variant="outlined"/>
+                    variant="outlined" />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -42,7 +37,7 @@ const FormTrazabilidad = () => {
                     name="litrosProcesados"
                     label="Litros procesados"
                     fullWidth
-                    variant="outlined"/>
+                    variant="outlined" />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -50,7 +45,7 @@ const FormTrazabilidad = () => {
                     name="tina"
                     label="Tina"
                     fullWidth
-                    variant="outlined"/>
+                    variant="outlined" />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -59,7 +54,7 @@ const FormTrazabilidad = () => {
                     label="Cantidad de hormas"
                     fullWidth
                     type="number"
-                    variant="outlined"/>
+                    variant="outlined" />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -68,7 +63,7 @@ const FormTrazabilidad = () => {
                     label="Peso del lote"
                     fullWidth
                     type="number"
-                    variant="outlined"/>
+                    variant="outlined" />
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -83,6 +78,42 @@ const FormTrazabilidad = () => {
                     }}
                 />
             </Grid>
+            <Grid item xs={12} sm={6}>
+                <TextField
+                    id="cultivo"
+                    name="cultivo"
+                    label="Cultivo"
+                    fullWidth
+                    type="number"
+                    variant="outlined" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <TextField
+                    id="colorante"
+                    name="colorante"
+                    label="Colorante"
+                    fullWidth
+                    type="number"
+                    variant="outlined" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <TextField
+                    id="calcio"
+                    name="calcio"
+                    label="Calcio"
+                    fullWidth
+                    type="number"
+                    variant="outlined" />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <TextField
+                    id="cuajo"
+                    name="cuajo"
+                    label="Cuajo"
+                    fullWidth
+                    type="number"
+                    variant="outlined" />
+            </Grid>
             <Grid item xs={12} alignSelf="right">
                 <ButtonGroup fullWidth variant="contained">
                     <Button
@@ -91,7 +122,7 @@ const FormTrazabilidad = () => {
                         color="primary">Buscar Lote</Button>
                 </ButtonGroup>
             </Grid>
-        </>
+        </Grid>
     )
 }
 
