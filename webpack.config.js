@@ -1,13 +1,13 @@
-var path = require('path');
+const path = require('path');
 
 module.exports = {
     entry: ['babel-polyfill', './src/main/js/app.js'],
-    devtool: 'sourcemaps',
+    devtool: 'source-map',
     cache: true,
     mode: 'development',
     output: {
         path: __dirname,
-        filename: './src/main/resources/static/built/bundle.js'
+        filename: './src/main/resources/static/built/bundle.js',
     },
     module: {
         rules: [
