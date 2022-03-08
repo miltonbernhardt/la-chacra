@@ -1,10 +1,10 @@
-import GridTrazabilidad from "./GridTrazabilidad";
-import FormTrazabilidad from "./FormTrazabilidad";
-import PageFormTable from "../../components/PageFormTable";
+import * as React from 'react';
+import { FormTrazabilidad } from "./FormTrazabilidad";
+import { GridTrazabilidad } from "./GridTrazabilidad";
+import { PageFormTable } from "../../components/PageFormTable";
 import { produccion as data } from "../../data/data";
 
-
-const VerTrazabilidad = () => {
+export const VerTrazabilidad = () => {
     return (<>
             <>
                 <PageFormTable
@@ -20,5 +20,3 @@ const VerTrazabilidad = () => {
         </>
     );
 }
-
-export default VerTrazabilidad;

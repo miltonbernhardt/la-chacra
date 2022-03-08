@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-const DialogEliminarLote = ({ open, onClose, onSubmit, lote }) => {
+export const DialogEliminarLote = ({ open, onClose, onSubmit, lote }) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">
@@ -18,5 +19,3 @@ const DialogEliminarLote = ({ open, onClose, onSubmit, lote }) => {
         </>
     );
 }
-
-export default DialogEliminarLote;

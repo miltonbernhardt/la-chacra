@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { Title } from './Title';
 import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
+import { useTheme } from '@mui/material/styles';
 
-export default function Chart({ title, data, yLabel, xDataKey, yDataKey }) {
+export function Chart({ title, data, yLabel, xDataKey, yDataKey }) {
     const theme = useTheme();
 
     return (

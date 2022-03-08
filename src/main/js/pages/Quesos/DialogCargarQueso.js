@@ -1,17 +1,10 @@
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Grid
-} from '@mui/material';
-import { createRef, useEffect, useMemo, useState } from 'react';
-import Input from "../../components/Input";
+import * as React from 'react';
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@mui/material';
+import { Input } from "../../components/Input";
+import { createRef, useEffect, useMemo, useState } from 'react';
 
 const quesoInicial = {
     id: '',
@@ -20,15 +13,15 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, queso }) => {
+export const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, queso }) => {
 
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
     useEffect(() => setQuesoForm(queso), [queso, isCargarQueso]);
 
-    const refCodigo = createRef(null)
-    const refTipoQueso = createRef(null)
-    const refNomenclatura = createRef(null)
+    const refCodigo = createRef()
+    const refTipoQueso = createRef()
+    const refNomenclatura = createRef()
 
     const labelCargar = useMemo(() => isEditarQueso ? 'Actualizar Producto' : 'Cargar Producto', [isEditarQueso]);
 
@@ -97,5 +90,3 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
         </>
     );
 }
-
-export default DialogCargarQueso;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { toastValidationErrors } from "../resources/fields";
 import { getAuthHeader } from "./loginService";
+import { toastValidationErrors } from "../resources/fields";
 
 const PUERTO = '8000';
 const RAIZ_URL = `http://localhost:${PUERTO}`;

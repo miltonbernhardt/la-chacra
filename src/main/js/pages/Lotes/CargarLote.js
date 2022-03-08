@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import * as React from 'react';
 import toast from "react-hot-toast";
-import Loading from '../../components/Loading';
-import PageFormTable from "../../components/PageFormTable";
+import { DialogEliminarLote } from "./DialogEliminarLote";
+import { FormLote } from "./FormLote";
+import { GridLotes } from "./GridLotes";
+import { Loading } from '../../components/Loading';
+import { PageFormTable } from "../../components/PageFormTable";
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
-import DialogEliminarLote from "./DialogEliminarLote";
-import FormLote from "./FormLote";
-import GridLotes from "./GridLotes";
+import { useCallback, useEffect, useState } from "react";
 
 const loteInicial = {
     id: '',
@@ -21,7 +22,7 @@ const loteInicial = {
     codigoQueso: ''
 }
 
-const CargarProduccion = () => {
+export const CargarProduccion = () => {
     const [lote, setLote] = useState(loteInicial);
     const [listaLotes, setListaLotes] = useState([]);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -135,5 +136,3 @@ const CargarProduccion = () => {
         </PageFormTable>
     )
 }
-
-export default CargarProduccion;

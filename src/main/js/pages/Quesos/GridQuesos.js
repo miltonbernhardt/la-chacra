@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
@@ -21,7 +22,7 @@ const columns = [
     },
 ]
 
-const GridQuesos = ({ listaQuesos, setSelection }) => {
+export const GridQuesos = ({ listaQuesos, setSelection }) => {
     return (
         <DataGrid
             style={{ minHeight: "600px" }}
@@ -35,5 +36,3 @@ const GridQuesos = ({ listaQuesos, setSelection }) => {
         />
     );
 }
-
-export default GridQuesos;

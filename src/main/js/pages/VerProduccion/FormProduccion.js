@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material";
 
-const FormProduccion = () => {
+export const FormProduccion = () => {
     return (
         <>
             <Grid item xs={12}>
@@ -44,5 +45,3 @@ const FormProduccion = () => {
         </>
     )
 }
-
-export default FormProduccion

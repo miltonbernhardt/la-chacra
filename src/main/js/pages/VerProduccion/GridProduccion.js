@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
@@ -87,7 +88,7 @@ const columns = [
     // },
 ];
 
-const GridProduccion = ({ data }) => {
+export const GridProduccion = ({ data }) => {
     return (
         <>
             <DataGrid
@@ -103,5 +104,3 @@ const GridProduccion = ({ data }) => {
         </>
     )
 }
-
-export default GridProduccion

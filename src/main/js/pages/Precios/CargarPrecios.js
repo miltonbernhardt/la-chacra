@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import PageFormTable from "../../components/PageFormTable";
-import Loading from "../../components/Loading"
-import { getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio } from "../../services/RestServices";
-import FormPrecios from "./FormPrecios";
-import GridPrecios from "./GridPrecios";
+import * as React from 'react';
 import * as fields from '../../resources/fields'
 import toast from "react-hot-toast";
+import { FormPrecios } from "./FormPrecios";
+import { GridPrecios } from "./GridPrecios";
+import { Loading } from "../../components/Loading"
+import { PageFormTable } from "../../components/PageFormTable";
+import { getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio } from "../../services/RestServices";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const precioInicial = {
     id: '',
@@ -14,7 +15,7 @@ const precioInicial = {
     idQueso: ''
 }
 
-const CargarPrecios = () => {
+export const CargarPrecios = () => {
 
     const [precio, setPrecio] = useState(precioInicial);
     const [listaPrecios, setListaPrecios] = useState([]);
@@ -141,5 +142,3 @@ const CargarPrecios = () => {
         </>
     );
 }
-
-export default CargarPrecios;

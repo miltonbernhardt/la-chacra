@@ -1,10 +1,11 @@
-import { Button, ButtonGroup, Grid } from "@mui/material";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Input from '../../components/Input';
-import Select from '../../components/Select';
+import * as React from 'react';
 import * as field from '../../resources/fields';
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import { Button, ButtonGroup, Grid } from "@mui/material";
+import { Input } from '../../components/Input';
+import { Select } from '../../components/Select';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const precioInicial = {
     id: '',
@@ -13,7 +14,7 @@ const precioInicial = {
     idQueso: ''
 }
 
-const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, isEditing }) => {
+export const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, isEditing }) => {
 
     const [precioForm, setPrecioForm] = useState(precioInicial);
 
@@ -83,5 +84,3 @@ const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCancelar, i
         </>
     )
 }
-
-export default FormPrecios

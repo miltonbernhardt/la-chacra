@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Autocomplete, Paper, Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { produccion, tiposDeQueso } from "../../data/data";
@@ -36,7 +37,7 @@ const columns = [
     },
 ]
 
-const EmitirRemito = () => {
+export const EmitirRemito = () => {
     return (<>
         <Paper style={{ width: '100%', height: '100%', padding: 2 }}>
             <Container maxWidth="sm">
@@ -117,5 +118,3 @@ const EmitirRemito = () => {
         </Paper>
     </>);
 }
-
-export default EmitirRemito;

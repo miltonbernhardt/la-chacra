@@ -2,30 +2,26 @@
 
 import * as React from 'react';
 import * as ReactDOM from "react-dom"
-
-import { ThemeProvider } from '@emotion/react';
-import { Box, CssBaseline } from '@mui/material';
-import { createTheme, styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
-import { Toaster } from 'react-hot-toast';
-
+import { Box, CssBaseline } from '@mui/material';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { BrowserRouter } from 'react-router-dom'
-
-import { CustomToolbar } from "./components/CustomToolbar";
-// import { CargarExpedicion } from'./pages/Expedicion/CargarExpedicion');
-import { Login } from "./pages/Login/Login"
-// import CargarProduccion from'./pages/Lotes/CargarLote');
-// import CargarQuesos from'./pages/Quesos/CargarQuesos');
 import { CargarClientes } from './pages/Clientes/Clientes'
+import { CargarExpedicion } from './pages/Expedicion/CargarExpedicion'
+import { CargarPrecios } from './pages/Precios/CargarPrecios'
+import { CargarProduccion } from './pages/Lotes/CargarLote'
+import { CargarQuesos } from './pages/Quesos/CargarQuesos'
 import { CustomDrawer } from './components/CustomDrawer'
+import { CustomToolbar } from "./components/CustomToolbar"
+import { EmitirRemito } from './pages/Remito/EmitirRemito'
 import { Home } from './components/Home'
-// const CargarPrecios from'./pages/Precios/CargarPrecios');
-// import EmitirRemito from'./pages/Remito/EmitirRemito');
-// import VerVentas from'./pages/Ventas/VerVentas');
-// import VerLitrosElaborados from'./pages/VerLitrosProducidos/VerLitrosElaborados');
-// import VerProduccion from'./pages/VerProduccion/VerProduccion');
-// import VerTrazabilidad from'./pages/VerTrazabilidad/VerTrazabilidad')
+import { Login } from "./pages/Login/Login"
+import { ThemeProvider } from '@emotion/react';
+import { Toaster } from 'react-hot-toast';
+import { VerLitrosElaborados } from './pages/VerLitrosProducidos/VerLitrosElaborados'
+import { VerProduccion } from './pages/VerProduccion/VerProduccion'
+import { VerTrazabilidad } from './pages/VerTrazabilidad/VerTrazabilidad'
+import { VerVentas } from './pages/Ventas/VerVentas'
+import { createTheme, styled } from '@mui/material/styles';
 import { existsLoginCookie } from "./services/loginService"
 
 export const themeOptions = {
@@ -175,7 +171,7 @@ const App = () => {
 
     //todo se podrían hacer componentes por roles y que muestren los diferentes menus
     const PageWhenLogged = () => {
-        return <BrowserRouter>
+        return <Router>
             <Box display="flex" height="98vh">
                 <CssBaseline/>
                 <AppBar position="fixed" open={drawerOpen}>
@@ -193,19 +189,19 @@ const App = () => {
                     <Switch>
                         <Route exact path="/" component={Home}/>
                         <Route path="/clientes" component={CargarClientes}/>
-                        {/*<Route path="/cargar/lotes" component={CargarProduccion}/>*/}
-                        {/*<Route path="/cargar/expedicion" component={CargarExpedicion}/>*/}
-                        {/*<Route path="/cargar/quesos" component={CargarQuesos}/>*/}
-                        {/*<Route path="/cargar/precios" component={CargarPrecios}/>*/}
-                        {/*<Route path="/ver/litros" component={VerLitrosElaborados}/>*/}
-                        {/*<Route path="/ver/produccion" component={VerProduccion}/>*/}
-                        {/*<Route path="/ver/ventas" component={VerVentas}/>*/}
-                        {/*<Route path="/ver/trazabilidad" component={VerTrazabilidad}/>*/}
-                        {/*<Route path="/emitir/remito" component={EmitirRemito}/>*/}
+                        <Route path="/cargar/lotes" component={CargarProduccion}/>
+                        <Route path="/cargar/expedicion" component={CargarExpedicion}/>
+                        <Route path="/cargar/quesos" component={CargarQuesos}/>
+                        <Route path="/cargar/precios" component={CargarPrecios}/>
+                        <Route path="/ver/litros" component={VerLitrosElaborados}/>
+                        <Route path="/ver/produccion" component={VerProduccion}/>
+                        <Route path="/ver/ventas" component={VerVentas}/>
+                        <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>
+                        <Route path="/emitir/remito" component={EmitirRemito}/>
                     </Switch>
                 </Main>
             </Box>
-        </BrowserRouter>
+        </Router>
     }
 
     return (

@@ -59,5 +59,3 @@ export const Input = React.forwardRef(({id, label, value, type = "number", requi
         />
     </Grid>;
 })
-
-export default Input

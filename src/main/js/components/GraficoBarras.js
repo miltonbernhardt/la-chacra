@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
+export const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
 
     console.log(data);
 
@@ -19,5 +20,3 @@ const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
         </ResponsiveContainer>
     );
 }
-
-export default GraficoBarras;

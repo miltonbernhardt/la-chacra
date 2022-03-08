@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
-const GridTrazabilidad = () => {
+export const GridTrazabilidad = () => {
     return (
         <>
             <DataGrid
@@ -16,5 +17,3 @@ const GridTrazabilidad = () => {
         </>
     )
 }
-
-export default GridTrazabilidad

@@ -1,26 +1,27 @@
-import { Button, ButtonGroup, Grid } from "@mui/material";
+import * as React from 'react';
 import { useEffect, useMemo, useState, createRef } from "react";
+import { Button, ButtonGroup, Grid } from "@mui/material";
 import * as message from "../../resources/messages";
 import * as field from "../../resources/fields";
 import * as validation from "../../resources/validations";
 import { toastValidationErrors } from "../../resources/fields";
-import Input from "../../components/Input";
-import Select from "../../components/Select";
+import { Input } from "../../components/Input";
+import { Select } from "../../components/Select";
 
-const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit }) => {
+export const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, handleSubmit }) => {
     const [loteForm, setLoteForm] = useState(lote)
 
-    const refSelectQueso = createRef(null)
-    const refLitros = createRef(null)
-    const refNumTina = createRef(null)
-    const refCantHormas = createRef(null)
-    const refPeso = createRef(null)
-    const refFecha = createRef(null)
+    const refSelectQueso = createRef()
+    const refLitros = createRef()
+    const refNumTina = createRef()
+    const refCantHormas = createRef()
+    const refPeso = createRef()
+    const refFecha = createRef()
 
-    const refLoteCultivo = createRef(null)
-    const refLoteColorante = createRef(null)
-    const refLoteCalcio = createRef(null)
-    const refLoteCuajo = createRef(null)
+    const refLoteCultivo = createRef()
+    const refLoteColorante = createRef()
+    const refLoteCalcio = createRef()
+    const refLoteCuajo = createRef()
 
     useEffect(() => setLoteForm(lote), [lote]);
 
@@ -140,5 +141,3 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
         </>
     )
 }
-
-export default FormLote;

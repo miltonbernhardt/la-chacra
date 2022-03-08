@@ -3,9 +3,10 @@ import AddIcon from '@mui/icons-material/Add';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import HistoryIcon from '@mui/icons-material/History';
 import HomeIcon from '@mui/icons-material/Home';
-import LogoutIcon from '@mui/icons-material/Logout';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PercentIcon from '@mui/icons-material/Percent';
 import PersonIcon from '@mui/icons-material/Person';
@@ -13,9 +14,8 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import SellIcon from '@mui/icons-material/Sell';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import { Divider, Drawer, IconButton, ListItemText, List, ListItem, ListItemIcon } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { Link } from "react-router-dom";
-import HistoryIcon from '@mui/icons-material/History';
+import { styled } from '@mui/material/styles';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',

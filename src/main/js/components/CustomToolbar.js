@@ -1,7 +1,7 @@
-const React = require('react')
-import { Typography, IconButton } from '@mui/material'
+import * as React from 'react';
 import MenuIcon from '@mui/icons-material/Menu'
 import Toolbar from '@mui/material/Toolbar'
+import { Typography, IconButton } from '@mui/material'
 
 export const CustomToolbar = ({ drawerOpen, handleDrawerOpen }) => {
     return <Toolbar>

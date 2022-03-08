@@ -1,9 +1,10 @@
+import * as React from 'react';
+import { FormProduccion } from "./FormProduccion";
+import { GridProduccion } from "./GridProduccion";
+import { PageFormTable } from "../../components/PageFormTable";
 import { produccion as data } from '../../data/data';
-import GridProduccion from "./GridProduccion";
-import FormProduccion from "./FormProduccion";
-import PageFormTable from "../../components/PageFormTable";
 
-const VerProduccion = () => {
+export const VerProduccion = () => {
 
     return (
         <>
@@ -19,5 +20,3 @@ const VerProduccion = () => {
         </>
     );
 }
-
-export default VerProduccion;

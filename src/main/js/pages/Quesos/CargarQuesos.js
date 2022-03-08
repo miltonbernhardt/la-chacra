@@ -1,13 +1,14 @@
-import { Button } from '@mui/material';
-import { useEffect, useState } from "react";
-import toast from 'react-hot-toast';
-import Loading from '../../components/Loading';
-import PageTableButtonPane from "../../components/PageTableButtonPane";
+import * as React from 'react';
 import * as message from "../../resources/messages";
+import toast from 'react-hot-toast';
+import { Button } from '@mui/material';
+import { DialogCargarQueso } from './DialogCargarQueso';
+import { DialogEliminarQueso } from './DialogEliminarQueso';
+import { GridQuesos } from './GridQuesos';
+import { Loading } from '../../components/Loading';
+import { PageTableButtonPane } from "../../components/PageTableButtonPane";
 import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
-import DialogCargarQueso from './DialogCargarQueso';
-import DialogEliminarQueso from './DialogEliminarQueso';
-import GridQuesos from './GridQuesos';
+import { useEffect, useState } from "react";
 
 const quesoInicial = {
     id: '',
@@ -16,7 +17,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const CargarQuesos = () => {
+export const CargarQuesos = () => {
 
     const [queso, setQueso] = useState(quesoInicial);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -138,5 +139,3 @@ const CargarQuesos = () => {
         </PageTableButtonPane>
     );
 }
-
-export default CargarQuesos;

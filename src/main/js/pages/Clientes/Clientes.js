@@ -1,18 +1,12 @@
 import * as React from 'react';
-import { Button } from '@mui/material';
 import toast from 'react-hot-toast';
-import { Loading } from '../../components/Loading';
-import { PageTableButtonPane } from "../../components/PageTableButtonPane";
-import {
-    deleteCliente,
-    getAllClientes,
-    getAllTipoClientes,
-    postCliente,
-    putCliente
-} from '../../services/RestServices';
+import { Button } from '@mui/material';
 import { DialogAltaCliente } from './DialogAltaCliente';
 import { DialogBajaCliente } from './DialogBajaCliente';
 import { GridClientes } from "./GridClientes";
+import { Loading } from '../../components/Loading';
+import { PageTableButtonPane } from "../../components/PageTableButtonPane";
+import { deleteCliente, getAllClientes, getAllTipoClientes, postCliente, putCliente } from '../../services/RestServices';
 
 const clienteInicial = {
     id: '',

@@ -1,20 +1,21 @@
-import { Button, ButtonGroup, Grid } from "@mui/material";
-import { createRef, useCallback, useEffect, useMemo, useState } from "react";
-import Input from "../../components/Input";
-import Select from "../../components/Select";
+import * as React from 'react';
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import { Button, ButtonGroup, Grid } from "@mui/material";
+import { Input } from "../../components/Input";
+import { Select } from "../../components/Select";
+import { createRef, useCallback, useEffect, useMemo, useState } from "react";
 
-const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete }) => {
+export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete }) => {
 
     const [expedicionForm, setExpedicionForm] = useState(expedicion)
 
-    const refIdLote = createRef(null);
-    const refSelectCliente = createRef(null);
-    const refFechaExpedicion = createRef(null);
-    const refCantidad = createRef(null);
-    const refPeso = createRef(null);
+    const refIdLote = createRef();
+    const refSelectCliente = createRef();
+    const refFechaExpedicion = createRef();
+    const refCantidad = createRef();
+    const refPeso = createRef();
 
     useEffect(() => {
         setExpedicionForm(expedicion)
@@ -97,5 +98,3 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
         </Grid>
     )
 }
-
-export default FormExpedicion

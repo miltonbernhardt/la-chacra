@@ -1,7 +1,8 @@
+import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useMemo } from "react";
 
-const GridLotes = ({ produccion, quesos, setSelection }) => {
+export const GridLotes = ({ produccion, quesos, setSelection }) => {
 
     const columns = useMemo(() => {
         return [
@@ -82,5 +83,3 @@ const GridLotes = ({ produccion, quesos, setSelection }) => {
         </>
     );
 }
-
-export default GridLotes;

@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Chart } from '../../components/Chart';
 import { DataGrid } from '@mui/x-data-grid';
-import Chart from '../../components/Chart';
 import { litrosElaborados, quesos } from "../../data/data";
 
 const columns1 = quesos.map((queso, index) => {
@@ -30,8 +31,7 @@ const columns = [{
     ...columns1
 ];
 
-const VerLitrosElaborados = () => {
-
+export const VerLitrosElaborados = () => {
     return (
         <>
             <Container maxWidth="sm">
@@ -153,5 +153,3 @@ const VerLitrosElaborados = () => {
             </Box>
         </>);
 }
-
-export default VerLitrosElaborados;

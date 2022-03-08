@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-const DialogEliminarExpedicion = ({ open, onClose, onSubmit }) => {
+export const DialogEliminarExpedicion = ({ open, onClose, onSubmit }) => {
     return (<>
         <Dialog open={open} onClose={onClose} scroll="body">
             <DialogTitle>Borrar Expedición</DialogTitle>
@@ -16,5 +17,3 @@ const DialogEliminarExpedicion = ({ open, onClose, onSubmit }) => {
         </Dialog>
     </>);
 }
-
-export default DialogEliminarExpedicion;

@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material";
 
-const FormTrazabilidad = () => {
+export const FormTrazabilidad = () => {
     return (
         <>
             <Grid item xs={12}>
@@ -94,5 +95,3 @@ const FormTrazabilidad = () => {
         </>
     )
 }
-
-export default FormTrazabilidad

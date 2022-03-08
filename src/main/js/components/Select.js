@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { Autocomplete, Box, Grid, TextField } from "@mui/material";
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
-const Select = forwardRef((
+export const Select = React.forwardRef((
     {
         id,
         label,
@@ -11,8 +11,8 @@ const Select = forwardRef((
         disabled = false
     }, ref) => {
 
-    const [val, setVal] = useState(value);
-    const [err, serErr] = useState(false);
+    const [val, setVal] = React.useState(value);
+    const [err, serErr] =React. useState(false);
 
     const setSelectError = () => serErr(true);
     const setValAndUpdate = (value) => {
@@ -20,14 +20,14 @@ const Select = forwardRef((
         serErr(false)
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (value && value !== {})
             setValAndUpdate(options.filter((o) => o.value === value).pop())
         else
             setValAndUpdate({ id: null, label: null, value: null });
     }, [value]);
 
-    useImperativeHandle(ref, () => ({
+    React.useImperativeHandle(ref, () => ({
         value: () => val.value,
         /* parameters;
             - map de errores: se debe inicializar previamente
@@ -80,5 +80,3 @@ const Select = forwardRef((
         />
     </Grid>
 })
-
-export default Select

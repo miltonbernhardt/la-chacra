@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {
     Button,
     Dialog,
@@ -7,8 +9,7 @@ import {
     DialogTitle
 } from '@mui/material';
 
-
-const DialogEliminarQueso = ({ open, onClose, queso, onBorrar }) => {
+export const DialogEliminarQueso = ({ open, onClose, queso, onBorrar }) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">
@@ -26,5 +27,3 @@ const DialogEliminarQueso = ({ open, onClose, queso, onBorrar }) => {
         </>
     );
 }
-
-export default DialogEliminarQueso;
