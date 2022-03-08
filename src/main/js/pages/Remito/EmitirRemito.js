@@ -2,7 +2,6 @@ import { Autocomplete, Paper, Box, Button, Container, Grid, TextField, Typograph
 import { DataGrid } from '@mui/x-data-grid';
 import { produccion, tiposDeQueso } from "../../data/data";
 
-
 const columns = [
     {
         field: "cantidad",
