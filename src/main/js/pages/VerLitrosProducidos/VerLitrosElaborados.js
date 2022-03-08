@@ -145,7 +145,6 @@ export const VerLitrosElaborados = () => {
                             columns={columns}
                             pageSize={20}
                             rowsPerPageOptions={[20]}
-                            pagination={false}
                             hideFooterPagination
                         />
                     </Paper>
