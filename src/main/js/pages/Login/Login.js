@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createRef } from "react";
 import SecurityIcon from '@mui/icons-material/Security';
 import { Avatar, Button, Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import Input from "../../components/Input";
@@ -13,9 +12,9 @@ const loginForm = {
     password: ''
 }
 
-const Login = ({ setLogged }) => {
-    const refUsername = createRef(null)
-    const refPassword = createRef(null)
+export const Login = ({ setLogged }) => {
+    const refUsername = React.createRef()
+    const refPassword = React.createRef()
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -96,5 +95,3 @@ const Login = ({ setLogged }) => {
         </Container>
     )
 }
-
-export default Login

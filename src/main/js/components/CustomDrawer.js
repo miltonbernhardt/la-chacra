@@ -28,7 +28,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     contrastText: "#fff"
 }));
 
-const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme, logout }) => {
+export const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme, logout }) => {
     return (
         <Drawer
             sx={{
@@ -141,5 +141,3 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme, logout }) =
         </Drawer>
     );
 }
-
-export default CustomDrawer;

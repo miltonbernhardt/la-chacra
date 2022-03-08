@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
 
-const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
+export const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
 
     return (
         <>
@@ -52,5 +53,3 @@ const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
         </>
     );
 }
-
-export default DialogBajaCliente;

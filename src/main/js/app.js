@@ -1,30 +1,32 @@
-'use strict';
+"use strict";
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import * as ReactDOM from "react-dom"
+
 import { ThemeProvider } from '@emotion/react';
 import { Box, CssBaseline } from '@mui/material';
 import { createTheme, styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
-import ReactDOM from "react-dom";
 import { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-const CustomToolbar = require("./components/CustomToolbar");
-const CargarExpedicion = require('./pages/Expedicion/CargarExpedicion');
-const Login = require("./pages/Login/Login");
-const CargarProduccion = require('./pages/Lotes/CargarLote');
-const CargarQuesos = require('./pages/Quesos/CargarQuesos');
-const CargarClientes = require('./pages/Clientes/Clientes');
-const CustomDrawer = require('./components/CustomDrawer');
-const Home = require('./components/Home');
-const CargarPrecios = require('./pages/Precios/CargarPrecios');
-const EmitirRemito = require('./pages/Remito/EmitirRemito');
-const VerVentas = require('./pages/Ventas/VerVentas');
-const VerLitrosElaborados = require('./pages/VerLitrosProducidos/VerLitrosElaborados');
-const VerProduccion = require('./pages/VerProduccion/VerProduccion');
-const VerTrazabilidad = require('./pages/VerTrazabilidad/VerTrazabilidad')
-const { existsLoginCookie } = require("./services/loginService");
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom'
+
+import { CustomToolbar } from "./components/CustomToolbar";
+// import { CargarExpedicion } from'./pages/Expedicion/CargarExpedicion');
+import { Login } from "./pages/Login/Login"
+// import CargarProduccion from'./pages/Lotes/CargarLote');
+// import CargarQuesos from'./pages/Quesos/CargarQuesos');
+import { CargarClientes } from './pages/Clientes/Clientes'
+import { CustomDrawer } from './components/CustomDrawer'
+import { Home } from './components/Home'
+// const CargarPrecios from'./pages/Precios/CargarPrecios');
+// import EmitirRemito from'./pages/Remito/EmitirRemito');
+// import VerVentas from'./pages/Ventas/VerVentas');
+// import VerLitrosElaborados from'./pages/VerLitrosProducidos/VerLitrosElaborados');
+// import VerProduccion from'./pages/VerProduccion/VerProduccion');
+// import VerTrazabilidad from'./pages/VerTrazabilidad/VerTrazabilidad')
+import { existsLoginCookie } from "./services/loginService"
 
 export const themeOptions = {
     palette: {
@@ -147,9 +149,9 @@ const Toast = () => {
 
 const App = () => {
     const theme = createTheme(themeOptions);
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [isLogged, setIsLogged] = useState(false);
-
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
+    const [isLogged, setIsLogged] = React.useState(false);
+    //
     const logout = () => {
         //TODO mas bien seria una acción hacia el backend y que luego dirija a la página por default de alguien no logged
         console.log("logout")
@@ -158,7 +160,7 @@ const App = () => {
         setIsLogged(false);
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         console.log("use effect con is logged")
         setIsLogged(existsLoginCookie())
     }, [isLogged]);
@@ -173,7 +175,7 @@ const App = () => {
 
     //todo se podrían hacer componentes por roles y que muestren los diferentes menus
     const PageWhenLogged = () => {
-        return <Router>
+        return <BrowserRouter>
             <Box display="flex" height="98vh">
                 <CssBaseline/>
                 <AppBar position="fixed" open={drawerOpen}>
@@ -186,30 +188,31 @@ const App = () => {
                     theme={theme}
                     logout={logout}
                 />
-                {/*<Main open={drawerOpen}>*/}
-                {/*    <DrawerHeader/>*/}
-                {/*    <Switch>*/}
-                {/*        <Route exact path="/" component={Home}/>*/}
-                {/*        <Route path="/clientes" component={CargarClientes}/>*/}
-                {/*        <Route path="/cargar/lotes" component={CargarProduccion}/>*/}
-                {/*        <Route path="/cargar/expedicion" component={CargarExpedicion}/>*/}
-                {/*        <Route path="/cargar/quesos" component={CargarQuesos}/>*/}
-                {/*        <Route path="/cargar/precios" component={CargarPrecios}/>*/}
-                {/*        <Route path="/ver/litros" component={VerLitrosElaborados}/>*/}
-                {/*        <Route path="/ver/produccion" component={VerProduccion}/>*/}
-                {/*        <Route path="/ver/ventas" component={VerVentas}/>*/}
-                {/*        <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>*/}
-                {/*        <Route path="/emitir/remito" component={EmitirRemito}/>*/}
-                {/*    </Switch>*/}
-                {/*</Main>*/}
+                <Main open={drawerOpen}>
+                    <DrawerHeader/>
+                    <Switch>
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/clientes" component={CargarClientes}/>
+                        {/*<Route path="/cargar/lotes" component={CargarProduccion}/>*/}
+                        {/*<Route path="/cargar/expedicion" component={CargarExpedicion}/>*/}
+                        {/*<Route path="/cargar/quesos" component={CargarQuesos}/>*/}
+                        {/*<Route path="/cargar/precios" component={CargarPrecios}/>*/}
+                        {/*<Route path="/ver/litros" component={VerLitrosElaborados}/>*/}
+                        {/*<Route path="/ver/produccion" component={VerProduccion}/>*/}
+                        {/*<Route path="/ver/ventas" component={VerVentas}/>*/}
+                        {/*<Route path="/ver/trazabilidad" component={VerTrazabilidad}/>*/}
+                        {/*<Route path="/emitir/remito" component={EmitirRemito}/>*/}
+                    </Switch>
+                </Main>
             </Box>
-        </Router>
+        </BrowserRouter>
     }
 
     return (
         <>
             <ThemeProvider theme={theme}>
-                {isLogged ? <PageWhenLogged/> : <Login setLogged={setIsLogged}/>}
+                {/* todo isLogged negated*/}
+                {!isLogged ? <PageWhenLogged/> : <Login setLogged={setIsLogged}/>}
             </ThemeProvider>
             <Toast/>
         </>

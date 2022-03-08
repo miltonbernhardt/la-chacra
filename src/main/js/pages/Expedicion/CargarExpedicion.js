@@ -18,7 +18,7 @@ const expedicionInicial = {
     importe: ''
 }
 
-const CargarExpedicion = () => {
+export const CargarExpedicion = () => {
 
     const [expedicion, setExpedicion] = useState(expedicionInicial);
     const [listaClientes, setListaClientes] = useState([]);
@@ -140,5 +140,3 @@ const CargarExpedicion = () => {
         </PageFormTable>
     );
 }
-
-export default CargarExpedicion;

@@ -1,10 +1,10 @@
+import * as React from 'react';
 import { Grid, TextField } from "@mui/material";
-import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
 // todo: buscar crear la funcion de que  si un input es el ultimo input de un form, que envie el form
-const Input = forwardRef(({id, label, value, type = "number", required = false, sm}, ref) => {
-    const [val, setVal] = useState(value);
-    const [err, serErr] = useState(false);
+export const Input = React.forwardRef(({id, label, value, type = "number", required = false, sm}, ref) => {
+    const [val, setVal] = React.useState(value);
+    const [err, serErr] = React.useState(false);
 
     const setFieldError = () => serErr(true);
     const setValAndUpdate = (value) => {
@@ -12,9 +12,9 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
         serErr(false)
     }
 
-    useEffect(() => setValAndUpdate(value), [value]);
+    React.useEffect(() => setValAndUpdate(value), [value]);
 
-    useImperativeHandle(ref, () => ({
+    React.useImperativeHandle(ref, () => ({
         value: () => val,
         setValue: (body) => {
             if (body != null && body instanceof Object)

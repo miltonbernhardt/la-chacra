@@ -1,8 +1,8 @@
+import * as React from 'react';
 import { Button } from '@mui/material';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import Loading from '../../components/Loading';
-import PageTableButtonPane from "../../components/PageTableButtonPane";
+import { Loading } from '../../components/Loading';
+import { PageTableButtonPane } from "../../components/PageTableButtonPane";
 import {
     deleteCliente,
     getAllClientes,
@@ -10,9 +10,9 @@ import {
     postCliente,
     putCliente
 } from '../../services/RestServices';
-import DialogAltaCliente from './DialogAltaCliente';
-import DialogBajaCliente from './DialogBajaCliente';
-import GridClientes from "./GridClientes";
+import { DialogAltaCliente } from './DialogAltaCliente';
+import { DialogBajaCliente } from './DialogBajaCliente';
+import { GridClientes } from "./GridClientes";
 
 const clienteInicial = {
     id: '',
@@ -32,16 +32,16 @@ const clienteInicial = {
     idTipoCliente: ''
 }
 
-const CargarClientes = () => {
+export const CargarClientes = () => {
 
-    const [cliente, setCliente] = useState(clienteInicial);
-    const [listaClientes, setListaClientes] = useState([]);
-    const [tiposClientes, setTiposClientes] = useState([]);
+    const [cliente, setCliente] = React.useState(clienteInicial);
+    const [listaClientes, setListaClientes] = React.useState([]);
+    const [tiposClientes, setTiposClientes] = React.useState([]);
 
-    const [isLoadingClientes, setLoadingClientes] = useState(true);
-    const [isLoadingTipoClientes, setLoadingTipoClientes] = useState(true);
+    const [isLoadingClientes, setLoadingClientes] = React.useState(true);
+    const [isLoadingTipoClientes, setLoadingTipoClientes] = React.useState(true);
 
-    const [isEditing, setEditing] = useState(false);
+    const [isEditing, setEditing] = React.useState(false);
 
     const fetchClientes = () => {
         getAllClientes()
@@ -61,16 +61,16 @@ const CargarClientes = () => {
             .finally(() => setLoadingTipoClientes(false));
     }
 
-    useEffect(() => {
+    React.useEffect(() => {
         fetchClientes();
         fetchTipoClientes();
     }, [])
 
-    const setSelection = useCallback((id) => {
+    const setSelection = React.useCallback((id) => {
         setCliente(listaClientes.filter(c => c.id === id).pop())
     }, [listaClientes])
 
-    const onSubmit = useCallback((clienteForm) => {
+    const onSubmit = React.useCallback((clienteForm) => {
         setOpenDialogAlta(false);
         setCliente(clienteInicial);
 
@@ -81,7 +81,7 @@ const CargarClientes = () => {
             postCliente(clienteForm).then(() => fetchClientes());
     }, [isEditing])
 
-    const onDelete = useCallback(() => {
+    const onDelete = React.useCallback(() => {
         deleteCliente(cliente.id)
             .then(() => {
                 fetchClientes();
@@ -92,8 +92,8 @@ const CargarClientes = () => {
     }, [cliente.id])
 
     // --- DIALOGS ---
-    const [openDialogAlta, setOpenDialogAlta] = useState(false);
-    const [openDialogBaja, setOpenDialogBaja] = useState(false);
+    const [openDialogAlta, setOpenDialogAlta] = React.useState(false);
+    const [openDialogBaja, setOpenDialogBaja] = React.useState(false);
 
     const onOpenAlta = () => {
         setEditing(false);
@@ -122,7 +122,7 @@ const CargarClientes = () => {
         setOpenDialogAlta(false);
     }
 
-    const valoresTiposClientes = useMemo(() =>
+    const valoresTiposClientes = React.useMemo(() =>
         tiposClientes.map((c) => {
             return { id: c.id, value: c.id, label: c.tipo }
         }), [tiposClientes])
@@ -158,5 +158,3 @@ const CargarClientes = () => {
         </PageTableButtonPane>
     );
 }
-
-export default CargarClientes;

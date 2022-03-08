@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Grid, Typography, ButtonGroup } from '@mui/material';
 
-const PageTableButtonPane = ({ title, buttons, grid, children }) => {
+export const PageTableButtonPane = ({ title, buttons, grid, children }) => {
     return (
         <Grid container
             direction="row"
@@ -30,5 +31,3 @@ const PageTableButtonPane = ({ title, buttons, grid, children }) => {
         </Grid>
     )
 }
-
-export default PageTableButtonPane

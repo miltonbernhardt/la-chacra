@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
     Box,
     Button,
@@ -8,7 +9,6 @@ import {
     DialogTitle,
     Grid, Typography
 } from "@mui/material";
-import { createRef, useEffect, useMemo, useState } from 'react';
 import Input from "../../components/Input";
 import Select from '../../components/Select';
 import * as field from "../../resources/fields";
@@ -33,26 +33,26 @@ const clienteInicial = {
     idTipoCliente: ''
 }
 
-const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposCliente }) => {
+export const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposCliente }) => {
 
-    const [clienteForm, setClienteForm] = useState(clienteInicial);
+    const [clienteForm, setClienteForm] = React.useState(clienteInicial);
 
-    const refSelectCliente = createRef(null)
-    const refRazonSocial = createRef(null)
-    const refCuit = createRef(null)
-    const refDomicilio = createRef(null)
-    const refCodPostal = createRef(null)
-    const refLocalidad = createRef(null)
-    const refProvincia = createRef(null)
-    const refPais = createRef(null)
-    const refTransporte = createRef(null)
-    const refSenasaUta = createRef(null)
-    const refEmail = createRef(null)
-    const refTelefono = createRef(null)
-    const refFax = createRef(null)
-    const refCelular = createRef(null)
+    const refSelectCliente = React.createRef()
+    const refRazonSocial = React.createRef()
+    const refCuit = React.createRef()
+    const refDomicilio = React.createRef()
+    const refCodPostal = React.createRef()
+    const refLocalidad = React.createRef()
+    const refProvincia = React.createRef()
+    const refPais = React.createRef()
+    const refTransporte = React.createRef()
+    const refSenasaUta = React.createRef()
+    const refEmail = React.createRef()
+    const refTelefono = React.createRef()
+    const refFax = React.createRef()
+    const refCelular = React.createRef()
 
-    useEffect(() => setClienteForm(cliente), [cliente]);
+    React.useEffect(() => setClienteForm(cliente), [cliente]);
 
     const handleSubmit = () => {
         const errors = new Map();
@@ -93,9 +93,9 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
     }
 
     // --- VARIABLES ---
-    const dialogTitle = useMemo(() => isEditing ? 'Actualizar Cliente' : 'Alta Cliente', [isEditing]);
-    const titleCliente = useMemo(() => cliente.id ? `Cliente Número ${cliente.id}` : 'Cliente', [cliente]);
-    const labelSubmit = useMemo(() => isEditing ? 'Actualizar' : 'Dar de Alta', [isEditing]);
+    const dialogTitle = React.useMemo(() => isEditing ? 'Actualizar Cliente' : 'Alta Cliente', [isEditing]);
+    const titleCliente = React.useMemo(() => cliente.id ? `Cliente Número ${cliente.id}` : 'Cliente', [cliente]);
+    const labelSubmit = React.useMemo(() => isEditing ? 'Actualizar' : 'Dar de Alta', [isEditing]);
 
     return (
         <>
@@ -228,5 +228,3 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
         </>
     );
 }
-
-export default DialogAltaCliente;

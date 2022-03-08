@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { Typography, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
+const React = require('react')
+import { Typography, IconButton } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
+import Toolbar from '@mui/material/Toolbar'
 
-const CustomToolbar = ({ drawerOpen, handleDrawerOpen }) => {
+export const CustomToolbar = ({ drawerOpen, handleDrawerOpen }) => {
     return <Toolbar>
         <IconButton
             color="inherit"
@@ -19,5 +19,3 @@ const CustomToolbar = ({ drawerOpen, handleDrawerOpen }) => {
         </Typography>
     </Toolbar>
 }
-
-export default CustomToolbar

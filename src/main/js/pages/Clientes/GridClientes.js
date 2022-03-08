@@ -1,8 +1,8 @@
+import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from "react";
 
-const GridClientes = ({ setSelection, clientes }) => {
-    const columns = useMemo(() => [
+export const GridClientes = ({ setSelection, clientes }) => {
+    const columns = React.useMemo(() => [
         {
             field: 'id',
             headerName: 'Nro Cliente',
@@ -60,5 +60,3 @@ const GridClientes = ({ setSelection, clientes }) => {
         />
     );
 }
-
-export default GridClientes;
