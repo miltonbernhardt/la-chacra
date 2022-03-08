@@ -113,6 +113,7 @@ const VerLitrosElaborados = () => {
                                 height: 300,
                             }}
                         >
+                            esta grafica va por dia
                             <Chart
                                 title="Litros Elaborados"
                                 yLabel="Litros"

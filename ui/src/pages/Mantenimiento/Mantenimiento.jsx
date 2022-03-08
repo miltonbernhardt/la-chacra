@@ -1,5 +1,6 @@
 import { Grid, Input, TextField, Button, ButtonGroup } from "@mui/material";
 import PageFormTable from '../../components/PageFormTable'
+import MantenimientoCardList from "./MantenimientoCardList";
 
 const Mantenimiento = () => {
     return (
@@ -8,6 +9,13 @@ const Mantenimiento = () => {
             form={
                 <>
                     <Grid container spacing={1.5}>
+                        <Grid item xs={12}>
+                            <TextField fullWidth
+                                variant="outlined"
+                                label="Fecha"
+                                type="date"
+                            />
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField fullWidth
                                 variant="outlined"
@@ -32,7 +40,7 @@ const Mantenimiento = () => {
             }
 
             table={
-                <></>
+                <MantenimientoCardList />
             }
         ></PageFormTable>
     );

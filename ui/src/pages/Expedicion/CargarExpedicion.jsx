@@ -7,6 +7,7 @@ import GridExpedicion from "./GridExpedicion";
 import DialogEliminarExpedicion from './DialogEliminarExpedicion'
 import * as field from "../../resources/fields";
 import toast from "react-hot-toast";
+import ScanDialog from "./ScanDialog";
 
 const expedicionInicial = {
     id: '',
@@ -28,6 +29,7 @@ const CargarExpedicion = () => {
     const [isLoadingClientes, setLoadingClientes] = useState(true);
 
     const [openDialogEliminar, setOpenDialogEliminar] = useState(false);
+    const [openScanDialog, setOpenScanDialog] = useState(false);
 
     useEffect(() => {
         fetchClientes();
@@ -90,6 +92,8 @@ const CargarExpedicion = () => {
 
     const cancelDelete = useCallback(() => setOpenDialogEliminar(false), [])
 
+    const closeScanDialog = useCallback(() => setOpenScanDialog(false), []);
+
     // --- Variables
     const clientesFormatted = useMemo(() => listaClientes.map((c) => {
         return { id: c.id, value: c.id, label: c.razonSocial }
@@ -134,6 +138,9 @@ const CargarExpedicion = () => {
                 open={openDialogEliminar}
                 onClose={cancelDelete}
                 onSubmit={submitDelete} />
+            <ScanDialog
+                open={openScanDialog}
+                onClose={closeScanDialog} />
         </PageFormTable>
     );
 }
