@@ -98,4 +98,16 @@ public class QuesoService {
         queso.setFechaBaja(dateUtil.now());
         repository.save(queso);
     }
+
+    public void increaseStock(Queso queso, Integer cantidad) {
+        var stock = queso.getStock() + cantidad;
+        queso.setStock(stock);
+        repository.save(queso);
+    }
+
+    public void decreaseStock(Queso queso, Integer cantidad) {
+        var stock = queso.getStock() - cantidad;
+        queso.setStock(stock);
+        repository.save(queso);
+    }
 }

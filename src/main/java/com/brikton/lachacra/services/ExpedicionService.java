@@ -25,19 +25,21 @@ public class ExpedicionService {
     private final PrecioService precioService;
     private final RemitoRepository remitoRepository;
     private final LoteService loteService;
+    private final QuesoService quesoService;
 
     public ExpedicionService(
             ExpedicionRepository repository,
             ClienteService clienteService,
             PrecioService precioService,
             RemitoRepository remitoRepository,
-            LoteService loteService
-    ) {
+            LoteService loteService,
+            QuesoService quesoService) {
         this.repository = repository;
         this.clienteService = clienteService;
         this.precioService = precioService;
         this.remitoRepository = remitoRepository;
         this.loteService = loteService;
+        this.quesoService = quesoService;
     }
 
     public List<ExpedicionDTO> getAll() {
@@ -50,6 +52,7 @@ public class ExpedicionService {
         var expedicion = expedicionFromDTO(dto);
 
         loteService.decreaseStock(expedicion.getLote(), expedicion.getCantidad());
+        quesoService.decreaseStock(expedicion.getLote().getQueso(),expedicion.getCantidad());
 
         double importe = getImporte(dto, expedicion);
         expedicion.setImporte(importe);
@@ -65,6 +68,7 @@ public class ExpedicionService {
         var expedicionUpdated = expedicionFromDTO(dto);
 
         updateStockLotes(expedicion, expedicionUpdated);
+        updateStockQuesos(expedicion, expedicionUpdated);
 
         var importe = getImporte(dto, expedicionUpdated);
         expedicionUpdated.setImporte(importe);
@@ -72,6 +76,8 @@ public class ExpedicionService {
         expedicionUpdated = repository.save(expedicionUpdated);
         return new ExpedicionDTO(expedicionUpdated);
     }
+
+
 
     private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
         var expedicion = new Expedicion();
@@ -97,6 +103,11 @@ public class ExpedicionService {
             var diff = expedicionUpdated.getCantidad() - expedicion.getCantidad();
             loteService.decreaseStock(expedicionUpdated.getLote(), diff);
         }
+    }
+
+    private void updateStockQuesos(Expedicion expedicion, Expedicion expedicionUpdated) {
+            quesoService.increaseStock(expedicion.getLote().getQueso(),expedicion.getCantidad());
+            quesoService.decreaseStock(expedicionUpdated.getLote().getQueso(),expedicionUpdated.getCantidad());
     }
 
     private boolean isSameLoteAndDifferentQuantity(Expedicion expedicion, Expedicion expedicionUpdated) {

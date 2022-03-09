@@ -3,8 +3,28 @@ import { Button, TextField } from "@mui/material";
 import { maxWidth } from "@mui/system";
 import { quesos } from "../../data/data";
 import StockCard from "./StockCard";
+import { useCallback, useEffect, useState } from "react";
+import toast from 'react-hot-toast';
+import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
+
 const StockProductos = () => {
-    const cards = quesos;
+
+    const [listaQuesos, setListaQuesos] = useState([]);
+
+    const [isLoading, setLoading] = useState(true);
+
+    useEffect(() => fetchQuesos(), []);
+
+    const fetchQuesos = () => {
+        getAllQuesos()
+            .then(({ data }) => {
+                setListaQuesos(data)
+                setLoading(false);
+            })
+            .catch(() => toast.error("No se pudo cargar productos"))
+            .finally(() => setLoading(false));
+    }
+
     return (
         <Container maxWidth="xl">
             <Grid container spacing={2} style={{
@@ -41,11 +61,9 @@ const StockProductos = () => {
                         }} maxWidth="xl">
                             {/* End hero unit */}
                             <Grid container spacing={2}>
-                                {cards.map((card) => (
-                                    <Grid item key={card.codigo} xs={12} sm={6} md={4} lg={3} xl={2}>
-                                        <StockCard tipoQueso={card.nombreQueso}//nombre de queso
-                                            stockQueso={100}
-                                            nomenclatura={card.nomenclatura} />
+                                {listaQuesos.map((queso) => (
+                                    <Grid item key={queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                                        <StockCard queso={queso} />
                                     </Grid>
                                 ))}
                             </Grid>
