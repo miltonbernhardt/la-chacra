@@ -13,7 +13,8 @@ const quesoInicial = {
     id: '',
     codigo: '',
     tipoQueso: '',
-    nomenclatura: ''
+    nomenclatura: '',
+    color: ''
 }
 
 const CargarQuesos = () => {
@@ -37,7 +38,8 @@ const CargarQuesos = () => {
                         id: q.id,
                         codigo: q.codigo,
                         nomenclatura: q.nomenclatura,
-                        tipoQueso: q.tipoQueso
+                        tipoQueso: q.tipoQueso,
+                        color: q.color
                     }
                 })
                 setListaQuesos(listaAux)

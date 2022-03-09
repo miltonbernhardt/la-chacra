@@ -1,3 +1,4 @@
+import { Chip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
@@ -19,6 +20,17 @@ const columns = [
         flex: 1,
         minWidth: 50
     },
+    {
+        field: 'color',
+        headerName: 'Color',
+        flex: 1,
+        minWidth: 50,
+        renderCell: ({ value }) => {
+            return (<Chip
+                style={{ backgroundColor: value }} />)
+        },
+    },
+
 ]
 
 const GridQuesos = ({ listaQuesos, setSelection }) => {

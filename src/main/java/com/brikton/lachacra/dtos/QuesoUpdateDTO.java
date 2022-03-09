@@ -29,6 +29,7 @@ public class QuesoUpdateDTO {
     private String nomenclatura;
 
     private Integer stock;
+    private String color;
 
     public QuesoUpdateDTO() {
     }

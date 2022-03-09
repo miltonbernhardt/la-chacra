@@ -6,7 +6,7 @@ import { red } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-export default function StockCard({ tipoQueso, stockQueso, nomenclatura }) {
+export default function StockCard({ tipoQueso, stockQueso, nomenclatura, queso }) {
     return (
         <Card
             sx={{
@@ -18,19 +18,9 @@ export default function StockCard({ tipoQueso, stockQueso, nomenclatura }) {
             }}
         >
             <CardActionArea onClick={() => alert('queso')}>
-
-                {/* <CardMedia
-                component="img"
-                sx={{
-                    // 16:9
-                    // pt: '56.25%',
-                }}
-                image="https://source.unsplash.com/random"
-                alt="random"
-            /> */}
                 <CardHeader
                     avatar={
-                        <Avatar sx={{ bgcolor: red[500] }} >
+                        <Avatar sx={{ bgcolor: queso.color }} >
                             {nomenclatura}
                         </Avatar>
                     }

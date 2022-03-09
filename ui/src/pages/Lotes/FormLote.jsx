@@ -18,7 +18,7 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
     const refCantHormas = createRef(null)
     const refPeso = createRef(null)
     const refFecha = createRef(null)
-
+    const refCantCajas = createRef(null)
     const refLoteCultivo = createRef(null)
     const refLoteColorante = createRef(null)
     const refLoteCalcio = createRef(null)
@@ -48,6 +48,10 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
         ])
 
         refCantHormas.current.validate(errors, values, [
+            { func: validation.minorToOne, msg: message.valZeroValue }
+        ])
+
+        refCantCajas.current.validate(errors, values, [
             { func: validation.minorToOne, msg: message.valZeroValue }
         ])
 
@@ -105,11 +109,19 @@ const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLote, hand
                     id={field.backCantHormas}
                     label={field.cantHormas}
                     value={loteForm.cantHormas}
-                    required />
+                    required
+                    sm={6} />
+                <Input ref={refCantCajas}
+                    id={field.backCantCajas}
+                    label={field.cantCajas}
+                    value={loteForm.cantCajas}
+                    required
+                    sm={6} />
                 <Input ref={refPeso}
                     id={field.backPeso}
                     label={field.peso}
                     value={loteForm.peso} />
+                Poner cajas
                 <Input ref={refLoteCultivo}
                     id={field.backLoteCultivo}
                     label={field.loteCultivo}
