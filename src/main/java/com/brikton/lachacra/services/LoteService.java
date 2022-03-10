@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -167,5 +168,12 @@ public class LoteService {
         var lote = repository.getById(id);
         lote.setFechaBaja(dateUtil.now());
         repository.save(lote);
+    }
+
+    public List<LoteDTO> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
+        List<LoteDTO> result = new ArrayList<>();
+        var list = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
+        list.forEach(lote -> result.add(new LoteDTO(lote)));
+        return result;
     }
 }

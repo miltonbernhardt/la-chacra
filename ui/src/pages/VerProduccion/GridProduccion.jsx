@@ -1,75 +1,70 @@
+import { Chip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-
+import * as field from "../../resources/fields";
 const columns = [
     {
-        field: 'identificadorLote',
+        field: field.backID,
         headerName: 'Lote',
         flex: 1,
         minWidth: 50
     },
     {
-        field: 'fechaElaboracion',
+        field: field.backFechaElaboracion,
         headerName: 'Fecha de elaboracion',
         type: 'date',
         flex: 1,
         minWidth: 50
     },
     {
-        field: 'tipoDeQueso',
+        field: field.backCodigoQueso,
         headerName: 'Queso',
         flex: 0.5,
         minWidth: 50
     },
     {
-        field: 'tina',
+        field: field.backNumeroTina,
         headerName: 'Tina',
         flex: 0.5,
         minWidth: 50
     },
     {
-        field: 'litrosProcesados',
+        field: field.backLitrosLeche,
         headerName: 'Litros Procesados',
         type: 'number',
         flex: 0.5,
         minWidth: 50
     },
     {
-        field: 'cantidadDeHormas',
+        field: field.backCantHormas,
         headerName: 'Hormas',
         type: 'number',
         flex: 0.5,
         minWidth: 50
     },
     {
-        field: 'saldoLote',
+        field: field.backStockLote,
         headerName: 'Saldo',
         type: 'number',
         flex: 0.5,
         minWidth: 50,
-        renderCell: (cellValues) => {
+        renderCell: ({ value }) => {
+            console.log(value)
             return (
-                <div
-                    style={{
-                        color: "blue",
-                        // fontSize: 18,
-                        width: "100%",
-                        textAlign: "right"
-                    }}
-                >
-                    {cellValues.value}
-                </div>
+                <Chip
+                    label={value.stockLote}
+                    color={value.color} />
             );
         }
     },
     {
-        field: 'pesoLote',
+        field: field.backPeso,
         headerName: 'Peso',
         type: 'number',
         flex: 0.5,
         minWidth: 50
     },
     {
-        field: 'rendimientoLote',
+        field: field.backRendimientoLote,
         headerName: 'Rendimiento',
         type: 'number',
         flex: 0.5,
@@ -98,7 +93,7 @@ const GridProduccion = ({ data }) => {
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}
-                // onCellClick={(params) => setSelection(params.id)}
+            // onCellClick={(params) => setSelection(params.id)}
             />
         </>
     )

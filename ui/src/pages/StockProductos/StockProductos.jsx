@@ -1,6 +1,5 @@
-import { Box, Grid, Container, Typography } from "@material-ui/core";
+import { Box, Container, Grid, Typography } from "@material-ui/core";
 import { Button, TextField } from "@mui/material";
-import { maxWidth } from "@mui/system";
 import { quesos } from "../../data/data";
 import StockCard from "./StockCard";
 const StockProductos = () => {
