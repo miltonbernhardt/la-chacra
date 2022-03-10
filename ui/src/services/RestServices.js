@@ -29,6 +29,7 @@ export const postLote = async (lote) => await POST(`${API_LOTE}`, lote);
 export const putLote = async (lote) => await PUT(`${API_LOTE}`, lote);
 export const deleteLote = async (id) => await DELETE(`${API_LOTE}${id}`);
 export const getLote = async (id) => await GET(`${API_LOTE}${id}`);
+export const getLotesByQuesoWithStock = async (codigoQueso) => await GET(`${API_LOTE}/queso?codigoQueso=${codigoQueso}`);
 
 // --- QUESO METHODS ---
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);
