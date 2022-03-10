@@ -99,15 +99,15 @@ public class QuesoService {
         repository.save(queso);
     }
 
-    public void increaseStock(Queso queso, Integer cantidad) {
+    public Queso increaseStock(Queso queso, Integer cantidad) {
         var stock = queso.getStock() + cantidad;
         queso.setStock(stock);
-        repository.save(queso);
+        return repository.save(queso);
     }
 
-    public void decreaseStock(Queso queso, Integer cantidad) {
+    public Queso decreaseStock(Queso queso, Integer cantidad) {
         var stock = queso.getStock() - cantidad;
         queso.setStock(stock);
-        repository.save(queso);
+        return repository.save(queso);
     }
 }
