@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 export const backID = "id"
 export const backFechaElaboracion = "fechaElaboracion"
 export const backCantHormas = "cantHormas"
+export const backCantCajas = "cantCajas"
 export const backLitrosLeche = "litrosLeche"
 export const backNumeroTina = "numeroTina"
 export const backPeso = "peso"
@@ -36,12 +37,14 @@ export const backCantidad = "cantidad"
 export const backImporte = "importe"
 export const backFechaExpedicion = "fechaExpedicion"
 export const backPrecio = "valor"
+export const backColor = "color"
 
 export const ID = "ID"
 
 // produccion
 export const fechaElaboracion = "Fecha de producción"
 export const cantHormas = "Cantidad de hormas"
+export const cantCajas = "Cantidad de cajas"
 export const litrosLeche = "Litros procesados"
 export const numeroTina = "Tina"
 export const peso = "Peso del lote"
@@ -55,6 +58,7 @@ export const loteCuajo = "Lote cuajo"
 export const codigo = "Código"
 export const nomenclatura = "Nomenclatura"
 export const tipoQueso = "Tipo de queso"
+export const color = "Color"
 
 // cliente
 export const cuit = "CUIT"
@@ -88,6 +92,7 @@ const backendFields = () => {
     fields.set(backID, ID)
     fields.set(backFechaElaboracion, fechaElaboracion)
     fields.set(backCantHormas, cantHormas)
+    fields.set(backCantCajas, cantCajas)
     fields.set(backLitrosLeche, litrosLeche)
     fields.set(backNumeroTina, numeroTina)
     fields.set(backPeso, peso)
@@ -121,6 +126,7 @@ const backendFields = () => {
     fields.set(backCantidad, cantidad)
     fields.set(backImporte, importe)
     fields.set(backFechaExpedicion, fechaExpedicion)
+    fields.ser(backColor, color)
     return fields
 }
 

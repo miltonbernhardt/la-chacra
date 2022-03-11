@@ -21,6 +21,10 @@ import * as React from 'react';
 import { Link } from "react-router-dom";
 import HistoryIcon from '@mui/icons-material/History';
 import HomeIcon from '@mui/icons-material/Home';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import BalanceIcon from '@mui/icons-material/Balance';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -74,6 +78,12 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     </ListItemIcon>
                     <ListItemText primary="Cargar Expediciones" />
                 </ListItem>
+                <ListItem button component={Link} to="/emitir/remito">
+                    <ListItemIcon>
+                        <PointOfSaleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Emitir remito" />
+                </ListItem>
             </List>
             <Divider />
             <List>
@@ -103,34 +113,52 @@ const CustomDrawer = ({ drawerWidth, open, handleDrawerClose, theme }) => {
                     <ListItemIcon>
                         <TimelineIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Ver producción" />
+                    <ListItemText primary="Producción" />
                 </ListItem>
                 <ListItem button component={Link} to="/ver/litros">
                     <ListItemIcon>
                         <PercentIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Litros elaborados" />
+                    <ListItemText primary="Litros Elaborados" />
+                </ListItem>
+                <ListItem button component={Link} to="/stock/productos">
+                    <ListItemIcon>
+                        <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Stock Productos" />
+                </ListItem>
+                <ListItem button component={Link} to="/rendimiento">
+                    <ListItemIcon>
+                        <AnalyticsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Rendimiento" />
                 </ListItem>
                 <ListItem button component={Link} to="/ver/ventas">
                     <ListItemIcon>
-                        <SellIcon />
+                        <BalanceIcon />
                     </ListItemIcon>
                     <ListItemText primary="Ventas" />
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem button component={Link} to="/stock/embalaje">
+                    <ListItemIcon>
+                        <Inventory2Icon />
+                    </ListItemIcon>
+                    <ListItemText primary="Stock Embalaje" />
+                </ListItem>
+                <ListItem button component={Link} to="/mantenimiento">
+                    <ListItemIcon>
+                        <SellIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Mantenimiento" />
                 </ListItem>
                 <ListItem button component={Link} to="/ver/trazabilidad">
                     <ListItemIcon>
                         <HistoryIcon />
                     </ListItemIcon>
                     <ListItemText primary="Trazabilidad" />
-                </ListItem>
-            </List>
-            <Divider />
-            <List>
-                <ListItem button component={Link} to="/emitir/remito">
-                    <ListItemIcon>
-                        <PointOfSaleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Emitir remito" />
                 </ListItem>
             </List >
         </Drawer>

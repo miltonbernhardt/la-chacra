@@ -99,6 +99,8 @@ public class LoteService {
         var stock = dto.getCantHormas();
         lote.setStockLote(stock);
 
+        updateStockQueso(dto);
+
         lote = repository.save(lote);
         return new LoteDTO(lote);
     }
@@ -167,5 +169,22 @@ public class LoteService {
         var lote = repository.getById(id);
         lote.setFechaBaja(dateUtil.now());
         repository.save(lote);
+    }
+
+    private void updateStockQueso(LoteDTO dto){
+        var queso = getQueso(dto.getCodigoQueso());
+        if (repository.existsByIdNotFechaBaja(dto.getId())) {
+            var oldLote = repository.getById(dto.getId());
+                quesoService.decreaseStock(oldLote.getQueso(),oldLote.getCantHormas());
+        }
+        quesoService.increaseStock(queso,dto.getCantHormas());
+    }
+
+    public List<LoteDTO> getByQuesoAndWithStock(String codigoQueso) {
+        var queso = getQueso(codigoQueso);
+        var lista = repository.findAllByQuesoAndStockLoteGreaterThan(queso,0);
+        List<LoteDTO> response = new ArrayList<>();
+        lista.forEach(lote -> response.add(new LoteDTO(lote)));
+        return response;
     }
 }

@@ -70,6 +70,7 @@ public class QuesoService {
         queso.setCodigo(dto.getCodigo());
         queso.setNomenclatura(dto.getNomenclatura());
         queso.setStock(dto.getStock());
+        queso.setColor(dto.getColor());
         return queso;
     }
 
@@ -77,6 +78,7 @@ public class QuesoService {
         var oldQueso = get(dto.getId());
         oldQueso.setNomenclatura(dto.getNomenclatura());
         oldQueso.setTipoQueso(dto.getTipoQueso());
+        oldQueso.setColor(dto.getColor());
         var queso = repository.save(oldQueso);
         return new QuesoDTO(queso);
     }
@@ -95,5 +97,17 @@ public class QuesoService {
     private void darBajaQueso(Queso queso) {
         queso.setFechaBaja(dateUtil.now());
         repository.save(queso);
+    }
+
+    public Queso increaseStock(Queso queso, Integer cantidad) {
+        var stock = queso.getStock() + cantidad;
+        queso.setStock(stock);
+        return repository.save(queso);
+    }
+
+    public Queso decreaseStock(Queso queso, Integer cantidad) {
+        var stock = queso.getStock() - cantidad;
+        queso.setStock(stock);
+        return repository.save(queso);
     }
 }

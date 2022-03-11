@@ -393,6 +393,7 @@ public class LoteServiceTest {
 
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.save(any(Lote.class))).thenReturn(updatedLote);
+        when(repository.getById("101020210011")).thenReturn(updatedLote);
         when(quesoService.getByCodigo("001")).thenReturn(mockQueso());
 
         LoteDTO dtoActual = service.update(dtoToUpdate);
@@ -491,6 +492,14 @@ public class LoteServiceTest {
                 LoteNotFoundException.class, () -> service.delete("101020210011")
         );
         assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Get_By_Queso_And_With_Stock__OK(){
+        when(quesoService.getByCodigo(any(String.class))).thenReturn(mockQueso());
+        when(repository.findAllByQuesoAndStockLoteGreaterThan(any(Queso.class),any(Integer.class))).thenReturn(List.of(mockLote()));
+        var result = service.getByQuesoAndWithStock("001");
+        assertEquals(1,result.size());
     }
 
     Lote mockLote() {

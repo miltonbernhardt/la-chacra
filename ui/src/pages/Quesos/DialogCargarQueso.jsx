@@ -29,6 +29,7 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
     const refCodigo = createRef(null)
     const refTipoQueso = createRef(null)
     const refNomenclatura = createRef(null)
+    const refColor = createRef(null)
 
     const labelCargar = useMemo(() => isEditarQueso ? 'Actualizar Producto' : 'Cargar Producto', [isEditarQueso]);
 
@@ -48,6 +49,8 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
         refNomenclatura.current.validate(errors, values, [
             { func: validation.empty, msg: message.valEmptyField }
         ])
+
+        refColor.current.setValue(values);
 
         if (errors.size > 0) {
             console.error(errors)
@@ -73,20 +76,26 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                             ref={refTipoQueso}
                             value={quesoForm.tipoQueso}
                             type="text"
-                            required/>
+                            required />
                         <Input
                             id={field.backNomenclatura}
                             label={field.nomenclatura}
                             ref={refNomenclatura}
                             value={quesoForm.nomenclatura}
                             type="text"
-                            required/>
+                            required />
                         <Input
                             id={field.backCodigo}
                             label={field.codigo}
                             ref={refCodigo}
                             value={quesoForm.codigo}
-                            required/>
+                            required />
+                        <Input
+                            id={field.backColor}
+                            label={field.color}
+                            ref={refColor}
+                            value={quesoForm.color}
+                            type="color" />
                     </Grid>
                 </DialogContent>
                 <DialogActions>

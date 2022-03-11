@@ -24,6 +24,7 @@ public class QuesoDTO {
 
     private Long id;
     private Integer stock;
+    private String color;
 
     public QuesoDTO() {
     }
@@ -34,6 +35,7 @@ public class QuesoDTO {
         this.setTipoQueso(queso.getTipoQueso());
         this.setNomenclatura(queso.getNomenclatura());
         this.setStock(queso.getStock());
+        this.setColor(queso.getColor());
     }
 
     public String getCodigo() {

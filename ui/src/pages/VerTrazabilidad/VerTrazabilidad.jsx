@@ -5,18 +5,19 @@ import { produccion as data } from "../../data/data";
 
 
 const VerTrazabilidad = () => {
-    return (<>
-            <>
-                <PageFormTable
-                    form={
-                        <FormTrazabilidad/>
-                    }
-                    sizeForm={5}
-                    table={
-                        <GridTrazabilidad data={data}/>
-                    }
-                />
-            </>
+    return (
+        <>
+            <PageFormTable
+                titleForm={"Trazabilidad"}
+                form={
+                    <FormTrazabilidad />
+                }
+                sizeForm={5}
+                titleTable={"Expediciones"}
+                table={
+                    <GridTrazabilidad data={data} />
+                }
+            />
         </>
     );
 }
