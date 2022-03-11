@@ -502,6 +502,13 @@ public class LoteServiceTest {
         assertEquals(1,result.size());
     }
 
+    @Test
+    void Get_Between_Dates__OK(){
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(LocalDate.class),any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(mockLote()));
+        var result = service.getBetweenDates(LocalDate.now(),LocalDate.now());
+        assertEquals(1,result.size());
+    }
+
     Lote mockLote() {
         Lote lote = new Lote();
         lote.setId("101020210011");
