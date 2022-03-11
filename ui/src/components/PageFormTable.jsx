@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 
-const PageFormTable = ({ form, table, titleTable, children, titleForm }) => {
+const PageFormTable = ({ form, table, titleTable, children, titleForm, mdForm, lgForm }) => {
     return (
         <Grid container
             direction="row"
@@ -17,7 +17,7 @@ const PageFormTable = ({ form, table, titleTable, children, titleForm }) => {
             }}>
 
             {/* FORM */}
-            <Grid item xs={12} sm={12} md={4} lg={3} >
+            <Grid item xs={12} sm={12} md={mdForm ? mdForm : 4} lg={lgForm ? lgForm : 3} >
                 <Grid item xs={12}>
                     <Typography variant="h6" padding={0.5}>
                         {titleForm}
@@ -27,7 +27,7 @@ const PageFormTable = ({ form, table, titleTable, children, titleForm }) => {
             </Grid>
 
             {/* TABLE */}
-            <Grid item xs={12} sm={12} md={8} lg={9} >
+            <Grid item xs={12} sm={12} md={mdForm ? 12 - mdForm : 8} lg={lgForm ? 12 - lgForm : 9} >
                 <Grid item xs={12}>
                     <Typography variant="h6" padding={0.5}>
                         {titleTable}

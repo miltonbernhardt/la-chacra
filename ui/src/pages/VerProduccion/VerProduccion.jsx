@@ -1,19 +1,37 @@
 import GridProduccion from "./GridProduccion";
 import FormProduccion from "./FormProduccion";
 import PageFormTable from "../../components/PageFormTable";
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getLotesBetweenDates } from "../../services/RestServices";
 import * as field from "../../resources/fields";
 import toast from "react-hot-toast";
+import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
+
+import Loading from '../../components/Loading';
+
 const VerProduccion = () => {
 
     const [listaLotes, setListaLotes] = useState([]);
+    const [listaQuesos, setListaQuesos] = useState([]);
+
+    const [isLoading, setLoading] = useState(true);
 
     const fetchLotes = (fechaDesde, fechaHasta) => {
         getLotesBetweenDates(fechaDesde, fechaHasta)
             .then(({ data }) => setListaLotes(data))
             .catch(() => toast.error('No se pudieron cargar los lotes'))
     }
+
+    const fetchQuesos = useCallback(() => {
+        getAllQuesos()
+            .then(data => {
+                setListaQuesos(data.data);
+            })
+            .catch(() => toast.error("No se pudo cargar quesos"))
+            .finally(() => setLoading(false));
+    }, []);
+
+    useEffect(() => fetchQuesos(), [fetchQuesos])
 
     const handleBuscar = useCallback((fechaDesde, fechaHasta) => {
         fetchLotes(fechaDesde, fechaHasta);
@@ -30,6 +48,7 @@ const VerProduccion = () => {
             if (lote.cantHormas > lote.stockLote) colorStock = 'success';
             if (0 > lote.stockLote) colorStock = 'error';
             if (0 === lote.stockLote) colorStock = 'default';
+            if (0 === lote.stockLote) colorStock = 'default';
             return {
                 ...lote,
                 [field.backStockLote]: {
@@ -37,12 +56,17 @@ const VerProduccion = () => {
                     color: colorStock
                 }
             }
-        })
+        });
 
+
+    if (isLoading)
+        return (<Loading />)
 
     return (
         <>
             <PageFormTable
+                mdForm={2}
+                lgForm={2}
                 titleForm={"Producción"}
                 form={
                     <FormProduccion
@@ -51,7 +75,9 @@ const VerProduccion = () => {
                 }
                 sizeForm={3}
                 table={
-                    <GridProduccion data={listaLotesFormatted} />
+                    <GridProduccion
+                        quesos={listaQuesos}
+                        data={listaLotesFormatted} />
                 }
             />
         </>

@@ -49,14 +49,12 @@ const FormProduccion = ({ onBuscar, initialDate }) => {
                 label={field.fechaDesde}
                 value={initialDate}
                 type="date"
-                sm={6}
                 required />
             <Input ref={refFechaHasta}
                 id={'fechaHasta'}
                 label={field.fechaHasta}
                 value={initialDate}
                 type="date"
-                sm={6}
                 required />
 
             <Grid item xs={12} alignSelf="right" mb={0.5}>
