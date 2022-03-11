@@ -54,7 +54,14 @@ const VerProduccion = () => {
                 [field.backStockLote]: {
                     stockLote: lote.stockLote,
                     color: colorStock
-                }
+                },
+                [field.backCodigoQueso]:
+                    listaQuesos
+                        .filter(q => {
+                            return q.codigo === lote.codigoQueso
+                        })
+                        .pop()
+
             }
         });
 

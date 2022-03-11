@@ -34,13 +34,10 @@ const GridProduccion = ({ data, quesos }) => {
                 flex: 0.75,
                 minWidth: 50,
                 renderCell: ({ value }) => {
-                    const queso = quesos
-                        .filter(q => {
-                            return q.codigo === value
-                        })
-                        .pop().tipoQueso;
-                    return <Chip label={queso.tipoQueso}
-                        color={queso.color} />
+                    console.log(value)
+                    return <Chip
+                        label={value.tipoQueso}
+                        style={{ backgroundColor: value.color }} />
                 }
             },
             {
@@ -70,7 +67,6 @@ const GridProduccion = ({ data, quesos }) => {
                 flex: 0.5,
                 minWidth: 50,
                 renderCell: ({ value }) => {
-                    console.log(value)
                     return (
                         <Chip
                             label={value.stockLote}
