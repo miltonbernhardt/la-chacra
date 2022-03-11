@@ -1,9 +1,9 @@
-import { Chip } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import * as field from "../../resources/fields";
 import { useMemo } from "react";
+import * as field from "../../resources/fields";
 
-const GridProduccion = ({ data, quesos }) => {
+const GridProduccion = ({ data, setSelection }) => {
 
     const columns = useMemo(() => {
         return [
@@ -34,7 +34,6 @@ const GridProduccion = ({ data, quesos }) => {
                 flex: 0.75,
                 minWidth: 50,
                 renderCell: ({ value }) => {
-                    console.log(value)
                     return <Chip
                         label={value.tipoQueso}
                         style={{ backgroundColor: value.color }} />
@@ -92,7 +91,7 @@ const GridProduccion = ({ data, quesos }) => {
     }, []);
 
     return (
-        <>
+        < >
             <DataGrid
                 style={{ minHeight: "600px" }}
                 autoHeight={true}
@@ -101,9 +100,11 @@ const GridProduccion = ({ data, quesos }) => {
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}
-            // onCellClick={(params) => setSelection(params.id)}
-            />
-        </>
+                onCellDoubleClick={(params) => setSelection(params.id)} />
+            <Typography variant="h7" color="GrayText">
+                Doble click sobre una fila de la tabla para editar el lote de producción
+            </Typography>
+        </ >
     )
 }
 
