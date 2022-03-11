@@ -6,7 +6,6 @@ import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.LoteService;
-import com.brikton.lachacra.util.DateRange;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +34,12 @@ public class LoteController {
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getAll() {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
+    }
+
+    @GetMapping(value = "/queso")
+    public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getByQuesoAndWithStock(@PathParam("codigoQueso") String codigoQueso) {
+        log.info("API::getByQuesoAndWithStock - codigoQueso: {}", codigoQueso);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getByQuesoAndWithStock(codigoQueso)));
     }
 
     @GetMapping(value = "/produccion")

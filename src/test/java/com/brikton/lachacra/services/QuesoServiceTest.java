@@ -10,6 +10,7 @@ import com.brikton.lachacra.repositories.LoteRepository;
 import com.brikton.lachacra.repositories.QuesoRepository;
 import com.brikton.lachacra.util.DateUtil;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -278,6 +279,20 @@ public class QuesoServiceTest {
                 QuesoNotFoundException.class, () -> quesoService.delete(1L)
         );
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, thrown.getMessage());
+    }
+
+    @Test
+    void Increase_Stock(){
+        when(repository.save(any(Queso.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        var result = quesoService.increaseStock(mockQueso(),1);
+        assertEquals(2,result.getStock());
+    }
+
+    @Test
+    void Decrease_Stock(){
+        when(repository.save(any(Queso.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        var result = quesoService.decreaseStock(mockQueso(),1);
+        assertEquals(0,result.getStock());
     }
 
     Queso mockQueso() {

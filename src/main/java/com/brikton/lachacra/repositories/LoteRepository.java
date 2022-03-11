@@ -23,4 +23,6 @@ public interface LoteRepository extends JpaRepository<Lote, String> {
     List<Lote> findAllByFechaElaboracionBetween(LocalDate fechaElaboracion, LocalDate fechaElaboracion2);
 
     List<Lote> findAllByFechaBajaAndFechaElaboracionBetween(LocalDate fechaBaja, LocalDate fechaElaboracion, LocalDate fechaElaboracion2);
+
+    List<Lote> findAllByQuesoAndStockLoteGreaterThan(Queso queso, Integer stockLote);
 }
