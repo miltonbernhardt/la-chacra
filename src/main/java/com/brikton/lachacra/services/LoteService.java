@@ -94,7 +94,12 @@ public class LoteService {
         if (dto.getStockLote() != null)
             updateStockLote(dto);
 
-        return persist(dto);
+        var updatedLote = persist(dto);
+
+        if (updatedLote.getId() != dto.getId())
+            delete(dto.getId());
+
+        return updatedLote;
     }
 
     private LoteDTO persist(LoteDTO dto) throws QuesoNotFoundConflictException {
