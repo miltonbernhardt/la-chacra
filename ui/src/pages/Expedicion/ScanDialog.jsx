@@ -14,8 +14,7 @@ const ScanDialog = ({ open, onClose, onSubmit }) => {
         let result3 = `${result1}.${result2}`;
         let peso = parseFloat(result3);
         setListaLecturas([...listaLecturas, { id: scan, lote: lote, peso: peso }])
-        setPesoExpedicion(pesoExpedicion + peso); //todo estas sumas andan mal 213.84999999999994
-        //buscar libreria para sumar
+        setPesoExpedicion(Math.round((pesoExpedicion + peso) * 100) / 100);
     }
 
     const handleError = () => { alert('Error en la lectura') };
