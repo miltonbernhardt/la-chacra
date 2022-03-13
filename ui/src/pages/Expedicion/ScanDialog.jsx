@@ -1,32 +1,114 @@
-import { Typography, Grid, Box, Container, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Stack } from '@mui/material';
-import { useState } from 'react';
-import BarcodeReader from 'react-barcode-reader'
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+    Box,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Stack,
+    Typography
+} from '@mui/material';
+import { createRef, useCallback, useState } from 'react';
+import BarcodeReader from 'react-barcode-reader';
+import toast from 'react-hot-toast';
+import Input from '../../components/Input';
+import Select from "../../components/Select";
+import * as field from "../../resources/fields";
+import * as message from "../../resources/messages";
+import * as validation from "../../resources/validations";
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
-const ScanDialog = ({ open, onClose, onSubmit }) => {
+const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicion }) => {
 
     const [listaLecturas, setListaLecturas] = useState([]);
     const [pesoExpedicion, setPesoExpedicion] = useState(0);
 
+    const refCantidad = createRef(null);
+    const refSelectCliente = createRef(null);
+    const refFechaExpedicion = createRef(null);
+
     const handleScan = (scan) => {
         let lote = scan.substring(0, 12);
+        if (listaLecturas.length > 0 && lote !== listaLecturas.at(0).lote) {
+            toast.error('Se leyeron etiquetas de lotes distintos');
+            return
+        }
         let result1 = scan.substring(13, 20);
         let result2 = scan.substring(20, 23);
         let result3 = `${result1}.${result2}`;
         let peso = parseFloat(result3);
-        setListaLecturas([...listaLecturas, { id: scan, lote: lote, peso: peso }])
+        setListaLecturas([...listaLecturas,
+        {
+            id: listaLecturas.length,
+            lote: lote,
+            peso: peso
+        }])
         setPesoExpedicion(Math.round((pesoExpedicion + peso) * 100) / 100);
     }
 
-    const handleError = () => { alert('Error en la lectura') };
+    const handleError = useCallback(() => { alert('Error en la lectura') }, []);
+
+    const handleDeleteRow = (lote) => {
+        setPesoExpedicion(Math.round((pesoExpedicion - lote.peso) * 100) / 100);
+        const newList = listaLecturas.filter(item => item.id !== lote.id);
+        setListaLecturas(newList);
+    }
+
+    const handleCargar = useCallback(() => {
+        const errors = new Map();
+        const values = {};
+
+        refSelectCliente.current.validate(errors, values, [
+            { func: validation.emptySelect, msg: message.valEmptyField }
+        ])
+
+        refCantidad.current.validate(errors, values, [
+            { func: validation.minorToOne, msg: message.valZeroValue }])
+
+        refFechaExpedicion.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyFecha },
+            { func: validation.olderDate, msg: message.valOlderDate }
+        ])
+
+        if (listaLecturas.length === 0) {
+            toast.error('No hay etiquetas para cargar');
+            return;
+        }
+
+        if (errors.size > 0) {
+            console.error(errors)
+            field.toastValidationErrors(errors)
+            return
+        }
+
+        values[field.backIdLote] = listaLecturas.at(0).lote;
+        values[field.backPesoExpedicion] = pesoExpedicion;
+
+        onSubmit(values)
+    }, [listaLecturas, onSubmit, pesoExpedicion, refCantidad, refFechaExpedicion, refSelectCliente]);
+
+    const handleCancelar = useCallback(() => {
+        setListaLecturas([]);
+        onClose();
+    }, [onClose])
 
     return (
         <>
             <BarcodeReader
                 onScan={handleScan}
-                onError={handleError}
-            />
+                onError={handleError} />
             <Dialog open={open} onClose={onClose} scroll="body">
-                <DialogTitle>Escanear códigos</DialogTitle>
+                <DialogTitle>
+                    <Stack direction="row" spacing={2}>
+                        <QrCodeScannerIcon variant="outlined" fontSize='large' />
+                        <Typography variant="h6">
+                            Escanear etiquetas
+                        </Typography>
+                    </Stack>
+                </DialogTitle>
                 <DialogContent>
                     <Container maxWidth="sm">
                         <Box
@@ -39,7 +121,19 @@ const ScanDialog = ({ open, onClose, onSubmit }) => {
                             }}
                         >
                             <Grid container spacing={2}>
-                                <Typography variant="h6" paddingLeft={2}>
+                                <Input ref={refFechaExpedicion}
+                                    id={field.backFechaExpedicion}
+                                    label={field.fechaExpedicion}
+                                    value={fechaExpedicion}
+                                    type="date"
+                                    required />
+                                <Select ref={refSelectCliente}
+                                    id={field.backIdCliente}
+                                    label={field.cliente}
+                                    value={cliente}
+                                    options={clientes}
+                                    required />
+                                <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Códigos escaneados
                                 </Typography>
                                 <Grid item xs={12}>
@@ -63,29 +157,32 @@ const ScanDialog = ({ open, onClose, onSubmit }) => {
                                                     <Typography>
                                                         {lote.peso}
                                                     </Typography>
-                                                    <Button>quitar</Button>
+                                                    <Button onClick={() => handleDeleteRow(lote)}>
+                                                        <DeleteIcon />
+                                                        quitar
+                                                    </Button>
                                                 </Stack>)
                                         })}
                                     </Stack>
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        label="Cantidad de pizas" />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        label="Peso total"
-                                        value={pesoExpedicion} />
-                                </Grid>
+                                <Input ref={refCantidad}
+                                    id={field.backCantidad}
+                                    label={field.cantidad}
+                                    sm={6}
+                                    required />
+                                <Input
+                                    id={field.backPesoExpedicion}
+                                    label={field.pesoExpedicion}
+                                    value={pesoExpedicion}
+                                    sm={6}
+                                    contentEditable={false} />
                             </Grid>
                         </Box>
                     </Container>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onSubmit}>Cargar Expedición</Button>
+                    <Button onClick={handleCancelar}>Cancelar</Button>
+                    <Button onClick={handleCargar}>Cargar Expedición</Button>
                 </DialogActions>
             </Dialog>
         </>

@@ -126,7 +126,7 @@ const backendFields = () => {
     fields.set(backCantidad, cantidad)
     fields.set(backImporte, importe)
     fields.set(backFechaExpedicion, fechaExpedicion)
-    fields.ser(backColor, color)
+    fields.set(backColor, color)
     return fields
 }
 
