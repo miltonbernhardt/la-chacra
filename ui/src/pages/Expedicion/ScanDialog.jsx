@@ -31,12 +31,14 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
     const refFechaExpedicion = createRef(null);
 
     const handleScan = (scan) => {
-        let lote = scan.substring(0, 12);
+        let lote;
+        scan.charAt(13) === '0' ?
+            lote = scan.substring(0, 12) : lote = scan.substring(0, 13);
         if (listaLecturas.length > 0 && lote !== listaLecturas.at(0).lote) {
             toast.error('Se leyeron etiquetas de lotes distintos');
             return
         }
-        let result1 = scan.substring(13, 20);
+        let result1 = scan.substring(14, 20);
         let result2 = scan.substring(20, 23);
         let result3 = `${result1}.${result2}`;
         let peso = parseFloat(result3);
