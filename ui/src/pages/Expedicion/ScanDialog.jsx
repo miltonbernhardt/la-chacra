@@ -11,7 +11,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import { createRef, useCallback, useState } from 'react';
+import { createRef, useCallback, useEffect, useState } from 'react';
 import BarcodeReader from 'react-barcode-reader';
 import toast from 'react-hot-toast';
 import Input from '../../components/Input';
@@ -32,7 +32,7 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
 
     const handleScan = (scan) => {
         let lote;
-        scan.charAt(13) === '0' ?
+        scan.charAt(12) === '0' ?
             lote = scan.substring(0, 12) : lote = scan.substring(0, 13);
         if (listaLecturas.length > 0 && lote !== listaLecturas.at(0).lote) {
             toast.error('Se leyeron etiquetas de lotes distintos');
@@ -90,6 +90,7 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
         values[field.backPesoExpedicion] = pesoExpedicion;
 
         onSubmit(values)
+        setListaLecturas([]);
     }, [listaLecturas, onSubmit, pesoExpedicion, refCantidad, refFechaExpedicion, refSelectCliente]);
 
     const handleCancelar = useCallback(() => {

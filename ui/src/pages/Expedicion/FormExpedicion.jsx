@@ -59,6 +59,11 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
         handleSubmit(values)
     }, [expedicionForm.id, handleSubmit, refCantidad, refFechaExpedicion, refIdLote, refPeso, refSelectCliente]);
 
+    const submitScan = useCallback((values) => {
+        setOpenScanDialog(false);
+        handleSubmit(values);
+    }, [handleSubmit])
+
     // --- Scan methods ---
 
     const handleFirstScan = useCallback((firstScan) => {
@@ -116,7 +121,7 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
             <ScanDialog
                 open={openScanDialog}
                 onClose={closeScanDialog}
-                onSubmit={handleSubmit}
+                onSubmit={submitScan}
                 clientes={clientes}
                 firstScan={firstScan} />
             {!openScanDialog ? <BarcodeReader
