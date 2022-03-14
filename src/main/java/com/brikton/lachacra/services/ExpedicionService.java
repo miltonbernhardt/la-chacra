@@ -141,4 +141,12 @@ public class ExpedicionService {
             throw new ExpedicionNotFoundException();
         return expedicion.get();
     }
+
+    public List<ExpedicionDTO> getAllByLote(String idLote) {
+        var lote = loteService.get(idLote);
+        var expediciones = repository.findAllByLote(lote);
+        List<ExpedicionDTO> response = new ArrayList<>();
+        expediciones.forEach(e -> response.add(new ExpedicionDTO(e)));
+        return response;
+    }
 }

@@ -58,6 +58,9 @@ public class LoteService {
         throw new LoteNotFoundException();
     }
 
+    public LoteDTO getDTOById(String id){
+        return new LoteDTO(get(id));
+    }
     public Lote decreaseStock(Lote lote, Integer cantidad) {
         var oldStock = lote.getStockLote();
         var actualStock = oldStock - cantidad;

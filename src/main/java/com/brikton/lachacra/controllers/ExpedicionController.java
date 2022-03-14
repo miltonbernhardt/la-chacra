@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -32,6 +34,13 @@ public class ExpedicionController {
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAll() {
         log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
+    }
+
+    @GetMapping(value = "/lote")
+    public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAllByLote(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
+                                                                                    @PathParam("idLote") String idLote) {
+        log.info("API::getAllByLote - idLote = {}",idLote);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllByLote(idLote)));
     }
 
     @PostMapping(value = "/")
