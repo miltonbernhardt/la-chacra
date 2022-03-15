@@ -36,6 +36,12 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> getById(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
+                                                                         @PathVariable("id") String id) {
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getDTOById(id)));
+    }
+
     @GetMapping(value = "/queso")
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getByQuesoAndWithStock(@PathParam("codigoQueso") String codigoQueso) {
         log.info("API::getByQuesoAndWithStock - codigoQueso: {}", codigoQueso);

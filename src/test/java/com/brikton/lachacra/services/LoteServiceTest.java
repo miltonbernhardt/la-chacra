@@ -509,6 +509,26 @@ public class LoteServiceTest {
         assertEquals(1,result.size());
     }
 
+    @Test
+    void Get_DTO_By_Id_OK(){
+        when(repository.findById(anyString())).thenReturn(Optional.of(mockLote()));
+        var result = service.getDTOById("101020210011");
+        assertEquals("101020210011",result.getId());
+        assertEquals(LocalDate.of(2021, 10, 10),result.getFechaElaboracion());
+        assertEquals(1,result.getNumeroTina());
+        assertEquals(1D,result.getLitrosLeche());
+        assertEquals(1,result.getCantHormas());
+        assertEquals(1,result.getStockLote());
+        assertEquals(1D,result.getPeso());
+        assertEquals(1D,result.getRendimiento());
+        assertEquals("cultivo1, cultivo2",result.getLoteCultivo());
+        assertEquals("colorante1, colorante2",result.getLoteColorante());
+        assertEquals("calcio1, calcio2",result.getLoteCalcio());
+        assertEquals("cuajo1, cuajo2",result.getLoteCuajo());
+        assertEquals(mockQueso().getCodigo(),result.getCodigoQueso());
+    }
+
+
     Lote mockLote() {
         Lote lote = new Lote();
         lote.setId("101020210011");

@@ -1,7 +1,9 @@
 import { Grid, TextField } from "@mui/material";
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
-export const Input = forwardRef(({ id, label, value, type = "number", required = false, sm }, ref) => {
+
+const Input = forwardRef(({ id, label, value, type = "number", required = false, sm, contentEditable = true }, ref) => {
+
     const [val, setVal] = useState(value);
     const [err, serErr] = useState(false);
 
@@ -55,6 +57,7 @@ export const Input = forwardRef(({ id, label, value, type = "number", required =
             onChange={e => setValAndUpdate(e.target.value)}
             required={required}
             ref={ref}
+            contentEditable={contentEditable}
         />
     </Grid>;
 })
