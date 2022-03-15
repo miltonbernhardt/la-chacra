@@ -75,6 +75,9 @@ public class LoteService {
     public LoteDTO save(LoteDTO dto) throws QuesoNotFoundConflictException, LoteAlreadyExistsException {
         var id = generateID(dto);
         checkAlreadyExistenceLote(id);
+
+        dto.setStockLote(dto.getCantHormas());
+
         return persist(dto);
     }
 
@@ -87,7 +90,16 @@ public class LoteService {
     public LoteDTO update(LoteUpdateDTO dtoUpdate) throws QuesoNotFoundConflictException, LoteNotFoundException {
         var dto = new LoteDTO(dtoUpdate);
         checkExistenceLote(dto.getId());
-        return persist(dto);
+
+        if (dto.getStockLote() != null)
+            updateStockLote(dto);
+
+        var updatedLote = persist(dto);
+
+        if (updatedLote.getId() != dto.getId())
+            delete(dto.getId());
+
+        return updatedLote;
     }
 
     private LoteDTO persist(LoteDTO dto) throws QuesoNotFoundConflictException {
@@ -95,9 +107,6 @@ public class LoteService {
 
         var rendimiento = calculateRendimiento(dto.getPeso(), dto.getLitrosLeche());
         lote.setRendimiento(rendimiento);
-
-        var stock = dto.getCantHormas();
-        lote.setStockLote(stock);
 
         updateStockQueso(dto);
 
@@ -178,6 +187,12 @@ public class LoteService {
                 quesoService.decreaseStock(oldLote.getQueso(),oldLote.getCantHormas());
         }
         quesoService.increaseStock(queso,dto.getCantHormas());
+    }
+
+    private void updateStockLote(LoteDTO dto) {
+        var lote = repository.getById(dto.getId());
+        var stock = dto.getStockLote() - lote.getCantHormas() + dto.getCantHormas();
+        dto.setStockLote(stock);
     }
 
     public List<LoteDTO> getByQuesoAndWithStock(String codigoQueso) {
