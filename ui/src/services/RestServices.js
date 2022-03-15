@@ -56,6 +56,7 @@ export const getAllExpediciones = async () => await GET(`${API_EXPEDICION}`);
 export const postExpedicion = async (expedicion) => await POST(`${API_EXPEDICION}`, expedicion);
 export const putExpedicion = async (expedicion) => await PUT(`${API_EXPEDICION}`, expedicion);
 export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${id}`);
+export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICION}lote?idLote=${idLote}`);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {

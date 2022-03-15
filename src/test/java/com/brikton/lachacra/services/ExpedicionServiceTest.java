@@ -356,6 +356,14 @@ public class ExpedicionServiceTest {
         assertEquals(ErrorMessages.MSG_EXPEDICION_NOT_FOUND, thrown.getMessage());
     }
 
+    @Test
+    void Get_All_By_Lote__OK(){
+        when(loteService.get(anyString())).thenReturn(mockLote());
+        when(repository.findAllByLote(any(Lote.class))).thenReturn(List.of(mockExpedicion()));
+        var result = service.getAllByLote("101020210011");
+        assertEquals(1,result.size());
+    }
+
     private Expedicion mockExpedicion() {
         var exp = new Expedicion();
         exp.setFechaExpedicion(LocalDate.of(2021, 10, 11));
