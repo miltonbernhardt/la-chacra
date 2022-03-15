@@ -503,6 +503,13 @@ public class LoteServiceTest {
     }
 
     @Test
+    void Get_Between_Dates__OK(){
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(LocalDate.class),any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(mockLote()));
+        var result = service.getBetweenDates(LocalDate.now(),LocalDate.now());
+        assertEquals(1,result.size());
+    }
+
+    @Test
     void Get_DTO_By_Id_OK(){
         when(repository.findById(anyString())).thenReturn(Optional.of(mockLote()));
         var result = service.getDTOById("101020210011");

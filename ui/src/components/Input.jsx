@@ -1,7 +1,9 @@
 import { Grid, TextField } from "@mui/material";
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 
+
 const Input = forwardRef(({ id, label, value, type = "number", required = false, sm, contentEditable = true }, ref) => {
+
     const [val, setVal] = useState(value);
     const [err, serErr] = useState(false);
 
@@ -60,4 +62,4 @@ const Input = forwardRef(({ id, label, value, type = "number", required = false,
     </Grid>;
 })
 
-export default Input
+export default Input;

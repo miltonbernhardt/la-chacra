@@ -30,6 +30,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -688,5 +689,12 @@ public class LoteControllerIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedQuesos, actualQuesos);
+    }
+
+    @Test
+    void Get_Between_Dates__OK(){
+        String query = "/produccion?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
+        var response = restTemplate.getForEntity(baseUrl+query,SuccessfulResponse.class);
+        assertEquals(2,((ArrayList) response.getBody().getData()).size());
     }
 }
