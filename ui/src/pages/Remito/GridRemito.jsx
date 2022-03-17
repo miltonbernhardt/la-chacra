@@ -8,7 +8,7 @@ const columns = [
         flex: 1,
         minWidth: 100
     }, {
-        field: "producto",
+        field: "tipoQueso",
         headerName: "Producto",
         type: 'text',
         flex: 1,
@@ -33,11 +33,11 @@ const columns = [
         minWidth: 100
     },
 ]
-const GridRemito = () => {
+const GridRemito = ({ data }) => {
     return (
         <DataGrid
             style={{ minHeight: "600px" }}
-            rows={[]}
+            rows={data}
             columns={columns}
             pageSize={20}
             rowsPerPageOptions={[20]}

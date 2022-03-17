@@ -10,10 +10,31 @@ import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
 import toast from "react-hot-toast";
 
-const RemitoForm = ({ importe, clientes }) => {
+const RemitoForm = ({ importe, clientes, onCargar, onEmitir }) => {
 
     const refFechaRemito = createRef(null)
     const refSelectCliente = createRef(null)
+
+    const handleCargar = () => {
+        const errors = new Map();
+        const values = {};
+
+        refSelectCliente.current.validate(errors, values, [
+            { func: validation.emptySelect, msg: message.valEmptyField }
+        ])
+        refFechaRemito.current.validate(errors, values, [
+            { func: validation.empty, msg: message.valEmptyFecha },
+            { func: validation.olderDate, msg: message.valOlderDate }
+        ])
+
+        if (errors.size > 0) {
+            console.error(errors)
+            field.toastValidationErrors(errors)
+            return
+        }
+
+        onCargar(values.idCliente, values.fecha)
+    }
 
     return (
         <Grid container spacing={1.5}>
@@ -40,7 +61,7 @@ const RemitoForm = ({ importe, clientes }) => {
                 contentEditable={false} />
             <Grid item xs={12} alignSelf="center" mb={0.5}>
                 <ButtonGroup variant="contained" fullWidth>
-                    <Button color="info" startIcon={<FileOpenIcon />}>
+                    <Button color="info" onClick={handleCargar} startIcon={<FileOpenIcon />}>
                         Cargar Datos
                     </Button>
                     <Button startIcon={<ReceiptIcon />}>
