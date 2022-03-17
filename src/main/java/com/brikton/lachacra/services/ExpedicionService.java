@@ -2,6 +2,7 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
+import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.ExpedicionCannotDeleteException;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class ExpedicionService {
 
         double importe = getImporte(dto, expedicion);
         expedicion.setImporte(importe);
-
+        expedicion.setOnRemito(false);
         expedicion = repository.save(expedicion);
         return new ExpedicionDTO(expedicion);
     }
@@ -70,6 +72,7 @@ public class ExpedicionService {
         updateStockLotes(expedicion, expedicionUpdated);
         updateStockQuesos(expedicion, expedicionUpdated);
 
+        expedicionUpdated.setOnRemito(expedicion.getOnRemito());
         var importe = getImporte(dto, expedicionUpdated);
         expedicionUpdated.setImporte(importe);
 
@@ -148,5 +151,14 @@ public class ExpedicionService {
         List<ExpedicionDTO> response = new ArrayList<>();
         expediciones.forEach(e -> response.add(new ExpedicionDTO(e)));
         return response;
+    }
+
+    public List<Expedicion> getForRemito(Cliente cliente) {
+        return repository.findAllByClienteAndOnRemito(cliente,false);
+    }
+
+    public void setOnRemitoTrue(List<Expedicion> expediciones){
+        expediciones.forEach(e -> e.setOnRemito(true));
+        repository.saveAll(expediciones);
     }
 }

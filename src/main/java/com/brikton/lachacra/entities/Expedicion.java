@@ -23,6 +23,7 @@ public class Expedicion {
     private Integer cantidad;
     private Double peso;
     private Double importe;
+    private Boolean onRemito;
 
     @ManyToOne
     @JoinColumn(name = "nro_cliente")

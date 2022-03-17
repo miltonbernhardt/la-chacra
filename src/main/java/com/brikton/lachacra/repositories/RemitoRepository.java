@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface RemitoRepository extends JpaRepository<Remito, Long> {
+
     boolean existsByExpedicionesContains(Expedicion expedicion);
+
 }
