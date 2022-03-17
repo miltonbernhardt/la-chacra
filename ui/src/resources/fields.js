@@ -42,6 +42,8 @@ export const backFechaDesde = "fromDate"
 export const backFechaHasta = "toDate"
 export const backStockLote = "stockLote"
 export const backRendimientoLote = "rendimiento"
+export const backFechaRemito = "fecha"
+export const backImporteTotal = "importeTotal"
 
 export const ID = "ID"
 
@@ -95,6 +97,10 @@ export const fechaExpedicion = "Fecha de expedición"
 export const fechaDesde = "Desde"
 export const fechaHasta = "Hasta"
 
+// remito
+export const fechaRemito = "Fecha de remito"
+export const importeTotal = "Importe total"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -137,6 +143,8 @@ const backendFields = () => {
     fields.set(backColor, color)
     fields.set(backFechaDesde, fechaDesde)
     fields.set(backFechaHasta, fechaHasta)
+    fields.set(backFechaRemito, fechaRemito)
+    fields.set(backImporteTotal, importeTotal)
     return fields
 }
 

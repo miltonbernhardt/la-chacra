@@ -1,13 +1,11 @@
 package com.brikton.lachacra.entities;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -26,4 +24,7 @@ public class Remito {
     @OneToMany
     @ToString.Exclude
     private List<Expedicion> expediciones;
+
+    @Transient
+    private List<ItemRemito> itemsRemito;
 }
