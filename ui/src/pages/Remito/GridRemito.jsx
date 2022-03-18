@@ -41,7 +41,6 @@ const GridRemito = ({ data }) => {
             columns={columns}
             pageSize={20}
             rowsPerPageOptions={[20]}
-            pagination={false}
             hideFooterPagination
         />);
 }

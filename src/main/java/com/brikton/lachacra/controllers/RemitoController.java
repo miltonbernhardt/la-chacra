@@ -1,6 +1,8 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
+import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.RemitoDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.RemitoService;
@@ -15,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
-import javax.websocket.server.PathParam;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 
@@ -42,18 +43,19 @@ public class RemitoController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.generateRemitoDTO(idCliente,fecha)));
     }
 
-    @GetMapping(value = "/pdf")
-    public ResponseEntity<byte[]> getPdf() throws JRException, FileNotFoundException {
-        log.info("API::getPdf");
+    @GetMapping(value = "/pdf/{id}")
+    public ResponseEntity<byte[]> getPdf(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+                                             @PathVariable("id") Long id) throws JRException, FileNotFoundException {
+        log.info("API::getPdf - id: {}", id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("filename", "remito.pdf");
-        return new ResponseEntity<byte[]>(service.getPdf(), headers, HttpStatus.OK);
+        return new ResponseEntity<byte[]>(service.getPdf(id), headers, HttpStatus.OK);
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<byte[]> generateAndSave(
+    public ResponseEntity<SuccessfulResponse<RemitoDTO>> generateAndSave(
             @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
             @RequestParam("id_cliente") Long idCliente,
             @RequestParam("fecha")
@@ -61,9 +63,7 @@ public class RemitoController {
             ) throws JRException, FileNotFoundException {
         log.info("API::generateAndSave- id_cliente: {} fecha: {}",idCliente,fecha);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("filename", "remito.pdf");
-        return new ResponseEntity<byte[]>(service.generateAndSave(idCliente,fecha), headers, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .body(SuccessfulResponse.set(SuccessfulMessages.MSG_REMITO_CREATED, service.generateAndSave(idCliente,fecha)));
     }
 }

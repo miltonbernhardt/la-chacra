@@ -3,6 +3,7 @@ package com.brikton.lachacra.services;
 import com.brikton.lachacra.dtos.ItemRemitoDTO;
 import com.brikton.lachacra.dtos.RemitoDTO;
 import com.brikton.lachacra.entities.*;
+import com.brikton.lachacra.exceptions.RemitoNotFoundException;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
@@ -76,31 +77,28 @@ public class RemitoService {
         return new RemitoDTO(generateRemito(idCliente,fecha));
     }
 
-    public byte[] generateAndSave(Long idCliente, LocalDate fecha) throws JRException, FileNotFoundException {
+    public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) throws JRException, FileNotFoundException {
         var remito = generateRemito(idCliente,fecha);
-        expedicionService.setOnRemitoTrue(remito.getExpediciones());
-        repository.save(remito);
-        try {
-            return getPdf(remito);
-        } catch (JRException e) {
-            repository.delete(remito);
-            expedicionService.setOnRemitoFalse(remito.getExpediciones());
-            throw e;
-        } catch (FileNotFoundException e) {
-            repository.delete(remito);
-            expedicionService.setOnRemitoFalse(remito.getExpediciones());
-            throw e;
-        }
+        expedicionService.setOnRemitoTrue(remito.getExpediciones());//TODO uncomment
+        return new RemitoDTO(repository.save(remito));//TODO uncomment
     }
 
-    public byte[] getPdf(Remito remito) throws JRException, FileNotFoundException {
+    public Remito getRemito (Long id) {
+        var remito = repository.findById(id);
+        if (remito.isEmpty()) throw new RemitoNotFoundException();
+        return remito.get();
+    }
+
+    public byte[] getPdf(Long id) throws JRException, FileNotFoundException {
+
+        var remito = getRemito(id);
 
         generateItemsRemito(remito);
 
         var cliente = remito.getExpediciones().get(0).getCliente();
 
         var dto = new RemitoDTO(remito);
-        
+
         Map<String, Object> remitoParams = new HashMap<String, Object>();
         remitoParams.put("importeTotal", dto.getImporteTotal());
         remitoParams.put("nombreCliente", cliente.getRazonSocial());
