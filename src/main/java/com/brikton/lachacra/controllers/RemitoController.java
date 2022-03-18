@@ -51,4 +51,19 @@ public class RemitoController {
         headers.setContentDispositionFormData("filename", "remito.pdf");
         return new ResponseEntity<byte[]>(service.getPdf(), headers, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/")
+    public ResponseEntity<byte[]> generateAndSave(
+            @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
+            @RequestParam("id_cliente") Long idCliente,
+            @RequestParam("fecha")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
+            ) throws JRException, FileNotFoundException {
+        log.info("API::generateAndSave- id_cliente: {} fecha: {}",idCliente,fecha);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("filename", "remito.pdf");
+        return new ResponseEntity<byte[]>(service.generateAndSave(idCliente,fecha), headers, HttpStatus.OK);
+    }
 }

@@ -161,4 +161,9 @@ public class ExpedicionService {
         expediciones.forEach(e -> e.setOnRemito(true));
         repository.saveAll(expediciones);
     }
+
+    public void setOnRemitoFalse(List<Expedicion> expediciones){
+        expediciones.forEach(e -> e.setOnRemito(false));
+        repository.saveAll(expediciones);
+    }
 }

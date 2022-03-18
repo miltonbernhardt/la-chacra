@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import Loading from "../../components/Loading";
 const EmitirRemito = () => {
 
+    const [importeTotal, setImporteTotal] = useState(0.0);
     const [listaItems, setListaItems] = useState([]);
     const [listaClientes, setListaClientes] = useState([]);
 
@@ -27,7 +28,11 @@ const EmitirRemito = () => {
 
     const handleCargar = (cliente, fecha) => {
         getRemito(cliente, fecha)
-            .then(({ data }) => setListaItems(data.itemsRemito))
+            .then(({ data }) => {
+                setImporteTotal(data.importeTotal);
+                setListaItems(data.itemsRemito);
+            })
+            .catch(() => toast.error('No se pudieron cargas los datos'))
     }
 
     const handleEmitir = () => { alert('not yet implemented') }
@@ -54,7 +59,8 @@ const EmitirRemito = () => {
                 <RemitoForm
                     onCargar={handleCargar}
                     onEmitir={handleEmitir}
-                    clientes={clientesFormatted} />}
+                    clientes={clientesFormatted}
+                    importe={importeTotal} />}
             table={
                 <GridRemito
                     data={itemsFormatted} />}>

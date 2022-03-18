@@ -23,7 +23,7 @@ public class RemitoDTO {
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double importeTotal;
 
-    private List<ItemRemitoDTO> itemsRemito;//TODO
+    private List<ItemRemitoDTO> itemsRemito;
 
     private Long id;
 
