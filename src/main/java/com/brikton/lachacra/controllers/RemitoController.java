@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
@@ -44,12 +45,12 @@ public class RemitoController {
 
     @GetMapping(value = "/pdf/{id}")
     public ResponseEntity<byte[]> getPdf(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-                                             @PathVariable("id") Long id) throws JRException, FileNotFoundException {
+                                             @PathVariable("id") Long id) throws JRException, IOException {
         log.info("API::getPdf - id: {}", id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("filename", "remito.pdf");
+        headers.setContentDispositionFormData("filename", "remito-"+id+".pdf");
         return new ResponseEntity<byte[]>(service.getPdf(id), headers, HttpStatus.OK);
     }
 

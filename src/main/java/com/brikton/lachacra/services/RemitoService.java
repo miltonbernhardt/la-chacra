@@ -10,9 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,6 +28,9 @@ import java.util.Map;
 @Service
 @Slf4j
 public class RemitoService {
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     private final PrecioService precioService;
     private final ClienteService clienteService;
@@ -91,7 +99,7 @@ public class RemitoService {
         return remito.get();
     }
 
-    public byte[] getPdf(Long id) throws JRException, FileNotFoundException {
+    public byte[] getPdf(Long id) throws JRException, IOException {
 
         var remito = getRemito(id);
 
@@ -113,10 +121,11 @@ public class RemitoService {
         remitoParams.put("fecha", dto.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         remitoParams.put("ds", new JRBeanCollectionDataSource(dto.getItemsRemito()));
 
+        Resource remitoTemplate = resourceLoader.getResource("classpath:Remito.jrxml");
+
         JasperReport jasperReport
-                = JasperCompileManager.compileReport(
-                "/home/elias/Development/la-chacra/src/main/resources/Remito.jrxml"); //TODO change to relative path
-        JRSaver.saveObject(jasperReport, "employeeReport.jasper");
+                = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
+        JRSaver.saveObject(jasperReport, "Remito.jasper");
 
         JasperPrint empReport =
                 JasperFillManager.fillReport
