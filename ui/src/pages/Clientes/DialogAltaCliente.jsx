@@ -6,9 +6,10 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Grid, Typography
+    Grid,
+    Typography
 } from "@mui/material";
-import { createRef, useEffect, useMemo, useState } from 'react';
+import {createRef, useEffect, useMemo, useState} from 'react';
 import Input from "../../components/Input";
 import Select from '../../components/Select';
 import * as field from "../../resources/fields";
@@ -33,7 +34,7 @@ const clienteInicial = {
     idTipoCliente: ''
 }
 
-const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposCliente }) => {
+const DialogAltaCliente = ({cliente, open, onClose, onSubmit, isEditing, tiposCliente}) => {
 
     const [clienteForm, setClienteForm] = useState(clienteInicial);
 
@@ -60,15 +61,15 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
         values["id"] = clienteForm.id
 
         refRazonSocial.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyField }
+            {func: validation.empty, msg: message.valEmptyField}
         ])
 
         refCuit.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyField }
+            {func: validation.empty, msg: message.valEmptyField}
         ])
 
         refSelectCliente.current.validate(errors, values, [
-            { func: validation.emptySelect, msg: message.valEmptyField }
+            {func: validation.emptySelect, msg: message.valEmptyField}
         ])
 
         if (errors.size > 0) {
@@ -122,20 +123,20 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     ref={refRazonSocial}
                                     value={clienteForm.razonSocial}
                                     required
-                                    type="text" />
+                                    type="text"/>
                                 <Input
                                     id={field.backCuit}
                                     label={field.cuit}
                                     ref={refCuit}
                                     value={clienteForm.cuit}
                                     required
-                                    type="text" />
+                                    type="text"/>
                                 <Select ref={refSelectCliente}
-                                    value={clienteForm.idTipoCliente}
-                                    id={field.backIdTipoCliente}
-                                    label={field.idTipoCliente}
-                                    options={tiposCliente}
-                                    required />
+                                        value={clienteForm.idTipoCliente}
+                                        id={field.backIdTipoCliente}
+                                        label={field.idTipoCliente}
+                                        options={tiposCliente}
+                                        required/>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Domicilio
                                 </Typography>
@@ -144,34 +145,34 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     label={field.domicilio}
                                     ref={refDomicilio}
                                     value={clienteForm.domicilio}
-                                    type="text" />
+                                    type="text"/>
                                 <Input
                                     id={field.backLocalidad}
                                     label={field.localidad}
                                     ref={refLocalidad}
                                     value={clienteForm.localidad}
                                     type="text"
-                                    sm={8} />
+                                    sm={8}/>
                                 <Input
                                     id={field.backCodPostal}
                                     label={field.codPostal}
                                     ref={refCodPostal}
                                     value={clienteForm.codPostal}
-                                    sm={4} />
+                                    sm={4}/>
                                 <Input
                                     id={field.backProvincia}
                                     label={field.provincia}
                                     ref={refProvincia}
                                     value={clienteForm.provincia}
                                     type="text"
-                                    sm={6} />
+                                    sm={6}/>
                                 <Input
                                     id={field.backPais}
                                     label={field.pais}
                                     ref={refPais}
                                     value={clienteForm.pais}
                                     type="text"
-                                    sm={6} />
+                                    sm={6}/>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Datos de contacto
                                 </Typography>
@@ -181,25 +182,25 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     label={field.email}
                                     type="email"
                                     ref={refEmail}
-                                    value={clienteForm.email} />
+                                    value={clienteForm.email}/>
                                 <Input
                                     id={field.backTelefono}
                                     label={field.telefono}
                                     type="tel"
                                     ref={refTelefono}
-                                    value={clienteForm.telefono} />
+                                    value={clienteForm.telefono}/>
                                 <Input
                                     id={field.backCelular}
                                     label={field.celular}
                                     type="tel"
                                     ref={refCelular}
-                                    value={clienteForm.celular} />
+                                    value={clienteForm.celular}/>
                                 <Input
                                     id={field.backFax}
                                     label={field.fax}
                                     type="tel"
                                     ref={refFax}
-                                    value={clienteForm.fax} />
+                                    value={clienteForm.fax}/>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Transporte
                                 </Typography>
@@ -209,13 +210,13 @@ const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing, tiposC
                                     label={field.transporte}
                                     ref={refTransporte}
                                     value={clienteForm.transporte}
-                                    type="text" />
+                                    type="text"/>
                                 <Input
                                     id={field.backSenasaUta}
                                     label={field.senasaUta}
                                     ref={refSenasaUta}
                                     value={clienteForm.senasaUta}
-                                    type="text" />
+                                    type="text"/>
                             </Grid>
                         </Box>
                     </Container>

@@ -1,9 +1,8 @@
 import GridTrazabilidad from "./GridTrazabilidad";
 import FormTrazabilidad from "./FormTrazabilidad";
 import PageFormTable from "../../components/PageFormTable";
-import { produccion as data } from "../../data/data";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getLote, getExpedicionesByLote, getAllClientes } from "../../services/RestServices";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {getAllClientes, getExpedicionesByLote, getLote} from "../../services/RestServices";
 import toast from "react-hot-toast";
 import * as field from "../../resources/fields";
 
@@ -31,7 +30,7 @@ const VerTrazabilidad = () => {
 
     const fetchClientes = () => {
         getAllClientes()
-            .then(({ data }) => {
+            .then(({data}) => {
                 setListaClientes(data)
             })
             .catch(() => toast.error("No se pudo cargar clientes"))
@@ -39,10 +38,10 @@ const VerTrazabilidad = () => {
 
     const handleBuscar = useCallback((idLote) => {
         getLote(idLote)
-            .then(({ data }) => setLote(data))
+            .then(({data}) => setLote(data))
             .catch(() => toast.error('No se pudo cargar el lote'))
         getExpedicionesByLote(idLote)
-            .then(({ data }) => setListaExpediciones(data))
+            .then(({data}) => setListaExpediciones(data))
             .catch(() => toast.error('No se pudieron cargar las expediciones'))
     }, [])
 
@@ -64,12 +63,13 @@ const VerTrazabilidad = () => {
                 form={
                     <FormTrazabilidad
                         lote={lote}
-                        onBuscar={handleBuscar} />
+                        onBuscar={handleBuscar}/>
                 }
-                sizeForm={5}
+                mdForm={6}
+                lgForm={5}
                 titleTable={"Expediciones"}
                 table={
-                    <GridTrazabilidad data={expedicionesFormatted} />
+                    <GridTrazabilidad data={expedicionesFormatted}/>
                 }
             />
         </>

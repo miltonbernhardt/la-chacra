@@ -1,18 +1,22 @@
-import { CardActionArea, CardHeader } from '@mui/material';
+import {CardActionArea, CardHeader} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { StockProductoDialog } from './StockProductoDialog';
+import {StockProductoDialog} from './StockProductoDialog';
 
-export default function StockCard({ queso }) {
+export default function StockCard({queso}) {
 
     const [isStockDialogOpen, setStockDialogOpen] = React.useState(false);
 
-    const handleCardAction = React.useCallback(() => { setStockDialogOpen(true) }, [])
+    const handleCardAction = React.useCallback(() => {
+        setStockDialogOpen(true)
+    }, [])
 
-    const closeDialog = React.useCallback(() => { setStockDialogOpen(false) }, [])
+    const closeDialog = React.useCallback(() => {
+        setStockDialogOpen(false)
+    }, [])
 
     return (
         <>
@@ -27,21 +31,22 @@ export default function StockCard({ queso }) {
                 <CardActionArea onClick={handleCardAction}>
                     <CardHeader
                         avatar={
-                            <Avatar sx={{ bgcolor: queso.color }} >
+                            <Avatar sx={{bgcolor: queso.color}}>
                                 {queso.nomenclatura}
                             </Avatar>
                         }
-                        title={''} />
+                        title={''}/>
                     <CardContent sx={{
                         flexGrow: 1,
                         justifyContent: 'center',
                         alignItems: 'center',
                         textAlign: 'center',
                     }}>
-                        <Typography gutterBottom variant="h3" component="h2" >
+                        <Typography gutterBottom variant="h3" component="h2">
                             {queso.stock}
                         </Typography>
-                        <Typography gutterBottom variant="h7" component="h2" color="textSecondary" alignContent='center'>
+                        <Typography gutterBottom variant="h7" component="h2" color="textSecondary"
+                                    alignContent='center'>
                             {queso.tipoQueso}
                         </Typography>
                     </CardContent>

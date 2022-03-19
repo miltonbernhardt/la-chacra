@@ -1,4 +1,4 @@
-import { DataGrid } from '@mui/x-data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 
 const columns = [
     {
@@ -33,10 +33,10 @@ const columns = [
         minWidth: 100
     },
 ]
-const GridRemito = ({ data }) => {
+const GridRemito = ({data}) => {
     return (
         <DataGrid
-            style={{ minHeight: "600px" }}
+            style={{minHeight: "600px"}}
             rows={data}
             columns={columns}
             pageSize={20}

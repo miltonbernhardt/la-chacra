@@ -1,8 +1,8 @@
 import PageFormTable from '../../components/PageFormTable';
 import GridRemito from './GridRemito';
 import RemitoForm from "./RemitoForm";
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { getRemito, getAllClientes, postRemito } from '../../services/RestServices';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {getAllClientes, getRemito, postRemito} from '../../services/RestServices';
 import toast from "react-hot-toast";
 import Loading from "../../components/Loading";
 
@@ -20,7 +20,7 @@ const EmitirRemito = () => {
 
     const fetchClientes = () => {
         getAllClientes()
-            .then(({ data }) => {
+            .then(({data}) => {
                 setListaClientes(data)
             })
             .catch(() => toast.error("No se pudo cargar clientes"))
@@ -29,7 +29,7 @@ const EmitirRemito = () => {
 
     const handleCargar = useCallback((cliente, fecha) => {
         getRemito(cliente, fecha)
-            .then(({ data }) => {
+            .then(({data}) => {
                 setImporteTotal(data.importeTotal);
                 setListaItems(data.itemsRemito);
             })
@@ -37,13 +37,11 @@ const EmitirRemito = () => {
     }, []);
 
     const handleEmitir = useCallback((cliente, fecha) => {
-
         postRemito(cliente, fecha)
-            .then(({ data }) => {
+            .then(({data}) => {
                 window.open(`http://localhost:8000/api/v1/remitos/pdf/${data.id}`, '_blank').focus();
             })
-            .catch((e) => {
-                console.log(e)
+            .catch(() => {
                 toast.error('No se pudo generar el remito')
             })
             .finally(() => {
@@ -54,17 +52,17 @@ const EmitirRemito = () => {
 
     //--- Variables ---
     const clientesFormatted = useMemo(() => listaClientes.map((c) => {
-        return { id: c.id, value: c.id, label: c.razonSocial }
+        return {id: c.id, value: c.id, label: c.razonSocial}
     }), [listaClientes])
 
     const itemsFormatted = useMemo(() =>
-        listaItems.map(i => {
-            return { ...i, id: i.tipoQueso }
-        })
+            listaItems.map(i => {
+                return {...i, id: i.tipoQueso}
+            })
         , [listaItems]);
 
     if (isLoading)
-        return <Loading />
+        return <Loading/>
 
     return (
         <PageFormTable
@@ -75,10 +73,10 @@ const EmitirRemito = () => {
                     onCargar={handleCargar}
                     onEmitir={handleEmitir}
                     clientes={clientesFormatted}
-                    importe={importeTotal} />}
+                    importe={importeTotal}/>}
             table={
                 <GridRemito
-                    data={itemsFormatted} />}>
+                    data={itemsFormatted}/>}>
         </PageFormTable>
     );
 }

@@ -2,7 +2,6 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
-import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.RemitoDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.RemitoService;

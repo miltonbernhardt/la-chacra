@@ -157,7 +157,7 @@ export const toastValidationErrors = (errors) => {
         let realField = mapFields.get(field)
         realField = realField ?? field
         toast.error(<>
-            <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>
+            <div style={{width: "100%"}}><b>{realField}</b>: {msg}</div>
         </>)
     })
 }

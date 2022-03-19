@@ -1,7 +1,7 @@
-import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
-import { DataGrid } from '@mui/x-data-grid';
+import {Box, Button, Container, Grid, Paper, TextField, Typography} from "@mui/material";
+import {DataGrid} from '@mui/x-data-grid';
 import Chart from '../../components/Chart';
-import { litrosElaborados, quesos } from "../../data/data";
+import {litrosElaborados, quesos} from "../../data/data";
 
 const columns1 = quesos.map((queso, index) => {
     return {
@@ -20,14 +20,14 @@ const columns = [{
     flex: 1,
     minWidth: 100
 },
-{
-    field: "total",
-    headerName: "Total",
-    type: 'number',
-    flex: 1,
-    minWidth: 100
-},
-...columns1
+    {
+        field: "total",
+        headerName: "Total",
+        type: 'number',
+        flex: 1,
+        minWidth: 100
+    },
+    ...columns1
 ];
 
 const VerLitrosElaborados = () => {
@@ -71,7 +71,7 @@ const VerLitrosElaborados = () => {
                                     variant="outlined"
                                     InputLabelProps={{
                                         shrink: true,
-                                    }} />
+                                    }}/>
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <TextField
@@ -83,7 +83,7 @@ const VerLitrosElaborados = () => {
                                     variant="outlined"
                                     InputLabelProps={{
                                         shrink: true,
-                                    }} />
+                                    }}/>
                             </Grid>
                             <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
                                 <Button variant="contained" fullWidth>Buscar</Button>
@@ -128,12 +128,12 @@ const VerLitrosElaborados = () => {
                 </Grid>
             </Box>
             <Box height={600}
-                sx={{
-                    padding: 1,
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                 sx={{
+                     padding: 1,
+                     flexDirection: 'column',
+                     alignItems: 'center',
 
-                }}>
+                 }}>
                 <Grid item xs={12}>
                     <Paper
                         sx={{

@@ -1,6 +1,16 @@
-import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    TextField
+} from "@mui/material";
 
-const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
+const DialogBajaCliente = ({open, onClose, onSubmit, cliente}) => {
 
     return (
         <>
@@ -18,7 +28,7 @@ const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
                             }}
                         >
                             <Grid container spacing={2}>
-                                <Grid item xs={12} >
+                                <Grid item xs={12}>
                                     <TextField
                                         id="numeroCliente"
                                         name="numeroCliente"
@@ -27,9 +37,9 @@ const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
                                         type="text"
                                         variant="outlined"
                                         value={cliente.id}
-                                        contentEditable={false} />
+                                        contentEditable={false}/>
                                 </Grid>
-                                <Grid item xs={12} >
+                                <Grid item xs={12}>
                                     <TextField
                                         id="razonSocial"
                                         name="razonSocial"
@@ -38,7 +48,7 @@ const DialogBajaCliente = ({ open, onClose, onSubmit, cliente }) => {
                                         type="text"
                                         variant="outlined"
                                         value={cliente.razonSocial}
-                                        contentEditable={false} />
+                                        contentEditable={false}/>
                                 </Grid>
                             </Grid>
                         </Box>

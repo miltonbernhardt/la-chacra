@@ -1,13 +1,5 @@
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    Grid
-} from '@mui/material';
-import { createRef, useEffect, useMemo, useState } from 'react';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid} from '@mui/material';
+import {createRef, useEffect, useMemo, useState} from 'react';
 import Input from "../../components/Input";
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
@@ -20,7 +12,7 @@ const quesoInicial = {
     nomenclatura: ''
 }
 
-const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, queso }) => {
+const DialogCargarQueso = ({isCargarQueso, isEditarQueso, onClose, onSubmit, queso}) => {
 
     const [quesoForm, setQuesoForm] = useState(quesoInicial);
 
@@ -39,15 +31,15 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
         values["id"] = quesoForm.id
 
         refTipoQueso.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyField }
+            {func: validation.empty, msg: message.valEmptyField}
         ])
 
         refCodigo.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyField }
+            {func: validation.empty, msg: message.valEmptyField}
         ])
 
         refNomenclatura.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyField }
+            {func: validation.empty, msg: message.valEmptyField}
         ])
 
         refColor.current.setValue(values);
@@ -76,26 +68,26 @@ const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSubmit, qu
                             ref={refTipoQueso}
                             value={quesoForm.tipoQueso}
                             type="text"
-                            required />
+                            required/>
                         <Input
                             id={field.backNomenclatura}
                             label={field.nomenclatura}
                             ref={refNomenclatura}
                             value={quesoForm.nomenclatura}
                             type="text"
-                            required />
+                            required/>
                         <Input
                             id={field.backCodigo}
                             label={field.codigo}
                             ref={refCodigo}
                             value={quesoForm.codigo}
-                            required />
+                            required/>
                         <Input
                             id={field.backColor}
                             label={field.color}
                             ref={refColor}
                             value={quesoForm.color}
-                            type="color" />
+                            type="color"/>
                     </Grid>
                 </DialogContent>
                 <DialogActions>

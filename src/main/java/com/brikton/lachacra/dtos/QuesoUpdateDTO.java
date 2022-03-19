@@ -1,7 +1,6 @@
 package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.constants.ValidationMessages;
-import com.brikton.lachacra.entities.Queso;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 

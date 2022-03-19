@@ -2,7 +2,6 @@ package com.brikton.lachacra.util;
 
 import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.Data;
-import org.aspectj.lang.annotation.Before;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;

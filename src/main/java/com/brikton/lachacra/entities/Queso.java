@@ -1,6 +1,8 @@
 package com.brikton.lachacra.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -31,11 +33,11 @@ public class Queso {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Queso queso = (Queso) o;
-        return Objects.equals(id, queso.id) && Objects.equals(codigo, queso.codigo) && Objects.equals(tipoQueso, queso.tipoQueso) && Objects.equals(nomenclatura, queso.nomenclatura) && Objects.equals(stock, queso.stock) && Objects.equals(fechaBaja, queso.fechaBaja)&& Objects.equals(color, queso.color);
+        return Objects.equals(id, queso.id) && Objects.equals(codigo, queso.codigo) && Objects.equals(tipoQueso, queso.tipoQueso) && Objects.equals(nomenclatura, queso.nomenclatura) && Objects.equals(stock, queso.stock) && Objects.equals(fechaBaja, queso.fechaBaja) && Objects.equals(color, queso.color);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, codigo, tipoQueso, nomenclatura, stock, fechaBaja,color);
+        return Objects.hash(id, codigo, tipoQueso, nomenclatura, stock, fechaBaja, color);
     }
 }

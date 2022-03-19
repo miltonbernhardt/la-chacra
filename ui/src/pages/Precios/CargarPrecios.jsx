@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import PageFormTable from "../../components/PageFormTable";
 import Loading from "../../components/Loading"
-import { getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio } from "../../services/RestServices";
+import {getAllPrecios, getAllQuesos, getAllTipoClientes, postPrecio, putPrecio} from "../../services/RestServices";
 import FormPrecios from "./FormPrecios";
 import GridPrecios from "./GridPrecios";
 import * as fields from '../../resources/fields'
@@ -28,21 +28,21 @@ const CargarPrecios = () => {
 
     const fetchPrecios = () => {
         getAllPrecios()
-            .then(({ data }) => setListaPrecios(data))
+            .then(({data}) => setListaPrecios(data))
             .catch(() => toast.error("No se pudo cargar precios"))
             .finally(() => setLoadingPrecios(false))
     }
 
     const fetchQuesos = () => {
         getAllQuesos()
-            .then(({ data }) => setListaQuesos(data))
+            .then(({data}) => setListaQuesos(data))
             .catch(() => toast.error("No se pudo cargar quesos"))
             .finally(() => setLoadingQuesos(false))
     }
 
     const fetchTipoClientes = () => {
         getAllTipoClientes()
-            .then(({ data }) => setListaTipoClientes(data))
+            .then(({data}) => setListaTipoClientes(data))
             .catch(() => toast.error("No se pudo cargar tipos de cliente"))
             .finally(() => setLoadingClientes(false))
     }
@@ -93,11 +93,11 @@ const CargarPrecios = () => {
 
     const tiposClienteAutocomplete = useMemo(() =>
         listaTipoClientes.map((c) => {
-            return { id: c.id, value: c.id, label: c.tipo }
+            return {id: c.id, value: c.id, label: c.tipo}
         }), [listaTipoClientes])
 
     if (isLoadingPrecios || isLoadingClientes || isLoadingQuesos)
-        return <Loading />
+        return <Loading/>
 
     // This needs to be called after all lists are loaded
     // or else lists are undefined
@@ -128,12 +128,12 @@ const CargarPrecios = () => {
                         precio={precio}
                         isEditing={isEditing}
                         handleSubmit={handleSubmit}
-                        handleCancelar={handleCancelar} />
+                        handleCancelar={handleCancelar}/>
                 }
                 table={
                     <GridPrecios
                         precios={preciosFormatted}
-                        setSelection={setSelection} />
+                        setSelection={setSelection}/>
                 }
                 titleTable="Precios"
                 titleForm="Ingreso de precios"

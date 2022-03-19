@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import {useTheme} from '@mui/material/styles';
+import {Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 import Title from './Title';
 
-export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2 }) {
+export default function Chart({title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2}) {
     const theme = useTheme();
 
     return (
@@ -40,25 +40,25 @@ export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1
                             {yLabel}
                         </Label>
                     </YAxis>
-                    <Tooltip />
+                    <Tooltip/>
                     <Line
                         isAnimationActive={true}
                         type="monotone"
                         dataKey={dataKey}
                         stroke="#dc3030"
-                        dot={true} />
+                        dot={true}/>
                     <Line
                         isAnimationActive={true}
                         type="monotone"
                         dataKey={dataKey1}
                         stroke="#0288d1"
-                        dot={true} />
+                        dot={true}/>
                     <Line
                         isAnimationActive={true}
                         type="monotone"
                         dataKey={dataKey2}
                         stroke="#ed6c02"
-                        dot={true} />
+                        dot={true}/>
                 </LineChart>
             </ResponsiveContainer>
         </React.Fragment>

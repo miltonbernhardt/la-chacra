@@ -15,8 +15,8 @@ import java.time.LocalDate;
 public class Expedicion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
-    @GenericGenerator(name = "seq", strategy="increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column
     private Long id;
     private LocalDate fechaExpedicion;

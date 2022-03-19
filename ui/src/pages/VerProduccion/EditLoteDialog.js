@@ -6,18 +6,18 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-    Typography,
+    Stack,
     Switch,
-    Stack
+    Typography
 } from "@mui/material";
-import { createRef, useCallback, useEffect, useState } from 'react';
+import {createRef, useEffect, useState} from 'react';
 import Input from "../../components/Input";
 import * as field from "../../resources/fields";
-import { toastValidationErrors } from "../../resources/fields";
+import {toastValidationErrors} from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
 
-const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
+const EditLoteDialog = ({lote, open, onClose, onSubmit, onDelete}) => {
 
     const [loteForm, setLoteForm] = useState(lote)
 
@@ -46,15 +46,15 @@ const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
         values["id"] = loteForm.id
 
         refLitros.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }
+            {func: validation.minorToOne, msg: message.valZeroValue}
         ])
 
         refCantHormas.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }
+            {func: validation.minorToOne, msg: message.valZeroValue}
         ])
 
         refCantCajas.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }
+            {func: validation.minorToOne, msg: message.valZeroValue}
         ])
 
         if (errors.size > 0) {
@@ -92,7 +92,7 @@ const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
                 scroll="body">
                 <DialogTitle>Editar Producción</DialogTitle>
                 <DialogContent
-                    style={{ backgroundColor: deleteEnabled ? "#F0BEBE" : '' }}>
+                    style={{backgroundColor: deleteEnabled ? "#F0BEBE" : ''}}>
                     <Container maxWidth="sm">
                         <Grid container spacing={2}>
                             <Grid item xs={8}>
@@ -105,52 +105,52 @@ const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
                                     Habilitar Borrado
                                     <Switch
                                         checked={deleteEnabled}
-                                        onChange={handleChangeSwitch} />
+                                        onChange={handleChangeSwitch}/>
                                 </Stack>
                             </Grid>
                             <Grid item container spacing={1.5} xs={12} sm={6}>
 
                                 <Input ref={refLitros}
-                                    id={field.backLitrosLeche}
-                                    label={field.litrosLeche}
-                                    value={loteForm.litrosLeche}
-                                    required />
+                                       id={field.backLitrosLeche}
+                                       label={field.litrosLeche}
+                                       value={loteForm.litrosLeche}
+                                       required/>
                                 <Input ref={refCantHormas}
-                                    id={field.backCantHormas}
-                                    label={field.cantHormas}
-                                    value={loteForm.cantHormas}
-                                    required />
+                                       id={field.backCantHormas}
+                                       label={field.cantHormas}
+                                       value={loteForm.cantHormas}
+                                       required/>
                                 <Input ref={refCantCajas}
-                                    id={field.backCantCajas}
-                                    label={field.cantCajas}
-                                    value={loteForm.cantCajas}
-                                    required />
+                                       id={field.backCantCajas}
+                                       label={field.cantCajas}
+                                       value={loteForm.cantCajas}
+                                       required/>
                                 <Input ref={refPeso}
-                                    id={field.backPeso}
-                                    label={field.peso}
-                                    value={loteForm.peso} />
+                                       id={field.backPeso}
+                                       label={field.peso}
+                                       value={loteForm.peso}/>
                             </Grid>
                             <Grid item container spacing={1.5} xs={12} sm={6}>
                                 <Input ref={refLoteCultivo}
-                                    id={field.backLoteCultivo}
-                                    label={field.loteCultivo}
-                                    value={loteForm.loteCultivo}
-                                    type="text" />
+                                       id={field.backLoteCultivo}
+                                       label={field.loteCultivo}
+                                       value={loteForm.loteCultivo}
+                                       type="text"/>
                                 <Input ref={refLoteColorante}
-                                    id={field.backLoteColorante}
-                                    label={field.loteColorante}
-                                    value={loteForm.loteColorante}
-                                    type="text" />
+                                       id={field.backLoteColorante}
+                                       label={field.loteColorante}
+                                       value={loteForm.loteColorante}
+                                       type="text"/>
                                 <Input ref={refLoteCalcio}
-                                    id={field.backLoteCalcio}
-                                    label={field.loteCalcio}
-                                    value={loteForm.loteCalcio}
-                                    type="text" />
+                                       id={field.backLoteCalcio}
+                                       label={field.loteCalcio}
+                                       value={loteForm.loteCalcio}
+                                       type="text"/>
                                 <Input ref={refLoteCuajo}
-                                    id={field.backLoteCuajo}
-                                    label={field.loteCuajo}
-                                    value={loteForm.loteCuajo}
-                                    type="text" />
+                                       id={field.backLoteCuajo}
+                                       label={field.loteCuajo}
+                                       value={loteForm.loteCuajo}
+                                       type="text"/>
                             </Grid>
                         </Grid>
                     </Container>

@@ -1,9 +1,9 @@
 package com.brikton.lachacra.dtos;
 
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.entities.Remito;
-import com.brikton.lachacra.constants.ValidationMessages;
-import lombok.*;
+import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

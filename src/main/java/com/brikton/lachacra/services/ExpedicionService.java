@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class ExpedicionService {
         var expedicion = expedicionFromDTO(dto);
 
         loteService.decreaseStock(expedicion.getLote(), expedicion.getCantidad());
-        quesoService.decreaseStock(expedicion.getLote().getQueso(),expedicion.getCantidad());
+        quesoService.decreaseStock(expedicion.getLote().getQueso(), expedicion.getCantidad());
 
         double importe = getImporte(dto, expedicion);
         expedicion.setImporte(importe);
@@ -79,7 +78,6 @@ public class ExpedicionService {
         expedicionUpdated = repository.save(expedicionUpdated);
         return new ExpedicionDTO(expedicionUpdated);
     }
-
 
 
     private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
@@ -109,8 +107,8 @@ public class ExpedicionService {
     }
 
     private void updateStockQuesos(Expedicion expedicion, Expedicion expedicionUpdated) {
-            quesoService.increaseStock(expedicion.getLote().getQueso(),expedicion.getCantidad());
-            quesoService.decreaseStock(expedicionUpdated.getLote().getQueso(),expedicionUpdated.getCantidad());
+        quesoService.increaseStock(expedicion.getLote().getQueso(), expedicion.getCantidad());
+        quesoService.decreaseStock(expedicionUpdated.getLote().getQueso(), expedicionUpdated.getCantidad());
     }
 
     private boolean isSameLoteAndDifferentQuantity(Expedicion expedicion, Expedicion expedicionUpdated) {
@@ -154,15 +152,15 @@ public class ExpedicionService {
     }
 
     public List<Expedicion> getForRemito(Cliente cliente) {
-        return repository.findAllByClienteAndOnRemito(cliente,false);
+        return repository.findAllByClienteAndOnRemito(cliente, false);
     }
 
-    public void setOnRemitoTrue(List<Expedicion> expediciones){
+    public void setOnRemitoTrue(List<Expedicion> expediciones) {
         expediciones.forEach(e -> e.setOnRemito(true));
         repository.saveAll(expediciones);
     }
 
-    public void setOnRemitoFalse(List<Expedicion> expediciones){
+    public void setOnRemitoFalse(List<Expedicion> expediciones) {
         expediciones.forEach(e -> e.setOnRemito(false));
         repository.saveAll(expediciones);
     }

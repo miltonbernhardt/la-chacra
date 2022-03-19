@@ -11,7 +11,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import { createRef, useCallback, useEffect, useState } from 'react';
+import {createRef, useCallback, useState} from 'react';
 import BarcodeReader from 'react-barcode-reader';
 import toast from 'react-hot-toast';
 import Input from '../../components/Input';
@@ -21,7 +21,7 @@ import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 
-const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicion }) => {
+const ScanDialog = ({open, onClose, onSubmit, clientes, cliente, fechaExpedicion}) => {
 
     const [listaLecturas, setListaLecturas] = useState([]);
     const [pesoExpedicion, setPesoExpedicion] = useState(0);
@@ -43,15 +43,17 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
         let result3 = `${result1}.${result2}`;
         let peso = parseFloat(result3);
         setListaLecturas([...listaLecturas,
-        {
-            id: listaLecturas.length,
-            lote: lote,
-            peso: peso
-        }])
+            {
+                id: listaLecturas.length,
+                lote: lote,
+                peso: peso
+            }])
         setPesoExpedicion(Math.round((pesoExpedicion + peso) * 100) / 100);
     }
 
-    const handleError = useCallback(() => { alert('Error en la lectura') }, []);
+    const handleError = useCallback(() => {
+        alert('Error en la lectura')
+    }, []);
 
     const handleDeleteRow = (lote) => {
         setPesoExpedicion(Math.round((pesoExpedicion - lote.peso) * 100) / 100);
@@ -64,15 +66,15 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
         const values = {};
 
         refSelectCliente.current.validate(errors, values, [
-            { func: validation.emptySelect, msg: message.valEmptyField }
+            {func: validation.emptySelect, msg: message.valEmptyField}
         ])
 
         refCantidad.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
+            {func: validation.minorToOne, msg: message.valZeroValue}])
 
         refFechaExpedicion.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyFecha },
-            { func: validation.olderDate, msg: message.valOlderDate }
+            {func: validation.empty, msg: message.valEmptyFecha},
+            {func: validation.olderDate, msg: message.valOlderDate}
         ])
 
         if (listaLecturas.length === 0) {
@@ -102,11 +104,11 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
         <>
             <BarcodeReader
                 onScan={handleScan}
-                onError={handleError} />
+                onError={handleError}/>
             <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>
                     <Stack direction="row" spacing={2}>
-                        <QrCodeScannerIcon variant="outlined" fontSize='large' />
+                        <QrCodeScannerIcon variant="outlined" fontSize='large'/>
                         <Typography variant="h6">
                             Escanear etiquetas
                         </Typography>
@@ -125,17 +127,17 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
                         >
                             <Grid container spacing={2}>
                                 <Input ref={refFechaExpedicion}
-                                    id={field.backFechaExpedicion}
-                                    label={field.fechaExpedicion}
-                                    value={fechaExpedicion}
-                                    type="date"
-                                    required />
+                                       id={field.backFechaExpedicion}
+                                       label={field.fechaExpedicion}
+                                       value={fechaExpedicion}
+                                       type="date"
+                                       required/>
                                 <Select ref={refSelectCliente}
-                                    id={field.backIdCliente}
-                                    label={field.cliente}
-                                    value={cliente}
-                                    options={clientes}
-                                    required />
+                                        id={field.backIdCliente}
+                                        label={field.cliente}
+                                        value={cliente}
+                                        options={clientes}
+                                        required/>
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
                                     Códigos escaneados
                                 </Typography>
@@ -161,7 +163,7 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
                                                         {lote.peso}
                                                     </Typography>
                                                     <Button onClick={() => handleDeleteRow(lote)}>
-                                                        <DeleteIcon />
+                                                        <DeleteIcon/>
                                                         quitar
                                                     </Button>
                                                 </Stack>)
@@ -169,16 +171,16 @@ const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicio
                                     </Stack>
                                 </Grid>
                                 <Input ref={refCantidad}
-                                    id={field.backCantidad}
-                                    label={field.cantidad}
-                                    sm={6}
-                                    required />
+                                       id={field.backCantidad}
+                                       label={field.cantidad}
+                                       sm={6}
+                                       required/>
                                 <Input
                                     id={field.backPesoExpedicion}
                                     label={field.pesoExpedicion}
                                     value={pesoExpedicion}
                                     sm={6}
-                                    contentEditable={false} />
+                                    contentEditable={false}/>
                             </Grid>
                         </Box>
                     </Container>
