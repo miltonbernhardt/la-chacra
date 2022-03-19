@@ -86,7 +86,7 @@ public class RemitoService {
     public RemitoDTO generateRemitoDTO(Long idCliente, LocalDate fecha) {
         return new RemitoDTO(generateRemito(idCliente, fecha));
     }
-
+    //TODO do not generate if it aint contains items
     public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) {
         var remito = generateRemito(idCliente, fecha);
         expedicionService.setOnRemitoTrue(remito.getExpediciones());
