@@ -87,7 +87,7 @@ public class RemitoService {
         return new RemitoDTO(generateRemito(idCliente, fecha));
     }
 
-    public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) throws JRException, FileNotFoundException {
+    public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) {
         var remito = generateRemito(idCliente, fecha);
         expedicionService.setOnRemitoTrue(remito.getExpediciones());
         return new RemitoDTO(repository.save(remito));

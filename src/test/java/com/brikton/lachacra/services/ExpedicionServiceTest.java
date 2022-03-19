@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -362,6 +361,24 @@ public class ExpedicionServiceTest {
         when(repository.findAllByLote(any(Lote.class))).thenReturn(List.of(mockExpedicion()));
         var result = service.getAllByLote("101020210011");
         assertEquals(1,result.size());
+    }
+
+    @Test
+    void Set_On_Remito_True__OK(){
+        when(repository.saveAll(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        var exp = mockExpedicion();
+        exp.setOnRemito(false);
+        var result = service.setOnRemitoTrue(List.of(exp));
+        assertTrue(result.get(0).getOnRemito());
+    }
+
+    @Test
+    void Set_On_Remito_False__OK(){
+        when(repository.saveAll(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        var exp = mockExpedicion();
+        exp.setOnRemito(true);
+        var result = service.setOnRemitoFalse(List.of(exp));
+        assertTrue(result.get(0).getOnRemito());
     }
 
     private Expedicion mockExpedicion() {

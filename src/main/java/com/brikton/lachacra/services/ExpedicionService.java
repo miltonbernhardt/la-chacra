@@ -155,13 +155,13 @@ public class ExpedicionService {
         return repository.findAllByClienteAndOnRemito(cliente, false);
     }
 
-    public void setOnRemitoTrue(List<Expedicion> expediciones) {
+    public List<Expedicion> setOnRemitoTrue(List<Expedicion> expediciones) {
         expediciones.forEach(e -> e.setOnRemito(true));
-        repository.saveAll(expediciones);
+        return repository.saveAll(expediciones);
     }
 
-    public void setOnRemitoFalse(List<Expedicion> expediciones) {
+    public List<Expedicion> setOnRemitoFalse(List<Expedicion> expediciones) {
         expediciones.forEach(e -> e.setOnRemito(false));
-        repository.saveAll(expediciones);
+        return repository.saveAll(expediciones);
     }
 }

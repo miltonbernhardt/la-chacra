@@ -60,7 +60,7 @@ public class RemitoController {
             @RequestParam("id_cliente") Long idCliente,
             @RequestParam("fecha")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha
-            ) throws JRException, FileNotFoundException {
+            ) {
         log.info("API::generateAndSave- id_cliente: {} fecha: {}",idCliente,fecha);
 
         return ResponseEntity.ok()
