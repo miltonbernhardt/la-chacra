@@ -33,7 +33,10 @@ const EmitirRemito = () => {
             .then(({ data }) => {
                 setImporteTotal(data.importeTotal);
                 setListaItems(data.itemsRemito);
-                data.itemsRemito.length === 0 ? setEmitible(false) : setEmitible(true);
+                if (data.itemsRemito.length === 0) {
+                    toast.success('El cliente no posee expediciones para remito');
+                    setEmitible(false);
+                } else setEmitible(true);
             })
             .catch(() => toast.error('No se pudieron cargar los datos'))
     }, []);
