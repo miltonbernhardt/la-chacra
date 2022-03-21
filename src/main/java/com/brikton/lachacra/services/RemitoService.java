@@ -1,9 +1,11 @@
 package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.RemitoDTO;
+import com.brikton.lachacra.dtos.RemitoReportDTO;
 import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.entities.Remito;
+import com.brikton.lachacra.exceptions.ExpedicionNotFoundException;
 import com.brikton.lachacra.exceptions.RemitoNotFoundException;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -86,9 +88,11 @@ public class RemitoService {
     public RemitoDTO generateRemitoDTO(Long idCliente, LocalDate fecha) {
         return new RemitoDTO(generateRemito(idCliente, fecha));
     }
-    //TODO do not generate if it aint contains items
+
     public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) {
         var remito = generateRemito(idCliente, fecha);
+        if (remito.getExpediciones() == null ||
+        remito.getExpediciones().isEmpty()) throw new ExpedicionNotFoundException();
         expedicionService.setOnRemitoTrue(remito.getExpediciones());
         return new RemitoDTO(repository.save(remito));
     }
@@ -107,7 +111,7 @@ public class RemitoService {
 
         var cliente = remito.getExpediciones().get(0).getCliente();
 
-        var dto = new RemitoDTO(remito);
+        var dto = new RemitoReportDTO(remito);
 
         Map<String, Object> remitoParams = new HashMap<String, Object>();
         remitoParams.put("importeTotal", dto.getImporteTotal());
