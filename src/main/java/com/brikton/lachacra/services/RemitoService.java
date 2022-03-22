@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,17 +51,18 @@ public class RemitoService {
         var expediciones = remito.getExpediciones();
         Map<String, ItemRemito> mapItems = new HashMap<>();
         expediciones.forEach(e -> {
-            if (!mapItems.containsKey(e.getLote().getQueso().getTipoQueso())) {
+            var quesoExpedicion = e.getLote().getQueso();
+            if (!mapItems.containsKey(quesoExpedicion.getTipoQueso())) {
                 var newItem = new ItemRemito();
-                newItem.setQueso(e.getLote().getQueso());
-                newItem.setPrecio(precioService.getPrecioValue(e.getLote().getQueso(), e.getCliente().getTipoCliente()));
+                newItem.setQueso(quesoExpedicion);
+                newItem.setPrecio(precioService.getPrecioValue(quesoExpedicion, e.getCliente().getTipoCliente()));
                 newItem.setCantidad(e.getCantidad());
                 newItem.setImporte(e.getImporte());
                 newItem.setPeso(e.getPeso());
-                mapItems.putIfAbsent(e.getLote().getQueso().getTipoQueso(), newItem);
+                mapItems.putIfAbsent(quesoExpedicion.getTipoQueso(), newItem);
             } else {
-                var item = mapItems.get(e.getLote().getQueso().getTipoQueso());
-                item.update(e);
+                var item = mapItems.get(quesoExpedicion.getTipoQueso());
+                updateItemRemito(item,e);
             }
         });
         List<ItemRemito> items = new ArrayList<>();
@@ -68,18 +70,34 @@ public class RemitoService {
         remito.setItemsRemito(items);
     }
 
+    public void updateItemRemito(ItemRemito itemRemito, Expedicion expedicion){
+        var quesoExpedicion = expedicion.getLote().getQueso();
+        var quesoRemito = itemRemito.getQueso();
+        if (quesoExpedicion.getTipoQueso().equals(quesoRemito.getTipoQueso())) {
+
+            var cantidad = itemRemito.getCantidad() + expedicion.getCantidad();
+            var peso = BigDecimal.valueOf(itemRemito.getPeso()).add(BigDecimal.valueOf(expedicion.getPeso()));
+            var importe = BigDecimal.valueOf(itemRemito.getImporte()).add(BigDecimal.valueOf(expedicion.getImporte()));
+
+            itemRemito.setCantidad(cantidad);
+            itemRemito.setImporte(importe.doubleValue());
+            itemRemito.setPeso(importe.doubleValue());
+        }
+    }
+
     public Remito generateRemito(Long idCliente, LocalDate fecha) {
 
         var cliente = clienteService.get(idCliente);
         var expediciones = expedicionService.getForRemito(cliente);
 
-        Double importe = 0d;
-        for (Expedicion e : expediciones) importe += e.getImporte();
+        BigDecimal importe = BigDecimal.valueOf(0d);
+        for (Expedicion e : expediciones)
+            importe = importe.add(BigDecimal.valueOf(e.getImporte()));
 
         var remito = new Remito();
         remito.setExpediciones(expediciones);
         remito.setFecha(fecha);
-        remito.setImporteTotal(importe);
+        remito.setImporteTotal(importe.doubleValue());
 
         generateItemsRemito(remito);
         return remito;

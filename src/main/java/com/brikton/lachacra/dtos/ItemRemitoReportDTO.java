@@ -11,7 +11,7 @@ import java.util.Locale;
 public class ItemRemitoReportDTO {
 
     private Integer cantidad;
-    private String tipoQueso,precio,importe;
+    private String tipoQueso, precio, importe;
     private Double peso;
 
     public ItemRemitoReportDTO(ItemRemito itemRemito){

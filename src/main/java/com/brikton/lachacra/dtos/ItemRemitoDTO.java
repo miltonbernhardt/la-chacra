@@ -8,7 +8,7 @@ public class ItemRemitoDTO {
 
     private Integer cantidad;
     private String tipoQueso;
-    private Double peso,precio,importe;
+    private Double peso, precio, importe;
 
     public ItemRemitoDTO(ItemRemito itemRemito){
         this.cantidad = itemRemito.getCantidad();
