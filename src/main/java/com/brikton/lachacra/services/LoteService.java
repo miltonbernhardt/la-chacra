@@ -2,6 +2,7 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
+import com.brikton.lachacra.dtos.RendimientoDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
@@ -212,5 +213,12 @@ public class LoteService {
         List<LoteDTO> response = new ArrayList<>();
         lista.forEach(lote -> response.add(new LoteDTO(lote)));
         return response;
+    }
+
+    public List<RendimientoDTO> getRendimiento(LocalDate fechaDesde, LocalDate fechaHasta) {
+        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
+        List<RendimientoDTO> rendimientos = new ArrayList<>();
+        lotes.forEach(lote -> rendimientos.add(new RendimientoDTO(lote)));
+        return rendimientos;
     }
 }
