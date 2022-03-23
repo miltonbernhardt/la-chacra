@@ -2,6 +2,7 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
+import com.brikton.lachacra.dtos.QuesoDTO;
 import com.brikton.lachacra.dtos.rendimiento.RendimientoDTO;
 import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
 import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
@@ -249,7 +250,7 @@ public class LoteService {
         ArrayList<RendimientoQuesoDTO> rendimientos = new ArrayList<>();
         auxList.forEach(list -> {
             var dto = new RendimientoQuesoDTO();
-            dto.setCodigoQueso(list.get(0).getQueso().getCodigo());
+            dto.setQueso(new QuesoDTO(list.get(0).getQueso()));
             updateRendimiento(dto,list);
             rendimientos.add(dto);
         });
