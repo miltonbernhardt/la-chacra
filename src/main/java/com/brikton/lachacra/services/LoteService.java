@@ -15,6 +15,7 @@ import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.DevolucionRepository;
 import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.LoteRepository;
+import com.brikton.lachacra.util.DateComparator;
 import com.brikton.lachacra.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -236,6 +234,7 @@ public class LoteService {
             updateRendimiento(dto,list);
             rendimientos.add(dto);
         });
+        Collections.sort(rendimientos, new DateComparator());
         return rendimientos;
     }
 
