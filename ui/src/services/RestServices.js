@@ -31,6 +31,8 @@ export const deleteLote = async (id) => await DELETE(`${API_LOTE}${id}`);
 export const getLote = async (id) => await GET(`${API_LOTE}${id}`);
 export const getLotesBetweenDates = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/produccion?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 export const getLotesByQuesoWithStock = async (codigoQueso) => await GET(`${API_LOTE}/queso?codigoQueso=${codigoQueso}`);
+export const getRendimientoByDia = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/rendimiento/dia?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+export const getRendimientoByQueso = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/rendimiento/queso?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 
 // --- QUESO METHODS ---
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);

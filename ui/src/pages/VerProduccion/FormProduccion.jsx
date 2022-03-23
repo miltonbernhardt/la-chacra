@@ -1,6 +1,6 @@
 import { ButtonGroup, Button, Grid, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
-import { Input } from '../../components/Input'
+import Input from '../../components/Input'
 import toast from 'react-hot-toast'
 import * as message from "../../resources/messages";
 import * as field from "../../resources/fields";

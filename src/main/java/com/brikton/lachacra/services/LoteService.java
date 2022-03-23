@@ -2,7 +2,9 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
-import com.brikton.lachacra.dtos.RendimientoDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
@@ -18,10 +20,13 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -215,10 +220,60 @@ public class LoteService {
         return response;
     }
 
-    public List<RendimientoDTO> getRendimiento(LocalDate fechaDesde, LocalDate fechaHasta) {
+    public List<RendimientoDiaDTO> getRendimientoByDia(LocalDate fechaDesde, LocalDate fechaHasta) {
         var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
-        List<RendimientoDTO> rendimientos = new ArrayList<>();
-        lotes.forEach(lote -> rendimientos.add(new RendimientoDTO(lote)));
+        Map<LocalDate,List<Lote>> mapRendimientos = new HashMap<>();
+        for (Lote lote : lotes) {
+            var fecha = lote.getFechaElaboracion();
+            addToMapRendimiento(mapRendimientos,fecha,lote);
+        }
+        var auxList = new ArrayList<>(mapRendimientos.values());
+        ArrayList<RendimientoDiaDTO> rendimientos = new ArrayList<>();
+        auxList.forEach(list -> {
+            var dto = new RendimientoDiaDTO();
+            dto.setFecha(list.get(0).getFechaElaboracion());
+            updateRendimiento(dto,list);
+            rendimientos.add(dto);
+        });
         return rendimientos;
     }
+
+    public List<RendimientoQuesoDTO> getRendimientoByQueso(LocalDate fechaDesde, LocalDate fechaHasta) {
+        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
+        Map<String,List<Lote>> mapRendimientos = new HashMap<>();
+        for (Lote lote : lotes) {
+            var queso = lote.getQueso().getTipoQueso();
+            addToMapRendimiento(mapRendimientos,queso,lote);
+        }
+        var auxList = new ArrayList<>(mapRendimientos.values());
+        ArrayList<RendimientoQuesoDTO> rendimientos = new ArrayList<>();
+        auxList.forEach(list -> {
+            var dto = new RendimientoQuesoDTO();
+            dto.setCodigoQueso(list.get(0).getQueso().getCodigo());
+            updateRendimiento(dto,list);
+            rendimientos.add(dto);
+        });
+        return rendimientos;
+    }
+
+    private <K,V> void addToMapRendimiento(Map<K,List<V>> map, K key, V value){
+        if (map.containsKey(key)) {
+            var list = map.get(key);
+            list.add(value);
+        } else {
+            var list = new ArrayList<V>();
+            list.add(value);
+            map.put(key,list);
+        }
+    }
+
+    private void updateRendimiento(RendimientoDTO dto, List<Lote> lotes){
+        BigDecimal rendimientoAvg = BigDecimal.ZERO;
+        for(Lote lote : lotes){
+            rendimientoAvg = rendimientoAvg.add(BigDecimal.valueOf(lote.getRendimiento()));
+        };
+        rendimientoAvg = rendimientoAvg.divide(BigDecimal.valueOf(lotes.size()),MathContext.DECIMAL32);
+        dto.setRendimiento(rendimientoAvg.doubleValue());
+    }
+
 }
