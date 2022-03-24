@@ -1,14 +1,7 @@
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle
-} from '@mui/material';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 
 
-const DialogEliminarQueso = ({ open, onClose, queso, onBorrar }) => {
+const DialogEliminarQueso = ({open, onClose, queso, onBorrar}) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">

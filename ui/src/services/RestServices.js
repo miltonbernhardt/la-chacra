@@ -1,6 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { toastValidationErrors } from "../resources/fields";
+import {toastValidationErrors} from "../resources/fields";
 
 const PUERTO = '8000';
 const RAIZ_URL = `http://localhost:${PUERTO}`;
@@ -11,6 +11,7 @@ const API_CLIENTE = '/api/v1/clientes/'
 const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
 const API_PRECIO = '/api/v1/precios/'
 const API_EXPEDICION = '/api/v1/expediciones/'
+const API_REMITO = '/api/v1/remitos/'
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -21,7 +22,7 @@ const headers = {
 const getNewHeader = () => {
     // const token = localStorage.getItem('token');
     // return {...headers, Authorization: `Bearer ${token}`}
-    return { ...headers }
+    return {...headers}
 }
 
 // --- LOTE METHODS ---
@@ -61,17 +62,21 @@ export const putExpedicion = async (expedicion) => await PUT(`${API_EXPEDICION}`
 export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${id}`);
 export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICION}lote?idLote=${idLote}`);
 
+// --- REMITO METHODS ---
+export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}/generate?id_cliente=${idCliente}&fecha=${fecha}`);
+export const postRemito = async (idCliente, fecha) => await POST(`${API_REMITO}?id_cliente=${idCliente}&fecha=${fecha}`);
+
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `GET ${URL}`
-    console.log({ request: method })
+    console.log({request: method})
 
-    return await axios.get(URL, { headers: getNewHeader() })
+    return await axios.get(URL, {headers: getNewHeader()})
         .then(response => {
-            const { data } = response
-            console.info({ response: data })
-            return { data: data.data }
+            const {data} = response
+            console.info({response: data})
+            return {data: data.data}
         })
         .catch(err => processResponseError(err))
 }
@@ -79,9 +84,9 @@ export const GET = async (postfixUrl) => {
 export const POST = async (postfixUrl, data) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `POST ${URL}`;
-    console.log({ request: method, data })
+    console.log({request: method, data})
 
-    return await axios.post(URL, data, { headers: getNewHeader() })
+    return await axios.post(URL, data, {headers: getNewHeader()})
         .then(response => processSuccessResponseWithMessage(response))
         .catch(err => processResponseError(err))
 }
@@ -89,9 +94,9 @@ export const POST = async (postfixUrl, data) => {
 export const PUT = async (postfixUrl, data) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `PUT ${URL}`
-    console.log({ request: method, data })
+    console.log({request: method, data})
 
-    return await axios.put(URL, data, { headers: getNewHeader() })
+    return await axios.put(URL, data, {headers: getNewHeader()})
         .then(response => processSuccessResponseWithMessage(response))
         .catch(err => processResponseError(err))
 }
@@ -99,25 +104,25 @@ export const PUT = async (postfixUrl, data) => {
 export const DELETE = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `DELETE ${URL}`
-    console.log({ request: method })
+    console.log({request: method})
 
-    return await axios.delete(URL, { headers: getNewHeader() })
+    return await axios.delete(URL, {headers: getNewHeader()})
         .then(response => processSuccessResponseWithMessage(response))
         .catch(err => processResponseError(err))
 }
 
 const processSuccessResponseWithMessage = (response) => {
-    const { data } = response
-    console.info({ response: data })
+    const {data} = response
+    console.info({response: data})
     toast.dismiss()
     toast.success(data.message);
-    return { data: data.data }
+    return {data: data.data}
 }
 
 const processResponseError = (err) => {
     if (err.response) {
-        const { data, status } = err.response
-        console.error({ data, status })
+        const {data, status} = err.response
+        console.error({data, status})
         toast.dismiss()
         if (data["errors"])
             toastValidationErrors(new Map(Object.entries(data.errors)))

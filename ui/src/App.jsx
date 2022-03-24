@@ -1,12 +1,12 @@
-import { ThemeProvider } from '@emotion/react';
+import {ThemeProvider} from '@emotion/react';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Box, CssBaseline, Typography } from '@mui/material';
+import {Box, CssBaseline, Typography} from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import { createTheme, styled } from '@mui/material/styles';
+import {createTheme, styled} from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import CargarExpedicion from './pages/Expedicion/CargarExpedicion';
 import CargarProduccion from './pages/Lotes/CargarLote';
 import CargarQuesos from './pages/Quesos/CargarQuesos';
@@ -19,7 +19,7 @@ import VerVentas from './pages/Ventas/VerVentas';
 import VerLitrosElaborados from './pages/VerLitrosProducidos/VerLitrosElaborados';
 import VerProduccion from './pages/VerProduccion/VerProduccion';
 import VerTrazabilidad from './pages/VerTrazabilidad/VerTrazabilidad'
-import { Toaster } from 'react-hot-toast';
+import {Toaster} from 'react-hot-toast';
 import './App.css';
 import StockProductos from './pages/StockProductos/StockProductos';
 import StockEmbalaje from './pages/StockEmbalaje/StockEmbalaje';
@@ -65,8 +65,8 @@ export const themeOptions = {
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
+const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})(
+    ({theme, open}) => ({
         flexGrow: 1,
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
@@ -85,7 +85,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+})(({theme, open}) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -100,7 +100,7 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader = styled('div')(({theme}) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
@@ -165,7 +165,7 @@ const App = () => {
             <ThemeProvider theme={theme}>
                 <Router>
                     <Box display="flex" height="98vh">
-                        <CssBaseline />
+                        <CssBaseline/>
                         <AppBar position="fixed" open={drawerOpen}>
                             <Toolbar>
                                 <IconButton
@@ -173,9 +173,9 @@ const App = () => {
                                     aria-label="open drawer"
                                     onClick={handleDrawerOpen}
                                     edge="start"
-                                    sx={{ mr: 2, ...(drawerOpen && { display: 'none' }) }}
+                                    sx={{mr: 2, ...(drawerOpen && {display: 'none'})}}
                                 >
-                                    <MenuIcon />
+                                    <MenuIcon/>
                                 </IconButton>
                                 <Typography variant="h6" noWrap component="div">
                                     La Chacra
@@ -189,29 +189,29 @@ const App = () => {
                             theme={theme}
                         />
                         <Main open={drawerOpen}>
-                            <DrawerHeader />
+                            <DrawerHeader/>
                             <Switch>
-                                <Route exact path="/" component={Home} />
-                                <Route path="/clientes" component={CargarClientes} />
-                                <Route path="/cargar/lotes" component={CargarProduccion} />
-                                <Route path="/cargar/expedicion" component={CargarExpedicion} />
-                                <Route path="/cargar/quesos" component={CargarQuesos} />
-                                <Route path="/cargar/precios" component={CargarPrecios} />
-                                <Route path="/ver/litros" component={VerLitrosElaborados} />
-                                <Route path="/ver/produccion" component={VerProduccion} />
-                                <Route path="/ver/ventas" component={VerVentas} />
-                                <Route path="/ver/trazabilidad" component={VerTrazabilidad} />
-                                <Route path="/emitir/remito" component={EmitirRemito} />
-                                <Route path="/stock/productos" component={StockProductos} />
-                                <Route path="/stock/embalaje" component={StockEmbalaje} />
-                                <Route path="/mantenimiento" component={Mantenimiento} />
-                                <Route path="/rendimiento" component={Rendimiento} />
+                                <Route exact path="/" component={Home}/>
+                                <Route path="/clientes" component={CargarClientes}/>
+                                <Route path="/cargar/lotes" component={CargarProduccion}/>
+                                <Route path="/cargar/expedicion" component={CargarExpedicion}/>
+                                <Route path="/cargar/quesos" component={CargarQuesos}/>
+                                <Route path="/cargar/precios" component={CargarPrecios}/>
+                                <Route path="/ver/litros" component={VerLitrosElaborados}/>
+                                <Route path="/ver/produccion" component={VerProduccion}/>
+                                <Route path="/ver/ventas" component={VerVentas}/>
+                                <Route path="/ver/trazabilidad" component={VerTrazabilidad}/>
+                                <Route path="/emitir/remito" component={EmitirRemito}/>
+                                <Route path="/stock/productos" component={StockProductos}/>
+                                <Route path="/stock/embalaje" component={StockEmbalaje}/>
+                                <Route path="/mantenimiento" component={Mantenimiento}/>
+                                <Route path="/rendimiento" component={Rendimiento}/>
                             </Switch>
                         </Main>
                     </Box>
                 </Router>
             </ThemeProvider>
-            <Toast />
+            <Toast/>
         </>
     );
 }

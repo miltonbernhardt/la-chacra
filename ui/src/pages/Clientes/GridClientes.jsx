@@ -1,7 +1,7 @@
-import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from "react";
+import {DataGrid} from '@mui/x-data-grid';
+import {useMemo} from "react";
 
-const GridClientes = ({ setSelection, clientes }) => {
+const GridClientes = ({setSelection, clientes}) => {
     const columns = useMemo(() => [
         {
             field: 'id',

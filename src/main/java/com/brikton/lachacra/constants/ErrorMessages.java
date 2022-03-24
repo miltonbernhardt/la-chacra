@@ -5,6 +5,7 @@ public class ErrorMessages {
     public static final String MSG_CODIGO_QUESO_ALREADY_EXIST = "Ya existe un queso con ese código";
     public static final String MSG_EXPEDICION_CANNOT_BE_DELETED = "No se puede borrar la expedición";
     public static final String MSG_EXPEDICION_NOT_FOUND = "Expedición no encontrada";
+    public static final String MSG_REMITO_NOT_FOUND = "Remito no encontrado";
     public static final String MSG_INTERNAL_SERVER_ERROR = "Ocurrió un error interno";
     public static final String MSG_INVALID_BODY = "Datos inválidos";
     public static final String MSG_INVALID_PARAMS = "Parámetros inválido";

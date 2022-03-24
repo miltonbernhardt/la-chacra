@@ -1,15 +1,12 @@
-import { CardActionArea, CardHeader } from '@mui/material';
+import {CardActionArea, CardHeader} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { red } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import Inventory2Icon from '@mui/icons-material/Inventory2';
 import BuildIcon from '@mui/icons-material/Build';
 
-const MantenimientoCard = ({ item }) => {
+const MantenimientoCard = ({item}) => {
     return (
         <Card
             sx={{
@@ -21,9 +18,9 @@ const MantenimientoCard = ({ item }) => {
             <CardActionArea onClick={() => alert('queso')}>
                 <CardHeader
                     avatar={
-                        <Avatar> <BuildIcon /></Avatar>
+                        <Avatar> <BuildIcon/></Avatar>
                     }
-                    title={`${item.fecha} ${item.equipo}`} />
+                    title={`${item.fecha} ${item.equipo}`}/>
                 <CardContent sx={{
                     flexGrow: 1, alignSelf: 'center',
                     justifyContent: 'center',

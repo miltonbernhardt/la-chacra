@@ -1,12 +1,11 @@
 package com.brikton.lachacra.dtos;
 
-import com.brikton.lachacra.entities.TipoCliente;
 import com.brikton.lachacra.constants.ValidationMessages;
-import lombok.*;
+import com.brikton.lachacra.entities.TipoCliente;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Data
 public class TipoClienteDTO {
