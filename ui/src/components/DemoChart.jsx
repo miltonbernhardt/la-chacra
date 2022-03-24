@@ -1,22 +1,12 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import {
-    Chart,
-    ArgumentAxis,
-    ValueAxis,
-    LineSeries,
-    Title,
-    Legend,
-} from '@devexpress/dx-react-chart-material-ui';
-import { styled } from '@mui/material/styles';
+import {ArgumentAxis, Chart, Legend, LineSeries, Title, ValueAxis,} from '@devexpress/dx-react-chart-material-ui';
+import {styled} from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { ArgumentScale, Animation } from '@devexpress/dx-react-chart';
-import {
-    curveCatmullRom,
-    line,
-} from 'd3-shape';
-import { scalePoint } from 'd3-scale';
-import { litrosElaborados as data } from '../data/data';
+import {Animation, ArgumentScale} from '@devexpress/dx-react-chart';
+import {curveCatmullRom, line,} from 'd3-shape';
+import {scalePoint} from 'd3-scale';
+import {litrosElaborados as data} from '../data/data';
 
 const PREFIX = 'Demo';
 
@@ -29,8 +19,8 @@ const Line = props => (
     <LineSeries.Path
         {...props}
         path={line()
-            .x(({ arg }) => arg)
-            .y(({ val }) => val)
+            .x(({arg}) => arg)
+            .y(({val}) => val)
             .curve(curveCatmullRom)}
     />
 );
@@ -43,7 +33,7 @@ const StyledDiv = styled('div')(() => ({
     },
 }));
 
-const Text = ({ text }) => {
+const Text = ({text}) => {
     const [mainText, subText] = text.split('\\n');
     return (
         <StyledDiv className={classes.title}>
@@ -56,13 +46,13 @@ const Text = ({ text }) => {
 };
 
 const Root = props => (
-    <Legend.Root {...props} sx={{ display: 'flex', margin: 'auto', flexDirection: 'row' }} />
+    <Legend.Root {...props} sx={{display: 'flex', margin: 'auto', flexDirection: 'row'}}/>
 );
 const Label = props => (
-    <Legend.Label {...props} sx={{ mb: 1, whiteSpace: 'nowrap' }} />
+    <Legend.Label {...props} sx={{mb: 1, whiteSpace: 'nowrap'}}/>
 );
 const Item = props => (
-    <Legend.Item {...props} sx={{ flexDirection: 'column-reverse' }} />
+    <Legend.Item {...props} sx={{flexDirection: 'column-reverse'}}/>
 );
 
 const StyledChart = styled(Chart)(() => ({
@@ -77,9 +67,9 @@ const DemoChart = () => {
             data={data}
             className={classes.chart}
         >
-            <ArgumentScale factory={scalePoint} />
-            <ArgumentAxis />
-            <ValueAxis />
+            <ArgumentScale factory={scalePoint}/>
+            <ArgumentAxis/>
+            <ValueAxis/>
 
             <LineSeries
                 name="Hydro-electric"
@@ -111,12 +101,12 @@ const DemoChart = () => {
                 argumentField="semana"
                 seriesComponent={Line}
             />
-            <Legend position="bottom" rootComponent={Root} itemComponent={Item} labelComponent={Label} />
+            <Legend position="bottom" rootComponent={Root} itemComponent={Item} labelComponent={Label}/>
             <Title
                 text="Energy Consumption in 2004\n(Millions of Tons, Oil Equivalent)"
                 textComponent={Text}
             />
-            <Animation />
+            <Animation/>
         </StyledChart>
     </Paper>);
 }

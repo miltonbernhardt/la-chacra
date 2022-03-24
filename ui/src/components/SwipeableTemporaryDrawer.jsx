@@ -25,7 +25,7 @@ export default function SwipeableTemporaryDrawer() {
             return;
         }
 
-        setState({ ...state, [anchor]: open });
+        setState({...state, [anchor]: open});
     };
 
     const iOS =
@@ -33,7 +33,7 @@ export default function SwipeableTemporaryDrawer() {
 
     const list = (anchor) => (
         <Box
-            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+            sx={{width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250}}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
@@ -44,18 +44,18 @@ export default function SwipeableTemporaryDrawer() {
                         <ListItemIcon>
                             {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                         </ListItemIcon>
-                        <ListItemText primary={text} />
+                        <ListItemText primary={text}/>
                     </ListItem>
                 ))}
             </List>
-            <Divider />
+            <Divider/>
             <List>
                 {['All mail', 'Trash', 'Spam'].map((text, index) => (
                     <ListItem button key={text}>
                         <ListItemIcon>
                             {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
                         </ListItemIcon>
-                        <ListItemText primary={text} />
+                        <ListItemText primary={text}/>
                     </ListItem>
                 ))}
             </List>

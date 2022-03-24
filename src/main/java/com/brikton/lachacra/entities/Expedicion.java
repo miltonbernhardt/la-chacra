@@ -15,14 +15,15 @@ import java.time.LocalDate;
 public class Expedicion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
-    @GenericGenerator(name = "seq", strategy="increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column
     private Long id;
     private LocalDate fechaExpedicion;
     private Integer cantidad;
     private Double peso;
     private Double importe;
+    private Boolean onRemito;
 
     @ManyToOne
     @JoinColumn(name = "nro_cliente")

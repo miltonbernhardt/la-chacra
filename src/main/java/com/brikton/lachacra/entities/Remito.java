@@ -1,13 +1,14 @@
 package com.brikton.lachacra.entities;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -16,8 +17,8 @@ import java.util.Objects;
 public class Remito {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
-    @GenericGenerator(name = "seq", strategy="increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     @Column(name = "id_remito")
     private Long id;
     private LocalDate fecha;
@@ -26,4 +27,7 @@ public class Remito {
     @OneToMany
     @ToString.Exclude
     private List<Expedicion> expediciones;
+
+    @Transient
+    private List<ItemRemito> itemsRemito;
 }

@@ -1,8 +1,8 @@
-import { DataGrid } from '@mui/x-data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import * as field from "../../resources/fields";
-import { useMemo } from 'react';
+import {useMemo} from 'react';
 
-const GridTrazabilidad = ({ data }) => {
+const GridTrazabilidad = ({data}) => {
 
     const columns = useMemo(() => {
         return [{
@@ -20,25 +20,25 @@ const GridTrazabilidad = ({ data }) => {
             flex: 0.75,
             minWidth: 50,
         },
-        {
-            field: field.backRazonSocial,
-            headerName: 'Cliente',
-            flex: 0.75,
-            minWidth: 50,
-        },
-        {
-            field: field.backCantidad,
-            headerName: 'Cantidad',
-            type: 'number',
-            flex: 0.5,
-            minWidth: 50,
-        },]
+            {
+                field: field.backRazonSocial,
+                headerName: 'Cliente',
+                flex: 0.75,
+                minWidth: 50,
+            },
+            {
+                field: field.backCantidad,
+                headerName: 'Cantidad',
+                type: 'number',
+                flex: 0.5,
+                minWidth: 50,
+            },]
     }, []);
 
     return (
         <>
             <DataGrid
-                style={{ minHeight: "600px" }}
+                style={{minHeight: "600px"}}
                 autoHeight={true}
                 rows={data}
                 columns={columns}

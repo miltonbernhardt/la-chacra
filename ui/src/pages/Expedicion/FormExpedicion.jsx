@@ -1,5 +1,5 @@
-import { Button, ButtonGroup, Grid } from "@mui/material";
-import { createRef, useCallback, useEffect, useMemo, useState } from "react";
+import {Button, ButtonGroup, Grid} from "@mui/material";
+import {createRef, useCallback, useEffect, useMemo, useState} from "react";
 import Input from "../../components/Input";
 import Select from "../../components/Select";
 import * as field from "../../resources/fields";
@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import ScanDialog from "./ScanDialog";
 import BarcodeReader from 'react-barcode-reader';
 
-const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete }) => {
+const FormExpedicion = ({expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete}) => {
 
     const [expedicionForm, setExpedicionForm] = useState(expedicion);
     const [fechaExpedicion, setFechaExpedicion] = useState('');
@@ -33,21 +33,21 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
         values["id"] = expedicionForm.id
 
         refSelectCliente.current.validate(errors, values, [
-            { func: validation.emptySelect, msg: message.valEmptyField }
+            {func: validation.emptySelect, msg: message.valEmptyField}
         ])
 
         refIdLote.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
+            {func: validation.minorToOne, msg: message.valZeroValue}])
 
         refCantidad.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
+            {func: validation.minorToOne, msg: message.valZeroValue}])
 
         refPeso.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
+            {func: validation.minorToOne, msg: message.valZeroValue}])
 
         refFechaExpedicion.current.validate(errors, values, [
-            { func: validation.empty, msg: message.valEmptyFecha },
-            { func: validation.olderDate, msg: message.valOlderDate }
+            {func: validation.empty, msg: message.valEmptyFecha},
+            {func: validation.olderDate, msg: message.valOlderDate}
         ])
 
         if (errors.size > 0) {
@@ -82,34 +82,34 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
         <>
             <Grid container spacing={1.5}>
                 <Input ref={refFechaExpedicion}
-                    id={field.backFechaExpedicion}
-                    label={field.fechaExpedicion}
-                    value={fechaExpedicion}
-                    type="date"
-                    required />
+                       id={field.backFechaExpedicion}
+                       label={field.fechaExpedicion}
+                       value={fechaExpedicion}
+                       type="date"
+                       required/>
                 <Select ref={refSelectCliente}
-                    value={expedicionForm.idCliente}
-                    id={field.backIdCliente}
-                    label={field.cliente}
-                    options={clientes}
-                    required />
+                        value={expedicionForm.idCliente}
+                        id={field.backIdCliente}
+                        label={field.cliente}
+                        options={clientes}
+                        required/>
                 <Input ref={refIdLote}
-                    id={field.backIdLote}
-                    label={field.numeroLote}
-                    value={expedicionForm.idLote}
-                    required />
+                       id={field.backIdLote}
+                       label={field.numeroLote}
+                       value={expedicionForm.idLote}
+                       required/>
                 <Input ref={refCantidad}
-                    id={field.backCantidad}
-                    label={field.cantidad}
-                    value={expedicionForm.cantidad}
-                    sm={6}
-                    required />
+                       id={field.backCantidad}
+                       label={field.cantidad}
+                       value={expedicionForm.cantidad}
+                       sm={6}
+                       required/>
                 <Input ref={refPeso}
-                    id={field.backPesoExpedicion}
-                    label={field.pesoExpedicion}
-                    value={expedicionForm.peso}
-                    sm={6}
-                    required />
+                       id={field.backPesoExpedicion}
+                       label={field.pesoExpedicion}
+                       value={expedicionForm.peso}
+                       sm={6}
+                       required/>
                 <Grid item xs={12} alignSelf="right" mb={0.5}>
                     <ButtonGroup fullWidth variant="contained">
                         <Button onClick={handleCancelar} disabled={!isEditing} color="primary">Cancelar</Button>
@@ -123,10 +123,10 @@ const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleC
                 onClose={closeScanDialog}
                 onSubmit={submitScan}
                 clientes={clientes}
-                firstScan={firstScan} />
+                firstScan={firstScan}/>
             {!openScanDialog ? <BarcodeReader
                 onScan={handleFirstScan}
-                onError={handleScanError} /> : <></>}
+                onError={handleScanError}/> : <></>}
         </>
     )
 }

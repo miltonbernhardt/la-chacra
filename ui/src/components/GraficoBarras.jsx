@@ -1,6 +1,6 @@
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
-const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
+const GraficoBarras = ({data, xDataKey, yDataKeyArray}) => {
 
     console.log(data);
 
@@ -8,12 +8,12 @@ const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
     return (
         <ResponsiveContainer width="100%" height="100%">
             <BarChart width={150} height={40} data={data}>
-                <XAxis dataKey={xDataKey} />
-                <YAxis />
-                <Tooltip />
-                <Legend />
+                <XAxis dataKey={xDataKey}/>
+                <YAxis/>
+                <Tooltip/>
+                <Legend/>
                 {yDataKeyArray.map((key) => {
-                    return <Bar key={key} dataKey={key} fill="#8884d8" />
+                    return <Bar key={key} dataKey={key} fill="#8884d8"/>
                 })}
             </BarChart>
         </ResponsiveContainer>

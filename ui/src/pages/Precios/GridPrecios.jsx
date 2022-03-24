@@ -1,8 +1,8 @@
-import { DataGrid } from '@mui/x-data-grid';
-import { useMemo } from "react";
+import {DataGrid} from '@mui/x-data-grid';
+import {useMemo} from "react";
 import * as fields from '../../resources/fields'
 
-const GridPrecios = ({ precios, setSelection }) => {
+const GridPrecios = ({precios, setSelection}) => {
 
     const columns = useMemo(() => {
         return [

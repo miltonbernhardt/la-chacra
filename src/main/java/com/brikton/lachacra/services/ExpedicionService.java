@@ -2,6 +2,7 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
+import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.exceptions.ClienteNotFoundException;
 import com.brikton.lachacra.exceptions.ExpedicionCannotDeleteException;
@@ -52,11 +53,11 @@ public class ExpedicionService {
         var expedicion = expedicionFromDTO(dto);
 
         loteService.decreaseStock(expedicion.getLote(), expedicion.getCantidad());
-        quesoService.decreaseStock(expedicion.getLote().getQueso(),expedicion.getCantidad());
+        quesoService.decreaseStock(expedicion.getLote().getQueso(), expedicion.getCantidad());
 
         double importe = getImporte(dto, expedicion);
         expedicion.setImporte(importe);
-
+        expedicion.setOnRemito(false);
         expedicion = repository.save(expedicion);
         return new ExpedicionDTO(expedicion);
     }
@@ -70,13 +71,13 @@ public class ExpedicionService {
         updateStockLotes(expedicion, expedicionUpdated);
         updateStockQuesos(expedicion, expedicionUpdated);
 
+        expedicionUpdated.setOnRemito(expedicion.getOnRemito());
         var importe = getImporte(dto, expedicionUpdated);
         expedicionUpdated.setImporte(importe);
 
         expedicionUpdated = repository.save(expedicionUpdated);
         return new ExpedicionDTO(expedicionUpdated);
     }
-
 
 
     private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
@@ -106,8 +107,8 @@ public class ExpedicionService {
     }
 
     private void updateStockQuesos(Expedicion expedicion, Expedicion expedicionUpdated) {
-            quesoService.increaseStock(expedicion.getLote().getQueso(),expedicion.getCantidad());
-            quesoService.decreaseStock(expedicionUpdated.getLote().getQueso(),expedicionUpdated.getCantidad());
+        quesoService.increaseStock(expedicion.getLote().getQueso(), expedicion.getCantidad());
+        quesoService.decreaseStock(expedicionUpdated.getLote().getQueso(), expedicionUpdated.getCantidad());
     }
 
     private boolean isSameLoteAndDifferentQuantity(Expedicion expedicion, Expedicion expedicionUpdated) {
@@ -148,5 +149,19 @@ public class ExpedicionService {
         List<ExpedicionDTO> response = new ArrayList<>();
         expediciones.forEach(e -> response.add(new ExpedicionDTO(e)));
         return response;
+    }
+
+    public List<Expedicion> getForRemito(Cliente cliente) {
+        return repository.findAllByClienteAndOnRemito(cliente, false);
+    }
+
+    public List<Expedicion> setOnRemitoTrue(List<Expedicion> expediciones) {
+        expediciones.forEach(e -> e.setOnRemito(true));
+        return repository.saveAll(expediciones);
+    }
+
+    public List<Expedicion> setOnRemitoFalse(List<Expedicion> expediciones) {
+        expediciones.forEach(e -> e.setOnRemito(false));
+        return repository.saveAll(expediciones);
     }
 }

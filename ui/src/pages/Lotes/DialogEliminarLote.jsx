@@ -1,6 +1,6 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 
-const DialogEliminarLote = ({ open, onClose, onSubmit, lote }) => {
+const DialogEliminarLote = ({open, onClose, onSubmit, lote}) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">

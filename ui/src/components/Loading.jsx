@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import {Box} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export const Loading = () => {
@@ -9,7 +9,7 @@ export const Loading = () => {
         alignItems: 'center',
         mt: 3,
     }}>
-        <CircularProgress size={"50%"} />
+        <CircularProgress size={"50%"}/>
     </Box>);
 }
 

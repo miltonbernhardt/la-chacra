@@ -1,7 +1,13 @@
-import { Chip } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import {Chip} from '@mui/material';
+import {DataGrid} from '@mui/x-data-grid';
 
 const columns = [
+    {
+        field: 'tipoQueso',
+        headerName: 'Tipo de queso',
+        flex: 1,
+        minWidth: 50
+    },
     {
         field: 'codigo',
         headerName: 'Código',
@@ -15,28 +21,22 @@ const columns = [
         minWidth: 50
     },
     {
-        field: 'tipoQueso',
-        headerName: 'Tipo de queso',
-        flex: 1,
-        minWidth: 50
-    },
-    {
         field: 'color',
         headerName: 'Color',
         flex: 1,
         minWidth: 50,
-        renderCell: ({ value }) => {
+        renderCell: ({value}) => {
             return (<Chip
-                style={{ backgroundColor: value }} />)
+                style={{backgroundColor: value}}/>)
         },
     },
 
 ]
 
-const GridQuesos = ({ listaQuesos, setSelection }) => {
+const GridQuesos = ({listaQuesos, setSelection}) => {
     return (
         <DataGrid
-            style={{ minHeight: "600px" }}
+            style={{minHeight: "600px"}}
             autoHeight={true}
             rows={listaQuesos}
             rowHeight={42}

@@ -1,5 +1,6 @@
 package com.brikton.lachacra.repositories;
 
+import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.entities.Lote;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,6 @@ public interface ExpedicionRepository extends JpaRepository<Expedicion, Long> {
     boolean existsByIdCliente(Long idCliente);
 
     List<Expedicion> findAllByLote(Lote lote);
+
+    List<Expedicion> findAllByClienteAndOnRemito(Cliente cliente, Boolean onRemito);
 }

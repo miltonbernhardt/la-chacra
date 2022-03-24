@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import toast from "react-hot-toast";
 import Loading from '../../components/Loading';
 import PageFormTable from "../../components/PageFormTable";
 import * as field from "../../resources/fields";
-import { deleteLote, getAllQuesos, getLotesBetweenDates, putLote } from "../../services/RestServices";
+import {deleteLote, getAllQuesos, getLotesBetweenDates, putLote} from "../../services/RestServices";
 import DialogEliminarLote from "../Lotes/DialogEliminarLote";
 import EditLoteDialog from './EditLoteDialog';
 import FormProduccion from "./FormProduccion";
@@ -21,7 +21,7 @@ const VerProduccion = () => {
 
     const fetchLotes = (fechaDesde, fechaHasta) => {
         getLotesBetweenDates(fechaDesde, fechaHasta)
-            .then(({ data }) => setListaLotes(data))
+            .then(({data}) => setListaLotes(data))
             .catch(() => toast.error('No se pudieron cargar los lotes'))
     }
 
@@ -51,7 +51,7 @@ const VerProduccion = () => {
 
     const handleSubmit = useCallback((loteSubmit) => {
         putLote(loteSubmit)
-            .then(({ data }) => {
+            .then(({data}) => {
                 const newList = listaLotes.filter((item) => item.id !== lote.id);
                 setListaLotes([...newList, data]);
             })
@@ -109,7 +109,7 @@ const VerProduccion = () => {
 
 
     if (isLoading)
-        return (<Loading />)
+        return (<Loading/>)
 
     return (
         <>
@@ -120,26 +120,26 @@ const VerProduccion = () => {
                 form={
                     <FormProduccion
                         onBuscar={handleBuscar}
-                        initialDate={today} />
+                        initialDate={today}/>
                 }
                 sizeForm={3}
                 table={
                     <GridProduccion
                         quesos={listaQuesos}
                         data={listaLotesFormatted}
-                        setSelection={setSelection} />
+                        setSelection={setSelection}/>
                 }>
                 <EditLoteDialog
                     lote={lote}
                     open={isEditing}
                     onClose={closeDialog}
                     onSubmit={handleSubmit}
-                    onDelete={eliminarLote} />
+                    onDelete={eliminarLote}/>
                 <DialogEliminarLote
                     open={eliminarDialog}
                     lote={lote}
                     onClose={cancelEliminar}
-                    onSubmit={handleEliminar} />
+                    onSubmit={handleEliminar}/>
             </PageFormTable>
         </>
     );

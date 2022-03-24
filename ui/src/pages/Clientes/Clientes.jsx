@@ -1,15 +1,9 @@
-import { Button } from '@mui/material';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {Button} from '@mui/material';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import toast from 'react-hot-toast';
 import Loading from '../../components/Loading';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
-import {
-    deleteCliente,
-    getAllClientes,
-    getAllTipoClientes,
-    postCliente,
-    putCliente
-} from '../../services/RestServices';
+import {deleteCliente, getAllClientes, getAllTipoClientes, postCliente, putCliente} from '../../services/RestServices';
 import DialogAltaCliente from './DialogAltaCliente';
 import DialogBajaCliente from './DialogBajaCliente';
 import GridClientes from "./GridClientes";
@@ -45,7 +39,7 @@ const CargarClientes = () => {
 
     const fetchClientes = () => {
         getAllClientes()
-            .then(({ data }) => {
+            .then(({data}) => {
                 setListaClientes(data)
             })
             .catch(() => toast.error("No se pudo cargar clientes"))
@@ -54,7 +48,7 @@ const CargarClientes = () => {
 
     const fetchTipoClientes = () => {
         getAllTipoClientes()
-            .then(({ data }) => {
+            .then(({data}) => {
                 setTiposClientes(data);
             })
             .catch(() => toast.error("No se pudo cargar tipos de cliente"))
@@ -124,11 +118,11 @@ const CargarClientes = () => {
 
     const valoresTiposClientes = useMemo(() =>
         tiposClientes.map((c) => {
-            return { id: c.id, value: c.id, label: c.tipo }
+            return {id: c.id, value: c.id, label: c.tipo}
         }), [tiposClientes])
 
     if (isLoadingClientes || isLoadingTipoClientes)
-        return (<Loading />)
+        return (<Loading/>)
 
     return (
         <PageTableButtonPane
@@ -149,12 +143,12 @@ const CargarClientes = () => {
                 onSubmit={onSubmit}
                 open={openDialogAlta}
                 isEditing={isEditing}
-                tiposCliente={valoresTiposClientes} />
+                tiposCliente={valoresTiposClientes}/>
             <DialogBajaCliente
                 cliente={cliente}
                 onClose={onCloseDialog}
                 open={openDialogBaja}
-                onSubmit={onDelete} />
+                onSubmit={onDelete}/>
         </PageTableButtonPane>
     );
 }

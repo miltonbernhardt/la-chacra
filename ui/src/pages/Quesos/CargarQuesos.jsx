@@ -1,10 +1,10 @@
-import { Button } from '@mui/material';
-import { useEffect, useState } from "react";
+import {Button} from '@mui/material';
+import {useEffect, useState} from "react";
 import toast from 'react-hot-toast';
 import Loading from '../../components/Loading';
 import PageTableButtonPane from "../../components/PageTableButtonPane";
 import * as message from "../../resources/messages";
-import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/RestServices";
+import {deleteQueso, getAllQuesos, postQueso, putQueso} from "../../services/RestServices";
 import DialogCargarQueso from './DialogCargarQueso';
 import DialogEliminarQueso from './DialogEliminarQueso';
 import GridQuesos from './GridQuesos';
@@ -109,7 +109,7 @@ const CargarQuesos = () => {
     }
 
     if (isLoading)
-        return (<Loading />)
+        return (<Loading/>)
 
     return (
         <PageTableButtonPane
@@ -122,7 +122,7 @@ const CargarQuesos = () => {
             grid={
                 <GridQuesos
                     listaQuesos={listaQuesos}
-                    setSelection={setSelection} />
+                    setSelection={setSelection}/>
             }
         >
             <DialogCargarQueso
@@ -136,7 +136,7 @@ const CargarQuesos = () => {
                 open={isOpenEliminarProducto}
                 onClose={() => setOpenEliminarProducto(false)}
                 queso={queso}
-                onBorrar={onDelete} />
+                onBorrar={onDelete}/>
         </PageTableButtonPane>
     );
 }
