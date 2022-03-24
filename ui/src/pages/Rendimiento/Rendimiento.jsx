@@ -1,11 +1,11 @@
-import { Grid, Box, Paper } from "@mui/material";
+import { Grid } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import Loading from '../../components/Loading';
+import { getRendimientoByDia, getRendimientoByQueso } from '../../services/RestServices';
 import RendimientoCard from "./RendimientoCard";
-import Chart from '../../components/Chart'
+import RendimientoChart from "./RendimientoChart";
 import RendimientoQuesoCard from "./RendimientoQuesoCard";
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { getRendimientoByDia, getRendimientoByQueso, getAllQuesos } from '../../services/RestServices'
-import Loading from '../../components/Loading'
-import toast from 'react-hot-toast'
 
 const Rendimiento = () => {
 
@@ -20,10 +20,10 @@ const Rendimiento = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const date = currentDate.getDate();
-        // const fechaDesde = '2020-01-01';
-        // const fechaHasta = '2021-12-12';
-        const fechaDesde = `${year}-${padTo2Digits(month)}-${padTo2Digits(date,)}`;
-        const fechaHasta = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+        const fechaDesde = '2020-01-01';
+        const fechaHasta = '2021-12-12';
+        // const fechaDesde = `${year}-${padTo2Digits(month)}-${padTo2Digits(date,)}`;
+        // const fechaHasta = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaRendimientos(data);
@@ -117,10 +117,6 @@ const Rendimiento = () => {
     return (
         isLoadingRendimientoQueso ||
             isLoadingRendimientos ? <Loading /> :
-            // Rendimiento
-            // Rendimiento promedio de la semana
-            // Rendimiento promedio de las tres ultimas semanas (en grafico por dias)
-            // (a este ultimo lo hacemos tambien por quesos, pero con indicadores)
             <Grid container
                 direction="row"
                 spacing={2}
@@ -143,77 +139,30 @@ const Rendimiento = () => {
                 </Grid>
                 {/*Chart*/}
                 <Grid item container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <Paper
-                                        sx={{
-                                            p: 2,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            height: 300,
-                                        }}
-                                    >
-                                        <Chart
-                                            title="Rendimiento"
-                                            yLabel="Rendimiento"
-                                            xLabel="Dias"
-                                            data={rendimientoMultilineFormatted}
-                                            xDataKey="dia"
-                                            dataKey="Ultimos 5 dias"
-                                            dataKey1="5 dias anteriores"
-                                            dataKey2="10 dias anteriores"
-                                            domain={domain}
-                                        />
-                                    </Paper>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <Paper
-                                        sx={{
-                                            p: 2,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            height: 300,
-                                        }}
-                                    >
-                                        <Chart
-                                            title="Rendimiento"
-                                            yLabel="Rendimiento"
-                                            xLabel="Fecha"
-                                            data={rendimientoFormatted}
-                                            xDataKey="fecha"
-                                            dataKey="rendimiento"
-                                            domain={domain}
-                                        />
-                                    </Paper>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Grid>
-                </Grid>{/*Chart*/}
+                    <RendimientoChart
+                        title="Rendimiento"
+                        yLabel="Rendimiento"
+                        xLabel="Dias"
+                        data={rendimientoMultilineFormatted}
+                        xDataKey="dia"
+                        dataKey="Ultimos 5 dias"
+                        dataKey1="5 dias anteriores"
+                        dataKey2="10 dias anteriores"
+                        domain={domain}
+                        legend={true} />
+                    <RendimientoChart
+                        title="Rendimiento"
+                        yLabel="Rendimiento"
+                        xLabel="Fecha"
+                        data={rendimientoFormatted}
+                        xDataKey="fecha"
+                        dataKey="rendimiento"
+                        domain={domain} />
+                </Grid>
                 <Grid item container spacing={2}>
                     {listaByQuesoFormatted.map((rendimiento) => (
                         <Grid item key={rendimiento.queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                            <RendimientoQuesoCard queso={rendimiento.queso}//nombre de queso
+                            <RendimientoQuesoCard queso={rendimiento.queso}
                                 rendimiento={rendimiento.rendimiento} />
                         </Grid>
                     ))}

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer, Legend } from 'recharts';
 import Title from './Title';
 
-export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2, dot = false, domain/*:[bottom,top]*/ }) {
+export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2, legend = false, dot = false, domain/*:[bottom,top]*/ }) {
 
     const theme = useTheme();
 
@@ -42,6 +42,7 @@ export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1
                         </Label>
                     </YAxis>
                     <Tooltip />
+                    {legend ? <Legend /> : <></>}
                     <Line
                         isAnimationActive={true}
                         type="monotone"
