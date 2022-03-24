@@ -504,7 +504,7 @@ public class LoteServiceTest {
 
     @Test
     void Get_Between_Dates__OK(){
-        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(LocalDate.class),any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(mockLote()));
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(),any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(mockLote()));
         var result = service.getBetweenDates(LocalDate.now(),LocalDate.now());
         assertEquals(1,result.size());
     }
@@ -528,6 +528,43 @@ public class LoteServiceTest {
         assertEquals(mockQueso().getCodigo(),result.getCodigoQueso());
     }
 
+    @Test
+    void Get_Rendimiento_By_Dia__OK(){
+        var lote1 = mockLote();
+        var lote2 = mockLote();
+        var lote3 = mockLote();
+        lote1.setFechaElaboracion(LocalDate.of(2021, 10, 10));
+        lote2.setFechaElaboracion(LocalDate.of(2021, 10, 11));
+        lote3.setFechaElaboracion(LocalDate.of(2021, 10, 11));
+
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(),any(),any()))
+                .thenReturn(List.of(lote1,lote2,lote3));
+
+        var result = service.getRendimientoByDia(LocalDate.of(2021, 10, 10),LocalDate.of(2021, 10, 10));
+        assertEquals(2,result.size());
+    }
+
+    @Test
+    void Get_Rendimiento_By_Queso__OK(){
+        var lote1 = mockLote();
+        var lote2 = mockLote();
+        var lote3 = mockLote();
+
+        var queso1 = mockQueso();
+        var queso2 = mockQueso();
+        queso1.setTipoQueso("tipo1");
+        queso2.setTipoQueso("tipo2");
+
+        lote1.setQueso(queso1);
+        lote2.setQueso(queso1);
+        lote3.setQueso(queso2);
+
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(),any(),any()))
+                .thenReturn(List.of(lote1,lote2,lote3));
+
+        var result = service.getRendimientoByQueso(LocalDate.of(2021, 10, 10),LocalDate.of(2021, 10, 10));
+        assertEquals(2,result.size());
+    }
 
     Lote mockLote() {
         Lote lote = new Lote();
