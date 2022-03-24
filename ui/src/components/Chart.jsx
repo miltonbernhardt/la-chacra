@@ -3,7 +3,8 @@ import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, Tooltip, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from './Title';
 
-export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2 }) {
+export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1, dataKey2, dot = false, domain/*:[bottom,top]*/ }) {
+
     const theme = useTheme();
 
     return (
@@ -27,7 +28,7 @@ export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1
                     <YAxis
                         stroke={theme.palette.text.secondary}
                         style={theme.typography.body2}
-                    >
+                        domain={domain} >
                         <Label
                             angle={270}
                             position="left"
@@ -46,19 +47,19 @@ export default function Chart({ title, data, yLabel, xDataKey, dataKey, dataKey1
                         type="monotone"
                         dataKey={dataKey}
                         stroke="#dc3030"
-                        dot={true} />
+                        dot={dot} />
                     <Line
                         isAnimationActive={true}
                         type="monotone"
                         dataKey={dataKey1}
                         stroke="#0288d1"
-                        dot={true} />
+                        dot={dot} />
                     <Line
                         isAnimationActive={true}
                         type="monotone"
                         dataKey={dataKey2}
                         stroke="#ed6c02"
-                        dot={true} />
+                        dot={dot} />
                 </LineChart>
             </ResponsiveContainer>
         </React.Fragment>

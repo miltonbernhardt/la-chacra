@@ -17,17 +17,20 @@ const Rendimiento = () => {
 
     const fetchRendimientos = useCallback(() => {
         const currentDate = new Date();
-        const today = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
-        const pastMonth = `${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`;
-        const fechaDesde = '2020-01-01';
-        const fechaHasta = '2021-12-12';
-        getRendimientoByDia(fechaDesde, fechaHasta)//TODO change this
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        // const fechaDesde = '2020-01-01';
+        // const fechaHasta = '2021-12-12';
+        const fechaDesde = `${year}-${padTo2Digits(month)}-${padTo2Digits(date,)}`;
+        const fechaHasta = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+        getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaRendimientos(data);
             })
             .catch(() => toast.error('No se pudo cargar rendimientos'))
             .finally(() => setLoadingRendimientos(false));
-        getRendimientoByQueso(fechaDesde, fechaHasta)//TODO change this
+        getRendimientoByQueso(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setRendimientosQuesos(data);
             })
@@ -35,9 +38,14 @@ const Rendimiento = () => {
             .finally(() => setLoadingRendimientoQueso(false));
     }, [])
 
+    const padTo2Digits = (num) => {
+        return num.toString().padStart(2, '0');
+    }
+
+
     useEffect(() => {
         fetchRendimientos();
-    }, [fetchRendimientos])//TODO quitar hardcode
+    }, [fetchRendimientos])
 
 
     // --- Variables ---
@@ -69,7 +77,7 @@ const Rendimiento = () => {
             }
         })
 
-    const rendimientoChartFormatted = useMemo(() => {
+    const rendimientoMultilineFormatted = useMemo(() => {
         const semana1 = listaRendimientos.slice(-16, -10);
         const semana2 = listaRendimientos.slice(-11, -5)
         const ultimaSemana = listaRendimientos.slice(-6);
@@ -82,6 +90,29 @@ const Rendimiento = () => {
             }
         })
     }, [listaRendimientos]);
+
+    const rendimientoFormatted = useMemo(() => {
+        return listaRendimientos.map((value, index) => {
+            return {
+                ...value,
+                fecha: value.fecha.at(8) + value.fecha.at(9) + '-' +
+                    value.fecha.at(5) + value.fecha.at(6)
+            }
+        })
+    }, [listaRendimientos]);
+
+    const domain = useMemo(() => {
+        const dataArray = listaRendimientos.slice(-16);
+        let bottom = 11;
+        let top = 12;
+        for (var i in dataArray) {
+            if (bottom > dataArray[i].rendimiento) bottom = dataArray[i].rendimiento;
+            if (top < dataArray[i].rendimiento) top = dataArray[i].rendimiento;
+        }
+        bottom = Math.ceil(bottom * 1) / 1
+        top = Math.floor(top * 1) / 1
+        return [bottom, top];
+    }, [listaRendimientos])
 
     return (
         isLoadingRendimientoQueso ||
@@ -134,11 +165,12 @@ const Rendimiento = () => {
                                             title="Rendimiento"
                                             yLabel="Rendimiento"
                                             xLabel="Dias"
-                                            data={rendimientoChartFormatted}
+                                            data={rendimientoMultilineFormatted}
                                             xDataKey="dia"
                                             dataKey="Ultimos 5 dias"
                                             dataKey1="5 dias anteriores"
                                             dataKey2="10 dias anteriores"
+                                            domain={domain}
                                         />
                                     </Paper>
                                 </Grid>
@@ -167,11 +199,10 @@ const Rendimiento = () => {
                                             title="Rendimiento"
                                             yLabel="Rendimiento"
                                             xLabel="Fecha"
-                                            data={listaRendimientos}
+                                            data={rendimientoFormatted}
                                             xDataKey="fecha"
                                             dataKey="rendimiento"
-                                            dataKey1="rendimientoS2"
-                                            dataKey2="rendimientoS3"
+                                            domain={domain}
                                         />
                                     </Paper>
                                 </Grid>
