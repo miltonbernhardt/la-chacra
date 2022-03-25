@@ -6,6 +6,7 @@ import { getRendimientoByDia, getRendimientoByQueso } from '../../services/RestS
 import RendimientoCard from "./RendimientoCard";
 import RendimientoChart from "./RendimientoChart";
 import RendimientoQuesoCard from "./RendimientoQuesoCard";
+import RendimientoSearch from "./RendimientoSearch";
 
 const Rendimiento = () => {
 
@@ -15,18 +16,17 @@ const Rendimiento = () => {
     const [isLoadingRendimientos, setLoadingRendimientos] = useState(true);
     const [isLoadingRendimientoQueso, setLoadingRendimientoQueso] = useState(true)
 
-    const fetchRendimientos = useCallback(() => {
-        const currentDate = new Date();
+    const fetchRendimientos = useCallback((fechaHasta, meses) => {
+        const currentDate = new Date(fechaHasta);
+        currentDate.setMonth(currentDate.getMonth() - meses);
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const date = currentDate.getDate();
-        const fechaDesde = '2020-01-01';
-        const fechaHasta = '2021-12-12';
-        // const fechaDesde = `${year}-${padTo2Digits(month)}-${padTo2Digits(date,)}`;
-        // const fechaHasta = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {
-                setListaRendimientos(data);
+                data.length > 16 ? setListaRendimientos(data) :
+                    toast.error('No se poseen suficientes datos');
             })
             .catch(() => toast.error('No se pudo cargar rendimientos'))
             .finally(() => setLoadingRendimientos(false));
@@ -42,11 +42,21 @@ const Rendimiento = () => {
         return num.toString().padStart(2, '0');
     }
 
+    const fechaInicial = useMemo(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+    }, [])
 
     useEffect(() => {
-        fetchRendimientos();
-    }, [fetchRendimientos])
+        fetchRendimientos(fechaInicial, 1);
+    }, [fechaInicial, fetchRendimientos])
 
+    const handleSearch = useCallback((fechaHasta, meses) => {
+        fetchRendimientos(fechaHasta, meses);
+    }, [fetchRendimientos])
 
     // --- Variables ---
 
@@ -128,6 +138,10 @@ const Rendimiento = () => {
                     boxSizing: "border-box",
                 }}>
                 <Grid item container spacing={2}>
+                    <RendimientoSearch
+                        fechaInicial={fechaInicial}
+                        meses={1}
+                        onSearch={handleSearch} />
                     <RendimientoCard
                         titulo="rendimiento"
                         valor={ultimoRendimientoPromedio}
@@ -135,7 +149,7 @@ const Rendimiento = () => {
                     <RendimientoCard
                         titulo="rendimiento"
                         valor={rendimientoPromedio}
-                        descripcion="Rendimiento promedio del último mes" />
+                        descripcion="Rendimiento promedio del período" />
                 </Grid>
                 {/*Chart*/}
                 <Grid item container spacing={2}>

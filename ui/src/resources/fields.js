@@ -101,6 +101,10 @@ export const fechaHasta = "Hasta"
 export const fechaRemito = "Fecha de remito"
 export const importeTotal = "Importe total"
 
+// rendimiento
+export const cantidadMeses = "Cantidad de meses"
+export const backCantidadMeses = "cantidadMeses"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -145,6 +149,7 @@ const backendFields = () => {
     fields.set(backFechaHasta, fechaHasta)
     fields.set(backFechaRemito, fechaRemito)
     fields.set(backImporteTotal, importeTotal)
+    fields.set(backCantidadMeses, cantidadMeses)
     return fields
 }
 
@@ -157,7 +162,7 @@ export const toastValidationErrors = (errors) => {
         let realField = mapFields.get(field)
         realField = realField ?? field
         toast.error(<>
-            <div style={{width: "100%"}}><b>{realField}</b>: {msg}</div>
+            <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>
         </>)
     })
 }
