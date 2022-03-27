@@ -82,7 +82,8 @@ export const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
     return <Dialog
         open={open}
         onClose={onClose}
-        scroll="body">
+        scroll="body"
+    >
         <DialogTitle>Editar Producción</DialogTitle>
         <DialogContent
             style={{ backgroundColor: deleteEnabled ? "#F0BEBE" : '' }}>

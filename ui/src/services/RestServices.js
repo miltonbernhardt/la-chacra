@@ -3,8 +3,9 @@ import toast from 'react-hot-toast';
 import { toastValidationErrors } from "../resources/fields";
 import * as paths from "../resources/paths";
 
+//todo usar env
 const PUERTO = '8000';
-const RAIZ_URL = `http://localhost:${PUERTO}`; //todo usar env
+const RAIZ_URL = `http://localhost:${PUERTO}`;
 
 const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'
@@ -81,9 +82,8 @@ const processResponseError2 = (err) => {
 const processStatusCode2 = (statusCode) => {
     switch (statusCode) {
         case 401:
-            //todo si esta en login no deberia redireccionar
             if (window.location.pathname !== paths.login) {
-                localStorage.removeItem("username"); //todo esta mal
+                localStorage.removeItem("username");
                 window.location.pathname = paths.login
             }
             break

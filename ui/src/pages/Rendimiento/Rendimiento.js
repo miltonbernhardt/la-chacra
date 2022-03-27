@@ -17,7 +17,6 @@ export const Rendimiento = () => {
     const [isLoadingRendimientos, setLoadingRendimientos] = useState(true);
     const [isLoadingRendimientoQueso, setLoadingRendimientoQueso] = useState(true)
 
-    //TODO: mover mensajes a constantes
     const fetchRendimientos = useCallback((fechaHasta, meses) => {
         //TODO: mover conversion de fechas a un archivo aparte como funcion
         const currentDate = new Date(fechaHasta);
@@ -62,7 +61,6 @@ export const Rendimiento = () => {
     }, [fetchRendimientos])
 
     // --- Variables ---
-    //TODO: mover funcion a un archivo aparte
     const rendimientoPromedio = useMemo(() => {
         var sum = 0.0;
         for (var i in listaRendimientos) {
@@ -71,7 +69,6 @@ export const Rendimiento = () => {
         return (Math.round((sum / listaRendimientos.length) * 100) / 100);
     }, [listaRendimientos])
 
-    //TODO: mover funcion a un archivo aparte
     const ultimoRendimientoPromedio = useMemo(() => {
         let sum = 0.0;
         const ultimaSemana = listaRendimientos.slice(-5);
@@ -121,8 +118,8 @@ export const Rendimiento = () => {
             if (bottom > dataArray[i].rendimiento) bottom = dataArray[i].rendimiento;
             if (top < dataArray[i].rendimiento) top = dataArray[i].rendimiento;
         }
-        bottom = Math.ceil(bottom * 1) / 1 //TODO: simplify
-        top = Math.floor(top * 1) / 1 //TODO: simplify
+        bottom = Math.ceil(bottom)
+        top = Math.floor(top)
         return [bottom, top];
     }, [listaRendimientos])
 

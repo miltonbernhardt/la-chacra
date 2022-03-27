@@ -27,7 +27,6 @@ export const CargarPrecios = () => {
     const [isLoadingQuesos, setLoadingQuesos] = useState(true);
     const [isLoadingClientes, setLoadingClientes] = useState(true);
 
-    //TODO: mover mensaje a constante
     const fetchPrecios = () => {
         getAllPrecios()
             .then(({ data }) => setListaPrecios(data))
@@ -35,7 +34,6 @@ export const CargarPrecios = () => {
             .finally(() => setLoadingPrecios(false))
     }
 
-    //TODO: mover mensaje a constante
     const fetchQuesos = () => {
         getAllQuesos()
             .then(({ data }) => setListaQuesos(data))
@@ -43,7 +41,6 @@ export const CargarPrecios = () => {
             .finally(() => setLoadingQuesos(false))
     }
 
-    //TODO: mover mensaje a constante
     const fetchTipoClientes = () => {
         getAllTipoClientes()
             .then(({ data }) => setListaTipoClientes(data))

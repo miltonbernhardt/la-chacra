@@ -103,7 +103,6 @@ export const VerProduccion = () => {
         }
     });
 
-
     if (isLoading) return (<Loading/>)
 
     return <PageFormTable

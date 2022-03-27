@@ -34,7 +34,6 @@ export const CargarExpedicion = () => {
         fetchClientes();
     }, []);
 
-    //TODO: mover mensajes a constante
     const fetchClientes = () => {
         getAllClientes()
             .then(({ data }) => {
@@ -44,7 +43,6 @@ export const CargarExpedicion = () => {
             .finally(() => setLoadingClientes(false));
     }
 
-    //TODO: mover mensajes a constante
     const handleSubmit = useCallback((expedicionForm) => {
         setExpedicion(expedicionForm);
         if (isEditing)

@@ -44,7 +44,6 @@ export const CargarClientes = () => {
 
     const [isEditing, setEditing] = useState(false);
 
-    //TODO: mover mensajes a constantes
     const fetchClientes = () => {
         getAllClientes()
             .then(({ data }) => {
@@ -54,7 +53,6 @@ export const CargarClientes = () => {
             .finally(() => setLoadingClientes(false))
     }
 
-    //TODO: mover mensajes a constantes
     const fetchTipoClientes = () => {
         getAllTipoClientes()
             .then(({ data }) => {
@@ -104,7 +102,6 @@ export const CargarClientes = () => {
         setOpenDialogAlta(true);
     }
 
-    //TODO: mover mensajes a constantes
     const onOpenBaja = () => {
         if (!cliente.id)
             toast.error("No se seleccionó ningún cliente");
@@ -112,7 +109,6 @@ export const CargarClientes = () => {
             setOpenDialogBaja(true);
     }
 
-    //TODO: mover mensajes a constantes
     const onOpenActualizar = () => {
         if (!cliente.id)
             toast.error("No se seleccionó ningún cliente");

@@ -24,7 +24,7 @@ function useProvideAuth() {
     const signin = ({ username, password }) => {
         const response = signinApi({ username, password })
             .then(response => {
-                localStorage.setItem("username", "admin") //todo
+                localStorage.setItem("username", username)
                 setIsLogged(true)
                 return response
             })

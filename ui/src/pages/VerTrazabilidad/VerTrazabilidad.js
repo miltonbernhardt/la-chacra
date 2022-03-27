@@ -29,7 +29,6 @@ export const VerTrazabilidad = () => {
 
     useEffect(() => fetchClientes(), []);
 
-    //TODO: mover mensajes a constantes
     const fetchClientes = () => {
         getAllClientes()
             .then(({ data }) => {
@@ -38,7 +37,6 @@ export const VerTrazabilidad = () => {
             .catch(() => toast.error("No se pudo cargar clientes"))
     }
 
-    //TODO: mover mensajes a constantes
     const handleBuscar = useCallback((idLote) => {
         getLote(idLote)
             .then(({ data }) => setLote(data))
@@ -49,7 +47,6 @@ export const VerTrazabilidad = () => {
             .catch(() => toast.error('No se pudieron cargar las expediciones'))
     }, [])
 
-    // --- Variables ---
     const expedicionesFormatted = useMemo(() => listaExpediciones.map(expedicion => {
         return {
             id: expedicion.id,
