@@ -1,17 +1,15 @@
-import {CardActionArea, CardHeader} from '@mui/material';
+import { CardActionArea, CardHeader } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import {red} from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-const RendimientoQuesoCard = ({queso, stockQueso}) => {
+const RendimientoQuesoCard = ({ queso, rendimiento }) => {
     return (
         <Card
             sx={{
                 height: '100%',
-                // display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center'
@@ -20,19 +18,21 @@ const RendimientoQuesoCard = ({queso, stockQueso}) => {
             <CardActionArea onClick={() => alert('queso')}>
                 <CardHeader
                     avatar={
-                        <Avatar sx={{bgcolor: red[500]}}>
+                        <Avatar sx={{ bgcolor: queso.color }} >
                             {queso.nomenclatura}
                         </Avatar>
-                    }
-                    title={queso.tipoQueso}/>
+                    } />
                 <CardContent sx={{
                     flexGrow: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
                     textAlign: 'center',
                 }}>
-                    <Typography gutterBottom variant="h3" component="h2">
-                        {stockQueso}
+                    <Typography gutterBottom variant="h3" component="h2" >
+                        {rendimiento}
+                    </Typography>
+                    <Typography gutterBottom variant="h7" color="textSecondary" component="h2" >
+                        {queso.tipoQueso}
                     </Typography>
                 </CardContent>
             </CardActionArea>

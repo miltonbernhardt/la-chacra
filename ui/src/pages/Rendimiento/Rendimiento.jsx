@@ -1,100 +1,187 @@
-import {Box, Grid, Paper} from "@mui/material";
+import { Grid } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import Loading from '../../components/Loading';
+import { getRendimientoByDia, getRendimientoByQueso } from '../../services/RestServices';
 import RendimientoCard from "./RendimientoCard";
-import Chart from '../../components/Chart'
-import {quesos} from "../../data/data";
+import RendimientoChart from "./RendimientoChart";
 import RendimientoQuesoCard from "./RendimientoQuesoCard";
+import RendimientoSearch from "./RendimientoSearch";
 
 const Rendimiento = () => {
 
-    const data = [
-        {dia: 1, rendimientoS1: 13, rendimientoS2: 12.7, rendimientoS3: 13.2},
-        {dia: 2, rendimientoS1: 12, rendimientoS2: 13.1, rendimientoS3: 13.7},
-        {dia: 3, rendimientoS1: 14, rendimientoS2: 13.5, rendimientoS3: 12.8},
-        {dia: 4, rendimientoS1: 13.5, rendimientoS2: 14.3, rendimientoS3: 12.9},
-        {dia: 5, rendimientoS1: 13.75, rendimientoS2: 14.2, rendimientoS3: 13.5},
-        {dia: 6, rendimientoS1: 12.8, rendimientoS2: 14, rendimientoS3: 13.8},
-        {dia: 7, rendimientoS1: 14, rendimientoS2: 13.7, rendimientoS3: 13},
-        {dia: 8, rendimientoS1: 13.7, rendimientoS2: 13.9, rendimientoS3: 13.9},
-        {dia: 9, rendimientoS1: 13.2, rendimientoS2: 13, rendimientoS3: 14},
-    ]
+    const [listaRendimientos, setListaRendimientos] = useState([]);
+    const [rendimientosQuesos, setRendimientosQuesos] = useState([]);
+
+    const [isLoadingRendimientos, setLoadingRendimientos] = useState(true);
+    const [isLoadingRendimientoQueso, setLoadingRendimientoQueso] = useState(true)
+
+    const fetchRendimientos = useCallback((fechaHasta, meses) => {
+        const currentDate = new Date(fechaHasta);
+        currentDate.setMonth(currentDate.getMonth() - meses);
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+        getRendimientoByDia(fechaDesde, fechaHasta)
+            .then(({ data }) => {
+                data.length > 16 ? setListaRendimientos(data) :
+                    toast.error('No se poseen suficientes datos');
+            })
+            .catch(() => toast.error('No se pudo cargar rendimientos'))
+            .finally(() => setLoadingRendimientos(false));
+        getRendimientoByQueso(fechaDesde, fechaHasta)
+            .then(({ data }) => {
+                setRendimientosQuesos(data);
+            })
+            .catch(() => toast.error('No se pudo cargar rendimientos de quesos'))
+            .finally(() => setLoadingRendimientoQueso(false));
+    }, [])
+
+    const padTo2Digits = (num) => {
+        return num.toString().padStart(2, '0');
+    }
+
+    const fechaInicial = useMemo(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+    }, [])
+
+    useEffect(() => {
+        fetchRendimientos(fechaInicial, 1);
+    }, [fechaInicial, fetchRendimientos])
+
+    const handleSearch = useCallback((fechaHasta, meses) => {
+        fetchRendimientos(fechaHasta, meses);
+    }, [fetchRendimientos])
+
+    // --- Variables ---
+
+    const rendimientoPromedio = useMemo(() => {
+        var sum = 0.0;
+        for (var i in listaRendimientos) {
+            sum = (Math.round((sum + listaRendimientos[i].rendimiento) * 100) / 100);
+        }
+        const rendimiento = (Math.round((sum / listaRendimientos.length) * 100) / 100);
+        return rendimiento;
+    }, [listaRendimientos])
+
+    const ultimoRendimientoPromedio = useMemo(() => {
+        var sum = 0.0;
+        const ultimaSemana = listaRendimientos.slice(-5);
+        for (var i in ultimaSemana) {
+            sum = (Math.round((sum + ultimaSemana[i].rendimiento) * 100) / 100);
+        }
+        const rendimiento = (Math.round((sum / ultimaSemana.length) * 100) / 100);
+        return rendimiento;
+    }, [listaRendimientos])
+
+    const listaByQuesoFormatted =
+        rendimientosQuesos.map((item) => {
+            return {
+                ...item,
+                rendimiento: (Math.round(item.rendimiento * 100) / 100)
+            }
+        })
+
+    const rendimientoMultilineFormatted = useMemo(() => {
+        const semana1 = listaRendimientos.slice(-16, -10);
+        const semana2 = listaRendimientos.slice(-11, -5)
+        const ultimaSemana = listaRendimientos.slice(-6);
+        return ultimaSemana.map((value, index) => {
+            return {
+                dia: index,
+                "10 dias anteriores": semana1.at(index).rendimiento,
+                "5 dias anteriores": semana2.at(index).rendimiento,
+                "Ultimos 5 dias": value.rendimiento
+            }
+        })
+    }, [listaRendimientos]);
+
+    const rendimientoFormatted = useMemo(() => {
+        return listaRendimientos.map((value, index) => {
+            return {
+                ...value,
+                fecha: value.fecha.at(8) + value.fecha.at(9) + '-' +
+                    value.fecha.at(5) + value.fecha.at(6)
+            }
+        })
+    }, [listaRendimientos]);
+
+    const domain = useMemo(() => {
+        const dataArray = listaRendimientos.slice(-16);
+        let bottom = 11;
+        let top = 12;
+        for (var i in dataArray) {
+            if (bottom > dataArray[i].rendimiento) bottom = dataArray[i].rendimiento;
+            if (top < dataArray[i].rendimiento) top = dataArray[i].rendimiento;
+        }
+        bottom = Math.ceil(bottom * 1) / 1
+        top = Math.floor(top * 1) / 1
+        return [bottom, top];
+    }, [listaRendimientos])
 
     return (
-        // Rendimiento
-        // Rendimiento promedio de la semana
-        // Rendimiento promedio de las tres ultimas semanas (en grafico por dias)
-        // (a este ultimo lo hacemos tambien por quesos, pero con indicadores)
-        <Grid container
-              direction="row"
-              spacing={2}
-              paddingRight={2}
-              style={{
-                  minHeight: "92%",
-                  maxWidth: "98%",
-                  margin: "1%",
-                  boxSizing: "border-box",
-              }}>
-            <Grid item container spacing={2}>
-                <Grid item xs={12} sm={6}>
+        isLoadingRendimientoQueso ||
+            isLoadingRendimientos ? <Loading /> :
+            <Grid container
+                direction="row"
+                spacing={2}
+                paddingRight={2}
+                style={{
+                    minHeight: "92%",
+                    maxWidth: "98%",
+                    margin: "1%",
+                    boxSizing: "border-box",
+                }}>
+                <Grid item container spacing={2}>
+                    <RendimientoSearch
+                        fechaInicial={fechaInicial}
+                        meses={1}
+                        onSearch={handleSearch} />
                     <RendimientoCard
                         titulo="rendimiento"
-                        valor="13.5"
-                        descripcion="Rendimiento promedio de la semana"
-                    />
-
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                        valor={ultimoRendimientoPromedio}
+                        descripcion="Rendimiento promedio de la semana" />
                     <RendimientoCard
                         titulo="rendimiento"
-                        valor="12.8"
-                        descripcion="Rendimiento promedio de las últimas 3 semanas"
-                    />
+                        valor={rendimientoPromedio}
+                        descripcion="Rendimiento promedio del período" />
                 </Grid>
-            </Grid>
-            {/*Chart*/}
-            <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Paper
-                                    sx={{
-                                        p: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: 300,
-                                    }}
-                                >
-                                    <Chart
-                                        title="Rendimiento"
-                                        yLabel="Rendimiento"
-                                        xLabel="Dias"
-                                        data={data}
-                                        xDataKey="dia"
-                                        dataKey="rendimientoS1"
-                                        dataKey1="rendimientoS2"
-                                        dataKey2="rendimientoS3"
-                                    />
-                                </Paper>
-                            </Grid>
+                {/*Chart*/}
+                <Grid item container spacing={2}>
+                    <RendimientoChart
+                        title="Rendimiento"
+                        yLabel="Rendimiento"
+                        xLabel="Dias"
+                        data={rendimientoMultilineFormatted}
+                        xDataKey="dia"
+                        dataKey="Ultimos 5 dias"
+                        dataKey1="5 dias anteriores"
+                        dataKey2="10 dias anteriores"
+                        domain={domain}
+                        legend={true} />
+                    <RendimientoChart
+                        title="Rendimiento"
+                        yLabel="Rendimiento"
+                        xLabel="Fecha"
+                        data={rendimientoFormatted}
+                        xDataKey="fecha"
+                        dataKey="rendimiento"
+                        domain={domain} />
+                </Grid>
+                <Grid item container spacing={2}>
+                    {listaByQuesoFormatted.map((rendimiento) => (
+                        <Grid item key={rendimiento.queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                            <RendimientoQuesoCard queso={rendimiento.queso}
+                                rendimiento={rendimiento.rendimiento} />
                         </Grid>
-                    </Box>
+                    ))}
                 </Grid>
             </Grid>
-            <Grid item container spacing={2}>
-                {quesos.map((card) => (
-                    <Grid item key={card.codigo} xs={12} sm={6} md={4} lg={3} xl={2}>
-                        <RendimientoQuesoCard queso={card}//nombre de queso
-                                              stockQueso={100}/>
-                    </Grid>
-                ))}
-            </Grid>
-        </Grid>
     );
 }
 

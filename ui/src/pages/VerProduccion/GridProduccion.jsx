@@ -1,9 +1,9 @@
-import {Chip, Typography} from '@mui/material';
-import {DataGrid} from '@mui/x-data-grid';
-import {useMemo} from "react";
+import { Chip, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { useMemo } from "react";
 import * as field from "../../resources/fields";
 
-const GridProduccion = ({data, setSelection}) => {
+const GridProduccion = ({ data, setSelection }) => {
 
     const columns = useMemo(() => {
         return [
@@ -33,10 +33,10 @@ const GridProduccion = ({data, setSelection}) => {
                 headerName: 'Queso',
                 flex: 0.75,
                 minWidth: 50,
-                renderCell: ({value}) => {
+                renderCell: ({ value }) => {
                     return <Chip
                         label={value.tipoQueso}
-                        style={{backgroundColor: value.color}}/>
+                        style={{ backgroundColor: value.color }} />
                 }
             },
             {
@@ -65,13 +65,15 @@ const GridProduccion = ({data, setSelection}) => {
                 type: 'number',
                 flex: 0.5,
                 minWidth: 50,
-                renderCell: ({value}) => {
+                renderCell: ({ value }) => {
                     return (
                         <Chip
                             label={value.stockLote}
-                            color={value.color}/>
+                            color={value.color} />
                     );
-                }
+                },
+                sortComparator: (v1, v2) => { return v1.stockLote - v2.stockLote },
+
             },
             {
                 field: field.backPeso,
@@ -93,14 +95,14 @@ const GridProduccion = ({data, setSelection}) => {
     return (
         < >
             <DataGrid
-                style={{minHeight: "600px"}}
+                style={{ minHeight: "600px" }}
                 autoHeight={true}
                 rows={data}
                 columns={columns}
                 rowHeight={42}
                 pageSize={15}
                 rowsPerPageOptions={[15]}
-                onCellDoubleClick={(params) => setSelection(params.id)}/>
+                onCellDoubleClick={(params) => setSelection(params.id)} />
             <Typography variant="h7" color="GrayText">
                 Doble click sobre una fila de la tabla para editar el lote de producción
             </Typography>
