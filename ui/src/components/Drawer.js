@@ -225,8 +225,7 @@ export const Drawer = ({ drawerWidth, open, handleDrawerClose, theme, permisos }
                     {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                 </IconButton>
             </DrawerHeader>
-            >
-            <HomeSection/>
+            <HomeSection closeDrawer={handleDrawerClose}/>
             <LoadUpSection closeDrawer={handleDrawerClose} permisos={permisos}/>
             <BusinessSection closeDrawer={handleDrawerClose} permisos={permisos}/>
             <StatsSection closeDrawer={handleDrawerClose} permisos={permisos}/>

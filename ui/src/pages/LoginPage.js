@@ -1,7 +1,7 @@
 import { Button, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import * as React from 'react';
 import { createRef } from 'react';
-import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 import { Input } from "../components/Input";
 import { LoginIcon } from "../Images";
 import * as field from "../resources/fields";

@@ -125,7 +125,6 @@ export const FormLote = ({ quesos, lote, cancelEditing, deleteLote, isEditingLot
                        id={field.backPeso}
                        label={field.peso}
                        value={loteForm.peso}/>
-                Poner cajas
                 <Input ref={refLoteCultivo}
                        id={field.backLoteCultivo}
                        label={field.loteCultivo}

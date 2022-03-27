@@ -3,7 +3,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useState } from "react";
-import { Toolbar } from "../components/Toolbar";
+import { CustomToolbar } from "../components/CustomToolbar";
 import { Drawer } from "../components/Drawer";
 import { Routes } from "../components/Routes";
 import { useAuth } from "../services/use-auth";
@@ -54,7 +54,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-
 export const MainPage = ({ theme }) => {
     const auth = useAuth();
 
@@ -66,7 +65,7 @@ export const MainPage = ({ theme }) => {
     return <Box display="flex" height="98vh">
         <CssBaseline/>
         <AppBar position="fixed" open={drawerOpen}>
-            <Toolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
+            <CustomToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
         </AppBar>
         <Drawer
             drawerWidth={drawerWidth}

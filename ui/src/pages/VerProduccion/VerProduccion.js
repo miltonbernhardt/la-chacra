@@ -5,7 +5,7 @@ import { Loading } from '../../components/Loading';
 import { PageFormTable } from "../../components/PageFormTable";
 import * as field from "../../resources/fields";
 import { deleteLote, getAllQuesos, getLotesBetweenDates, putLote } from "../../services/RestServices";
-import DialogEliminarLote from "../Lotes/DialogEliminarLote";
+import { DialogEliminarLote } from "../Lotes/DialogEliminarLote";
 import { EditLoteDialog } from './EditLoteDialog';
 import { FormProduccion } from "./FormProduccion";
 import { GridProduccion } from "./GridProduccion";
@@ -85,63 +85,51 @@ export const VerProduccion = () => {
         return `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`
     }, []);
 
-    const listaLotesFormatted =
-        listaLotes.map((lote) => {
-            let colorStock = lote.cantHormas === lote.stockLote ? 'info' : 'default';
-            if (lote.cantHormas > lote.stockLote) colorStock = 'success';
-            if (0 > lote.stockLote) colorStock = 'error';
-            if (0 === lote.stockLote) colorStock = 'default';
-            if (0 === lote.stockLote) colorStock = 'default';
-            return {
-                ...lote,
-                [field.backStockLote]: {
-                    stockLote: lote.stockLote,
-                    color: colorStock
-                },
-                [field.backCodigoQueso]:
-                    listaQuesos
-                        .filter(q => {
-                            return q.codigo === lote.codigoQueso
-                        })
-                        .pop()
+    const listaLotesFormatted = listaLotes.map((lote) => {
+        let colorStock = lote.cantHormas === lote.stockLote ? 'info' : 'default';
+        if (lote.cantHormas > lote.stockLote) colorStock = 'success';
+        if (0 > lote.stockLote) colorStock = 'error';
+        if (0 === lote.stockLote) colorStock = 'default';
+        if (0 === lote.stockLote) colorStock = 'default';
+        return {
+            ...lote, [field.backStockLote]: {
+                stockLote: lote.stockLote, color: colorStock
+            }, [field.backCodigoQueso]: listaQuesos
+                .filter(q => {
+                    return q.codigo === lote.codigoQueso
+                })
+                .pop()
 
-            }
-        });
+        }
+    });
 
 
-    if (isLoading)
-        return (<Loading/>)
+    if (isLoading) return (<Loading/>)
 
-    return (
-        <>
-            <PageFormTable
-                mdForm={2}
-                lgForm={2}
-                titleForm={"Producción"}
-                form={
-                    <FormProduccion
-                        onBuscar={handleBuscar}
-                        initialDate={today}/>
-                }
-                sizeForm={3}
-                table={
-                    <GridProduccion
-                        quesos={listaQuesos}
-                        data={listaLotesFormatted}
-                        setSelection={setSelection}/>
-                }>
-                <EditLoteDialog
-                    lote={lote}
-                    open={isEditing}
-                    onClose={closeDialog}
-                    onSubmit={handleSubmit}
-                    onDelete={eliminarLote}/>
-                <DialogEliminarLote
-                    open={eliminarDialog}
-                    lote={lote}
-                    onClose={cancelEliminar}
-                    onSubmit={handleEliminar}/>
-            </PageFormTable>
-        </>
-    );
+    return (<>
+        <PageFormTable
+            mdForm={2}
+            lgForm={2}
+            titleForm={"Producción"}
+            form={<FormProduccion
+                onBuscar={handleBuscar}
+                initialDate={today}/>}
+            sizeForm={3}
+            table={<GridProduccion
+                quesos={listaQuesos}
+                data={listaLotesFormatted}
+                setSelection={setSelection}/>}>
+            <EditLoteDialog
+                lote={lote}
+                open={isEditing}
+                onClose={closeDialog}
+                onSubmit={handleSubmit}
+                onDelete={eliminarLote}/>
+            <DialogEliminarLote
+                open={eliminarDialog}
+                lote={lote}
+                onClose={cancelEliminar}
+                onSubmit={handleEliminar}/>
+        </PageFormTable>
+    </>);
 }
