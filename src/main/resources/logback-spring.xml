@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration >
+<configuration>
     <property name="log.filename" value="la-chacra-app"/>
     <springProfile name="dev">
         <property name="dir" value="./log/"/>
@@ -13,7 +13,8 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                %d{ISO8601} %highlight(%-5level) --- %boldMagenta([%thread]) %boldYellow([%logger{0}:%line]): %msg %ex{short}%n
+                %d{ISO8601} %highlight(%-5level) --- %boldMagenta([%thread]) %boldYellow([%logger{0}:%line]): %msg
+                %ex{short}%n
             </Pattern>
         </layout>
     </appender>
@@ -22,7 +23,7 @@
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${dir}/${log.filename}.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d{ISO8601} %5p [%t] %c{1}:%L - %m%ex{15}%nopex %n</Pattern>
+            <Pattern>%d{ISO8601} %5p [%t] %c{1}:%L - %m%ex{20}%nopex %n</Pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>
@@ -39,6 +40,13 @@
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
     </root>
+
+    <springProfile name="dev">
+        <logger name="org.springframework.boot.autoconfigure.security" level="INFO" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+    </springProfile>
+
     <logger name="com.brikton" level="INFO" additivity="false">
         <appender-ref ref="RollingFile"/>
         <appender-ref ref="Console"/>
