@@ -25,6 +25,7 @@ import java.time.LocalDate;
 @RequestMapping(Path.API_REMITOS)
 @Slf4j
 @Validated
+//TODO: add authority
 public class RemitoController {
 
     private final RemitoService service;

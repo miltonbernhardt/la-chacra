@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasCargarLotesAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequestMapping(Path.API_LOTES)
 @Slf4j
 @Validated
+@HasCargarLotesAuthority
 public class LoteController {
 
     private final LoteService service;

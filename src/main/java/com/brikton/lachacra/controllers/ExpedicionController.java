@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasCargarExpedicionAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequestMapping(Path.API_EXPEDICIONES)
 @Slf4j
 @Validated
+@HasCargarExpedicionAuthority
 public class ExpedicionController {
 
     private final ExpedicionService service;
@@ -30,6 +32,7 @@ public class ExpedicionController {
         this.service = service;
     }
 
+    @HasCargarExpedicionAuthority
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAll() {
         log.info("API::getAll");

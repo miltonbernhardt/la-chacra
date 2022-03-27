@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasCargarQuesosAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping(Path.API_QUESOS)
 @Slf4j
 @Validated
+@HasCargarQuesosAuthority
 public class QuesoController {
 
     private final QuesoService service;

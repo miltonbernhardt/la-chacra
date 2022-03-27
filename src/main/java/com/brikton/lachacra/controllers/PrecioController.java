@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasCargarPreciosAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.PrecioDTO;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping(Path.API_PRECIOS)
 @Slf4j
 @Validated
+@HasCargarPreciosAuthority
 public class PrecioController {
 
     private final PrecioService service;

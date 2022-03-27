@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasClienteAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping(Path.API_CLIENTES)
 @Slf4j
 @Validated
+@HasClienteAuthority
 public class ClienteController {
 
     private final ClienteService service;

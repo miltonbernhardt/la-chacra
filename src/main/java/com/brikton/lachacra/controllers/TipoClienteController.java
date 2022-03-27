@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping(Path.API_TIPOS_CLIENTE)
 @Slf4j
 @Validated
+//TODO: add authority
 public class TipoClienteController {
 
     private final TipoClienteService service;
