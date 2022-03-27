@@ -58,7 +58,6 @@ export const LoginPage = () => {
         return <Redirect push to={from}/>
     }
 
-
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>

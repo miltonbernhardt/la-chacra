@@ -4,6 +4,7 @@ import { PageFormTable } from '../../components/PageFormTable'
 import { MantenimientoCardList } from "./MantenimientoCardList";
 
 export const Mantenimiento = () => {
+    //TODO: usar un formulario como en el resto de paginas
     return <PageFormTable
         titleForm={"Mantenimiento"}
         form={
