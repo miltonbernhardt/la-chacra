@@ -20,7 +20,6 @@ export const LoginPage = () => {
     const refUsername = createRef()
     const refPassword = createRef()
 
-    const history = useHistory();
     const location = useLocation();
     const auth = useAuth();
 

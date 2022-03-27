@@ -1,10 +1,10 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import { IconButton, Typography } from '@mui/material'
-import Toolbar from '@mui/material/Toolbar'
+import * as MaterialToolbar from '@mui/material/Toolbar'
 import * as React from 'react';
 
 export const Toolbar = ({ drawerOpen, handleDrawerOpen }) => {
-    return <Toolbar>
+    return <MaterialToolbar>
         <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -17,5 +17,5 @@ export const Toolbar = ({ drawerOpen, handleDrawerOpen }) => {
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             La Chacra
         </Typography>
-    </Toolbar>
+    </MaterialToolbar>
 }

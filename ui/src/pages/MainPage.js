@@ -3,7 +3,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import { styled } from "@mui/material/styles";
 import * as React from "react";
 import { useState } from "react";
-import { CustomToolbar } from "../components/CustomToolbar";
+import { Toolbar } from "../components/Toolbar";
 import { Drawer } from "../components/Drawer";
 import { Routes } from "../components/Routes";
 import { useAuth } from "../services/use-auth";
@@ -60,17 +60,13 @@ export const MainPage = ({ theme }) => {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    // useEffect(() => {
-    //     auth.permissions()
-    // }, [])
-
     const handleDrawerOpen = () => setDrawerOpen(true)
     const handleDrawerClose = () => setDrawerOpen(false)
 
     return <Box display="flex" height="98vh">
         <CssBaseline/>
         <AppBar position="fixed" open={drawerOpen}>
-            <CustomToolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
+            <Toolbar handleDrawerOpen={handleDrawerOpen} drawerOpen={drawerOpen}/>
         </AppBar>
         <Drawer
             drawerWidth={drawerWidth}
