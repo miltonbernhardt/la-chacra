@@ -1,11 +1,11 @@
-import {Grid, TextField} from "@mui/material";
-import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
+import { Grid, TextField } from "@mui/material";
+import * as React from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
-
-const Input = forwardRef(({id, label, value, type = "number", required = false, sm}, ref) => {
-
-    const [val, setVal] = useState(value);
-    const [err, serErr] = useState(false);
+// todo: buscar crear la funcion de que  si un input es el ultimo input de un form, que envie el form - crear function submit
+export const Input = forwardRef(({ id, label, value, type = "number", required = false, sm }, ref) => {
+    const [val, setVal] = useState(value)
+    const [err, serErr] = useState(false)
 
     const setFieldError = () => serErr(true);
     const setValAndUpdate = (value) => {
@@ -28,7 +28,7 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
          */
         validate: (errors, body, functionsMsg) => {
             let isValid = true
-            functionsMsg.some(({func, msg}) => {
+            functionsMsg.some(({ func, msg }) => {
                 if (func(val)) {
                     errors.set(id, msg)
                     isValid = false
@@ -51,7 +51,7 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
             variant="outlined"
             value={val}
             InputLabelProps={
-                type === "date" ? {shrink: true} : {}
+                type === "date" ? { shrink: true } : {}
             }
             error={err}
             onChange={e => setValAndUpdate(e.target.value)}
@@ -60,5 +60,3 @@ const Input = forwardRef(({id, label, value, type = "number", required = false, 
         />
     </Grid>;
 })
-
-export default Input;

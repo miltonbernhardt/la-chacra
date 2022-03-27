@@ -1,5 +1,6 @@
-import {Box} from '@mui/material';
+import { Box } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import * as React from 'react';
 
 export const Loading = () => {
     return (<Box sx={{
@@ -12,5 +13,3 @@ export const Loading = () => {
         <CircularProgress size={"50%"}/>
     </Box>);
 }
-
-export default Loading;

@@ -1,6 +1,7 @@
-import {Grid, Typography} from '@mui/material';
+import { Grid, Typography } from '@mui/material';
+import * as React from 'react';
 
-const PageFormTable = ({form, table, titleTable, children, titleForm, mdForm, lgForm}) => {
+export const PageFormTable = ({ form, table, titleTable, children, titleForm, mdForm, lgForm }) => {
     return (
         <Grid container
               direction="row"
@@ -43,5 +44,3 @@ const PageFormTable = ({form, table, titleTable, children, titleForm, mdForm, lg
         </Grid>
     )
 }
-
-export default PageFormTable

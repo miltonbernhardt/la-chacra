@@ -1,9 +1,8 @@
-import {Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
+import * as React from 'react';
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
-const GraficoBarras = ({data, xDataKey, yDataKeyArray}) => {
-
+export const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
     console.log(data);
-
 
     return (
         <ResponsiveContainer width="100%" height="100%">
@@ -19,5 +18,3 @@ const GraficoBarras = ({data, xDataKey, yDataKeyArray}) => {
         </ResponsiveContainer>
     );
 }
-
-export default GraficoBarras;

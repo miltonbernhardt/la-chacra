@@ -1,6 +1,7 @@
-import {ButtonGroup, Grid, Typography} from '@mui/material';
+import { ButtonGroup, Grid, Typography } from '@mui/material';
+import * as React from 'react';
 
-const PageTableButtonPane = ({title, buttons, grid, children}) => {
+export const PageTableButtonPane = ({ title, buttons, grid, children }) => {
     return (
         <Grid container
               direction="row"
@@ -18,7 +19,7 @@ const PageTableButtonPane = ({title, buttons, grid, children}) => {
                   boxSizing: "border-box",
               }}>
             <Grid item container direction="column" xs={12}>
-                <Grid item container justifyContent="space-between" xs={12} style={{paddingBottom: "1%"}}>
+                <Grid item container justifyContent="space-between" xs={12} style={{ paddingBottom: "1%" }}>
                     <Typography variant="h6">{title}</Typography>
                     <ButtonGroup variant="contained">
                         {buttons}
@@ -30,5 +31,3 @@ const PageTableButtonPane = ({title, buttons, grid, children}) => {
         </Grid>
     )
 }
-
-export default PageTableButtonPane
