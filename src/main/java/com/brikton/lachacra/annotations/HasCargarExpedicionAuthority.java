@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target(value = {ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAuthority('"+Path.CARGAR_EXPEDICIONES+"')")
+@PreAuthorize("hasAuthority('" + Path.CARGAR_EXPEDICIONES + "')")
 public @interface HasCargarExpedicionAuthority {
 }

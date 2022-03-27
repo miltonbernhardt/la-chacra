@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target(value = {ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAuthority('"+Path.CARGAR_LOTES+"')")
+@PreAuthorize("hasAuthority('" + Path.CARGAR_LOTES + "')")
 public @interface HasCargarLotesAuthority {
 }

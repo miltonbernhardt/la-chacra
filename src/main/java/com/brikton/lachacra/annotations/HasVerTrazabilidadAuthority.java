@@ -1,4 +1,3 @@
-
 package com.brikton.lachacra.annotations;
 
 import com.brikton.lachacra.constants.Path;
