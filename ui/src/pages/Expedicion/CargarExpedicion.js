@@ -116,28 +116,26 @@ export const CargarExpedicion = () => {
     if (isLoadingClientes)
         return <Loading/>
 
-    return (
-        <PageFormTable
-            form={
-                <FormExpedicion
-                    expedicion={expedicion}
-                    isEditing={isEditing}
-                    clientes={clientesFormatted}
-                    handleSubmit={handleSubmit}
-                    handleCancelar={handleCancelar}
-                    handleDelete={handleDelete}/>
-            }
-            table={
-                <GridExpedicion
-                    expediciones={expedicionesFormatted}
-                    setSelection={handleSelect}/>
-            }
-            titleTable="Expediciones"
-            titleForm="Ingreso de expediciones">
-            <DialogEliminarExpedicion
-                open={openDialogEliminar}
-                onClose={cancelDelete}
-                onSubmit={submitDelete}/>
-        </PageFormTable>
-    );
+    return <PageFormTable
+        form={
+            <FormExpedicion
+                expedicion={expedicion}
+                isEditing={isEditing}
+                clientes={clientesFormatted}
+                handleSubmit={handleSubmit}
+                handleCancelar={handleCancelar}
+                handleDelete={handleDelete}/>
+        }
+        table={
+            <GridExpedicion
+                expediciones={expedicionesFormatted}
+                setSelection={handleSelect}/>
+        }
+        titleTable="Expediciones"
+        titleForm="Ingreso de expediciones">
+        <DialogEliminarExpedicion
+            open={openDialogEliminar}
+            onClose={cancelDelete}
+            onSubmit={submitDelete}/>
+    </PageFormTable>
 }

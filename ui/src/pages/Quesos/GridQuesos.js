@@ -31,20 +31,17 @@ const columns = [
                 style={{ backgroundColor: value }}/>)
         },
     },
-
 ]
 
 export const GridQuesos = ({ listaQuesos, setSelection }) => {
-    return (
-        <DataGrid
-            style={{ minHeight: "600px" }}
-            autoHeight={true}
-            rows={listaQuesos}
-            rowHeight={42}
-            pageSize={15}
-            rowsPerPageOptions={[15]}
-            columns={columns}
-            onCellClick={(params) => setSelection(params.id)}
-        />
-    );
+    return <DataGrid
+        style={{ minHeight: "600px" }}
+        autoHeight={true}
+        rows={listaQuesos}
+        rowHeight={42}
+        pageSize={15}
+        rowsPerPageOptions={[15]}
+        columns={columns}
+        onCellClick={(params) => setSelection(params.id)}
+    />
 }

@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { getLotesByQuesoWithStock } from '../../services/RestServices';
 
+//TODO: creo que habria que mirar de hacer todas las llamdas de una sola vez
 export const StockProductoDialog = ({ open, onClose, queso }) => {
 
     const [listaLotes, setListaLotes] = useState([]);

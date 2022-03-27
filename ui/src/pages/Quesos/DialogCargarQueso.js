@@ -54,48 +54,44 @@ export const DialogCargarQueso = ({ isCargarQueso, isEditarQueso, onClose, onSub
         onSubmit(values)
     }
 
-    return (
-        <>
-            <Dialog open={isCargarQueso || isEditarQueso} onClose={onClose} scroll="body">
-                <DialogTitle>Productos</DialogTitle>
-                <DialogContent>
-                    <DialogContentText paddingBottom={2}>
-                        Ingrese los datos del producto
-                    </DialogContentText>
-                    <Grid container spacing={2}>
-                        <Input
-                            id={field.backTipoQueso}
-                            label={field.tipoQueso}
-                            ref={refTipoQueso}
-                            value={quesoForm.tipoQueso}
-                            type="text"
-                            required/>
-                        <Input
-                            id={field.backNomenclatura}
-                            label={field.nomenclatura}
-                            ref={refNomenclatura}
-                            value={quesoForm.nomenclatura}
-                            type="text"
-                            required/>
-                        <Input
-                            id={field.backCodigo}
-                            label={field.codigo}
-                            ref={refCodigo}
-                            value={quesoForm.codigo}
-                            required/>
-                        <Input
-                            id={field.backColor}
-                            label={field.color}
-                            ref={refColor}
-                            value={quesoForm.color}
-                            type="color"/>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={onCargar}>{labelCargar}</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
+    return      <Dialog open={isCargarQueso || isEditarQueso} onClose={onClose} scroll="body">
+        <DialogTitle>Productos</DialogTitle>
+        <DialogContent>
+            <DialogContentText paddingBottom={2}>
+                Ingrese los datos del producto
+            </DialogContentText>
+            <Grid container spacing={2}>
+                <Input
+                    id={field.backTipoQueso}
+                    label={field.tipoQueso}
+                    ref={refTipoQueso}
+                    value={quesoForm.tipoQueso}
+                    type="text"
+                    required/>
+                <Input
+                    id={field.backNomenclatura}
+                    label={field.nomenclatura}
+                    ref={refNomenclatura}
+                    value={quesoForm.nomenclatura}
+                    type="text"
+                    required/>
+                <Input
+                    id={field.backCodigo}
+                    label={field.codigo}
+                    ref={refCodigo}
+                    value={quesoForm.codigo}
+                    required/>
+                <Input
+                    id={field.backColor}
+                    label={field.color}
+                    ref={refColor}
+                    value={quesoForm.color}
+                    type="color"/>
+            </Grid>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={onClose}>Cancelar</Button>
+            <Button onClick={onCargar}>{labelCargar}</Button>
+        </DialogActions>
+    </Dialog>
 }

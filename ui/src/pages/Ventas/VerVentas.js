@@ -1,7 +1,7 @@
 import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import * as React from 'react';
-import Chart from '../../components/Chart';
+import { Chart } from '../../components/Chart';
 import { quesos, ventas } from "../../data/data";
 
 const columns1 = quesos.map((queso, index) => {

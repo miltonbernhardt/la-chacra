@@ -54,35 +54,31 @@ export const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCanc
     // --- Variables
     const labelCargar = useMemo(() => isEditing ? 'Actualizar Precio' : 'Cargar Precio', [isEditing]);
 
-    return (
-        <>
-            <Grid container spacing={1.5}>
-                <Select ref={refSelectQueso}
-                        value={precioForm.idQueso}
-                        id={field.backIdQueso}
-                        label={field.queso}
-                        options={quesos}
-                        disabled={isEditing}
-                        required/>
-                <Select ref={refSelectCliente}
-                        value={precioForm.idTipoCliente}
-                        id={field.backIdTipoCliente}
-                        label={field.idTipoCliente}
-                        options={clientes}
-                        disabled={isEditing}
-                        required/>
-                <Input ref={refPrecio}
-                       id={field.backPrecio}
-                       label={field.precio}
-                       value={precioForm.valor}
-                       required/>
-                <Grid item xs={12} alignSelf="right" mb={0.5}>
-                    <ButtonGroup fullWidth variant="contained">
-                        <Button onClick={handleCancelar} disabled={!isEditing} color="info">Cancelar</Button>
-                        <Button onClick={handleCargar} color="primary">{labelCargar}</Button>
-                    </ButtonGroup>
-                </Grid>
-            </Grid>
-        </>
-    )
+    return <Grid container spacing={1.5}>
+        <Select ref={refSelectQueso}
+                value={precioForm.idQueso}
+                id={field.backIdQueso}
+                label={field.queso}
+                options={quesos}
+                disabled={isEditing}
+                required/>
+        <Select ref={refSelectCliente}
+                value={precioForm.idTipoCliente}
+                id={field.backIdTipoCliente}
+                label={field.idTipoCliente}
+                options={clientes}
+                disabled={isEditing}
+                required/>
+        <Input ref={refPrecio}
+               id={field.backPrecio}
+               label={field.precio}
+               value={precioForm.valor}
+               required/>
+        <Grid item xs={12} alignSelf="right" mb={0.5}>
+            <ButtonGroup fullWidth variant="contained">
+                <Button onClick={handleCancelar} disabled={!isEditing} color="info">Cancelar</Button>
+                <Button onClick={handleCargar} color="primary">{labelCargar}</Button>
+            </ButtonGroup>
+        </Grid>
+    </Grid>
 }

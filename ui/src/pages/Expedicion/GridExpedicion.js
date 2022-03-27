@@ -61,17 +61,13 @@ export const GridExpedicion = ({ expediciones, setSelection }) => {
         ]
     }, []);
 
-    return (
-        <>
-            <DataGrid
-                rows={expediciones}
-                columns={columns}
-                autoHeight={true}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-                onCellClick={(params) => setSelection(params.id)}
-            />
-        </>
-    )
+    return <DataGrid
+        rows={expediciones}
+        columns={columns}
+        autoHeight={true}
+        rowHeight={42}
+        pageSize={15}
+        rowsPerPageOptions={[15]}
+        onCellClick={(params) => setSelection(params.id)}
+    />
 }

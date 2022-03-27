@@ -57,38 +57,36 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
         onEmitir(values.idCliente, values.fecha)
     }, [onEmitir, refFechaRemito, refSelectCliente]);
 
-    return (
-        <Grid container spacing={1.5}>
-            <Grid item xs={12}>
-                <Typography variant="h7" color="GrayText">
-                    Datos del Remito
-                </Typography>
-            </Grid>
-            <Input ref={refFechaRemito}
-                   id={field.backFechaRemito}
-                   label={field.fechaRemito}
-                   type="date"
-                   required/>
-            <Select
-                ref={refSelectCliente}
-                id={field.backIdCliente}
-                label={field.cliente}
-                options={clientes}
-                required/>
-            <Input
-                id={field.backImporteTotal}
-                label={field.importeTotal}
-                value={importe}/>
-            <Grid item xs={12} alignSelf="center" mb={0.5}>
-                <ButtonGroup variant="contained" fullWidth>
-                    <Button color="info" onClick={handleCargar} startIcon={<FileOpenIcon/>}>
-                        Cargar Datos
-                    </Button>
-                    <Button startIcon={<ReceiptIcon/>} onClick={handleEmitir} disabled={!emitible}>
-                        Emitir Remito
-                    </Button>
-                </ButtonGroup>
-            </Grid>
+    return <Grid container spacing={1.5}>
+        <Grid item xs={12}>
+            <Typography variant="h7" color="GrayText">
+                Datos del Remito
+            </Typography>
         </Grid>
-    );
+        <Input ref={refFechaRemito}
+               id={field.backFechaRemito}
+               label={field.fechaRemito}
+               type="date"
+               required/>
+        <Select
+            ref={refSelectCliente}
+            id={field.backIdCliente}
+            label={field.cliente}
+            options={clientes}
+            required/>
+        <Input
+            id={field.backImporteTotal}
+            label={field.importeTotal}
+            value={importe}/>
+        <Grid item xs={12} alignSelf="center" mb={0.5}>
+            <ButtonGroup variant="contained" fullWidth>
+                <Button color="info" onClick={handleCargar} startIcon={<FileOpenIcon/>}>
+                    Cargar Datos
+                </Button>
+                <Button startIcon={<ReceiptIcon/>} onClick={handleEmitir} disabled={!emitible}>
+                    Emitir Remito
+                </Button>
+            </ButtonGroup>
+        </Grid>
+    </Grid>
 }

@@ -36,13 +36,12 @@ const columns = [
 ]
 
 export const GridRemito = ({ data }) => {
-    return (
-        <DataGrid
-            style={{ minHeight: "600px" }}
-            rows={data}
-            columns={columns}
-            pageSize={20}
-            rowsPerPageOptions={[20]}
-            hideFooterPagination
-        />);
+    return <DataGrid
+        style={{ minHeight: "600px" }}
+        rows={data}
+        columns={columns}
+        pageSize={20}
+        rowsPerPageOptions={[20]}
+        hideFooterPagination
+    />
 }

@@ -99,134 +99,130 @@ export const DialogAltaCliente = ({ cliente, open, onClose, onSubmit, isEditing,
     const titleCliente = useMemo(() => cliente.id ? `Cliente Número ${cliente.id}` : 'Cliente', [cliente]);
     const labelSubmit = useMemo(() => isEditing ? 'Actualizar' : 'Dar de Alta', [isEditing]);
 
-    return (
-        <>
-            <Dialog open={open} onClose={onClose} scroll="body">
-                <DialogTitle>{dialogTitle}</DialogTitle>
-                <DialogContent>
-                    <Container maxWidth="sm">
-                        <Box
-                            sx={{
-                                marginTop: 8,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                mt: 3
-                            }}
-                        >
-                            <Grid container spacing={2}>
-                                <Typography variant="h6" paddingLeft={2}>
-                                    {titleCliente}
-                                </Typography>
-                                <Input
-                                    id={field.backRazonSocial}
-                                    label={field.razonSocial}
-                                    ref={refRazonSocial}
-                                    value={clienteForm.razonSocial}
-                                    required
-                                    type="text"/>
-                                <Input
-                                    id={field.backCuit}
-                                    label={field.cuit}
-                                    ref={refCuit}
-                                    value={clienteForm.cuit}
-                                    required
-                                    type="text"/>
-                                <Select ref={refSelectCliente}
-                                        value={clienteForm.idTipoCliente}
-                                        id={field.backIdTipoCliente}
-                                        label={field.idTipoCliente}
-                                        options={tiposCliente}
-                                        required/>
-                                <Typography variant="h6" paddingLeft={2} mt={2}>
-                                    Domicilio
-                                </Typography>
-                                <Input
-                                    id={field.backDomicilio}
-                                    label={field.domicilio}
-                                    ref={refDomicilio}
-                                    value={clienteForm.domicilio}
-                                    type="text"/>
-                                <Input
-                                    id={field.backLocalidad}
-                                    label={field.localidad}
-                                    ref={refLocalidad}
-                                    value={clienteForm.localidad}
-                                    type="text"
-                                    sm={8}/>
-                                <Input
-                                    id={field.backCodPostal}
-                                    label={field.codPostal}
-                                    ref={refCodPostal}
-                                    value={clienteForm.codPostal}
-                                    sm={4}/>
-                                <Input
-                                    id={field.backProvincia}
-                                    label={field.provincia}
-                                    ref={refProvincia}
-                                    value={clienteForm.provincia}
-                                    type="text"
-                                    sm={6}/>
-                                <Input
-                                    id={field.backPais}
-                                    label={field.pais}
-                                    ref={refPais}
-                                    value={clienteForm.pais}
-                                    type="text"
-                                    sm={6}/>
-                                <Typography variant="h6" paddingLeft={2} mt={2}>
-                                    Datos de contacto
-                                </Typography>
+    return <Dialog open={open} onClose={onClose} scroll="body">
+        <DialogTitle>{dialogTitle}</DialogTitle>
+        <DialogContent>
+            <Container maxWidth="sm">
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        mt: 3
+                    }}
+                >
+                    <Grid container spacing={2}>
+                        <Typography variant="h6" paddingLeft={2}>
+                            {titleCliente}
+                        </Typography>
+                        <Input
+                            id={field.backRazonSocial}
+                            label={field.razonSocial}
+                            ref={refRazonSocial}
+                            value={clienteForm.razonSocial}
+                            required
+                            type="text"/>
+                        <Input
+                            id={field.backCuit}
+                            label={field.cuit}
+                            ref={refCuit}
+                            value={clienteForm.cuit}
+                            required
+                            type="text"/>
+                        <Select ref={refSelectCliente}
+                                value={clienteForm.idTipoCliente}
+                                id={field.backIdTipoCliente}
+                                label={field.idTipoCliente}
+                                options={tiposCliente}
+                                required/>
+                        <Typography variant="h6" paddingLeft={2} mt={2}>
+                            Domicilio
+                        </Typography>
+                        <Input
+                            id={field.backDomicilio}
+                            label={field.domicilio}
+                            ref={refDomicilio}
+                            value={clienteForm.domicilio}
+                            type="text"/>
+                        <Input
+                            id={field.backLocalidad}
+                            label={field.localidad}
+                            ref={refLocalidad}
+                            value={clienteForm.localidad}
+                            type="text"
+                            sm={8}/>
+                        <Input
+                            id={field.backCodPostal}
+                            label={field.codPostal}
+                            ref={refCodPostal}
+                            value={clienteForm.codPostal}
+                            sm={4}/>
+                        <Input
+                            id={field.backProvincia}
+                            label={field.provincia}
+                            ref={refProvincia}
+                            value={clienteForm.provincia}
+                            type="text"
+                            sm={6}/>
+                        <Input
+                            id={field.backPais}
+                            label={field.pais}
+                            ref={refPais}
+                            value={clienteForm.pais}
+                            type="text"
+                            sm={6}/>
+                        <Typography variant="h6" paddingLeft={2} mt={2}>
+                            Datos de contacto
+                        </Typography>
 
-                                <Input
-                                    id={field.backEmail}
-                                    label={field.email}
-                                    type="email"
-                                    ref={refEmail}
-                                    value={clienteForm.email}/>
-                                <Input
-                                    id={field.backTelefono}
-                                    label={field.telefono}
-                                    type="tel"
-                                    ref={refTelefono}
-                                    value={clienteForm.telefono}/>
-                                <Input
-                                    id={field.backCelular}
-                                    label={field.celular}
-                                    type="tel"
-                                    ref={refCelular}
-                                    value={clienteForm.celular}/>
-                                <Input
-                                    id={field.backFax}
-                                    label={field.fax}
-                                    type="tel"
-                                    ref={refFax}
-                                    value={clienteForm.fax}/>
-                                <Typography variant="h6" paddingLeft={2} mt={2}>
-                                    Transporte
-                                </Typography>
+                        <Input
+                            id={field.backEmail}
+                            label={field.email}
+                            type="email"
+                            ref={refEmail}
+                            value={clienteForm.email}/>
+                        <Input
+                            id={field.backTelefono}
+                            label={field.telefono}
+                            type="tel"
+                            ref={refTelefono}
+                            value={clienteForm.telefono}/>
+                        <Input
+                            id={field.backCelular}
+                            label={field.celular}
+                            type="tel"
+                            ref={refCelular}
+                            value={clienteForm.celular}/>
+                        <Input
+                            id={field.backFax}
+                            label={field.fax}
+                            type="tel"
+                            ref={refFax}
+                            value={clienteForm.fax}/>
+                        <Typography variant="h6" paddingLeft={2} mt={2}>
+                            Transporte
+                        </Typography>
 
-                                <Input
-                                    id={field.backTransporte}
-                                    label={field.transporte}
-                                    ref={refTransporte}
-                                    value={clienteForm.transporte}
-                                    type="text"/>
-                                <Input
-                                    id={field.backSenasaUta}
-                                    label={field.senasaUta}
-                                    ref={refSenasaUta}
-                                    value={clienteForm.senasaUta}
-                                    type="text"/>
-                            </Grid>
-                        </Box>
-                    </Container>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={handleSubmit}>{labelSubmit}</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
+                        <Input
+                            id={field.backTransporte}
+                            label={field.transporte}
+                            ref={refTransporte}
+                            value={clienteForm.transporte}
+                            type="text"/>
+                        <Input
+                            id={field.backSenasaUta}
+                            label={field.senasaUta}
+                            ref={refSenasaUta}
+                            value={clienteForm.senasaUta}
+                            type="text"/>
+                    </Grid>
+                </Box>
+            </Container>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={onClose}>Cancelar</Button>
+            <Button onClick={handleSubmit}>{labelSubmit}</Button>
+        </DialogActions>
+    </Dialog>
 }

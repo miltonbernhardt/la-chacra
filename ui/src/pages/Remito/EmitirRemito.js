@@ -71,20 +71,18 @@ export const EmitirRemito = () => {
     if (isLoading)
         return <Loading/>
 
-    return (
-        <PageFormTable
-            titleForm="Emitir Remito"
-            titleTable="Detalle"
-            form={
-                <RemitoForm
-                    onCargar={handleCargar}
-                    onEmitir={handleEmitir}
-                    clientes={clientesFormatted}
-                    importe={importeTotal}
-                    emitible={emitible}/>}
-            table={
-                <GridRemito
-                    data={itemsFormatted}/>}>
-        </PageFormTable>
-    );
+    return <PageFormTable
+        titleForm="Emitir Remito"
+        titleTable="Detalle"
+        form={
+            <RemitoForm
+                onCargar={handleCargar}
+                onEmitir={handleEmitir}
+                clientes={clientesFormatted}
+                importe={importeTotal}
+                emitible={emitible}/>}
+        table={
+            <GridRemito
+                data={itemsFormatted}/>}>
+    </PageFormTable>
 }

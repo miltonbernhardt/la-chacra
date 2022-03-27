@@ -112,32 +112,30 @@ export const CargarQuesos = () => {
     if (isLoading)
         return (<Loading/>)
 
-    return (
-        <PageTableButtonPane
-            title="Productos"
-            buttons={<>
-                <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
-                <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
-                <Button onClick={openCargarDialog}>Cargar Producto</Button>
-            </>}
-            grid={
-                <GridQuesos
-                    listaQuesos={listaQuesos}
-                    setSelection={setSelection}/>
-            }
-        >
-            <DialogCargarQueso
-                isEditarQueso={isEditarQueso}
-                isCargarQueso={isCargarQueso}
-                queso={isCargarQueso ? quesoInicial : queso}
-                onClose={closeGestorProducto}
-                onSubmit={onSubmit}
-            />
-            <DialogEliminarQueso
-                open={isOpenEliminarProducto}
-                onClose={() => setOpenEliminarProducto(false)}
-                queso={queso}
-                onBorrar={onDelete}/>
-        </PageTableButtonPane>
-    );
+    return <PageTableButtonPane
+        title="Productos"
+        buttons={<>
+            <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
+            <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
+            <Button onClick={openCargarDialog}>Cargar Producto</Button>
+        </>}
+        grid={
+            <GridQuesos
+                listaQuesos={listaQuesos}
+                setSelection={setSelection}/>
+        }
+    >
+        <DialogCargarQueso
+            isEditarQueso={isEditarQueso}
+            isCargarQueso={isCargarQueso}
+            queso={isCargarQueso ? quesoInicial : queso}
+            onClose={closeGestorProducto}
+            onSubmit={onSubmit}
+        />
+        <DialogEliminarQueso
+            open={isOpenEliminarProducto}
+            onClose={() => setOpenEliminarProducto(false)}
+            queso={queso}
+            onBorrar={onDelete}/>
+    </PageTableButtonPane>
 }

@@ -59,20 +59,16 @@ export const GridLotes = ({ produccion, quesos, setSelection }) => {
         ]
     }, [quesos]);
 
-    return (
-        <>
-            <DataGrid
-                style={{ minHeight: "600px" }}
-                autoHeight={true}
-                rows={produccion}
-                columns={columns}
-                onCellDoubleClick={(params) => {
-                    setSelection(params.id)
-                }}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-            />
-        </>
-    );
+    return <DataGrid
+        style={{ minHeight: "600px" }}
+        autoHeight={true}
+        rows={produccion}
+        columns={columns}
+        onCellDoubleClick={(params) => {
+            setSelection(params.id)
+        }}
+        rowHeight={42}
+        pageSize={15}
+        rowsPerPageOptions={[15]}
+    />
 }

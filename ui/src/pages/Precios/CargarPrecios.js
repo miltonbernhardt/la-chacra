@@ -122,26 +122,22 @@ export const CargarPrecios = () => {
         }
     })
 
-    return (
-        <>
-            <PageFormTable
-                form={
-                    <FormPrecios
-                        clientes={tiposClienteAutocomplete}
-                        quesos={quesosAutocomplete}
-                        precio={precio}
-                        isEditing={isEditing}
-                        handleSubmit={handleSubmit}
-                        handleCancelar={handleCancelar}/>
-                }
-                table={
-                    <GridPrecios
-                        precios={preciosFormatted}
-                        setSelection={setSelection}/>
-                }
-                titleTable="Precios"
-                titleForm="Ingreso de precios"
-            />
-        </>
-    );
+    return <PageFormTable
+        form={
+            <FormPrecios
+                clientes={tiposClienteAutocomplete}
+                quesos={quesosAutocomplete}
+                precio={precio}
+                isEditing={isEditing}
+                handleSubmit={handleSubmit}
+                handleCancelar={handleCancelar}/>
+        }
+        table={
+            <GridPrecios
+                precios={preciosFormatted}
+                setSelection={setSelection}/>
+        }
+        titleTable="Precios"
+        titleForm="Ingreso de precios"
+    />
 }

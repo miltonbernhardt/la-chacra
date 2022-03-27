@@ -3,19 +3,19 @@ import * as React from 'react';
 import { Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Title } from './Title';
 
-export default function Chart({
-                                  title,
-                                  data,
-                                  yLabel,
-                                  xDataKey,
-                                  dataKey,
-                                  dataKey1,
-                                  dataKey2,
-                                  legend = false,
-                                  dot = false,
-                                  domain/*:[bottom,top]*/
-                              }) {
-
+export function Chart(
+    {
+        title,
+        data,
+        yLabel,
+        xDataKey,
+        dataKey,
+        dataKey1,
+        dataKey2,
+        legend = false,
+        dot = false,
+        domain/*:[bottom,top]*/
+    }) {
     const theme = useTheme();
 
     return (

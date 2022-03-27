@@ -107,33 +107,31 @@ export const CargarProduccion = () => {
     if (isLoading)
         return (<Loading/>)
 
-    return (
-        <PageFormTable
-            form={
-                <FormLote
-                    quesos={quesosAutocomplete}
-                    lote={lote}
-                    updateStateLote={updateStateLote}
-                    setLote={setLote}
-                    isEditingLote={isEditingLote}
-                    cancelEditing={cancelEditing}
-                    deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit}/>
-            }
-            table={
-                <GridLotes
-                    quesos={listaQuesos}
-                    produccion={listaLotes}
-                    setSelection={setSelection}/>
-            }
-            titleTable="Producción ingresada"
-            titleForm="Ingreso de producción"
-        >
-            <DialogEliminarLote
-                open={eliminarDialog}
+    return <PageFormTable
+        form={
+            <FormLote
+                quesos={quesosAutocomplete}
                 lote={lote}
-                onClose={cancelEliminar}
-                onSubmit={handleEliminar}/>
-        </PageFormTable>
-    )
+                updateStateLote={updateStateLote}
+                setLote={setLote}
+                isEditingLote={isEditingLote}
+                cancelEditing={cancelEditing}
+                deleteLote={eliminarLote}
+                handleSubmit={handleSubmit}/>
+        }
+        table={
+            <GridLotes
+                quesos={listaQuesos}
+                produccion={listaLotes}
+                setSelection={setSelection}/>
+        }
+        titleTable="Producción ingresada"
+        titleForm="Ingreso de producción"
+    >
+        <DialogEliminarLote
+            open={eliminarDialog}
+            lote={lote}
+            onClose={cancelEliminar}
+            onSubmit={handleEliminar}/>
+    </PageFormTable>
 }

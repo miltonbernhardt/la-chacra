@@ -24,46 +24,44 @@ export const MantenimientoCardList = () => {
         },
     ];
 
-    return (
-        <>
-            <Grid container
-                  style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      padding: 10
-                  }}
-                  spacing={2}>
-                <Grid item xs={12} sm={2}>
-                    <Typography variant='h6' style={{ paddingLeft: 2 }}>Historial</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField fullWidth/>
-                </Grid>
-                <Grid item xs={12} sm={4} mb={0.5}>
-                    <ButtonGroup variant="contained" fullWidth>
-                        <Button variant="contained" fullWidth>Buscar</Button>
-                    </ButtonGroup>
-                </Grid>
+    return <>
+        <Grid container
+              style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 10
+              }}
+              spacing={2}>
+            <Grid item xs={12} sm={2}>
+                <Typography variant='h6' style={{ paddingLeft: 2 }}>Historial</Typography>
             </Grid>
-            <Grid item xs={12} alignSelf={"center"}>
-
-                <Box sx={{ overflowY: 'auto', maxHeight: 800, padding: 2, }}>
-
-                    <Container sx={{ py: 8, innerHeight: 800 }} style={{
-                        backgroundColor: "#fafafa",
-                    }} maxWidth="xl">
-                        {/* End hero unit */}
-                        <Grid container spacing={2}>
-                            {mantenimientoList.map((card) => (
-                                <Grid item key={card.id} xs={12}>
-                                    <MantenimientoCard
-                                        item={card}/>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Container>
-                </Box>
+            <Grid item xs={12} sm={6}>
+                <TextField fullWidth/>
             </Grid>
-        </>
-    );
+            <Grid item xs={12} sm={4} mb={0.5}>
+                <ButtonGroup variant="contained" fullWidth>
+                    <Button variant="contained" fullWidth>Buscar</Button>
+                </ButtonGroup>
+            </Grid>
+        </Grid>
+        <Grid item xs={12} alignSelf={"center"}>
+
+            <Box sx={{ overflowY: 'auto', maxHeight: 800, padding: 2, }}>
+
+                <Container sx={{ py: 8, innerHeight: 800 }} style={{
+                    backgroundColor: "#fafafa",
+                }} maxWidth="xl">
+                    {/* End hero unit */}
+                    <Grid container spacing={2}>
+                        {mantenimientoList.map((card) => (
+                            <Grid item key={card.id} xs={12}>
+                                <MantenimientoCard
+                                    item={card}/>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Container>
+            </Box>
+        </Grid>
+    </>
 }

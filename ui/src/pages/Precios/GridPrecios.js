@@ -33,17 +33,13 @@ export const GridPrecios = ({ precios, setSelection }) => {
         ]
     }, []);
 
-    return (
-        <>
-            <DataGrid
-                autoHeight={true}
-                rows={precios}
-                columns={columns}
-                onCellDoubleClick={(params) => setSelection(params.id)}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-            />
-        </>
-    );
+    return <DataGrid
+        autoHeight={true}
+        rows={precios}
+        columns={columns}
+        onCellDoubleClick={(params) => setSelection(params.id)}
+        rowHeight={42}
+        pageSize={15}
+        rowsPerPageOptions={[15]}
+    />
 }

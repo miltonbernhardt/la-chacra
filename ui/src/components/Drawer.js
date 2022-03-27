@@ -206,35 +206,32 @@ export const Drawer = ({ drawerWidth, open, handleDrawerClose, theme, permisos }
     const auth = useAuth();
     const history = useHistory();
 
-    return (
-        <DrawerMU
-            sx={{
+    return <DrawerMU
+        sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
                 width: drawerWidth,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                    width: drawerWidth,
-                    boxSizing: 'border-box',
-                },
-            }}
-            variant="persistent"
-            anchor="left"
-            open={open}
-        >
-            <DrawerHeader>
-                <IconButton onClick={handleDrawerClose} style={{ color: "white" }}>
-                    {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-                </IconButton>
-            </DrawerHeader>
-            <HomeSection closeDrawer={handleDrawerClose}/>
-            <LoadUpSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-            <BusinessSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-            <StatsSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-            <BackgroundSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-            <LogoutSection logout={() => {
-                //todo mover afuera
-                auth.signout()
-                history.push(paths.login)
-            }}/>
-        </DrawerMU>
-    );
+                boxSizing: 'border-box',
+            },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+    >
+        <DrawerHeader>
+            <IconButton onClick={handleDrawerClose} style={{ color: "white" }}>
+                {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+            </IconButton>
+        </DrawerHeader>
+        <HomeSection closeDrawer={handleDrawerClose}/>
+        <LoadUpSection closeDrawer={handleDrawerClose} permisos={permisos}/>
+        <BusinessSection closeDrawer={handleDrawerClose} permisos={permisos}/>
+        <StatsSection closeDrawer={handleDrawerClose} permisos={permisos}/>
+        <BackgroundSection closeDrawer={handleDrawerClose} permisos={permisos}/>
+        <LogoutSection logout={() => {
+            auth.signout()
+            history.push(paths.login)
+        }}/>
+    </DrawerMU>
 }
