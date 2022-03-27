@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.annotations.HasClienteAuthority;
+import com.brikton.lachacra.annotations.HasEmitirRemitoAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
@@ -31,8 +32,8 @@ public class ClienteController {
     }
 
     @GetMapping(value = "/")
+    @HasEmitirRemitoAuthority
     public ResponseEntity<SuccessfulResponse<List<ClienteDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 

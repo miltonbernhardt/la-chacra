@@ -35,14 +35,12 @@ public class ExpedicionController {
     @HasCargarExpedicionAuthority
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 
     @GetMapping(value = "/lote")
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAllByLote(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
-                                                                                    @PathParam("idLote") String idLote) {
-        log.info("API::getAllByLote - idLote = {}",idLote);
+                                                                                @PathParam("idLote") String idLote) {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllByLote(idLote)));
     }
 

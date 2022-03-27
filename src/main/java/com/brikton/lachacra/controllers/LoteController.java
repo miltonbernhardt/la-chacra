@@ -42,7 +42,7 @@ public class LoteController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<LoteDTO>> getById(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
-                                                                         @PathVariable("id") String id) {
+                                                               @PathVariable("id") String id) {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getDTOById(id)));
     }
 
@@ -54,29 +54,29 @@ public class LoteController {
 
     @GetMapping(value = "/produccion")
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getBetweenDates(@RequestParam("fecha_desde")
-                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+                                                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
                                                                              @RequestParam("fecha_hasta")
-                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
-        log.info("API::getBetweenDates - fecha_desde: {} - fecha_hasta: {} ", fechaDesde,fechaHasta);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getBetweenDates(fechaDesde,fechaHasta)));
+                                                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+        log.info("API::getBetweenDates - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getBetweenDates(fechaDesde, fechaHasta)));
     }
 
     @GetMapping(value = "/rendimiento/dia")
     public ResponseEntity<SuccessfulResponse<List<RendimientoDiaDTO>>> getRendimientoByDia(@RequestParam("fecha_desde")
-                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-                                                                                      @RequestParam("fecha_hasta")
-                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
-        log.info("API::getRendimientoByDia - fecha_desde: {} - fecha_hasta: {} ", fechaDesde,fechaHasta);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByDia(fechaDesde,fechaHasta)));
+                                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+                                                                                           @RequestParam("fecha_hasta")
+                                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+        log.info("API::getRendimientoByDia - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByDia(fechaDesde, fechaHasta)));
     }
 
     @GetMapping(value = "/rendimiento/queso")
     public ResponseEntity<SuccessfulResponse<List<RendimientoQuesoDTO>>> getRendimientoByQueso(@RequestParam("fecha_desde")
-                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+                                                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
                                                                                                @RequestParam("fecha_hasta")
-                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
-        log.info("API::getRendimientoByQueso - fecha_desde: {} - fecha_hasta: {} ", fechaDesde,fechaHasta);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByQueso(fechaDesde,fechaHasta)));
+                                                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+        log.info("API::getRendimientoByQueso - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByQueso(fechaDesde, fechaHasta)));
     }
 
     @PostMapping(value = "/")
