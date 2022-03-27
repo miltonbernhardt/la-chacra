@@ -44,6 +44,8 @@ export const backStockLote = "stockLote"
 export const backRendimientoLote = "rendimiento"
 export const backFechaRemito = "fecha"
 export const backImporteTotal = "importeTotal"
+export const backUsername = "username"
+export const backPassword = "password"
 
 export const ID = "ID"
 
@@ -105,6 +107,10 @@ export const importeTotal = "Importe total"
 export const cantidadMeses = "Cantidad de meses"
 export const backCantidadMeses = "cantidadMeses"
 
+//login
+export const username = "Nombre de usuario"
+export const password = "Contraseña"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -150,6 +156,8 @@ const backendFields = () => {
     fields.set(backFechaRemito, fechaRemito)
     fields.set(backImporteTotal, importeTotal)
     fields.set(backCantidadMeses, cantidadMeses)
+    fields.set(backUsername, username)
+    fields.set(backPassword, password)
     return fields
 }
 
