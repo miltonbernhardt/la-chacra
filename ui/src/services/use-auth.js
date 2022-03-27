@@ -56,7 +56,7 @@ function useProvideAuth() {
     const permissions = () => {
         const response = permisos()
             .then((data) => {
-                console.log({ data })
+                console.debug({ data })
                 setAuthorizations(data.data);
             })
             .catch(e => console.error({ e }))

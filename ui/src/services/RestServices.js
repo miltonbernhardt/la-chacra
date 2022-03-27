@@ -139,7 +139,7 @@ export const postRemito = async (idCliente, fecha) => await POST(`${API_REMITO}?
 const GET = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `GET ${URL}`
-    console.log({ request: method })
+    console.debug({ request: method })
 
     return await axios.get(URL, { headers: getNewHeader() })
         .then(response => {
@@ -153,7 +153,7 @@ const GET = async (postfixUrl) => {
 const POST = async (postfixUrl, data) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `POST ${URL}`;
-    console.log({ request: method, data })
+    console.debug({ request: method, data })
 
     return await axios.post(URL, data, { headers: getNewHeader() })
         .then(response => processSuccessResponseWithMessage(response))
@@ -163,7 +163,7 @@ const POST = async (postfixUrl, data) => {
 const PUT = async (postfixUrl, data) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `PUT ${URL}`
-    console.log({ request: method, data })
+    console.debug({ request: method, data })
 
     return await axios.put(URL, data, { headers: getNewHeader() })
         .then(response => processSuccessResponseWithMessage(response))
@@ -173,7 +173,7 @@ const PUT = async (postfixUrl, data) => {
 const DELETE = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
     const method = `DELETE ${URL}`
-    console.log({ request: method })
+    console.debug({ request: method })
 
     return await axios.delete(URL, { headers: getNewHeader() })
         .then(response => processSuccessResponseWithMessage(response))

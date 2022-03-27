@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export const GraficoBarras = ({ data, xDataKey, yDataKeyArray }) => {
-    console.log(data);
+    console.debug(data);
 
     return (
         <ResponsiveContainer width="100%" height="100%">
