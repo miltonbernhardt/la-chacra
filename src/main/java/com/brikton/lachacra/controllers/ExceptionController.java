@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 // todo audit users actions - crear un aspect que intercepte antes las request y que las mande a la bd
+//https://www.baeldung.com/spring-data-rest-events
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     private final CookieUtil cookieUtil;
