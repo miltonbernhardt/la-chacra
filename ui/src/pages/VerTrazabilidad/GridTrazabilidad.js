@@ -36,17 +36,13 @@ export const GridTrazabilidad = ({ data }) => {
             },]
     }, []);
 
-    return (
-        <>
-            <DataGrid
-                style={{ minHeight: "600px" }}
-                autoHeight={true}
-                rows={data}
-                columns={columns}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-            />
-        </>
-    )
+    return  <DataGrid
+        style={{ minHeight: "600px" }}
+        autoHeight={true}
+        rows={data}
+        columns={columns}
+        rowHeight={42}
+        pageSize={15}
+        rowsPerPageOptions={[15]}
+    />
 }

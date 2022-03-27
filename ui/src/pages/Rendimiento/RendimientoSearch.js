@@ -45,43 +45,41 @@ export const RendimientoSearch = ({ fechaInicial, meses, onSearch }) => {
         { id: 12, value: 12, label: '12' },
     ]
 
-    return (
-        <Grid item xs={12} sm={12} md={4} spacing={2}>
-            <Paper
-                sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
-                    width: '100%'
-                }}>
-                <Stack minHeight={300} sx={{ height: '100%' }} direction="column" justifyContent="space-between">
-                    <Typography variant='h6'>Consultar producción</Typography>
-                    <Grid container spacing={2}>
-                        <Input
-                            ref={refFecha}
-                            id={field.backFechaHasta}
-                            label={field.fechaHasta}
-                            value={fechaInicial}
-                            type="date"
-                            required/>
-                        <Select
-                            ref={refMeses}
-                            value={meses}
-                            id={field.backCantidadMeses}
-                            label={field.cantidadMeses}
-                            options={mesesOptions}
-                            required/>
-                    </Grid>
-                    <Button
-                        startIcon={<SearchIcon/>}
-                        variant='contained'
-                        onClick={handleSearch}
-                        fullWidth>
-                        Consultar
-                    </Button>
-                </Stack>
-            </Paper>
-        </Grid>
-    );
+    return <Grid item xs={12} sm={12} md={4} spacing={2}>
+        <Paper
+            sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                width: '100%'
+            }}>
+            <Stack minHeight={300} sx={{ height: '100%' }} direction="column" justifyContent="space-between">
+                <Typography variant='h6'>Consultar producción</Typography>
+                <Grid container spacing={2}>
+                    <Input
+                        ref={refFecha}
+                        id={field.backFechaHasta}
+                        label={field.fechaHasta}
+                        value={fechaInicial}
+                        type="date"
+                        required/>
+                    <Select
+                        ref={refMeses}
+                        value={meses}
+                        id={field.backCantidadMeses}
+                        label={field.cantidadMeses}
+                        options={mesesOptions}
+                        required/>
+                </Grid>
+                <Button
+                    startIcon={<SearchIcon/>}
+                    variant='contained'
+                    onClick={handleSearch}
+                    fullWidth>
+                    Consultar
+                </Button>
+            </Stack>
+        </Paper>
+    </Grid>
 }

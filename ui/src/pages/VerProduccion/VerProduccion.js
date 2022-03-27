@@ -106,30 +106,28 @@ export const VerProduccion = () => {
 
     if (isLoading) return (<Loading/>)
 
-    return (<>
-        <PageFormTable
-            mdForm={2}
-            lgForm={2}
-            titleForm={"Producción"}
-            form={<FormProduccion
-                onBuscar={handleBuscar}
-                initialDate={today}/>}
-            sizeForm={3}
-            table={<GridProduccion
-                quesos={listaQuesos}
-                data={listaLotesFormatted}
-                setSelection={setSelection}/>}>
-            <EditLoteDialog
-                lote={lote}
-                open={isEditing}
-                onClose={closeDialog}
-                onSubmit={handleSubmit}
-                onDelete={eliminarLote}/>
-            <DialogEliminarLote
-                open={eliminarDialog}
-                lote={lote}
-                onClose={cancelEliminar}
-                onSubmit={handleEliminar}/>
-        </PageFormTable>
-    </>);
+    return <PageFormTable
+        mdForm={2}
+        lgForm={2}
+        titleForm={"Producción"}
+        form={<FormProduccion
+            onBuscar={handleBuscar}
+            initialDate={today}/>}
+        sizeForm={3}
+        table={<GridProduccion
+            quesos={listaQuesos}
+            data={listaLotesFormatted}
+            setSelection={setSelection}/>}>
+        <EditLoteDialog
+            lote={lote}
+            open={isEditing}
+            onClose={closeDialog}
+            onSubmit={handleSubmit}
+            onDelete={eliminarLote}/>
+        <DialogEliminarLote
+            open={eliminarDialog}
+            lote={lote}
+            onClose={cancelEliminar}
+            onSubmit={handleEliminar}/>
+    </PageFormTable>
 }

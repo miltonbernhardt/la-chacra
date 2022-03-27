@@ -9,9 +9,7 @@ import * as React from 'react';
 
 //TODO: titulo unused
 export const RendimientoCard = ({ titulo, valor, descripcion }) => {
-    return (
-
-        <Grid item xs={12} sm={6} md={4}>
+    return <Grid item xs={12} sm={6} md={4}>
             <Card
                 sx={{
                     height: '100%',
@@ -41,5 +39,4 @@ export const RendimientoCard = ({ titulo, valor, descripcion }) => {
                 </CardContent>
             </Card>
         </Grid>
-    );
 }

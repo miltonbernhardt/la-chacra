@@ -58,48 +58,46 @@ export const LoginPage = () => {
         return <Redirect push to={from}/>
     }
 
-    return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline/>
-            <Grid
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
-                <LoginIcon/>
-                <Typography component="h1" variant="h5">
-                    Iniciar Sesión
-                </Typography>
-                <Grid container spacing={1.5} sx={{ mt: 1 }}>
-                    <Input ref={refUsername}
-                           id={field.backUsername}
-                           label={field.username}
-                           value={loginForm.username}
-                           type="text"
-                           fullWidth
-                           required/>
-                    <Input ref={refPassword}
-                           id={field.backPassword}
-                           label={field.password}
-                           value={loginForm.password}
-                           type="password"
-                           fullWidth
-                           required/>
-                    <Grid item xs={12}>
-                        <Button
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={handleSubmit}
-                        >
-                            Iniciar Sesión
-                        </Button>
-                    </Grid>
+    return <Container component="main" maxWidth="xs">
+        <CssBaseline/>
+        <Grid
+            sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <LoginIcon/>
+            <Typography component="h1" variant="h5">
+                Iniciar Sesión
+            </Typography>
+            <Grid container spacing={1.5} sx={{ mt: 1 }}>
+                <Input ref={refUsername}
+                       id={field.backUsername}
+                       label={field.username}
+                       value={loginForm.username}
+                       type="text"
+                       fullWidth
+                       required/>
+                <Input ref={refPassword}
+                       id={field.backPassword}
+                       label={field.password}
+                       value={loginForm.password}
+                       type="password"
+                       fullWidth
+                       required/>
+                <Grid item xs={12}>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={handleSubmit}
+                    >
+                        Iniciar Sesión
+                    </Button>
                 </Grid>
             </Grid>
-        </Container>
-    )
+        </Grid>
+    </Container>
 }

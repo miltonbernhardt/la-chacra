@@ -38,31 +38,29 @@ export const FormProduccion = ({ onBuscar, initialDate }) => {
         }
     }
 
-    return (
-        <Grid container spacing={1.5}>
-            <Grid item xs={12}>
-                <Typography variant="h7" color="GrayText">
-                    Rango de fechas
-                </Typography>
-            </Grid>
-            <Input ref={refFechaDesde}
-                   id={'fechaDesde'}
-                   label={field.fechaDesde}
-                   value={initialDate}
-                   type="date"
-                   required/>
-            <Input ref={refFechaHasta}
-                   id={'fechaHasta'}
-                   label={field.fechaHasta}
-                   value={initialDate}
-                   type="date"
-                   required/>
-
-            <Grid item xs={12} alignSelf="right" mb={0.5}>
-                <ButtonGroup fullWidth variant="contained">
-                    <Button color="primary" onClick={handleBuscar}>Buscar</Button>
-                </ButtonGroup>
-            </Grid>
+    return <Grid container spacing={1.5}>
+        <Grid item xs={12}>
+            <Typography variant="h7" color="GrayText">
+                Rango de fechas
+            </Typography>
         </Grid>
-    )
+        <Input ref={refFechaDesde}
+               id={'fechaDesde'}
+               label={field.fechaDesde}
+               value={initialDate}
+               type="date"
+               required/>
+        <Input ref={refFechaHasta}
+               id={'fechaHasta'}
+               label={field.fechaHasta}
+               value={initialDate}
+               type="date"
+               required/>
+
+        <Grid item xs={12} alignSelf="right" mb={0.5}>
+            <ButtonGroup fullWidth variant="contained">
+                <Button color="primary" onClick={handleBuscar}>Buscar</Button>
+            </ButtonGroup>
+        </Grid>
+    </Grid>
 }

@@ -18,7 +18,7 @@ export function StockCard({ queso }) {
         setStockDialogOpen(false)
     }, [])
 
-    return (<>
+    return <>
         <Card
             sx={{
                 height: '100%', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
@@ -48,5 +48,5 @@ export function StockCard({ queso }) {
             open={isStockDialogOpen}
             onClose={closeDialog}
         />
-    </>);
+    </>
 }

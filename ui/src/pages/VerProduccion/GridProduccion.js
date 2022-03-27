@@ -95,20 +95,18 @@ export const GridProduccion = ({ data, setSelection }) => {
         ]
     }, []);
 
-    return (
-        < >
-            <DataGrid
-                style={{ minHeight: "600px" }}
-                autoHeight={true}
-                rows={data}
-                columns={columns}
-                rowHeight={42}
-                pageSize={15}
-                rowsPerPageOptions={[15]}
-                onCellDoubleClick={(params) => setSelection(params.id)}/>
-            <Typography variant="h7" color="GrayText">
-                Doble click sobre una fila de la tabla para editar el lote de producción
-            </Typography>
-        </ >
-    )
+    return  <>
+        <DataGrid
+            style={{ minHeight: "600px" }}
+            autoHeight={true}
+            rows={data}
+            columns={columns}
+            rowHeight={42}
+            pageSize={15}
+            rowsPerPageOptions={[15]}
+            onCellDoubleClick={(params) => setSelection(params.id)}/>
+        <Typography variant="h7" color="GrayText">
+            Doble click sobre una fila de la tabla para editar el lote de producción
+        </Typography>
+    </>
 }

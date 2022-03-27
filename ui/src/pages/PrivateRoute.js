@@ -6,21 +6,19 @@ import { useAuth } from "../services/use-auth";
 export const PrivateRoute = ({ children, ...rest }) => {
     const auth = useAuth();
 
-    return (
-        <Route
-            {...rest}
-            render={({ location }) =>
-                auth.isLogged ? (
-                    children
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: paths.login,
-                            state: { from: location }
-                        }}
-                    />
-                )
-            }
-        />
-    );
+    return <Route
+        {...rest}
+        render={({ location }) =>
+            auth.isLogged ? (
+                children
+            ) : (
+                <Redirect
+                    to={{
+                        pathname: paths.login,
+                        state: { from: location }
+                    }}
+                />
+            )
+        }
+    />
 }

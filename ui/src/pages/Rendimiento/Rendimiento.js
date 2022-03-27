@@ -126,63 +126,61 @@ export const Rendimiento = () => {
         return [bottom, top];
     }, [listaRendimientos])
 
-    return (
-        isLoadingRendimientoQueso ||
-        isLoadingRendimientos ? <Loading/> :
-            <Grid container
-                  direction="row"
-                  spacing={2}
-                  paddingRight={2}
-                  style={{
-                      minHeight: "92%",
-                      maxWidth: "98%",
-                      margin: "1%",
-                      boxSizing: "border-box",
-                  }}>
-                <Grid item container spacing={2}>
-                    <RendimientoSearch
-                        fechaInicial={fechaInicial}
-                        meses={1}
-                        onSearch={handleSearch}/>
-                    <RendimientoCard
-                        titulo="rendimiento"
-                        valor={ultimoRendimientoPromedio}
-                        descripcion="Rendimiento promedio de la semana"/>
-                    <RendimientoCard
-                        titulo="rendimiento"
-                        valor={rendimientoPromedio}
-                        descripcion="Rendimiento promedio del período"/>
-                </Grid>
-                {/*Chart*/}
-                <Grid item container spacing={2}>
-                    <RendimientoChart
-                        title="Rendimiento"
-                        yLabel="Rendimiento"
-                        xLabel="Dias"
-                        data={rendimientoMultilineFormatted}
-                        xDataKey="dia"
-                        dataKey="Ultimos 5 dias"
-                        dataKey1="5 dias anteriores"
-                        dataKey2="10 dias anteriores"
-                        domain={domain}
-                        legend={true}/>
-                    <RendimientoChart
-                        title="Rendimiento"
-                        yLabel="Rendimiento"
-                        xLabel="Fecha"
-                        data={rendimientoFormatted}
-                        xDataKey="fecha"
-                        dataKey="rendimiento"
-                        domain={domain}/>
-                </Grid>
-                <Grid item container spacing={2}>
-                    {listaByQuesoFormatted.map((rendimiento) => (
-                        <Grid item key={rendimiento.queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                            <RendimientoQuesoCard queso={rendimiento.queso}
-                                                  rendimiento={rendimiento.rendimiento}/>
-                        </Grid>
-                    ))}
-                </Grid>
+    return isLoadingRendimientoQueso ||
+    isLoadingRendimientos ? <Loading/> :
+        <Grid container
+              direction="row"
+              spacing={2}
+              paddingRight={2}
+              style={{
+                  minHeight: "92%",
+                  maxWidth: "98%",
+                  margin: "1%",
+                  boxSizing: "border-box",
+              }}>
+            <Grid item container spacing={2}>
+                <RendimientoSearch
+                    fechaInicial={fechaInicial}
+                    meses={1}
+                    onSearch={handleSearch}/>
+                <RendimientoCard
+                    titulo="rendimiento"
+                    valor={ultimoRendimientoPromedio}
+                    descripcion="Rendimiento promedio de la semana"/>
+                <RendimientoCard
+                    titulo="rendimiento"
+                    valor={rendimientoPromedio}
+                    descripcion="Rendimiento promedio del período"/>
             </Grid>
-    );
+            {/*Chart*/}
+            <Grid item container spacing={2}>
+                <RendimientoChart
+                    title="Rendimiento"
+                    yLabel="Rendimiento"
+                    xLabel="Dias"
+                    data={rendimientoMultilineFormatted}
+                    xDataKey="dia"
+                    dataKey="Ultimos 5 dias"
+                    dataKey1="5 dias anteriores"
+                    dataKey2="10 dias anteriores"
+                    domain={domain}
+                    legend={true}/>
+                <RendimientoChart
+                    title="Rendimiento"
+                    yLabel="Rendimiento"
+                    xLabel="Fecha"
+                    data={rendimientoFormatted}
+                    xDataKey="fecha"
+                    dataKey="rendimiento"
+                    domain={domain}/>
+            </Grid>
+            <Grid item container spacing={2}>
+                {listaByQuesoFormatted.map((rendimiento) => (
+                    <Grid item key={rendimiento.queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                        <RendimientoQuesoCard queso={rendimiento.queso}
+                                              rendimiento={rendimiento.rendimiento}/>
+                    </Grid>
+                ))}
+            </Grid>
+        </Grid>
 }

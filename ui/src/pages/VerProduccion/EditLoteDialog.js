@@ -79,81 +79,79 @@ export const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
         onSubmit(loteSubmit)
     }
 
-    return (<>
-        <Dialog
-            open={open}
-            onClose={onClose}
-            scroll="body">
-            <DialogTitle>Editar Producción</DialogTitle>
-            <DialogContent
-                style={{ backgroundColor: deleteEnabled ? "#F0BEBE" : '' }}>
-                <Container maxWidth="sm">
-                    <Grid container spacing={2}>
-                        <Grid item xs={8}>
-                            <Typography variant="h6" paddingLeft={2}>
-                                Lote: {lote.id}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Stack direction="row" justifyContent="right">
-                                Habilitar Borrado
-                                <Switch
-                                    checked={deleteEnabled}
-                                    onChange={handleChangeSwitch}/>
-                            </Stack>
-                        </Grid>
-                        <Grid item container spacing={1.5} xs={12} sm={6}>
-
-                            <Input ref={refLitros}
-                                   id={field.backLitrosLeche}
-                                   label={field.litrosLeche}
-                                   value={loteForm.litrosLeche}
-                                   required/>
-                            <Input ref={refCantHormas}
-                                   id={field.backCantHormas}
-                                   label={field.cantHormas}
-                                   value={loteForm.cantHormas}
-                                   required/>
-                            <Input ref={refCantCajas}
-                                   id={field.backCantCajas}
-                                   label={field.cantCajas}
-                                   value={loteForm.cantCajas}
-                                   required/>
-                            <Input ref={refPeso}
-                                   id={field.backPeso}
-                                   label={field.peso}
-                                   value={loteForm.peso}/>
-                        </Grid>
-                        <Grid item container spacing={1.5} xs={12} sm={6}>
-                            <Input ref={refLoteCultivo}
-                                   id={field.backLoteCultivo}
-                                   label={field.loteCultivo}
-                                   value={loteForm.loteCultivo}
-                                   type="text"/>
-                            <Input ref={refLoteColorante}
-                                   id={field.backLoteColorante}
-                                   label={field.loteColorante}
-                                   value={loteForm.loteColorante}
-                                   type="text"/>
-                            <Input ref={refLoteCalcio}
-                                   id={field.backLoteCalcio}
-                                   label={field.loteCalcio}
-                                   value={loteForm.loteCalcio}
-                                   type="text"/>
-                            <Input ref={refLoteCuajo}
-                                   id={field.backLoteCuajo}
-                                   label={field.loteCuajo}
-                                   value={loteForm.loteCuajo}
-                                   type="text"/>
-                        </Grid>
+    return <Dialog
+        open={open}
+        onClose={onClose}
+        scroll="body">
+        <DialogTitle>Editar Producción</DialogTitle>
+        <DialogContent
+            style={{ backgroundColor: deleteEnabled ? "#F0BEBE" : '' }}>
+            <Container maxWidth="sm">
+                <Grid container spacing={2}>
+                    <Grid item xs={8}>
+                        <Typography variant="h6" paddingLeft={2}>
+                            Lote: {lote.id}
+                        </Typography>
                     </Grid>
-                </Container>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onDelete} disabled={!deleteEnabled}>Borrar Lote</Button>
-                <Button onClick={onClose}>Cancelar</Button>
-                <Button onClick={submitLote}>Actualizar Lote</Button>
-            </DialogActions>
-        </Dialog>
-    </>);
+                    <Grid item xs={3}>
+                        <Stack direction="row" justifyContent="right">
+                            Habilitar Borrado
+                            <Switch
+                                checked={deleteEnabled}
+                                onChange={handleChangeSwitch}/>
+                        </Stack>
+                    </Grid>
+                    <Grid item container spacing={1.5} xs={12} sm={6}>
+
+                        <Input ref={refLitros}
+                               id={field.backLitrosLeche}
+                               label={field.litrosLeche}
+                               value={loteForm.litrosLeche}
+                               required/>
+                        <Input ref={refCantHormas}
+                               id={field.backCantHormas}
+                               label={field.cantHormas}
+                               value={loteForm.cantHormas}
+                               required/>
+                        <Input ref={refCantCajas}
+                               id={field.backCantCajas}
+                               label={field.cantCajas}
+                               value={loteForm.cantCajas}
+                               required/>
+                        <Input ref={refPeso}
+                               id={field.backPeso}
+                               label={field.peso}
+                               value={loteForm.peso}/>
+                    </Grid>
+                    <Grid item container spacing={1.5} xs={12} sm={6}>
+                        <Input ref={refLoteCultivo}
+                               id={field.backLoteCultivo}
+                               label={field.loteCultivo}
+                               value={loteForm.loteCultivo}
+                               type="text"/>
+                        <Input ref={refLoteColorante}
+                               id={field.backLoteColorante}
+                               label={field.loteColorante}
+                               value={loteForm.loteColorante}
+                               type="text"/>
+                        <Input ref={refLoteCalcio}
+                               id={field.backLoteCalcio}
+                               label={field.loteCalcio}
+                               value={loteForm.loteCalcio}
+                               type="text"/>
+                        <Input ref={refLoteCuajo}
+                               id={field.backLoteCuajo}
+                               label={field.loteCuajo}
+                               value={loteForm.loteCuajo}
+                               type="text"/>
+                    </Grid>
+                </Grid>
+            </Container>
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={onDelete} disabled={!deleteEnabled}>Borrar Lote</Button>
+            <Button onClick={onClose}>Cancelar</Button>
+            <Button onClick={submitLote}>Actualizar Lote</Button>
+        </DialogActions>
+    </Dialog>
 }
