@@ -11,17 +11,18 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import {useEffect, useState} from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import {getLotesByQuesoWithStock} from '../../services/RestServices';
+import { getLotesByQuesoWithStock } from '../../services/RestServices';
 
-export const StockProductoDialog = ({open, onClose, queso}) => {
+export const StockProductoDialog = ({ open, onClose, queso }) => {
 
     const [listaLotes, setListaLotes] = useState([]);
 
     const fetchLotes = () => {
         getLotesByQuesoWithStock(queso.codigo)
-            .then(({data}) => setListaLotes(data))
+            .then(({ data }) => setListaLotes(data))
             .catch(() => toast.error('No se pudo consultar los lotes del producto'))
     }
 
@@ -34,7 +35,7 @@ export const StockProductoDialog = ({open, onClose, queso}) => {
                     <Chip
                         avatar={queso.nomenclatura}
                         label={queso.tipoQueso}
-                        style={{backgroundColor: queso.color}}
+                        style={{ backgroundColor: queso.color }}
                     />
                 </DialogTitle>
                 <DialogContent>
