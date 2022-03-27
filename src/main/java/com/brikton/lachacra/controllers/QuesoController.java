@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.QuesoDTO;
@@ -16,10 +17,9 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/quesos")
+@RequestMapping(Path.API_QUESOS)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class QuesoController {
 
     private final QuesoService service;

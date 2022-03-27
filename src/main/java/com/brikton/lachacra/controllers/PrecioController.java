@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.dtos.PrecioDTO;
 import com.brikton.lachacra.dtos.PrecioUpdateDTO;
@@ -14,10 +15,9 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/precios")
+@RequestMapping(Path.API_PRECIOS)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class PrecioController {
 
     private final PrecioService service;

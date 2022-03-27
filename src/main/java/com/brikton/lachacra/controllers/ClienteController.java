@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
@@ -16,10 +17,9 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/clientes")
+@RequestMapping(Path.API_CLIENTES)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class ClienteController {
 
     private final ClienteService service;

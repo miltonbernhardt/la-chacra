@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.RemitoDTO;
@@ -21,10 +22,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/v1/remitos")
+@RequestMapping(Path.API_REMITOS)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class RemitoController {
 
     private final RemitoService service;

@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ExpedicionDTO;
@@ -18,10 +19,9 @@ import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/expediciones")
+@RequestMapping(Path.API_EXPEDICIONES)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class ExpedicionController {
 
     private final ExpedicionService service;

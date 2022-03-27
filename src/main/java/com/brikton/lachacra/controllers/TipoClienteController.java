@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.dtos.TipoClienteDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.TipoClienteService;
@@ -14,10 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/tipos_cliente")
+@RequestMapping(Path.API_TIPOS_CLIENTE)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
 public class TipoClienteController {
 
     private final TipoClienteService service;
