@@ -95,7 +95,7 @@ export const Rendimiento = () => {
                 dia: index,
                 "10 dias anteriores": semana1.at(index).rendimiento,
                 "5 dias anteriores": semana2.at(index).rendimiento,
-                "Ultimos 5 dias": value.rendimiento
+                "Últimos 5 dias": value.rendimiento
             }
         })
     }, [listaRendimientos]);

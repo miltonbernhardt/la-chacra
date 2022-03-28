@@ -1,4 +1,4 @@
-package com.brikton.lachacra.config;
+package com.brikton.lachacra.configs;
 
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.filters.TokenAuthenticationFilter;

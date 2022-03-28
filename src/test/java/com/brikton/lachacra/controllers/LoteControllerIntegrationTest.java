@@ -2,6 +2,7 @@ package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
@@ -48,7 +49,7 @@ public class LoteControllerIntegrationTest {
     private int port;
 
     private String baseUrl = "http://localhost";
-    private final String path = "/api/v1/lotes/";
+    private final String path = Path.API_LOTES;
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
@@ -77,7 +78,7 @@ public class LoteControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path).concat("/");
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);

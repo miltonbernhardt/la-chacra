@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
+import com.brikton.lachacra.constants.Path;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,7 +36,7 @@ public class ExpedicionControllerIntegrationTest {
     private int port;
 
     private String baseUrl = "http://localhost";
-    private final String path = "/api/v1/expediciones/";
+    private final String path = Path.API_EXPEDICIONES;
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
@@ -64,7 +65,7 @@ public class ExpedicionControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path).concat("/");
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);

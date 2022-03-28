@@ -234,7 +234,7 @@ public class LoteService {
             updateRendimiento(dto,list);
             rendimientos.add(dto);
         });
-        Collections.sort(rendimientos, new DateComparator());
+        rendimientos.sort(new DateComparator());
         return rendimientos;
     }
 

@@ -51,7 +51,7 @@ public class RemitoController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("filename", "remito-" + id + ".pdf");
-        return new ResponseEntity<byte[]>(service.getPdf(id), headers, HttpStatus.OK);
+        return new ResponseEntity<>(service.getPdf(id), headers, HttpStatus.OK);
     }
 
     @PostMapping(value = "/")
@@ -63,7 +63,6 @@ public class RemitoController {
     ) {
         log.info("API::generateAndSave- id_cliente: {} fecha: {}", idCliente, fecha);
 
-        return ResponseEntity.ok()
-                .body(SuccessfulResponse.set(SuccessfulMessages.MSG_REMITO_CREATED, service.generateAndSave(idCliente, fecha)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_REMITO_CREATED, service.generateAndSave(idCliente, fecha)));
     }
 }

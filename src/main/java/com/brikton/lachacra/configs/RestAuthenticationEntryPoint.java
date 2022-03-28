@@ -1,4 +1,4 @@
-package com.brikton.lachacra.config;
+package com.brikton.lachacra.configs;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
