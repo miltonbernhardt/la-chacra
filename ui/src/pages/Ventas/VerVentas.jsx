@@ -3,6 +3,7 @@ import { ventas } from "../../data/data";
 import ChartVentas from "./ChartVentas";
 import GridVentas from "./GridVentas";
 import SearchVentas from "./SearchVentas";
+import { useState } from 'react';
 
 const VerVentas = () => {
 

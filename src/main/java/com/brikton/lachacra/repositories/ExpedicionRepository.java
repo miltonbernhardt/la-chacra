@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,5 @@ public interface ExpedicionRepository extends JpaRepository<Expedicion, Long> {
     List<Expedicion> findAllByLote(Lote lote);
 
     List<Expedicion> findAllByClienteAndOnRemito(Cliente cliente, Boolean onRemito);
+
 }
