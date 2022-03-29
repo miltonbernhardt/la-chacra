@@ -18,7 +18,7 @@ const Rendimiento = () => {
 
     const fetchRendimientos = useCallback((fechaHasta, meses) => {
         const currentDate = new Date(fechaHasta);
-        currentDate.setMonth(currentDate.getMonth() - meses);
+        currentDate.setDate(currentDate.getDate() - (30 * meses));
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const date = currentDate.getDate();
