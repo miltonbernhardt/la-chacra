@@ -302,6 +302,7 @@ public class LoteService {
 
         return dtos;
     }
+
     private LitrosElaboradosDia updateLitros(LitrosElaboradosDia litros, Lote lote){
         var litrosElaborados = litros.getLitrosElaborados();
             var codigoQueso = lote.getQueso().getCodigo();

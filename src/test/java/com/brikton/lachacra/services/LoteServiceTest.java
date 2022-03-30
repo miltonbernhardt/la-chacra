@@ -566,6 +566,39 @@ public class LoteServiceTest {
         assertEquals(2,result.size());
     }
 
+    @Test
+    void Get_Litros_Elaborados__OK(){
+        var loteA = mockLote();
+        var loteB = mockLote();
+        var loteC = mockLote();
+
+        loteA.setLitrosLeche(100d);
+        loteB.setLitrosLeche(200d);
+        loteC.setLitrosLeche(300d);
+
+        var quesoA = mockQueso();
+        var quesoB = mockQueso();
+        quesoA.setCodigo("quesoA");
+        quesoB.setCodigo("quesoB");
+
+        loteA.setQueso(quesoA);
+        loteB.setQueso(quesoA);
+        loteC.setQueso(quesoB);
+
+        when(repository
+                .findAllByFechaBajaAndFechaElaboracionBetween(any(),any(LocalDate.class),any(LocalDate.class)))
+                .thenReturn(List.of(loteA,loteB,loteC));
+
+        var result = service.getLitrosElaborados(
+                LocalDate.of(2021, 10, 10),
+                LocalDate.of(2021, 10, 10));
+        assertEquals(1,result.size());
+        assertEquals(2,result.get(0).getLitrosElaborados().size());
+        assertEquals(300d,result.get(0).getLitrosElaborados().get(0).getCantidad());
+        assertEquals(300d,result.get(0).getLitrosElaborados().get(1).getCantidad());
+
+    }
+
     Lote mockLote() {
         Lote lote = new Lote();
         lote.setId("101020210011");
