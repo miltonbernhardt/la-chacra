@@ -70,6 +70,7 @@ const VerVentas = () => {
 
     // --- Variables ---
     const ventasFormatted = useMemo(() => {
+        if (isLoadingQuesos || isLoadingVentas) return [];
         return listaVentas.map((dia, index) => {
             const ventas = dia.ventas;
             const ventasAsList = ventas.map((v) => {
@@ -85,7 +86,7 @@ const VerVentas = () => {
                 ...ventasAsProps
             }
         })
-    }, [listaQuesos, listaVentas])
+    }, [isLoadingQuesos, isLoadingVentas, listaQuesos, listaVentas])
 
     const quesosFormatted = useMemo(() =>
         listaQuesos.map((q) => {

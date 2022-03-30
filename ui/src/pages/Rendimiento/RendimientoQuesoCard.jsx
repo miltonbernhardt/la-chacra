@@ -1,4 +1,4 @@
-import { CardActionArea, CardHeader } from '@mui/material';
+import { CardHeader } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,27 +15,25 @@ const RendimientoQuesoCard = ({ queso, rendimiento }) => {
                 alignItems: 'center'
             }}
         >
-            <CardActionArea onClick={() => alert('queso')}>
-                <CardHeader
-                    avatar={
-                        <Avatar sx={{ bgcolor: queso.color }} >
-                            {queso.nomenclatura}
-                        </Avatar>
-                    } />
-                <CardContent sx={{
-                    flexGrow: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                }}>
-                    <Typography gutterBottom variant="h3" component="h2" >
-                        {rendimiento}
-                    </Typography>
-                    <Typography gutterBottom variant="h7" color="textSecondary" component="h2" >
-                        {queso.tipoQueso}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
+            <CardHeader
+                avatar={
+                    <Avatar sx={{ bgcolor: queso.color }} >
+                        {queso.nomenclatura}
+                    </Avatar>
+                } />
+            <CardContent sx={{
+                flexGrow: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+            }}>
+                <Typography gutterBottom variant="h3" component="h2" >
+                    {rendimiento}
+                </Typography>
+                <Typography gutterBottom variant="h7" color="textSecondary" component="h2" >
+                    {queso.tipoQueso}
+                </Typography>
+            </CardContent>
         </Card>
     );
 }

@@ -1,7 +1,5 @@
-import { Grid, Paper, Typography } from "@mui/material";
-import { useRef, useState, useCallback, useMemo } from "react";
-import Select from '../../components/Select';
-import * as field from '../../resources/fields';
+import { Grid, Paper } from "@mui/material";
+import { useCallback, useMemo, useState } from "react";
 import ChartVentas from "./ChartVentas";
 import SelectVentasByQueso from "./SelectVentasByQueso";
 
