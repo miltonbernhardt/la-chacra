@@ -29,7 +29,8 @@ const LitrosByQueso = ({ listaLitros, quesosSelect }) => {
                 xDataKey="fecha"
                 dataKey={dataKeys.dataKey ? dataKeys.dataKey.value : ''}
                 dataKey1={dataKeys.dataKey1 ? dataKeys.dataKey1.value : ''}
-                dataKey2={dataKeys.dataKey2 ? dataKeys.dataKey2.value : ''} />
+                dataKey2={dataKeys.dataKey2 ? dataKeys.dataKey2.value : ''}
+                dot={true} />
             <Grid item xs={12} md={4}>
                 <Paper
                     sx={{

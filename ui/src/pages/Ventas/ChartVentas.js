@@ -1,9 +1,9 @@
 import { Grid, Paper } from "@mui/material";
 import Chart from '../../components/Chart';
 
-const ChartVentas = ({ title, yLabel, xLabel, data, xDataKey, dataKey, dataKey1, dataKey2, domain, legend }) => {
+const ChartVentas = ({ title, yLabel, xLabel, data, xDataKey, dataKey, dataKey1, dataKey2, domain, legend, md = 8 }) => {
     return (
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={md}>
             <Paper
                 sx={{
                     p: 2,

@@ -45,7 +45,7 @@ const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
     ]
 
     return (
-        <Grid item xs={12} sm={12} md={4} spacing={2}>
+        <Grid item xs={12} sm={12} md={2} spacing={2}>
             <Paper
                 sx={{
                     p: 2,

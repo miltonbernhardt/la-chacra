@@ -9,33 +9,6 @@ import GridLitros from "./GridLitros";
 import LitrosByQueso from "./LitrosByQueso";
 import SearchLitros from "./SearchLitros";
 
-const columns1 = quesos.map((queso, index) => {
-    return {
-        field: queso.nomenclatura,
-        headerName: queso.nomenclatura,
-        type: 'number',
-        flex: 0.7,
-        minWidth: 80
-    }
-})
-
-const columns = [{
-    field: "semana",
-    headerName: "Semana",
-    type: 'date',
-    flex: 1,
-    minWidth: 100
-},
-{
-    field: "total",
-    headerName: "Total",
-    type: 'number',
-    flex: 1,
-    minWidth: 100
-},
-...columns1
-];
-
 const VerLitrosElaborados = () => {
 
     const [listaLitros, setListaLitros] = useState([]);
@@ -70,7 +43,10 @@ const VerLitrosElaborados = () => {
         const date = currentDate.getDate();
         const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
         getLitros(fechaDesde, fechaHasta)
-            .then(({ data }) => { setListaLitros(data) })
+            .then(({ data }) => {
+                setListaLitros(data)
+                if (data.length < 16) toast.error('No se poseen suficientes datos');
+            })
             .catch(() => toast.error('No se pudo cargar litros'))
             .finally(() => setLoadingLitros(false));
     }, [])
@@ -125,6 +101,21 @@ const VerLitrosElaborados = () => {
             }
         }), [listaQuesos]);
 
+    const litrosMultilineFormatted = useMemo(() => {
+        if (listaLitros.length < 16) return [];
+        const semana1 = listaLitros.slice(-16, -10);
+        const semana2 = listaLitros.slice(-11, -5)
+        const ultimaSemana = listaLitros.slice(-6);
+        return ultimaSemana.map((value, index) => {
+            return {
+                dia: index,
+                "10 dias anteriores": semana1.at(index).total,
+                "5 dias anteriores": semana2.at(index).total,
+                "Ultimos 5 dias": value.total
+            }
+        })
+    }, [listaLitros]);
+
     return (
         isLoadingLitros || isLoadingQuesos ? <Loading /> :
             <Grid container
@@ -143,10 +134,20 @@ const VerLitrosElaborados = () => {
                         meses={1}
                         onSearch={handleSearch} />
                     <ChartLitros
-                        title="Litros Totales"
+                        md={5}
+                        title="Litros totales"
                         data={litrosFormatted}
                         xDataKey="fecha"
                         dataKey="total" />
+                    <ChartLitros
+                        md={5}
+                        title="Litros totales"
+                        data={litrosMultilineFormatted}
+                        xDataKey="fecha"
+                        dataKey="Ultimos 5 dias"
+                        dataKey1="5 dias anteriores"
+                        dataKey2="10 dias anteriores"
+                        legend={true} />
                 </Grid>
                 <Grid item container spacing={2}>
                     <LitrosByQueso
