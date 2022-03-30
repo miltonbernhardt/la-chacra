@@ -1,7 +1,13 @@
-import {Box, Button, Container, Grid, Paper, TextField, Typography} from "@mui/material";
-import {DataGrid} from '@mui/x-data-grid';
-import Chart from '../../components/Chart';
-import {litrosElaborados, quesos} from "../../data/data";
+import { Grid } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import Loading from "../../components/Loading";
+import { quesos } from "../../data/data";
+import { getAllQuesos, getLitros } from "../../services/RestServices";
+import ChartLitros from "./ChartLitros";
+import GridLitros from "./GridLitros";
+import LitrosByQueso from "./LitrosByQueso";
+import SearchLitros from "./SearchLitros";
 
 const columns1 = quesos.map((queso, index) => {
     return {
@@ -20,141 +26,138 @@ const columns = [{
     flex: 1,
     minWidth: 100
 },
-    {
-        field: "total",
-        headerName: "Total",
-        type: 'number',
-        flex: 1,
-        minWidth: 100
-    },
-    ...columns1
+{
+    field: "total",
+    headerName: "Total",
+    type: 'number',
+    flex: 1,
+    minWidth: 100
+},
+...columns1
 ];
 
 const VerLitrosElaborados = () => {
 
+    const [listaLitros, setListaLitros] = useState([]);
+    const [listaQuesos, setListaQuesos] = useState([]);
+
+    const [isLoadingLitros, setLoadingLitros] = useState(true);
+    const [isLoadingQuesos, setLoadingQuesos] = useState(true)
+
+    const fetchQuesos = () => {
+        getAllQuesos()
+            .then(quesos => {
+                const listaAux = quesos.data.map((q) => {
+                    return {
+                        id: q.id,
+                        codigo: q.codigo,
+                        nomenclatura: q.nomenclatura,
+                        tipoQueso: q.tipoQueso,
+                        color: q.color
+                    }
+                })
+                setListaQuesos(listaAux)
+            })
+            .catch(() => toast.error("No se pudo cargar quesos"))
+            .finally(() => setLoadingQuesos(false));
+    }
+
+    const fetchLitros = useCallback((fechaHasta, meses) => {
+        const currentDate = new Date(fechaHasta);
+        currentDate.setDate(currentDate.getDate() - (30 * meses));
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+        getLitros(fechaDesde, fechaHasta)
+            .then(({ data }) => { setListaLitros(data) })
+            .catch(() => toast.error('No se pudo cargar litros'))
+            .finally(() => setLoadingLitros(false));
+    }, [])
+
+    const padTo2Digits = (num) => {
+        return num.toString().padStart(2, '0');
+    }
+
+    const fechaInicial = useMemo(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+    }, [])
+
+    useEffect(() => {
+        fetchLitros(fechaInicial, 1);
+        fetchQuesos();
+    }, [fechaInicial, fetchLitros])
+
+    const handleSearch = useCallback((fechaHasta, meses) => {
+        fetchLitros(fechaHasta, meses);
+    }, [fetchLitros])
+
+    // --- Variables ---
+    const litrosFormatted = useMemo(() => {
+        if (isLoadingQuesos || isLoadingLitros) return [];
+        return listaLitros.map((dia, index) => {
+            const litros = dia.litrosElaborados;
+            const litrosAsList = litros.map((v) => {
+                const tipoQueso = listaQuesos.filter(q => q.codigo === v.codigoQueso).pop().tipoQueso;
+                return [tipoQueso, v.cantidad]
+            });
+            const litrosAsProps = Object.fromEntries(litrosAsList);
+            return {
+                id: index,
+                fecha: dia.fecha.at(8) + dia.fecha.at(9) + '/' +
+                    dia.fecha.at(5) + dia.fecha.at(6),
+                total: dia.total,
+                ...litrosAsProps
+            }
+        })
+    }, [isLoadingQuesos, isLoadingLitros, listaQuesos, listaLitros])
+
+    const quesosFormatted = useMemo(() =>
+        listaQuesos.map((q) => {
+            return {
+                id: q.id,
+                label: q.codigo + ' - ' + q.tipoQueso + ' - ' + q.nomenclatura,
+                value: q.tipoQueso
+            }
+        }), [listaQuesos]);
+
     return (
-        <>
-            <Container maxWidth="sm">
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        mt: 1
-                    }}
-                >
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-
-                        }}
-                    >
-                        <Grid container spacing={2}>
-                            <Typography variant="h6" paddingLeft={2} paddingTop={1}>
-                                Litros Elaborados
-                            </Typography>
-                            <Grid item xs={12}>
-                                <Typography variant="h7" color="GrayText">
-                                    Rango de fechas
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    id="fechaDesde"
-                                    name="fechaDesde"
-                                    label="Desde"
-                                    fullWidth
-                                    type="date"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}/>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    id="fechaHasta"
-                                    name="fechaHasta"
-                                    label="Hasta"
-                                    type="date"
-                                    fullWidth
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}/>
-                            </Grid>
-                            <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
-                                <Button variant="contained" fullWidth>Buscar</Button>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </Box>
-            </Container>
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    mt: 1,
-                    padding: 1
-                }}
-            >
-                <Grid container spacing={2}>
-                    {/* Chart */}
-                    <Grid item xs={12}>
-                        <Paper
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                height: 300,
-                            }}
-                        >
-                            esta grafica va por dia
-                            <Chart
-                                title="Litros Elaborados"
-                                yLabel="Litros"
-                                data={litrosElaborados}
-                                xDataKey="semana"
-                                dataKey="P"
-                                dataKey1="M"
-                                dataKey2="S"
-                            />
-                        </Paper>
-                    </Grid>
+        isLoadingLitros || isLoadingQuesos ? <Loading /> :
+            <Grid container
+                direction="row"
+                spacing={1.5}
+                paddingRight={2}
+                style={{
+                    minHeight: "92%",
+                    maxWidth: "98%",
+                    margin: "1%",
+                    boxSizing: "border-box",
+                }}>
+                <Grid item container spacing={2}>
+                    <SearchLitros
+                        fechaInicial={fechaInicial}
+                        meses={1}
+                        onSearch={handleSearch} />
+                    <ChartLitros
+                        title="Litros Totales"
+                        data={litrosFormatted}
+                        xDataKey="fecha"
+                        dataKey="total" />
                 </Grid>
-            </Box>
-            <Box height={600}
-                 sx={{
-                     padding: 1,
-                     flexDirection: 'column',
-                     alignItems: 'center',
-
-                 }}>
-                <Grid item xs={12}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: 600,
-                        }}
-                    >
-                        <DataGrid
-                            rows={litrosElaborados}
-                            columns={columns}
-                            pageSize={20}
-                            rowsPerPageOptions={[20]}
-                            pagination={false}
-                            hideFooterPagination
-                        />
-                    </Paper>
+                <Grid item container spacing={2}>
+                    <LitrosByQueso
+                        listaLitros={litrosFormatted}
+                        quesosSelect={quesosFormatted} />
                 </Grid>
-            </Box>
-        </>);
+                <GridLitros
+                    quesos={listaQuesos}
+                    data={litrosFormatted} />
+            </Grid>
+    );
 }
 
 export default VerLitrosElaborados;
