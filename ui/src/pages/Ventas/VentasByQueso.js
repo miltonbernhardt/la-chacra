@@ -27,9 +27,9 @@ const VentasByQueso = ({ listaVentas, quesosSelect }) => {
                 title="Ventas por queso"
                 data={listaVentas}
                 xDataKey="fecha"
-                dataKey={dataKeys.dataKey.value}
-                dataKey1={dataKeys.dataKey1.value}
-                dataKey2={dataKeys.dataKey2.value} />
+                dataKey={dataKeys.dataKey ? dataKeys.dataKey.value : ''}
+                dataKey1={dataKeys.dataKey1 ? dataKeys.dataKey1.value : ''}
+                dataKey2={dataKeys.dataKey2 ? dataKeys.dataKey2.value : ''} />
             <Grid item xs={12} md={4}>
                 <Paper
                     sx={{
