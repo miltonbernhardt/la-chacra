@@ -33,7 +33,7 @@ public class LoteUpdateDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-    private Double peso;
+    private Integer cajas;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)
@@ -53,6 +53,7 @@ public class LoteUpdateDTO {
 
     private Double rendimiento;
     private Integer stockLote;
+    private Double peso;
 
     public LoteUpdateDTO() {
     }
