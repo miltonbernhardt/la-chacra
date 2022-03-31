@@ -16,4 +16,7 @@ public class SuccessfulMessages {
     public static final String MSG_EXPEDICION_UPDATED = "Se actualizó la expedición correctamente";
     public static final String MSG_EXPEDICION_CREATED = "Se cargó la expedición correctamente";
     public static final String MSG_REMITO_CREATED = "Se creó el remito correctamente";
+    public static final String MSG_EMBALAJE_CREATED = "Se creó el embalaje correctamente";
+    public static final String MSG_EMBALAJE_DELETED = "Se borró el embalaje correctamente";
+    public static final String MSG_EMBALAJE_UPDATED = "Se actualizó el embalaje correctamente";
 }

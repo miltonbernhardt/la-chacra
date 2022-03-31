@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface EmbalajeRepository extends JpaRepository<Embalaje, Long> {
 
-    List<Embalaje> findByTipoEmbalajeAndListaQuesosContains(TipoEmbalaje tipoEmbalaje, Queso listaQuesos);
+    List<Embalaje> findByTipoEmbalajeAndListaQuesosContains(TipoEmbalaje tipoEmbalaje, Queso queso);
+
+    boolean existsByTipoEmbalajeAndListaQuesosContains(TipoEmbalaje tipoEmbalaje, Queso queso);
 
 }

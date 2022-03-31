@@ -15,4 +15,6 @@ public class ErrorMessages {
     public static final String MSG_PRECIO_NOT_FOUND = "Precio no encontrado";
     public static final String MSG_QUESO_NOT_FOUND = "Queso no encontrado";
     public static final String MSG_TIPO_CLIENTE_NOT_FOUND = "Tipo de cliente no encontrado";
+    public static final String MSG_EMBALAJE_NOT_FOUND = "Embalaje no encontrado";
+    public static final String MSG_EMBALAJE_ALREADY_EXISTS = "Ya existe el embalaje";
 }

@@ -17,6 +17,7 @@ import javax.validation.constraints.PastOrPresent;
 public class EmbalajeDTO {
 
     private Long id;
+    //TODO this validation does not work
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @ValidateString(acceptedValues = {"CAJA","BOLSA"},message = ValidationMessages.INVALID_FORMAT)
     private String tipoEmbalaje;
@@ -26,6 +27,8 @@ public class EmbalajeDTO {
     @NotNull(message = ValidationMessages.NOT_FOUND)
     private List<QuesoDTO> listaQuesos;
 
+    public EmbalajeDTO(){}
+
     public EmbalajeDTO(Embalaje embalaje){
         this.id = embalaje.getId();
         this.tipoEmbalaje = embalaje.getTipoEmbalaje().toString();
@@ -33,5 +36,12 @@ public class EmbalajeDTO {
         var quesosDTO = new ArrayList<QuesoDTO>();
         embalaje.getListaQuesos().forEach(queso -> quesosDTO.add(new QuesoDTO(queso)));
         listaQuesos = quesosDTO;
+    }
+
+    public EmbalajeDTO(EmbalajeUpdateDTO dto){
+        id = dto.getId();
+        tipoEmbalaje = dto.getTipoEmbalaje();
+        stock = dto.getStock();
+        listaQuesos = dto.getListaQuesos();
     }
 }
