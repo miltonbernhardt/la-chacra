@@ -8,7 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import * as validation from "../../resources/validations";
 import * as message from "../../resources/messages";
 
-const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
+const SearchLitros = ({ fechaInicial, meses, onSearch }) => {
 
     const refFecha = useRef(null);
     const refMeses = useRef(null);
@@ -55,7 +55,7 @@ const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
                     width: '100%'
                 }}            >
                 <Stack minHeight={300} sx={{ height: '100%' }} direction="column" justifyContent="space-between">
-                    <Typography variant='h6'>Consultar ventas</Typography>
+                    <Typography variant='h6'>Consultar litros</Typography>
                     <Grid container spacing={2}>
                         <Input
                             ref={refFecha}
@@ -85,4 +85,4 @@ const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
     );
 }
 
-export default SearchVentas;
+export default SearchLitros;

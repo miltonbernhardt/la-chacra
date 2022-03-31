@@ -54,6 +54,10 @@ public class VentaService {
             var codigoQueso = item.getQueso().getCodigo();
             var cantidad = item.getCantidad();
 
+            var total = venta.getTotal();
+            total += cantidad;
+            venta.setTotal(total);
+
             if (ventas.containsKey(codigoQueso)){
                 var aux = ventas.get(codigoQueso);
                 cantidad += aux.getCantidad();
@@ -65,9 +69,7 @@ public class VentaService {
                 ventas.put(codigoQueso,aux);
             }
 
-            var total = venta.getTotal();
-            total += cantidad;
-            venta.setTotal(total);
+
         });
         return venta;
     }

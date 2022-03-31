@@ -35,6 +35,8 @@ export const getLotesBetweenDates = async (fechaDesde, fechaHasta) => await GET(
 export const getLotesByQuesoWithStock = async (codigoQueso) => await GET(`${API_LOTE}/queso?codigoQueso=${codigoQueso}`);
 export const getRendimientoByDia = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/rendimiento/dia?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 export const getRendimientoByQueso = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/rendimiento/queso?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+export const getLitros = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/litros_elaborados?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+
 
 // --- QUESO METHODS ---
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);

@@ -1,7 +1,7 @@
 import { Grid, Paper } from "@mui/material";
 import Chart from '../../components/Chart';
 
-const ChartVentas = ({ title, yLabel, xLabel, data, xDataKey, dataKey, dataKey1, dataKey2, domain, legend, md = 8 }) => {
+const ChartLitros = ({ title, yLabel, xLabel, data, xDataKey, dataKey, dataKey1, dataKey2, domain, legend, md = 8, dot }) => {
     return (
         <Grid item xs={12} md={md}>
             <Paper
@@ -22,10 +22,11 @@ const ChartVentas = ({ title, yLabel, xLabel, data, xDataKey, dataKey, dataKey1,
                     dataKey1={dataKey1}
                     dataKey2={dataKey2}
                     domain={domain}
-                    legend={legend} />
+                    legend={legend}
+                    dot={dot} />
             </Paper>
         </Grid>
     );
 }
 
-export default ChartVentas;
+export default ChartLitros;

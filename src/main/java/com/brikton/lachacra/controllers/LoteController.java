@@ -4,6 +4,7 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
+import com.brikton.lachacra.dtos.litrosElaborados.LitrosElaboradosDiaDTO;
 import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
 import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
@@ -75,6 +76,15 @@ public class LoteController {
                                                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
         log.info("API::getRendimientoByQueso - fecha_desde: {} - fecha_hasta: {} ", fechaDesde,fechaHasta);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByQueso(fechaDesde,fechaHasta)));
+    }
+
+    @GetMapping(value = "/litros_elaborados")
+    public ResponseEntity<SuccessfulResponse<List<LitrosElaboradosDiaDTO>>> getLitrosElaborados(@RequestParam("fecha_desde")
+                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+                                                                                                @RequestParam("fecha_hasta")
+                                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+        log.info("API::getLitrosElaborados - fecha_desde: {} - fecha_hasta: {} ", fechaDesde,fechaHasta);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getLitrosElaborados(fechaDesde,fechaHasta)));
     }
 
     @PostMapping(value = "/")

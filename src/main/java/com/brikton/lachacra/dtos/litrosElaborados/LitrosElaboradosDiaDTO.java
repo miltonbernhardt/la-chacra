@@ -1,0 +1,26 @@
+package com.brikton.lachacra.dtos.litrosElaborados;
+
+import com.brikton.lachacra.dtos.ventas.VentaDTO;
+import com.brikton.lachacra.entities.LitrosElaboradosDia;
+import com.brikton.lachacra.entities.VentaDia;
+import lombok.Data;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+public class LitrosElaboradosDiaDTO {
+
+    private LocalDate fecha;
+    private Double total;
+    private List<LitrosElaboradosDTO> litrosElaborados;
+
+    public LitrosElaboradosDiaDTO(LitrosElaboradosDia litrosElaboradosDia) {
+     fecha=litrosElaboradosDia.getFecha();
+     total=litrosElaboradosDia.getTotal();
+     litrosElaborados = new ArrayList<>();
+     var listaLitros = new ArrayList<>(litrosElaboradosDia.getLitrosElaborados().values());
+     listaLitros.forEach(litros -> litrosElaborados.add(new LitrosElaboradosDTO(litros)));
+    }
+}
