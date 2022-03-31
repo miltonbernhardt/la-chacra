@@ -37,10 +37,11 @@ const VerLitrosElaborados = () => {
 
     const fetchLitros = useCallback((fechaHasta, meses) => {
         const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - (30 * meses));
+        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        const date = currentDate.getDate();
+        var date = currentDate.getDate();
+        if (month === 1 && date === 28) date = 27;
         const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
         getLitros(fechaDesde, fechaHasta)
             .then(({ data }) => {
