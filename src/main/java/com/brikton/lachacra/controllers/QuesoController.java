@@ -9,6 +9,7 @@ import com.brikton.lachacra.dtos.QuesoUpdateDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.QuesoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +32,7 @@ public class QuesoController {
         this.service = service;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('" + Path.CARGAR_LOTES + "," + Path.CARGAR_PRECIOS + "')")
     public ResponseEntity<SuccessfulResponse<List<QuesoDTO>>> getAll() {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));

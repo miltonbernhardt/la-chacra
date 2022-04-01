@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.util.CookieUtil;
@@ -81,15 +82,25 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handlerInternalError(HttpServletRequest req, Exception ex) {
         log.error("Request: {} - {}", req.getRequestURL(), ex);
-        return new ResponseEntity<>(ErrorResponse.set(ErrorMessages.MSG_INTERNAL_SERVER_ERROR, req.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+        var header = new HttpHeaders();
+        header.add("Content-Type", "application/json");
+        return new ResponseEntity<>(ErrorResponse.set(ErrorMessages.MSG_INTERNAL_SERVER_ERROR, req.getRequestURI(), HttpStatus.INTERNAL_SERVER_ERROR.value()), header, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("Request: {} - {}", request.getContextPath(), ex.getMessage());
-        Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+        var errors = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage,
+                (a, b) -> {
+                    if (a.equals(ValidationMessages.NOT_FOUND))
+                        return a;
+                    return b;
+                }));
+
         status = HttpStatus.BAD_REQUEST;
         headers.add("Content-Type", "application/json");
+
         return handleExceptionInternal(
                 ex,
                 ErrorResponse.set(ErrorMessages.MSG_INVALID_BODY, errors, ((ServletWebRequest) request).getRequest().getRequestURI(), status.value()),

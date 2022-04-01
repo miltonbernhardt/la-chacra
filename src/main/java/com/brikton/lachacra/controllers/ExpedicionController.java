@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping(Path.API_EXPEDICIONES)
 @Slf4j
-@Validated
 @HasCargarExpedicionAuthority
 public class ExpedicionController {
 
