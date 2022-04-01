@@ -1,12 +1,12 @@
 import { Box, Container, Grid, Typography } from "@material-ui/core";
-import { Button, ButtonGroup, TextField } from "@mui/material";
-import { useState, useCallback, useEffect, useMemo } from "react";
-import StockEmbalajeCard from "./StockEmbalajeCard";
-import { deleteEmbalaje, getAllEmbalajes, getAllQuesos, postEmbalaje, putEmbalaje } from "../../services/RestServices";
+import { Button, ButtonGroup } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from 'react-hot-toast';
-import Loading from '../../components/Loading'
-import EmbalajeDialog from "./EmbalajeDialog";
+import Loading from '../../components/Loading';
+import { deleteEmbalaje, getAllEmbalajes, getAllQuesos, postEmbalaje, putEmbalaje, updateStockEmbalaje } from "../../services/RestServices";
 import DeleteDialog from "./DeleteDialog";
+import EmbalajeDialog from "./EmbalajeDialog";
+import StockEmbalajeCard from "./StockEmbalajeCard";
 
 const embalajeInicial = {
     id: '',
@@ -81,6 +81,16 @@ const StockEmbalaje = () => {
             })
             .catch(() => toast.error('No se pudo actualizar embalaje'))
     }, [fetchEmbalajes, isNewEmbalaje])
+
+    const handleAgregarStock = useCallback((nuevoStock) => {
+        updateStockEmbalaje(embalaje.id, nuevoStock)
+            .then(() => {
+                fetchEmbalajes();
+                setDialogOpen(false);
+                setEmbalaje(embalajeInicial);
+            })
+            .catch(() => toast.error('No se pudo actualizar embalaje'))
+    }, [embalaje.id, fetchEmbalajes])
 
     const openDeleteEmbalaje = useCallback(() => setOpenDelete(true), []);
 
@@ -177,6 +187,7 @@ const StockEmbalaje = () => {
                     onClose={closeDialog}
                     onSubmit={handleSubmit}
                     onDelete={openDeleteEmbalaje}
+                    onAgregarStock={handleAgregarStock}
                     isNewEmbalaje={isNewEmbalaje} />
                 <DeleteDialog
                     open={openDelete}

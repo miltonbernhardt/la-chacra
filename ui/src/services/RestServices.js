@@ -76,6 +76,7 @@ export const getVentas = async (fechaDesde, fechaHasta) => await GET(`${API_VENT
 export const getAllEmbalajes = async () => await GET(`${API_EMBALAJE}`);
 export const postEmbalaje = async (embalaje) => await POST(`${API_EMBALAJE}`, embalaje);
 export const putEmbalaje = async (embalaje) => await PUT(`${API_EMBALAJE}`, embalaje);
+export const updateStockEmbalaje = async (id, stock) => await PUT(`${API_EMBALAJE}agregar_stock?id=${id}&stock=${stock}`, null);
 export const deleteEmbalaje = async (id) => await DELETE(`${API_EMBALAJE}${id}`);
 
 // --- GENERAL METHODS ---

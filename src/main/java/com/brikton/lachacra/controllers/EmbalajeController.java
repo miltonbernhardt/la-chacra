@@ -53,6 +53,12 @@ public class EmbalajeController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EMBALAJE_UPDATED, service.update(dto)));
     }
 
+    @PutMapping(value = "/agregar_stock")
+    public ResponseEntity<SuccessfulResponse<EmbalajeDTO>> updateStock(@RequestParam("id") Long id,@RequestParam("stock") Integer stock ) {
+        log.info("API::updateStock - id: {} - stock: {}", id, stock);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EMBALAJE_UPDATED, service.updateStock(id,stock)));
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<Long>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) @PathVariable("id") Long id) {
         log.info("API::delete - id: {}", id);

@@ -19,13 +19,14 @@ import * as validation from "../../resources/validations";
 import Select from "../../components/Select";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, isNewEmbalaje }) => {
+const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, isNewEmbalaje, onAgregarStock }) => {
 
     const [embalajeForm, setEmbalajeForm] = useState(embalaje)
 
     const [deleteEnabled, setDeleteEnabled] = useState(false)
 
     const refStock = createRef(null)
+    const refAgregarStock = createRef(null)
     const refSelectTipoEmbalaje = createRef(null)
     const refSelectQueso = createRef(null)
 
@@ -97,6 +98,11 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, i
         setListaQuesos(newList)
     }, [embalajeForm.listaQuesos, quesos, refSelectQueso, setListaQuesos])
 
+    const handleAgregarStock = useCallback(() => {
+        var values = {};
+        refAgregarStock.current.setValue(values);
+        if (values.stock > 0) onAgregarStock(values.stock);
+    }, [onAgregarStock, refAgregarStock])
 
     // --- VARIABLES ---
     const quesosAutocomplete = quesos.map((q) => {
@@ -114,17 +120,38 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, i
         ]
     }, [])
 
+    const agregarStock = useMemo(() => {
+        return (
+            isNewEmbalaje ? <></> :
+                <>
+                    <Input ref={refAgregarStock}
+                        id={field.backStockEmbalaje}
+                        label="Agregar Stock" />
+                    <Grid item xs={12}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            onClick={handleAgregarStock}>
+                            Agregar nuevo stock
+                        </Button>
+                    </Grid>
+                </>
+        )
+    }, [handleAgregarStock, isNewEmbalaje, refAgregarStock])
+
     const actions = useMemo(() => {
         return (
             <DialogActions>
                 {!isNewEmbalaje ?
                     <>
                         <Grid item xs={12}>
-                            <Stack direction="row" justifyContent="right">
-                                Habilitar Borrado
+                            <Stack direction="row" alignItems="center" justifyContent="left">
                                 <Switch
                                     checked={deleteEnabled}
                                     onChange={handleChangeSwitch} />
+                                <Typography variant="h6">
+                                    Habilitar Borrado
+                                </Typography>
                             </Stack>
                         </Grid>
                         <Button
@@ -165,6 +192,7 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, i
                                     label={field.stockEmbalaje}
                                     value={embalajeForm.stock}
                                     required />
+                                {agregarStock}
                             </Grid>
                             <Grid item container spacing={1.5} xs={12} sm={6}>
                                 <Select ref={refSelectQueso}

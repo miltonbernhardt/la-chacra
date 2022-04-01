@@ -66,6 +66,15 @@ public class EmbalajeService {
        return new EmbalajeDTO(result);
     }
 
+    public EmbalajeDTO updateStock(Long id,Integer stock){
+        var embalajeOptional = repository.findById(id);
+        if (embalajeOptional.isEmpty()) throw new EmbalajeNotFoundException();
+        var embalaje = embalajeOptional.get();
+        var stockUpdate = embalaje.getStock() + stock;
+        embalaje.setStock(stockUpdate);
+        return new EmbalajeDTO(persist(embalaje));
+    }
+
     private Embalaje persist(Embalaje embalaje){
         return repository.save(embalaje);
     }
