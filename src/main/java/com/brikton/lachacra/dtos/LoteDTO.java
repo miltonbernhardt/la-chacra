@@ -30,7 +30,7 @@ public class LoteDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-    private Integer cajas;
+    private Integer cantCajas;
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
     @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)
@@ -70,7 +70,7 @@ public class LoteDTO {
         this.setLoteCalcio(lote.getLoteCalcio());
         this.setLoteCuajo(lote.getLoteCuajo());
         this.setCodigoQueso(lote.getQueso().getCodigo());
-        this.setCajas(lote.getCajas());
+        this.setCantCajas(lote.getCantCajas());
     }
 
     public LoteDTO(LoteUpdateDTO dto) {
@@ -87,7 +87,7 @@ public class LoteDTO {
         this.setLoteCalcio(dto.getLoteCalcio());
         this.setLoteCuajo(dto.getLoteCuajo());
         this.setCodigoQueso(dto.getCodigoQueso());
-        this.setCajas(dto.getCajas());
+        this.setCantCajas(dto.getCantCajas());
     }
 
     public String getCodigoQueso() {

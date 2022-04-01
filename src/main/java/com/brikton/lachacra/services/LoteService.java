@@ -159,7 +159,7 @@ public class LoteService {
         lote.setLoteColorante(dto.getLoteColorante());
         lote.setLoteCalcio(dto.getLoteCalcio());
         lote.setLoteCuajo(dto.getLoteCuajo());
-        lote.setCajas(dto.getCajas());
+        lote.setCantCajas(dto.getCantCajas());
         return lote;
     }
 
@@ -218,10 +218,10 @@ public class LoteService {
         if (repository.existsByIdNotFechaBaja(dto.getId())) {
             var oldLote = repository.getById(dto.getId());
             embalajeService.increaseStockBolsa(oldLote.getCantHormas(),oldLote.getQueso());
-            embalajeService.increaseStockCaja(oldLote.getCajas(),oldLote.getQueso());
+            embalajeService.increaseStockCaja(oldLote.getCantCajas(),oldLote.getQueso());
         }
         embalajeService.decreaseStockBolsa(dto.getCantHormas(),queso);
-        embalajeService.decreaseStockCaja(dto.getCajas(),queso);
+        embalajeService.decreaseStockCaja(dto.getCantCajas(),queso);
     }
 
     private void updateStockLote(LoteDTO dto) {

@@ -1,27 +1,44 @@
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import toast from "react-hot-toast";
 import Loading from '../../components/Loading';
 import PageFormTable from "../../components/PageFormTable";
-import {deleteLote, getAllQuesos, postLote, putLote} from "../../services/RestServices";
+import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
 import DialogEliminarLote from "./DialogEliminarLote";
 import FormLote from "./FormLote";
 import GridLotes from "./GridLotes";
 
-const loteInicial = {
-    id: '',
-    fechaElaboracion: '',
-    numeroTina: '',
-    litrosLeche: '',
-    cantHormas: '',
-    peso: '',
-    loteCultivo: '',
-    loteColorante: '',
-    loteCalcio: '',
-    loteCuajo: '',
-    codigoQueso: ''
-}
 
 const CargarProduccion = () => {
+
+    const padTo2Digits = (num) => {
+        return num.toString().padStart(2, '0');
+    }
+
+    const fechaInicial = useMemo(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
+    }, [])
+
+    const loteInicial = useMemo(() => {
+        return {
+            id: '',
+            fechaElaboracion: fechaInicial,
+            numeroTina: '',
+            litrosLeche: '',
+            cantHormas: '',
+            cantCajas: '',
+            peso: '',
+            loteCultivo: '',
+            loteColorante: '',
+            loteCalcio: '',
+            loteCuajo: '',
+            codigoQueso: ''
+        }
+    }, [fechaInicial])
+
     const [lote, setLote] = useState(loteInicial);
     const [listaLotes, setListaLotes] = useState([]);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -50,7 +67,7 @@ const CargarProduccion = () => {
         setLote(loteSubmit);
         if (isEditingLote) {
             putLote(loteSubmit)
-                .then(({data}) => {
+                .then(({ data }) => {
                     const newList = listaLotes.filter((item) => item.id !== lote.id);
                     setListaLotes([...newList, data]);
                     setLote(loteInicial);
@@ -59,7 +76,7 @@ const CargarProduccion = () => {
             setEditingLote(false);
         } else {
             postLote(loteSubmit)
-                .then(({data}) => {
+                .then(({ data }) => {
                     setLote(loteInicial);
                     setListaLotes([...listaLotes, data]);
                 })
@@ -103,7 +120,7 @@ const CargarProduccion = () => {
     });
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
     return (
         <PageFormTable
@@ -116,13 +133,13 @@ const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit}/>
+                    handleSubmit={handleSubmit} />
             }
             table={
                 <GridLotes
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             }
             titleTable="Producción ingresada"
             titleForm="Ingreso de producción"
@@ -131,7 +148,7 @@ const CargarProduccion = () => {
                 open={eliminarDialog}
                 lote={lote}
                 onClose={cancelEliminar}
-                onSubmit={handleEliminar}/>
+                onSubmit={handleEliminar} />
         </PageFormTable>
     )
 }

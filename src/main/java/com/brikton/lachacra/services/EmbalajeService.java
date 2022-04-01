@@ -101,9 +101,10 @@ public class EmbalajeService {
      * @param increment if true it will increment the stock, else will decrement
      */
     private void updateStockEmbalaje(TipoEmbalaje tipoEmbalaje, Queso queso,Integer cantidad, Boolean increment){
-        var embalaje = repository
-                .findByTipoEmbalajeAndListaQuesosContains(tipoEmbalaje, queso)
-                .get(0);
+        var listaEmbalaje = repository
+                .findByTipoEmbalajeAndListaQuesosContains(tipoEmbalaje, queso);
+        if (listaEmbalaje.isEmpty()) throw new EmbalajeNotFoundException(tipoEmbalaje, queso);
+        var embalaje = listaEmbalaje.get(0);
         var stock = embalaje.getStock();
         if (increment) stock += cantidad;
         else stock -= cantidad;

@@ -22,7 +22,7 @@ public class Lote {
     private Double litrosLeche;
     private Integer cantHormas;
     private Integer stockLote;
-    private Integer cajas;
+    private Integer cantCajas;
     private Double peso;
     private Double rendimiento;
     private String loteCultivo;
