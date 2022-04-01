@@ -13,11 +13,9 @@ import java.util.List;
 @Repository
 public interface ExpedicionRepository extends JpaRepository<Expedicion, Long> {
 
-    @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Expedicion e WHERE e.lote.id=:idLote")
-    boolean existsByIdLote(String idLote);
+    boolean existsByLote(Lote lote);
 
-    @Query("SELECT CASE WHEN count(*) > 0 THEN true ELSE false END FROM Expedicion e WHERE e.cliente.id=:idCliente")
-    boolean existsByIdCliente(Long idCliente);
+    boolean existsByCliente(Cliente cliente);
 
     List<Expedicion> findAllByLote(Lote lote);
 

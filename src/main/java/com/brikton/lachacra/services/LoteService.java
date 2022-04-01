@@ -178,11 +178,16 @@ public class LoteService {
 
     public void delete(String id) throws LoteNotFoundException {
         checkExistenceLote(id);
-
-        if (expedicionRepository.existsByIdLote(id) || devolucionRepository.existsByIdLote(id))
+        var lote = repository.getById(id);
+        if (expedicionRepository.existsByLote(lote) || devolucionRepository.existsByLote(lote)) {
             darBajaLote(id);
-        else
+        }
+        else {
+            quesoService.decreaseStock(lote.getQueso(),lote.getCantHormas());
+            embalajeService.increaseStockBolsa(lote.getCantHormas(),lote.getQueso());
+            embalajeService.increaseStockCaja(lote.getCantCajas(),lote.getQueso());
             repository.deleteById(id);
+        }
     }
 
     private void checkExistenceLote(String id) {
@@ -212,7 +217,7 @@ public class LoteService {
         }
         quesoService.increaseStock(queso,dto.getCantHormas());
     }
-    //TODO check this method
+
     private void updateStockEmbalaje(LoteDTO dto){
         var queso = getQueso(dto.getCodigoQueso());
         if (repository.existsByIdNotFechaBaja(dto.getId())) {
