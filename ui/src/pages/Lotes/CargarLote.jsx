@@ -107,7 +107,7 @@ const CargarProduccion = () => {
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
-    }, [lote.id, listaLotes]);
+    }, [lote.id, loteInicial, listaLotes]);
 
     const cancelEliminar = useCallback(() => setEliminarDialog(false), []);
 

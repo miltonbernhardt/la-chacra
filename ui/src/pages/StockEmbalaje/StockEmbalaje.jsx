@@ -2,10 +2,11 @@ import { Box, Container, Grid, Typography } from "@material-ui/core";
 import { Button, ButtonGroup, TextField } from "@mui/material";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import StockEmbalajeCard from "./StockEmbalajeCard";
-import { getAllEmbalajes } from "../../services/RestServices";
+import { deleteEmbalaje, getAllEmbalajes, getAllQuesos, postEmbalaje, putEmbalaje } from "../../services/RestServices";
 import toast from 'react-hot-toast';
 import Loading from '../../components/Loading'
 import EmbalajeDialog from "./EmbalajeDialog";
+import DeleteDialog from "./DeleteDialog";
 
 const embalajeInicial = {
     id: '',
@@ -16,22 +17,89 @@ const embalajeInicial = {
 
 const StockEmbalaje = () => {
 
+    const [embalaje, setEmbalaje] = useState(embalajeInicial)
     const [listaEmbalajes, setListaEmbalajes] = useState([]);
+    const [listaQuesos, setListaQuesos] = useState([]);
 
-    const [isLoading, setLoading] = useState(true);
+    const [isNewEmbalaje, setNewEmbalaje] = useState(true);
+    const [isLoadingEmbalajes, setLoadingEmbalajes] = useState(true);
+    const [isLoadingQuesos, setLoadingQuesos] = useState(true);
     const [isDialogOpen, setDialogOpen] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
 
     const fetchEmbalajes = useCallback(() => {
         getAllEmbalajes()
             .then(({ data }) => setListaEmbalajes(data))
             .catch(() => toast.error("No se pudo cargar embalajes"))
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingEmbalajes(false))
+    }, []);
+
+    const fetchQuesos = useCallback(() => {
+        getAllQuesos()
+            .then(({ data }) => {
+
+                setListaQuesos(data)
+                setLoadingQuesos(false);
+            })
+            .catch(() => toast.error("No se pudo cargar productos"))
+            .finally(() => setLoadingQuesos(false));
+    }, []);
+
+    useEffect(() => {
+        fetchEmbalajes();
+        fetchQuesos();
+    }, [fetchEmbalajes, fetchQuesos]);
+
+    const handleNewEmbalaje = useCallback(() => { setDialogOpen(true) }, []);
+
+    const handleCardClick = useCallback((id) => {
+        setNewEmbalaje(false);
+        const selected = listaEmbalajes.filter(e => e.id === id).pop();
+        setEmbalaje(selected);
+        setDialogOpen(true);
+    }, [listaEmbalajes]);
+
+    const closeDialog = useCallback(() => {
+        setEmbalaje(embalajeInicial);
+        setNewEmbalaje(true);
+        setDialogOpen(false);
     }, [])
 
-    useEffect(() => fetchEmbalajes(), [fetchEmbalajes]);
+    const handleSubmit = useCallback((embalajeSubmmit) => {
+        if (isNewEmbalaje) postEmbalaje(embalajeSubmmit)
+            .then(() => {
+                fetchEmbalajes();
+                setDialogOpen(false);
+                setEmbalaje(embalajeInicial);
+            })
+            .catch(() => toast.error('No se pudo crear embalaje'))
+        else putEmbalaje(embalajeSubmmit)
+            .then(() => {
+                fetchEmbalajes();
+                setDialogOpen(false);
+                setEmbalaje(embalajeInicial);
+            })
+            .catch(() => toast.error('No se pudo actualizar embalaje'))
+    }, [fetchEmbalajes, isNewEmbalaje])
+
+    const openDeleteEmbalaje = useCallback(() => setOpenDelete(true), []);
+
+    const closeDelete = useCallback(() => setOpenDelete(false), [])
+
+    const handleDelete = useCallback(() => {
+        deleteEmbalaje(embalaje.id).then(() => {
+            closeDelete();
+            setDialogOpen(false);
+            fetchEmbalajes();
+            setEmbalaje(embalajeInicial);
+            setNewEmbalaje(true);
+        })
+    }, [closeDelete, embalaje.id, fetchEmbalajes]);
+
+    // --- VARIABLES ---
 
     const listaEmbalajesFormatted = useMemo(() => {
-        if (isLoading) return [];
+        if (isLoadingEmbalajes) return [];
         return listaEmbalajes.map((embalaje) => {
             var productos = "";
             embalaje.listaQuesos.forEach(element => {
@@ -42,10 +110,10 @@ const StockEmbalaje = () => {
                 productos: productos
             }
         })
-    }, [isLoading, listaEmbalajes])
+    }, [isLoadingEmbalajes, listaEmbalajes])
 
     return (
-        isLoading ? <Loading /> :
+        isLoadingEmbalajes || isLoadingQuesos ? <Loading /> :
             <>
                 <Container maxWidth="xl">
                     <Grid container
@@ -73,12 +141,10 @@ const StockEmbalaje = () => {
                                 <Typography variant='h6' style={{ paddingLeft: 2 }}>Embalaje</Typography>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField fullWidth />
                             </Grid>
                             <Grid item xs={12} sm={4} mb={0.5}>
                                 <ButtonGroup variant="contained" fullWidth>
-                                    <Button variant="contained" color="info" fullWidth>Buscar</Button>
-                                    <Button variant="contained" fullWidth>Nuevo Item</Button>
+                                    <Button variant="contained" onClick={handleNewEmbalaje} fullWidth>Nuevo Item</Button>
                                 </ButtonGroup>
                             </Grid>
                         </Grid>
@@ -94,6 +160,7 @@ const StockEmbalaje = () => {
                                         {listaEmbalajesFormatted.map((card) => (
                                             <Grid item key={card.id} xs={12} sm={6} md={4} lg={3} xl={2}>
                                                 <StockEmbalajeCard
+                                                    onClick={handleCardClick}
                                                     item={card} />
                                             </Grid>
                                         ))}
@@ -104,8 +171,17 @@ const StockEmbalaje = () => {
                     </Grid>
                 </Container>
                 <EmbalajeDialog
-                    embalaje={embalajeInicial}
-                    open={isDialogOpen} />
+                    embalaje={embalaje}
+                    open={isDialogOpen}
+                    quesos={listaQuesos}
+                    onClose={closeDialog}
+                    onSubmit={handleSubmit}
+                    onDelete={openDeleteEmbalaje}
+                    isNewEmbalaje={isNewEmbalaje} />
+                <DeleteDialog
+                    open={openDelete}
+                    onClose={closeDelete}
+                    onDelete={handleDelete} />
             </>
     );
 }

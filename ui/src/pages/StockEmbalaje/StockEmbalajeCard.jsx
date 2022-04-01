@@ -7,16 +7,14 @@ import * as React from 'react';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 
-export default function StockEmbalajeCard({ item }) {
+export default function StockEmbalajeCard({ item, onClick }) {
     return (
         <Card
             sx={{
                 height: '100%',
-                // display: 'flex',
                 flexDirection: 'column'
-            }}
-        >
-            <CardActionArea onClick={() => alert('queso')}>
+            }}>
+            <CardActionArea onClick={() => onClick(item.id)}>
                 <CardHeader
                     avatar={
                         item.tipoEmbalaje === 'CAJA' ?
@@ -28,7 +26,9 @@ export default function StockEmbalajeCard({ item }) {
                                 <ShoppingBagIcon />
                             </Avatar>
                     }
-                    title={item.tipo} />
+                    title={<Typography variant="h6">
+                        {item.tipoEmbalaje}
+                    </Typography>} />
                 <CardContent sx={{
                     flexGrow: 1, alignSelf: 'center',
                     justifyContent: 'center',

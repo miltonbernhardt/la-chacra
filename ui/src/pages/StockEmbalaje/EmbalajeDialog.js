@@ -19,7 +19,7 @@ import * as validation from "../../resources/validations";
 import Select from "../../components/Select";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete }) => {
+const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, isNewEmbalaje }) => {
 
     const [embalajeForm, setEmbalajeForm] = useState(embalaje)
 
@@ -31,13 +31,14 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
 
     useEffect(() => {
         setEmbalajeForm(embalaje);
+        setDeleteEnabled(false);
     }, [embalaje]);
 
     const handleChangeSwitch = (evt) => {
         setDeleteEnabled(evt.target.checked);
     }
 
-    const submitEmbalaje = () => {
+    const submitEmbalaje = useCallback(() => {
         const errors = new Map();
         const values = {};
         values["id"] = embalajeForm.id
@@ -45,29 +46,28 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
         refStock.current.validate(errors, values, [
             { func: validation.minorToOne, msg: message.valZeroValue }
         ])
+
         refSelectTipoEmbalaje.current.validate(errors, values, [
             { func: validation.emptySelect, msg: message.valEmptyField }
         ])
+
+        console.log(values);
+
         if (errors.size > 0) {
             console.error(errors)
             toastValidationErrors(errors)
             return
         }
-        //TODO
-        // const embalajeSubmit = {
-        //     ...embalaje,
-        //     [field.backLitrosLeche]: values.litrosLeche,
-        //     [field.backCantHormas]: values.cantHormas,
-        //     [field.backCantCajas]: values.cantCajas,
-        //     [field.backPeso]: values.peso,
-        //     [field.backEmbalajeCuajo]: values.embalajeCuajo,
-        //     [field.backEmbalajeColorante]: values.embalajeColorante,
-        //     [field.backEmbalajeCalcio]: values.embalajeCalcio,
-        //     [field.backEmbalajeCultivo]: values.embalajeCultivo,
-        // }
 
-        // onSubmit(embalajeSubmit)
-    }
+        const embalajeSubmit = {
+            ...embalajeForm,
+            [field.backStockEmbalaje]: values.stock,
+            [field.backTipoEmbalaje]: values.tipoEmbalaje
+        }
+        console.log(embalajeSubmit)
+
+        onSubmit(embalajeSubmit)
+    }, [embalajeForm, onSubmit, refSelectTipoEmbalaje, refStock])
 
     const setListaQuesos = useCallback((lista) => {
         const embalaje = { ...embalajeForm, listaQuesos: lista }
@@ -79,7 +79,34 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
         setListaQuesos(newList);
     }
 
-    // --- VARIABLES
+    const handleAgregarQueso = useCallback(() => {
+        var values = {};
+        const errors = new Map();
+        refSelectQueso.current.validate(errors, values, [
+            { func: validation.emptySelect, msg: message.valEmptyField }
+        ])
+        console.log(values);
+        if (errors.size > 0) {
+            console.error(errors)
+            toastValidationErrors(errors)
+            return
+        }
+        const queso = values.codigoQueso;
+        const selectedQueso = quesos.filter(q => q.codigo === queso).pop();
+        const newList = [...embalajeForm.listaQuesos, selectedQueso];
+        setListaQuesos(newList)
+    }, [embalajeForm.listaQuesos, quesos, refSelectQueso, setListaQuesos])
+
+
+    // --- VARIABLES ---
+    const quesosAutocomplete = quesos.map((q) => {
+        return {
+            id: q.id,
+            label: q.codigo + ' - ' + q.tipoQueso + ' - ' + q.nomenclatura,
+            value: q.codigo
+        }
+    });
+
     const tiposEmbalaje = useMemo(() => {
         return [
             { id: 1, label: 'CAJA', value: 'CAJA' },
@@ -87,34 +114,49 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
         ]
     }, [])
 
+    const actions = useMemo(() => {
+        return (
+            <DialogActions>
+                {!isNewEmbalaje ?
+                    <>
+                        <Grid item xs={12}>
+                            <Stack direction="row" justifyContent="right">
+                                Habilitar Borrado
+                                <Switch
+                                    checked={deleteEnabled}
+                                    onChange={handleChangeSwitch} />
+                            </Stack>
+                        </Grid>
+                        <Button
+                            onClick={onDelete}
+                            disabled={!deleteEnabled}>
+                            Borrar Embalaje
+                        </Button>
+                    </>
+                    : <></>}
+                <Button onClick={onClose}>Cancelar</Button>
+                <Button onClick={submitEmbalaje}>
+                    {isNewEmbalaje ? "Crear Embalaje" : "Actualizar Embalaje"}
+                </Button>
+            </DialogActions>)
+    }, [deleteEnabled, isNewEmbalaje, onClose, onDelete, submitEmbalaje])
+
     return (
         <>
             <Dialog
                 open={open}
                 onClose={onClose}
                 scroll="body">
-                <DialogTitle>Editar Producción</DialogTitle>
+                <DialogTitle>Editar Embalaje</DialogTitle>
                 <DialogContent
                     style={{ backgroundColor: deleteEnabled ? "#F0BEBE" : '' }}>
                     <Container maxWidth="sm">
                         <Grid container spacing={2}>
-                            <Grid item xs={8}>
-                                <Typography variant="h6" paddingLeft={2}>
-                                    Embalaje: {embalaje.id}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-                                <Stack direction="row" justifyContent="right">
-                                    Habilitar Borrado
-                                    <Switch
-                                        checked={deleteEnabled}
-                                        onChange={handleChangeSwitch} />
-                                </Stack>
-                            </Grid>
+
                             <Grid item container spacing={1.5} xs={12} sm={6}>
                                 <Select ref={refSelectTipoEmbalaje}
                                     value={embalajeForm.tipoEmbalaje}
-                                    id={field.tipoEmbalaje}
+                                    id={field.backTipoEmbalaje}
                                     label={field.tipoEmbalaje}
                                     options={tiposEmbalaje}
                                     required />
@@ -128,8 +170,13 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
                                 <Select ref={refSelectQueso}
                                     id={field.backCodigoQueso}
                                     label={field.queso}
-                                    options={quesos}
-                                    required />
+                                    options={quesosAutocomplete} />
+                                <Grid item xs={12}>
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        onClick={handleAgregarQueso}>Agregar Queso</Button>
+                                </Grid>
                                 <Grid item xs={12}>
                                     <Stack direction="column">
                                         <Stack direction="row" justifyContent="space-between">
@@ -139,7 +186,7 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
                                             <Typography>
                                             </Typography>
                                         </Stack>
-                                        {embalaje.listaQuesos.map(queso => {
+                                        {embalajeForm.listaQuesos.map(queso => {
                                             return (
                                                 <Stack direction="row" justifyContent="space-between">
                                                     <Typography>
@@ -149,8 +196,7 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
                                                         <DeleteIcon />
                                                         quitar
                                                     </Button>
-                                                </Stack>
-                                            )
+                                                </Stack>)
                                         }
                                         )}
                                     </Stack>
@@ -159,11 +205,7 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete })
                         </Grid>
                     </Container>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={onDelete} disabled={!deleteEnabled}>Borrar Embalaje</Button>
-                    <Button onClick={onClose}>Cancelar</Button>
-                    <Button onClick={submitEmbalaje}>Actualizar Embalaje</Button>
-                </DialogActions>
+                {actions}
             </Dialog>
         </>
     );
