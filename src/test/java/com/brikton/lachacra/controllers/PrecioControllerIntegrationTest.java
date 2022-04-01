@@ -3,6 +3,7 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.ErrorMessages;
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.PrecioDTO;
@@ -10,6 +11,7 @@ import com.brikton.lachacra.dtos.PrecioUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -23,7 +25,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -32,7 +33,6 @@ import org.springframework.web.client.*;
 
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
@@ -47,7 +47,7 @@ public class PrecioControllerIntegrationTest {
     private int port;
 
     private String baseUrl = "http://localhost";
-    private final String path = "/api/v1/precios/";
+    private final String path = Path.API_PRECIOS.concat("/");
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
@@ -77,7 +77,7 @@ public class PrecioControllerIntegrationTest {
     }
 
     @Test
-    void Get_All__OK() throws JsonProcessingException {
+    void Get_All__OK() {
         var precioDTO1 = new PrecioDTO();
         precioDTO1.setId(1L);
         precioDTO1.setValor(371.00);
@@ -126,39 +126,38 @@ public class PrecioControllerIntegrationTest {
         precioDTO8.setIdTipoCliente(3L);
         precioDTO8.setIdQueso(2L);
 
-        String expectedPrecios = mapper.writeValueAsString(List.of(precioDTO1, precioDTO2, precioDTO3, precioDTO4, precioDTO5, precioDTO6, precioDTO7, precioDTO8));
+        var expectedPrecios = List.of(precioDTO1, precioDTO2, precioDTO3, precioDTO4, precioDTO5, precioDTO6, precioDTO7, precioDTO8);
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        var actualPrecios = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedPrecios, actualPrecios);
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<PrecioDTO>>>() {
+        });
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedPrecios, successfulResponse.getData());
     }
 
     @Test
-    void Save__OK() throws JsonProcessingException {
-        PrecioDTO dtoToSave = new PrecioDTO();
+    void Save__OK() {
+        var dtoToSave = new PrecioDTO();
         dtoToSave.setValor(371.00);
         dtoToSave.setIdTipoCliente(3L);
         dtoToSave.setIdQueso(3L);
 
-        PrecioDTO expectedPrecio = new PrecioDTO();
+        var expectedPrecio = new PrecioDTO();
         expectedPrecio.setId(9L);
         expectedPrecio.setValor(371.00);
         expectedPrecio.setIdTipoCliente(3L);
         expectedPrecio.setIdQueso(3L);
 
-        var expectedLoteString = mapper.writeValueAsString(expectedPrecio);
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_PRECIO_CREATED);
-
         var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
-        var actualPrecio = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedLoteString, actualPrecio);
-        assertEquals(expectedMessage, actualMessage);
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<PrecioDTO>>() {
+        });
+        assertEquals(SuccessfulMessages.MSG_PRECIO_CREATED, successfulResponse.getMessage());
+        assertEquals(expectedPrecio, successfulResponse.getData());
     }
 
     @Test
@@ -250,30 +249,27 @@ public class PrecioControllerIntegrationTest {
     }
 
     @Test
-    void Update__OK() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+    void Update__OK() {
+        var dtoToUpdate = new PrecioUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setValor(371.00);
         dtoToUpdate.setIdTipoCliente(1L);
         dtoToUpdate.setIdQueso(1L);
 
-        PrecioDTO expectedPrecio = new PrecioDTO();
+        var expectedPrecio = new PrecioDTO();
         expectedPrecio.setId(1L);
         expectedPrecio.setValor(371.00);
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
-        var expectedLoteString = mapper.writeValueAsString(expectedPrecio);
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_PRECIO_UPDATED);
-
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-        var actualPrecio = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedLoteString, actualPrecio);
-        assertEquals(expectedMessage, actualMessage);
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<PrecioDTO>>() {
+        });
+        assertEquals(expectedPrecio, successfulResponse.getData());
+        assertEquals(SuccessfulMessages.MSG_PRECIO_UPDATED, successfulResponse.getMessage());
     }
 
     @Test
