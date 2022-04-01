@@ -44,6 +44,7 @@ export const backStockLote = "stockLote"
 export const backRendimientoLote = "rendimiento"
 export const backFechaRemito = "fecha"
 export const backImporteTotal = "importeTotal"
+export const backStockEmbalaje = "stock"
 
 export const ID = "ID"
 
@@ -105,6 +106,10 @@ export const importeTotal = "Importe total"
 export const cantidadMeses = "Cantidad de meses"
 export const backCantidadMeses = "cantidadMeses"
 
+// embalaje
+export const tipoEmbalaje = "Tipo de embalaje"
+export const stockEmbalaje = "Stock"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -150,6 +155,7 @@ const backendFields = () => {
     fields.set(backFechaRemito, fechaRemito)
     fields.set(backImporteTotal, importeTotal)
     fields.set(backCantidadMeses, cantidadMeses)
+    fields.set(backStockEmbalaje, stockEmbalaje)
     return fields
 }
 

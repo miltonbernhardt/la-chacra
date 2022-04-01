@@ -13,6 +13,7 @@ const API_PRECIO = '/api/v1/precios/'
 const API_EXPEDICION = '/api/v1/expediciones/'
 const API_REMITO = '/api/v1/remitos/'
 const API_VENTAS = '/api/v1/ventas/'
+const API_EMBALAJE = '/api/v1/embalajes/'
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -36,7 +37,6 @@ export const getLotesByQuesoWithStock = async (codigoQueso) => await GET(`${API_
 export const getRendimientoByDia = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/rendimiento/dia?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 export const getRendimientoByQueso = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/rendimiento/queso?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 export const getLitros = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}/litros_elaborados?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
-
 
 // --- QUESO METHODS ---
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);
@@ -70,8 +70,13 @@ export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}/ge
 export const postRemito = async (idCliente, fecha) => await POST(`${API_REMITO}?id_cliente=${idCliente}&fecha=${fecha}`);
 
 // --- VENTAS METHODS ---
-
 export const getVentas = async (fechaDesde, fechaHasta) => await GET(`${API_VENTAS}?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+
+// --- EMBALAJE METHODS ---
+export const getAllEmbalajes = async () => await GET(`${API_EMBALAJE}`);
+export const postEmbalaje = async (embalaje) => await POST(`${API_EMBALAJE}`, embalaje);
+export const putEmbalaje = async (embalaje) => await PUT(`${API_EMBALAJE}`, embalaje);
+export const deleteEmbalaje = async (id) => await DELETE(`${API_EMBALAJE}${id}`);
 
 // --- GENERAL METHODS ---
 export const GET = async (postfixUrl) => {
