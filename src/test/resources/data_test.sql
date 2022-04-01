@@ -47,3 +47,64 @@ VALUES (1, '2021-11-08', 100, 600.3, 62658.00, 1, '221020210011'),
        (2, '2021-11-09', 150, 700.4, 62658.00, 2, '231020210022'),
        (3, '2021-11-10', 200, 800.5, 62658.00, 3, '241020210033');
 
+INSERT INTO public.user_details (id, username, enabled, firstname, lastname, password, token_expired)
+VALUES (1, 'admin', true, 'admin', 'admin', '$2a$10$T1Abj2rU26bFckix86rrqO312ZaiSnUZRCfTthk7g8zn/dx7UKqaa', true),
+       (2, 'seller', true, 'seller', 'seller', '$2a$10$or2h/PmYIdzqF2V1qBaXBOTycch/.f4QZbdu4Vkp5FHTe0ZYXcIgm', true),
+       (3, 'user', true, 'user', 'user', '$2a$10$5DjFH2mVRxj9yBId6arDLuAbnDMowDfTpXOHvkVBLQ8ep7X2bFLei', true);
+
+INSERT INTO public.role (name)
+VALUES ('ROLE_ADMIN'),
+       ('ROLE_SELLER'),
+       ('ROLE_USER');
+
+INSERT INTO public.user_roles (user_id, role_name)
+VALUES (1, 'ROLE_ADMIN'),
+       (2, 'ROLE_SELLER'),
+       (3, 'ROLE_USER');
+
+INSERT INTO public.privilege (name, path)
+VALUES ('CARGAR_EXPEDICIONES', '/cargar/expedicion'),
+       ('CARGAR_LOTES', '/cargar/lotes'),
+       ('CARGAR_PRECIOS', '/cargar/precios'),
+       ('CARGAR_QUESOS', '/cargar/quesos'),
+       ('CLIENTES', '/clientes'),
+       ('EMITIR_REMITO', '/emitir/remito'),
+       ('MANTENIMIENTO', '/mantenimiento'),
+       ('RENDIMIENTO', '/rendimiento'),
+       ('STOCK_EMBALAJE', '/stock/embalaje'),
+       ('STOCK_PRODUCTOS', '/stock/productos'),
+       ('VER_LITROS', '/ver/litros'),
+       ('VER_PRODUCCION', '/ver/produccion'),
+       ('VER_TRAZABILIDAD', '/ver/trazabilidad'),
+       ('VER_VENTAS', '/ver/ventas');
+
+INSERT INTO public.role_privileges (role_name, privilege_name)
+VALUES ('ROLE_ADMIN', 'CARGAR_EXPEDICIONES'),
+       ('ROLE_ADMIN', 'CARGAR_LOTES'),
+       ('ROLE_ADMIN', 'CARGAR_PRECIOS'),
+       ('ROLE_ADMIN', 'CARGAR_QUESOS'),
+       ('ROLE_ADMIN', 'CLIENTES'),
+       ('ROLE_ADMIN', 'CLIENTES'),
+       ('ROLE_ADMIN', 'EMITIR_REMITO'),
+       ('ROLE_ADMIN', 'MANTENIMIENTO'),
+       ('ROLE_ADMIN', 'RENDIMIENTO'),
+       ('ROLE_ADMIN', 'STOCK_EMBALAJE'),
+       ('ROLE_ADMIN', 'STOCK_PRODUCTOS'),
+       ('ROLE_ADMIN', 'VER_LITROS'),
+       ('ROLE_ADMIN', 'VER_PRODUCCION'),
+       ('ROLE_ADMIN', 'VER_TRAZABILIDAD'),
+       ('ROLE_ADMIN', 'VER_VENTAS'),
+       ('ROLE_SELLER', 'CARGAR_EXPEDICIONES'),
+       ('ROLE_SELLER', 'CARGAR_PRECIOS'),
+       ('ROLE_SELLER', 'EMITIR_REMITO'),
+       ('ROLE_SELLER', 'RENDIMIENTO'),
+       ('ROLE_SELLER', 'VER_LITROS'),
+       ('ROLE_SELLER', 'VER_PRODUCCION'),
+       ('ROLE_SELLER', 'VER_TRAZABILIDAD'),
+       ('ROLE_SELLER', 'VER_VENTAS'),
+       ('ROLE_USER', 'CARGAR_LOTES'),
+       ('ROLE_USER', 'CARGAR_QUESOS'),
+       ('ROLE_USER', 'MANTENIMIENTO'),
+       ('ROLE_USER', 'STOCK_EMBALAJE'),
+       ('ROLE_USER', 'STOCK_PRODUCTOS');
+

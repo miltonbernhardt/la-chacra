@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
+import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
@@ -10,6 +11,7 @@ import com.brikton.lachacra.dtos.ClienteUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -31,14 +33,13 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.*;
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(DatabaseTestConfig.class)
+@Import({DatabaseTestConfig.class, NotSecurityConfigTest.class})
 @ActiveProfiles("test")
 @Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -48,7 +49,7 @@ public class ClienteControllerIntegrationTest {
     private int port;
 
     private String baseUrl = "http://localhost";
-    private final String path = Path.API_CLIENTES;
+    private final String path = Path.API_CLIENTES.concat("/");
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
@@ -77,14 +78,14 @@ public class ClienteControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path).concat("/");
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @Test
-    void Get_All__OK() throws JsonProcessingException {
+    void Get_All__OK() {
         var dto1 = new ClienteDTO();
         dto1.setId(1L);
         dto1.setIdTipoCliente(1L);
@@ -136,16 +137,19 @@ public class ClienteControllerIntegrationTest {
         dto3.setEmail("mail3@mail.com");
         dto3.setRazonSocial("ALEGRI, José César");
 
-        String expectedClientes = mapper.writeValueAsString(List.of(dto1, dto2, dto3));
+        var expectedClientes = List.of(dto1, dto2, dto3);
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        var actualClientes = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
+        });
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedClientes, actualClientes);
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedClientes, successfulResponse.getData());
     }
 
     @Test
-    void Save__OK() throws JsonProcessingException {
+    void Save__OK() {
         var mockToSave = new ClienteDTO();
         mockToSave.setIdTipoCliente(1L);
         mockToSave.setCuit("99888888887");
@@ -179,14 +183,14 @@ public class ClienteControllerIntegrationTest {
         expectedCliente.setEmail("mail1@mail.com");
         expectedCliente.setRazonSocial("Razon social 1");
 
-        var expectedClienteString = mapper.writeValueAsString(expectedCliente);
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_CREATED);
-
         var response = restTemplate.postForEntity(baseUrl, mockToSave, SuccessfulResponse.class);
-        var actualLote = mapper.writeValueAsString(Objects.requireNonNull(response.getBody()).getData());
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {
+        });
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedClienteString, actualLote);
+        assertEquals(SuccessfulMessages.MSG_CLIENTE_CREATED, successfulResponse.getMessage());
+        assertEquals(expectedCliente, successfulResponse.getData());
     }
 
     @Test
@@ -252,7 +256,7 @@ public class ClienteControllerIntegrationTest {
         dtoToSave.setCuit(RandomStringUtils.randomAlphabetic(256));
         dtoToSave.setCodPostal(RandomStringUtils.randomAlphabetic(7));
         dtoToSave.setDomicilio(RandomStringUtils.randomAlphabetic(256));
-        dtoToSave.setLocalidad(RandomStringUtils.randomAlphabetic(256) );
+        dtoToSave.setLocalidad(RandomStringUtils.randomAlphabetic(256));
         dtoToSave.setPais(RandomStringUtils.randomAlphabetic(256));
         dtoToSave.setProvincia(RandomStringUtils.randomAlphabetic(256));
         dtoToSave.setTransporte(RandomStringUtils.randomAlphabetic(256));
@@ -289,7 +293,7 @@ public class ClienteControllerIntegrationTest {
     }
 
     @Test
-    void Update__OK() throws JsonProcessingException {
+    void Update__OK() {
         var dtoToUpdate = new ClienteUpdateDTO();
         dtoToUpdate.setId(2L);
         dtoToUpdate.setIdTipoCliente(2L);
@@ -324,17 +328,14 @@ public class ClienteControllerIntegrationTest {
         expectedCliente.setEmail("mail1@mail.com");
         expectedCliente.setRazonSocial("Razon social 1");
 
-        var expectedClienteString = mapper.writeValueAsString(expectedCliente);
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_UPDATED);
-
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-        var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {
+        });
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedClienteString, actualLote);
-        assertEquals(expectedMessage, actualMessage);
+        assertEquals(SuccessfulMessages.MSG_CLIENTE_UPDATED, successfulResponse.getMessage());
+        assertEquals(expectedCliente, successfulResponse.getData());
     }
 
     @Test
@@ -402,7 +403,7 @@ public class ClienteControllerIntegrationTest {
         dtoToUpdate.setCuit(RandomStringUtils.randomAlphabetic(256));
         dtoToUpdate.setCodPostal(RandomStringUtils.randomAlphabetic(7));
         dtoToUpdate.setDomicilio(RandomStringUtils.randomAlphabetic(256));
-        dtoToUpdate.setLocalidad(RandomStringUtils.randomAlphabetic(256) );
+        dtoToUpdate.setLocalidad(RandomStringUtils.randomAlphabetic(256));
         dtoToUpdate.setPais(RandomStringUtils.randomAlphabetic(256));
         dtoToUpdate.setProvincia(RandomStringUtils.randomAlphabetic(256));
         dtoToUpdate.setTransporte(RandomStringUtils.randomAlphabetic(256));
@@ -502,7 +503,7 @@ public class ClienteControllerIntegrationTest {
     }
 
     @Test
-    void Delete__OK___After_That__Lote_Doesnt_Show_In_Get_All() throws JsonProcessingException {
+    void Delete__OK___After_That__Cliente_Doesnt_Show_In_Get_All() {
         var dto1 = new ClienteDTO();
         dto1.setId(1L);
         dto1.setIdTipoCliente(1L);
@@ -554,10 +555,11 @@ public class ClienteControllerIntegrationTest {
         dto3.setEmail("mail3@mail.com");
         dto3.setRazonSocial("ALEGRI, José César");
 
-
-        String expectedClientes = mapper.writeValueAsString(List.of(dto1, dto2, dto3));
+        var expectedClientes = List.of(dto1, dto2, dto3);
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        var actualClientes = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        var actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
+        }).getData();
+
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedClientes, actualClientes);
@@ -572,9 +574,10 @@ public class ClienteControllerIntegrationTest {
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        expectedClientes = mapper.writeValueAsString(List.of(dto3));
+        expectedClientes = List.of(dto3);
         response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        actualClientes = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
+        actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
+        }).getData();
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedClientes, actualClientes);

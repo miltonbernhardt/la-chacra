@@ -89,6 +89,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         log.error("Request: {} - {}", request.getContextPath(), ex.getMessage());
         Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
         status = HttpStatus.BAD_REQUEST;
+        headers.add("Content-Type", "application/json");
         return handleExceptionInternal(
                 ex,
                 ErrorResponse.set(ErrorMessages.MSG_INVALID_BODY, errors, ((ServletWebRequest) request).getRequest().getRequestURI(), status.value()),
@@ -98,11 +99,17 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<ErrorResponse> response(Exception ex, HttpServletRequest req, HttpHeaders httpHeaders, HttpStatus status, String message) {
         log.error("Request: {} - {}", req.getRequestURL(), ex.getMessage());
-        return new ResponseEntity<>(ErrorResponse.set(message, req.getRequestURI(), status.value()), httpHeaders, status);
+        var header = new HttpHeaders();
+        if (httpHeaders != null)
+            header.addAll(httpHeaders);
+        header.add("Content-Type", "application/json");
+        return new ResponseEntity<>(ErrorResponse.set(message, req.getRequestURI(), status.value()), header, status);
     }
 
     private ResponseEntity<ErrorResponse> response(Exception ex, HttpServletRequest req, HttpStatus status, String message, Map<String, String> errors) {
         log.error("Request: {} - {}", req.getRequestURL(), ex.getMessage());
-        return new ResponseEntity<>(ErrorResponse.set(message, errors, req.getRequestURI(), status.value()), status);
+        var headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json");
+        return new ResponseEntity<>(ErrorResponse.set(message, errors, req.getRequestURI(), status.value()), headers, status);
     }
 }

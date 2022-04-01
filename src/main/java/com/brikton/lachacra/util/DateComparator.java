@@ -1,6 +1,5 @@
 package com.brikton.lachacra.util;
 
-import com.brikton.lachacra.dtos.rendimiento.RendimientoDTO;
 import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
 
 import java.util.Comparator;

@@ -14,13 +14,18 @@ import java.util.Collection;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class Privilege  implements GrantedAuthority {
+public class Privilege implements GrantedAuthority {
     @Id
     private String name;
     private String path;
 
     @ManyToMany(mappedBy = "privileges")
     private Collection<Role> roles;
+
+    public Privilege(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
 
     @Override
     public String toString() {

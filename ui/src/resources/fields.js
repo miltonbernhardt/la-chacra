@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+import * as React from 'react';
 
 export const backID = "id"
 export const backFechaElaboracion = "fechaElaboracion"
@@ -165,9 +166,13 @@ export const toastValidationErrors = (errors) => {
     if (errors == null && !errors instanceof Map)
         return
     toast.dismiss()
+    console.log({errors})
     let mapFields = backendFields()
     errors.forEach(function (msg, field) {
+        console.log({msg})
+        console.log({field})
         let realField = mapFields.get(field)
+        console.log({realField})
         realField = realField ?? field
         toast.error(<>
             <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>

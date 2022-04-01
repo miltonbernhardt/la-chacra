@@ -65,11 +65,12 @@ const processResponseError2 = (err) => {
 
         if (status === 401 || status === 403)
             processStatusCode2(status)
-        toast.dismiss()
         if (data["errors"])
             toastValidationErrors(new Map(Object.entries(data.errors)))
-        else
+        else {
+            toast.dismiss()
             toast.error(data.message)
+        }
     } else {
         console.error(err.message)
         toast.dismiss()
@@ -196,11 +197,12 @@ const processResponseError = (err) => {
         if (status === 401 || status === 403)
             processStatusCode(status)
         else {
-            toast.dismiss()
             if (data["errors"])
                 toastValidationErrors(new Map(Object.entries(data.errors)))
-            else
+            else {
+                toast.dismiss()
                 toast.error(data.message)
+            }
         }
     } else {
         console.error(err.message)
