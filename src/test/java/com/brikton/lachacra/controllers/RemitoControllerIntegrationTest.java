@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
+import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.Path;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(DatabaseTestConfig.class)
+@Import({DatabaseTestConfig.class, NotSecurityConfigTest.class})
 @ActiveProfiles("test")
 @Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -30,7 +31,7 @@ public class RemitoControllerIntegrationTest {
     private int port;
 
     private String baseUrl = "http://localhost";
-    private final String path = Path.API_REMITOS;
+    private final String path = Path.API_REMITOS.concat("/");
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
@@ -42,7 +43,7 @@ public class RemitoControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path).concat("/");
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);

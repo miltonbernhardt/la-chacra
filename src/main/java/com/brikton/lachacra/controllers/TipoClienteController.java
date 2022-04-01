@@ -7,6 +7,7 @@ import com.brikton.lachacra.dtos.TipoClienteDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.TipoClienteService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ public class TipoClienteController {
         this.service = service;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<TipoClienteDTO>>> getAll() {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }

@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
+import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
@@ -22,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -35,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(DatabaseTestConfig.class)
+@Import({DatabaseTestConfig.class, NotSecurityConfigTest.class})
 @ActiveProfiles("test")
 @Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -264,7 +266,7 @@ public class PrecioControllerIntegrationTest {
         var expectedLoteString = mapper.writeValueAsString(expectedPrecio);
         var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_PRECIO_UPDATED);
 
-        var response =putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
         var actualPrecio = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
 

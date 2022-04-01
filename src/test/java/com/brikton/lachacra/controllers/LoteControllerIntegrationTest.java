@@ -1,6 +1,7 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
+import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
@@ -39,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(DatabaseTestConfig.class)
+@Import({DatabaseTestConfig.class, NotSecurityConfigTest.class})
 @ActiveProfiles("test")
 @Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -48,8 +49,8 @@ public class LoteControllerIntegrationTest {
     @LocalServerPort
     private int port;
 
+    private final String path = Path.API_LOTES.concat("/");
     private String baseUrl = "http://localhost";
-    private final String path = Path.API_LOTES;
 
     private static RestTemplate restTemplate = null;
     private static ObjectMapper mapper = null;
@@ -78,7 +79,7 @@ public class LoteControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path).concat("/");
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -693,9 +694,9 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Get_Between_Dates__OK(){
+    void Get_Between_Dates__OK() {
         String query = "/produccion?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
-        var response = restTemplate.getForEntity(baseUrl+query,SuccessfulResponse.class);
-        assertEquals(2,((ArrayList) response.getBody().getData()).size());
+        var response = restTemplate.getForEntity(baseUrl + query, SuccessfulResponse.class);
+        assertEquals(2, ((ArrayList) response.getBody().getData()).size());
     }
 }

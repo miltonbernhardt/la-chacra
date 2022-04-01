@@ -139,11 +139,10 @@ public class ClienteControllerIntegrationTest {
 
         var expectedClientes = List.of(dto1, dto2, dto3);
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
-        });
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {});
         assertEquals("", successfulResponse.getMessage());
         assertEquals(expectedClientes, successfulResponse.getData());
     }
@@ -184,11 +183,10 @@ public class ClienteControllerIntegrationTest {
         expectedCliente.setRazonSocial("Razon social 1");
 
         var response = restTemplate.postForEntity(baseUrl, mockToSave, SuccessfulResponse.class);
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {
-        });
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {});
         assertEquals(SuccessfulMessages.MSG_CLIENTE_CREATED, successfulResponse.getMessage());
         assertEquals(expectedCliente, successfulResponse.getData());
     }
@@ -329,11 +327,11 @@ public class ClienteControllerIntegrationTest {
         expectedCliente.setRazonSocial("Razon social 1");
 
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {
-        });
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {});
         assertEquals(SuccessfulMessages.MSG_CLIENTE_UPDATED, successfulResponse.getMessage());
         assertEquals(expectedCliente, successfulResponse.getData());
     }
@@ -557,11 +555,10 @@ public class ClienteControllerIntegrationTest {
 
         var expectedClientes = List.of(dto1, dto2, dto3);
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        var actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
-        }).getData();
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {}).getData();
         assertEquals(expectedClientes, actualClientes);
 
         //cliente dado de baja
@@ -576,10 +573,10 @@ public class ClienteControllerIntegrationTest {
 
         expectedClientes = List.of(dto3);
         response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
-        }).getData();
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {}).getData();
         assertEquals(expectedClientes, actualClientes);
     }
 
