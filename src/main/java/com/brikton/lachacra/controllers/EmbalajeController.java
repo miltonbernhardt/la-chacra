@@ -35,6 +35,12 @@ public class EmbalajeController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SuccessfulResponse<EmbalajeDTO>> getById(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) @PathVariable("id") Long id) {
+        log.info("API::getById - id: {}",id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
+    }
+
     @PostMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<EmbalajeDTO>> save(@RequestBody @Valid EmbalajeDTO dto) {
         log.info("API::save - dto: {}", dto);

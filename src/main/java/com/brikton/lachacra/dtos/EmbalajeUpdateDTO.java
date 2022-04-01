@@ -17,6 +17,7 @@ public class EmbalajeUpdateDTO {
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Long id;
     @NotNull(message = ValidationMessages.NOT_FOUND)
+    //TODO this validation does not work
     @ValidateString(acceptedValues = {"CAJA","BOLSA"},message = ValidationMessages.INVALID_FORMAT)
     private String tipoEmbalaje;
     @NotNull(message = ValidationMessages.NOT_FOUND)

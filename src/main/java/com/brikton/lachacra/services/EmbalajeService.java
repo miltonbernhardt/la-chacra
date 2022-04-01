@@ -33,34 +33,40 @@ public class EmbalajeService {
         return dtos;
     }
 
+    public EmbalajeDTO get(Long id) {
+        var result = repository.findById(id);
+        if (result.isEmpty()) throw new EmbalajeNotFoundException();
+        return new EmbalajeDTO(result.get());
+    }
+
     public EmbalajeDTO saveNew(EmbalajeDTO dto){
         if (dto.getId() != null && repository.existsById(dto.getId())) {
             throw new EmbalajeAlreadyExistsException();
         }
-        var result = persist(embalajeFromDTO(dto));
+        var embalaje = embalajeFromDTO(dto);
+        embalaje.getListaQuesos().forEach(queso ->
+        {
+            if (repository.existsByTipoEmbalajeAndListaQuesosContains(embalaje.getTipoEmbalaje(), queso))
+                throw new EmbalajeAlreadyExistsException();
+        });
+        var result = persist(embalaje);
         return new EmbalajeDTO(result);
     }
 
     public EmbalajeDTO update(EmbalajeUpdateDTO updateDTO){
         var dto = new EmbalajeDTO(updateDTO);
-        var embalaje = repository.findById(dto.getId());
-        if (embalaje.isPresent()) {
-            //TODO do not delete if already exists any relationship between tiposQuesos and tipoEmbalaje in another entity
-            //WRONG
-            //TODO
-            repository.delete(embalaje.get());
-        } else throw new EmbalajeNotFoundException();
-        var result = persist(embalajeFromDTO(dto));
-        return new EmbalajeDTO(result);
+        var update = embalajeFromDTO(dto);
+        if (!repository.existsById(update.getId())) throw new EmbalajeNotFoundException();
+        update.getListaQuesos().forEach(queso ->{
+            if (repository.existsByTipoEmbalajeAndListaQuesosContainsAndIdIsNot(
+                    update.getTipoEmbalaje(), queso, update.getId()))
+                throw new EmbalajeAlreadyExistsException();
+        });
+       var result = persist(update);
+       return new EmbalajeDTO(result);
     }
 
     private Embalaje persist(Embalaje embalaje){
-        embalaje.getListaQuesos().forEach(queso ->
-        {
-            //TODO check if already exists any relationship between tiposQuesos and tipoEmbalaje in another entity
-            if (repository.existsByTipoEmbalajeAndListaQuesosContains(embalaje.getTipoEmbalaje(), queso))
-                throw new EmbalajeAlreadyExistsException();
-        });
         return repository.save(embalaje);
     }
 
@@ -105,7 +111,7 @@ public class EmbalajeService {
         repository.save(embalaje);
     }
 
-    private Embalaje embalajeFromDTO(EmbalajeDTO dto){
+    public Embalaje embalajeFromDTO(EmbalajeDTO dto){
         Embalaje embalaje = new Embalaje();
         embalaje.setStock(dto.getStock());
         if (dto.getId()!=null)

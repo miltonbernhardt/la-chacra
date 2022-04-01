@@ -15,4 +15,5 @@ public interface EmbalajeRepository extends JpaRepository<Embalaje, Long> {
 
     boolean existsByTipoEmbalajeAndListaQuesosContains(TipoEmbalaje tipoEmbalaje, Queso queso);
 
+    boolean existsByTipoEmbalajeAndListaQuesosContainsAndIdIsNot(TipoEmbalaje tipoEmbalaje, Queso queso, Long id);
 }

@@ -18,7 +18,7 @@ public class Embalaje {
     private Long id;
     private TipoEmbalaje tipoEmbalaje;
     private Integer stock;
-    @ManyToMany
+    @OneToMany
     private List<Queso> listaQuesos;
 
     public Embalaje(){
