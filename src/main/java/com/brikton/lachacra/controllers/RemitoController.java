@@ -23,7 +23,6 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping(Path.API_REMITOS)
 @Slf4j
-@Validated
 //TODO: add authority
 public class RemitoController {
 

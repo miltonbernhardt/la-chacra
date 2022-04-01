@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping(Path.API_TIPOS_CLIENTE)
 @Slf4j
-@Validated
 @HasCargarPreciosAuthority
 @HasClienteAuthority
 public class TipoClienteController {

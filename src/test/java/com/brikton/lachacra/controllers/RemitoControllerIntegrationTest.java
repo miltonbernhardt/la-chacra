@@ -3,7 +3,6 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.Path;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -39,28 +38,28 @@ public class RemitoControllerIntegrationTest {
     @BeforeAll
     static void init() {
         restTemplate = new RestTemplate();
-    }
-
-    @BeforeEach
-    void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
+    @BeforeEach
+    void setUp() {
+        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
+    }
+
     @Test
-    void Generate_Remito__OK() throws JsonProcessingException {
+    void Generate_Remito__OK() {
         //TODO: test
     }
 
     @Test
-    void Get_Pdf__OK() throws JsonProcessingException {
+    void Get_Pdf__OK() {
         //TODO: test
     }
 
     @Test
-    void Generate_And_Save__OK() throws JsonProcessingException {
+    void Generate_And_Save__OK() {
         //TODO: test
     }
 }

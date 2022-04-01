@@ -66,14 +66,14 @@ public class PrecioControllerIntegrationTest {
     @BeforeAll
     static void init() {
         restTemplate = new RestTemplate();
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @BeforeEach
     void setUp() {
         baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @Test
