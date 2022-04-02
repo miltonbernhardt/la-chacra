@@ -83,17 +83,22 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, i
     const handleAgregarQueso = useCallback(() => {
         var values = {};
         const errors = new Map();
+
         refSelectQueso.current.validate(errors, values, [
             { func: validation.emptySelect, msg: message.valEmptyField }
         ])
-        console.log(values);
+
         if (errors.size > 0) {
             console.error(errors)
             toastValidationErrors(errors)
             return
         }
+
         const queso = values.codigoQueso;
         const selectedQueso = quesos.filter(q => q.codigo === queso).pop();
+
+        if (embalajeForm.listaQuesos.some(q => q.codigo === queso)) return;
+
         const newList = [...embalajeForm.listaQuesos, selectedQueso];
         setListaQuesos(newList)
     }, [embalajeForm.listaQuesos, quesos, refSelectQueso, setListaQuesos])
@@ -105,6 +110,7 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, i
     }, [onAgregarStock, refAgregarStock])
 
     // --- VARIABLES ---
+
     const quesosAutocomplete = quesos.map((q) => {
         return {
             id: q.id,

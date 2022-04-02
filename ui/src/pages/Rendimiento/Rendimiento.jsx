@@ -7,6 +7,7 @@ import RendimientoCard from "./RendimientoCard";
 import RendimientoChart from "./RendimientoChart";
 import RendimientoQuesoCard from "./RendimientoQuesoCard";
 import RendimientoSearch from "./RendimientoSearch";
+import { getValidDate } from "../../resources/utils";
 
 const Rendimiento = () => {
 
@@ -22,8 +23,10 @@ const Rendimiento = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         var date = currentDate.getDate();
-        if (month === 1 && date === 28) date = 27;
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+
+        date = getValidDate(date, month, year);
+
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 data.length > 16 ? setListaRendimientos(data) :

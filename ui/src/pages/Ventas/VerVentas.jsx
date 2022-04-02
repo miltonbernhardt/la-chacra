@@ -7,6 +7,7 @@ import ChartVentas from "./ChartVentas";
 import GridVentas from "./GridVentas";
 import SearchVentas from "./SearchVentas";
 import VentasByQueso from "./VentasByQueso";
+import { getValidDate } from "../../resources/utils";
 
 const VerVentas = () => {
 
@@ -40,8 +41,10 @@ const VerVentas = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         var date = currentDate.getDate();
-        if (month === 1 && date === 28) date = 27;
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+
+        date = getValidDate(date, month, year);
+
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
         getVentas(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaVentas(data)

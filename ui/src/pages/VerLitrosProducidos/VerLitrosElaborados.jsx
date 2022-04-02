@@ -8,6 +8,7 @@ import ChartLitros from "./ChartLitros";
 import GridLitros from "./GridLitros";
 import LitrosByQueso from "./LitrosByQueso";
 import SearchLitros from "./SearchLitros";
+import { getValidDate } from "../../resources/utils";
 
 const VerLitrosElaborados = () => {
 
@@ -41,8 +42,10 @@ const VerLitrosElaborados = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         var date = currentDate.getDate();
-        if (month === 1 && date === 28) date = 27;
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+
+        date = getValidDate(date, month, year);
+
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
         getLitros(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaLitros(data)
