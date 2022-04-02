@@ -12,6 +12,7 @@ import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.LoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class LoteController {
         this.service = service;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getAll() {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
@@ -52,6 +53,7 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getByQuesoAndWithStock(codigoQueso)));
     }
 
+    //TODO: tests params
     @GetMapping(value = "/produccion")
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getBetweenDates(@RequestParam("fecha_desde")
                                                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
@@ -61,6 +63,7 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getBetweenDates(fechaDesde, fechaHasta)));
     }
 
+    //TODO: test
     @GetMapping(value = "/rendimiento/dia")
     public ResponseEntity<SuccessfulResponse<List<RendimientoDiaDTO>>> getRendimientoByDia(@RequestParam("fecha_desde")
                                                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
@@ -70,6 +73,7 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByDia(fechaDesde, fechaHasta)));
     }
 
+    //TODO: test
     @GetMapping(value = "/rendimiento/queso")
     public ResponseEntity<SuccessfulResponse<List<RendimientoQuesoDTO>>> getRendimientoByQueso(@RequestParam("fecha_desde")
                                                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
@@ -86,7 +90,7 @@ public class LoteController {
     }
 
     @PutMapping(value = "/")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Validated LoteUpdateDTO dto) {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> update(@RequestBody @Valid LoteUpdateDTO dto) {
         log.info("API::update - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_UPDATED, service.update(dto)));
     }

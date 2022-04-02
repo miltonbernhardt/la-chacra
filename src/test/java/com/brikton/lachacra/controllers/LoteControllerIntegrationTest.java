@@ -11,6 +11,7 @@ import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -75,18 +76,18 @@ public class LoteControllerIntegrationTest {
     @BeforeAll
     static void init() {
         restTemplate = new RestTemplate();
+        mapper = new ObjectMapper();
     }
 
     @BeforeEach
     void setUp() {
         baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
-        mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @Test
-    void Get_All__OK() throws JsonProcessingException {
+    void Get_All__OK() {
         LoteDTO dto1 = new LoteDTO();
         dto1.setId("221020210011");
         dto1.setFechaElaboracion(LocalDate.of(2021, 10, 22));
@@ -126,17 +127,20 @@ public class LoteControllerIntegrationTest {
         dto3.setLoteCuajo("cuajo1, cuajo2");
         dto3.setCodigoQueso("002");
 
-        String expectedLotes = mapper.writeValueAsString(List.of(dto1, dto2, dto3));
+        var expectedLotes = List.of(dto1, dto2, dto3);
         var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
-        var actualLotes = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedLotes, actualLotes);
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<LoteDTO>>>() {
+        });
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedLotes, successfulResponse.getData());
     }
 
     @Test
-    void Save__OK() throws JsonProcessingException {
-        LoteDTO dtoToSave = new LoteDTO();
+    void Save__OK() {
+        var dtoToSave = new LoteDTO();
         dtoToSave.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         dtoToSave.setNumeroTina(1);
         dtoToSave.setCantHormas(1);
@@ -148,7 +152,7 @@ public class LoteControllerIntegrationTest {
         dtoToSave.setLoteCuajo("cuajo1, cuajo2");
         dtoToSave.setCodigoQueso("001");
 
-        LoteDTO expectedLote = new LoteDTO();
+        var expectedLote = new LoteDTO();
         expectedLote.setId("101020210011");
         expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 10));
         expectedLote.setNumeroTina(1);
@@ -163,17 +167,14 @@ public class LoteControllerIntegrationTest {
         expectedLote.setLoteCuajo("cuajo1, cuajo2");
         expectedLote.setCodigoQueso("001");
 
-        var expectedLoteString = mapper.writeValueAsString(expectedLote);
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_CREATED);
-
         var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
-        var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedLoteString, actualLote);
-        assertEquals(expectedMessage, actualMessage);
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<LoteDTO>>>() {
+        });
+        assertEquals(SuccessfulMessages.MSG_LOTE_CREATED, successfulResponse.getMessage());
+        assertEquals(expectedLote, successfulResponse.getData());
     }
 
     @Test
@@ -247,7 +248,7 @@ public class LoteControllerIntegrationTest {
 
     @Test
     void Save__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
-        LoteDTO dtoToSave = new LoteDTO();
+        var dtoToSave = new LoteDTO();
         dtoToSave.setId("1");
         dtoToSave.setStockLote(1);
         dtoToSave.setRendimiento(1d);
@@ -271,7 +272,7 @@ public class LoteControllerIntegrationTest {
 
     @Test
     void Save__Invalid_Fields__Other_Validations_1() throws JsonProcessingException {
-        LoteDTO dtoToSave = new LoteDTO();
+        var dtoToSave = new LoteDTO();
         dtoToSave.setId("1");
         dtoToSave.setStockLote(1);
         dtoToSave.setRendimiento(1d);
@@ -335,8 +336,8 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Update__OK() throws JsonProcessingException {
-        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
+    void Update__OK() {
+        var dtoToUpdate = new LoteUpdateDTO();
         dtoToUpdate.setId("221020210011");
         dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 21));
         dtoToUpdate.setNumeroTina(3);
@@ -349,7 +350,7 @@ public class LoteControllerIntegrationTest {
         dtoToUpdate.setLoteCuajo("cuajo3, cuajo4");
         dtoToUpdate.setCodigoQueso("002");
 
-        LoteDTO expectedLote = new LoteDTO();
+        var expectedLote = new LoteDTO();
         expectedLote.setId("211020210023");
         expectedLote.setFechaElaboracion(LocalDate.of(2021, 10, 21));
         expectedLote.setNumeroTina(3);
@@ -364,17 +365,14 @@ public class LoteControllerIntegrationTest {
         expectedLote.setLoteCuajo("cuajo3, cuajo4");
         expectedLote.setCodigoQueso("002");
 
-        var expectedLoteString = mapper.writeValueAsString(expectedLote);
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_UPDATED);
-
         var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
-        var actualLote = mapper.writeValueAsString(requireNonNull(response.getBody()).getData());
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
-
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedLoteString, actualLote);
-        assertEquals(expectedMessage, actualMessage);
+
+        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<LoteDTO>>>() {
+        });
+        assertEquals(SuccessfulMessages.MSG_LOTE_UPDATED, successfulResponse.getData());
+        assertEquals(expectedLote, successfulResponse.getData());
     }
 
     @Test
@@ -440,7 +438,7 @@ public class LoteControllerIntegrationTest {
         dtoToUpdate.setLoteCuajo("cuajo1, cuajo2");
         dtoToUpdate.setCodigoQueso("011");
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
+         HttpClientErrorException.Conflict thrown = assertThrows(
                 HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
         );
         var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
@@ -514,7 +512,7 @@ public class LoteControllerIntegrationTest {
 
     @Test
     void Update__Invalid_Fields__Other_Validations_2() throws JsonProcessingException {
-        LoteUpdateDTO dtoToUpdate = new LoteUpdateDTO();
+        var dtoToUpdate = new LoteUpdateDTO();
         dtoToUpdate.setId("111111111111111");
         dtoToUpdate.setFechaElaboracion(LocalDate.of(2021, 10, 21));
         dtoToUpdate.setNumeroTina(1000);
@@ -542,15 +540,13 @@ public class LoteControllerIntegrationTest {
     }
 
     @Test
-    void Delete_Lote_Without_Dependencies__OK() throws JsonProcessingException {
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_LOTE_DELETED);
-
+    void Delete_Lote_Without_Dependencies__OK() {
         var response = deleteForEntity(baseUrl.concat("231020210022"), SuccessfulResponse.class);
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
+        var actualMessage = requireNonNull(response.getBody()).getMessage();
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedMessage, actualMessage);
+        assertEquals(SuccessfulMessages.MSG_LOTE_DELETED, actualMessage);
     }
 
     @Test
@@ -693,9 +689,9 @@ public class LoteControllerIntegrationTest {
         assertEquals(expectedQuesos, actualQuesos);
     }
 
-    @Test
+    @Test //TODO: test bad params
     void Get_Between_Dates__OK() {
-        String query = "/produccion?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
+        String query = "produccion?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
         var response = restTemplate.getForEntity(baseUrl + query, SuccessfulResponse.class);
         assertEquals(2, ((ArrayList) response.getBody().getData()).size());
     }

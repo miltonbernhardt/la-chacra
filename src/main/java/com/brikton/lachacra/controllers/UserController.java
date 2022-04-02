@@ -7,6 +7,7 @@ import com.brikton.lachacra.entities.User;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok().headers(header).body(SuccessfulResponse.set(SuccessfulMessages.MSG_USER_LOGGED));
     }
 
-    @GetMapping(value = Path.API_PERMISSIONS)
+    @GetMapping(value = Path.API_PERMISSIONS, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<String>>> getPermisos() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
