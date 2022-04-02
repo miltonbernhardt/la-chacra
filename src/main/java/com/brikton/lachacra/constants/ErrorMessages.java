@@ -4,7 +4,6 @@ public class ErrorMessages {
     public static final String MSG_ACCESS_DENIED = "Acceso denegado";
     public static final String MSG_CLIENTE_NOT_FOUND = "Cliente no encontrado";
     public static final String MSG_CODIGO_QUESO_ALREADY_EXIST = "Ya existe un queso con ese código";
-    public static final String MSG_COOKIE_NOT_FOUND = "Cookie no encontrada";
     public static final String MSG_EXPEDICION_CANNOT_BE_DELETED = "No se puede borrar la expedición";
     public static final String MSG_EXPEDICION_NOT_FOUND = "Expedición no encontrada";
     public static final String MSG_INTERNAL_SERVER_ERROR = "Ocurrió un error interno";

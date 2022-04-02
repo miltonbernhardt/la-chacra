@@ -50,12 +50,8 @@ public class UserController {
 
         var principal = authentication.getPrincipal();
 
-        if (principal instanceof User) {
-            var permisos = userService.getPermisos((User) principal);
-            log.info("API - permisos: {}", permisos);
-            return ResponseEntity.ok().body(SuccessfulResponse.set(permisos));
-        }
-
-        return ResponseEntity.ok().body(SuccessfulResponse.set(""));
+        var permisos = userService.getPermisos((User) principal);
+        log.info("API - permisos: {}", permisos);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(permisos));
     }
 }

@@ -1,13 +1,9 @@
 package com.brikton.lachacra.dtos;
 
-import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.entities.Remito;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,7 +36,7 @@ public class RemitoReportDTO {
     }
 
     private void loadItemsRemitoReportDTO(List<ItemRemito> items) {
-        List <ItemRemitoReportDTO> itemsList = new ArrayList<>();
+        List<ItemRemitoReportDTO> itemsList = new ArrayList<>();
         items.forEach(itemRemito -> itemsList.add(new ItemRemitoReportDTO(itemRemito)));
         itemsRemito = itemsList;
     }

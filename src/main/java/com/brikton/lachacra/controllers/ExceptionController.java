@@ -69,11 +69,6 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return response(ex, req, cookieUtil.deleteCookies(), HttpStatus.UNAUTHORIZED, ErrorMessages.MSG_INVALID_USER);
     }
 
-    @ExceptionHandler(value = {UserInvalidException.class, UserNotFoundException.class})
-    protected ResponseEntity<ErrorResponse> handlerUserNotFound(HttpServletRequest req, AuthenticationException ex) {
-        return response(ex, req, cookieUtil.deleteCookies(), HttpStatus.UNAUTHORIZED, ex.getMessage());
-    }
-
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handlerUserWithNoAccess(HttpServletRequest req, AccessDeniedException ex) {
         return response(ex, req, null, HttpStatus.FORBIDDEN, ErrorMessages.MSG_ACCESS_DENIED);

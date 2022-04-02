@@ -28,12 +28,4 @@ public class Role {
                     name = "privilege_name", referencedColumnName = "name"))
     private Collection<Privilege> privileges;
 
-    public Role(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name + ": " + privileges;
-    }
 }

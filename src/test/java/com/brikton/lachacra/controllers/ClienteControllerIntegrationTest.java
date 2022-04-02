@@ -1,7 +1,6 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
-import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
@@ -10,11 +9,9 @@ import com.brikton.lachacra.dtos.ClienteDTO;
 import com.brikton.lachacra.dtos.ClienteUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
+import com.brikton.lachacra.utils.Rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,15 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.util.Assert;
-import org.springframework.web.client.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -39,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({DatabaseTestConfig.class, NotSecurityConfigTest.class})
+@Import(DatabaseTestConfig.class)
 @ActiveProfiles("test")
 @Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -47,41 +40,16 @@ public class ClienteControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
-
-    private String baseUrl = "http://localhost";
-    private final String path = Path.API_CLIENTES.concat("/");
-
-    private static RestTemplate restTemplate = null;
-    private static ObjectMapper mapper = null;
-
-    <T> ResponseEntity<T> putForEntity(String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
-        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
-        return nonNull(restTemplate.execute(url, HttpMethod.PUT, requestCallback, responseExtractor, uriVariables));
-    }
-
-    <T> ResponseEntity<T> deleteForEntity(String url, Class<T> responseType, Object... uriVariables) throws RestClientException {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(null, responseType);
-        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
-        return nonNull(restTemplate.execute(url, HttpMethod.DELETE, requestCallback, responseExtractor, uriVariables));
-    }
-
-    static <T> T nonNull(@Nullable T result) {
-        Assert.state(result != null, "No result");
-        return result;
-    }
+    private static Rest rest = null;
 
     @BeforeAll
     static void init() {
-        restTemplate = new RestTemplate();
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        rest = new Rest(Path.API_CLIENTES);
     }
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
+        rest.setPort(port);
     }
 
     @Test
@@ -138,11 +106,12 @@ public class ClienteControllerIntegrationTest {
         dto3.setRazonSocial("ALEGRI, José César");
 
         var expectedClientes = List.of(dto1, dto2, dto3);
-        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var response = rest.get();
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {});
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
+        });
         assertEquals("", successfulResponse.getMessage());
         assertEquals(expectedClientes, successfulResponse.getData());
     }
@@ -182,11 +151,12 @@ public class ClienteControllerIntegrationTest {
         expectedCliente.setEmail("mail1@mail.com");
         expectedCliente.setRazonSocial("Razon social 1");
 
-        var response = restTemplate.postForEntity(baseUrl, mockToSave, SuccessfulResponse.class);
+        var response = rest.post(mockToSave);
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {});
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {
+        });
         assertEquals(SuccessfulMessages.MSG_CLIENTE_CREATED, successfulResponse.getMessage());
         assertEquals(expectedCliente, successfulResponse.getData());
     }
@@ -209,13 +179,12 @@ public class ClienteControllerIntegrationTest {
         dtoToSave.setEmail("mail1@mail.com");
         dtoToSave.setRazonSocial("Razon social 1");
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> rest.post(dtoToSave)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
@@ -233,12 +202,11 @@ public class ClienteControllerIntegrationTest {
         dtoToSave.setFax("233334444444");
         dtoToSave.setEmail("mail1@mail.com");
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.post(dtoToSave)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(3, response.getErrors().size());
@@ -265,12 +233,11 @@ public class ClienteControllerIntegrationTest {
         dtoToSave.setEmail(RandomStringUtils.randomAlphabetic(256));
         dtoToSave.setIdTipoCliente(0L);
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.post(dtoToSave)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(14, response.getErrors().size());
@@ -326,12 +293,13 @@ public class ClienteControllerIntegrationTest {
         expectedCliente.setEmail("mail1@mail.com");
         expectedCliente.setRazonSocial("Razon social 1");
 
-        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var response = rest.put(dtoToUpdate);
 
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {});
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<ClienteDTO>>() {
+        });
         assertEquals(SuccessfulMessages.MSG_CLIENTE_UPDATED, successfulResponse.getMessage());
         assertEquals(expectedCliente, successfulResponse.getData());
     }
@@ -355,13 +323,12 @@ public class ClienteControllerIntegrationTest {
         dtoToUpdate.setEmail("mail1@mail.com");
         dtoToUpdate.setRazonSocial("Razon social 1");
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> rest.put(dtoToUpdate)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
@@ -379,12 +346,11 @@ public class ClienteControllerIntegrationTest {
         dtoToUpdate.setFax("233334444444");
         dtoToUpdate.setEmail("mail1@mail.com");
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.put(dtoToUpdate)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(4, response.getErrors().size());
@@ -413,12 +379,11 @@ public class ClienteControllerIntegrationTest {
         dtoToUpdate.setId(0L);
         dtoToUpdate.setIdTipoCliente(0L);
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.put(dtoToUpdate)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(15, response.getErrors().size());
@@ -440,64 +405,56 @@ public class ClienteControllerIntegrationTest {
     }
 
     @Test
-    void Delete_Client_Without_Dependencies__OK() throws JsonProcessingException {
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_DELETED);
-
-        var response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
-
+    void Delete_Client_Without_Dependencies__OK() {
+        var response = rest.delete("/2");
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedMessage, actualMessage);
+        assertEquals(SuccessfulMessages.MSG_CLIENTE_DELETED, requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
-    void Delete_Client_With_Dependencies__OK() throws JsonProcessingException {
-        var expectedMessage = mapper.writeValueAsString(SuccessfulMessages.MSG_CLIENTE_DELETED);
-
-        var response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
-        var actualMessage = mapper.writeValueAsString(requireNonNull(response.getBody()).getMessage());
-
+    void Delete_Client_With_Dependencies__OK() {
+        var response = rest.delete("/1");
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedMessage, actualMessage);
+        assertEquals(SuccessfulMessages.MSG_CLIENTE_DELETED, requireNonNull(response.getBody()).getMessage());
     }
 
     @Test
     void Delete__Client_Not_Found() throws JsonProcessingException {
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("5"), SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.delete("/5")
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
 
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, response.getMessage());
-        assertEquals(path.concat("5"), response.getPath());
+        assertEquals(Path.API_CLIENTES.concat("/5"), response.getPath());
     }
 
     @Test
     void Delete__Client_Already_Deleted() throws JsonProcessingException {
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> deleteForEntity(baseUrl.concat("4"), SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.delete("/4")
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
 
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_CLIENTE_NOT_FOUND, response.getMessage());
-        assertEquals(path.concat("4"), response.getPath());
+        assertEquals(Path.API_CLIENTES.concat("/4"), response.getPath());
     }
 
     @Test
     void Delete__Bad_ID() throws JsonProcessingException {
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> deleteForEntity(baseUrl.concat("0"), SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.delete("/0")
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
         assertEquals(ValidationMessages.CANNOT_BE_LESS_THAN_1, response.getErrors().get("id"));
-        assertEquals(path.concat("0"), response.getPath());
+        assertEquals(Path.API_CLIENTES.concat("/0"), response.getPath());
     }
 
     @Test
@@ -554,29 +511,31 @@ public class ClienteControllerIntegrationTest {
         dto3.setRazonSocial("ALEGRI, José César");
 
         var expectedClientes = List.of(dto1, dto2, dto3);
-        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var response = rest.get();
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {}).getData();
+        var actualClientes = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
+        }).getData();
         assertEquals(expectedClientes, actualClientes);
 
         //cliente dado de baja
-        response = deleteForEntity(baseUrl.concat("1"), SuccessfulResponse.class);
+        response = rest.delete("/1");
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         //cliente borrado
-        response = deleteForEntity(baseUrl.concat("2"), SuccessfulResponse.class);
+        response = rest.delete("/2");
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         expectedClientes = List.of(dto3);
-        response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        response = rest.get();
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        actualClientes = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {}).getData();
+        actualClientes = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<ClienteDTO>>>() {
+        }).getData();
         assertEquals(expectedClientes, actualClientes);
     }
 

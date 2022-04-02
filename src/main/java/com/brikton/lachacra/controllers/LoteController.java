@@ -6,8 +6,8 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
-import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
-import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
+import com.brikton.lachacra.dtos.RendimientoDiaDTO;
+import com.brikton.lachacra.dtos.RendimientoQuesoDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.LoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,14 +47,14 @@ public class LoteController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getDTOById(id)));
     }
 
-    @GetMapping(value = "/queso")
+    @GetMapping(value = "/queso", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getByQuesoAndWithStock(@PathParam("codigoQueso") String codigoQueso) {
         log.info("API::getByQuesoAndWithStock - codigoQueso: {}", codigoQueso);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getByQuesoAndWithStock(codigoQueso)));
     }
 
     //TODO: tests params
-    @GetMapping(value = "/produccion")
+    @GetMapping(value = "/produccion", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getBetweenDates(@RequestParam("fecha_desde")
                                                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
                                                                              @RequestParam("fecha_hasta")
@@ -64,7 +64,7 @@ public class LoteController {
     }
 
     //TODO: test
-    @GetMapping(value = "/rendimiento/dia")
+    @GetMapping(value = "/rendimiento/dia", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<RendimientoDiaDTO>>> getRendimientoByDia(@RequestParam("fecha_desde")
                                                                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
                                                                                            @RequestParam("fecha_hasta")
@@ -74,7 +74,7 @@ public class LoteController {
     }
 
     //TODO: test
-    @GetMapping(value = "/rendimiento/queso")
+    @GetMapping(value = "/rendimiento/queso", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<RendimientoQuesoDTO>>> getRendimientoByQueso(@RequestParam("fecha_desde")
                                                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
                                                                                                @RequestParam("fecha_hasta")

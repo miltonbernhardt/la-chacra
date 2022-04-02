@@ -1,4 +1,4 @@
-package com.brikton.lachacra.dtos.rendimiento;
+package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.Lote;
 import lombok.Data;
@@ -12,9 +12,10 @@ public class RendimientoDiaDTO extends RendimientoDTO {
 
     private LocalDate fecha;
 
-    public RendimientoDiaDTO(){}
+    public RendimientoDiaDTO() {
+    }
 
-    public RendimientoDiaDTO(Lote lote){
+    public RendimientoDiaDTO(Lote lote) {
         rendimiento = lote.getRendimiento();
         fecha = lote.getFechaElaboracion();
     }

@@ -1,7 +1,6 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
-import com.brikton.lachacra.configs.NotSecurityConfigTest;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
@@ -10,26 +9,20 @@ import com.brikton.lachacra.dtos.PrecioDTO;
 import com.brikton.lachacra.dtos.PrecioUpdateDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
+import com.brikton.lachacra.utils.Rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.util.Assert;
-import org.springframework.web.client.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -37,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({DatabaseTestConfig.class, NotSecurityConfigTest.class})
+@Import(DatabaseTestConfig.class)
 @ActiveProfiles("test")
 @Sql(scripts = {"classpath:data_test.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -45,35 +38,16 @@ public class PrecioControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
-
-    private String baseUrl = "http://localhost";
-    private final String path = Path.API_PRECIOS.concat("/");
-
-    private static RestTemplate restTemplate = null;
-    private static ObjectMapper mapper = null;
-
-    <T> ResponseEntity<T> putForEntity(String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
-        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
-        return nonNull(restTemplate.execute(url, HttpMethod.PUT, requestCallback, responseExtractor, uriVariables));
-    }
-
-    static <T> T nonNull(@Nullable T result) {
-        Assert.state(result != null, "No result");
-        return result;
-    }
+    private static Rest rest = null;
 
     @BeforeAll
     static void init() {
-        restTemplate = new RestTemplate();
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        rest = new Rest(Path.API_PRECIOS);
     }
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
+        rest.setPort(port);
     }
 
     @Test
@@ -127,11 +101,11 @@ public class PrecioControllerIntegrationTest {
         precioDTO8.setIdQueso(2L);
 
         var expectedPrecios = List.of(precioDTO1, precioDTO2, precioDTO3, precioDTO4, precioDTO5, precioDTO6, precioDTO7, precioDTO8);
-        var response = restTemplate.getForEntity(baseUrl, SuccessfulResponse.class);
+        var response = rest.get();
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<PrecioDTO>>>() {
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<PrecioDTO>>>() {
         });
         assertEquals("", successfulResponse.getMessage());
         assertEquals(expectedPrecios, successfulResponse.getData());
@@ -150,11 +124,11 @@ public class PrecioControllerIntegrationTest {
         expectedPrecio.setIdTipoCliente(3L);
         expectedPrecio.setIdQueso(3L);
 
-        var response = restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class);
+        var response = rest.post(dtoToSave);
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<PrecioDTO>>() {
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<PrecioDTO>>() {
         });
         assertEquals(SuccessfulMessages.MSG_PRECIO_CREATED, successfulResponse.getMessage());
         assertEquals(expectedPrecio, successfulResponse.getData());
@@ -162,63 +136,59 @@ public class PrecioControllerIntegrationTest {
 
     @Test
     void Save__Queso_Not_Found_Conflict() throws JsonProcessingException {
-        PrecioDTO dtoToSave = new PrecioDTO();
+        var dtoToSave = new PrecioDTO();
         dtoToSave.setValor(371.00);
         dtoToSave.setIdTipoCliente(1L);
         dtoToSave.setIdQueso(5L);
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> rest.post(dtoToSave)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Save__Tipo_Cliente_Not_Found_Conflict() throws JsonProcessingException {
-        PrecioDTO dtoToSave = new PrecioDTO();
+        var dtoToSave = new PrecioDTO();
         dtoToSave.setValor(371.00);
         dtoToSave.setIdTipoCliente(4L);
         dtoToSave.setIdQueso(1L);
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> rest.post(dtoToSave)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_TIPO_CLIENTE_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Save__Precio_Already_Exists_Conflict() throws JsonProcessingException {
-        PrecioDTO dtoToSave = new PrecioDTO();
+        var dtoToSave = new PrecioDTO();
         dtoToSave.setValor(371.00);
         dtoToSave.setIdTipoCliente(1L);
         dtoToSave.setIdQueso(1L);
 
-        HttpClientErrorException.Conflict thrown = assertThrows(
-                HttpClientErrorException.Conflict.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> rest.post(dtoToSave)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_PRECIO_ALREADY_EXISTS, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Save__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
-        PrecioDTO dtoToSave = new PrecioDTO();
+        var dtoToSave = new PrecioDTO();
         dtoToSave.setId(1L);
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.post(dtoToSave)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(3, response.getErrors().size());
@@ -229,17 +199,16 @@ public class PrecioControllerIntegrationTest {
 
     @Test
     void Save__Invalid_Fields__Other_Validations() throws JsonProcessingException {
-        PrecioDTO dtoToSave = new PrecioDTO();
+        var dtoToSave = new PrecioDTO();
         dtoToSave.setValor(0D);
         dtoToSave.setIdTipoCliente(0L);
         dtoToSave.setIdQueso(0L);
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> restTemplate.postForEntity(baseUrl, dtoToSave, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.post(dtoToSave)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(3, response.getErrors().size());
@@ -262,11 +231,11 @@ public class PrecioControllerIntegrationTest {
         expectedPrecio.setIdTipoCliente(1L);
         expectedPrecio.setIdQueso(1L);
 
-        var response = putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class);
+        var response = rest.put(dtoToUpdate);
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        var successfulResponse = mapper.convertValue(response.getBody(), new TypeReference<SuccessfulResponse<PrecioDTO>>() {
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<PrecioDTO>>() {
         });
         assertEquals(expectedPrecio, successfulResponse.getData());
         assertEquals(SuccessfulMessages.MSG_PRECIO_UPDATED, successfulResponse.getMessage());
@@ -274,82 +243,77 @@ public class PrecioControllerIntegrationTest {
 
     @Test
     void Update__Combination_Fields_Not_Valid__Conflict() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+        var dtoToUpdate = new PrecioUpdateDTO();
         dtoToUpdate.setId(2L);
         dtoToUpdate.setValor(500.00);
         dtoToUpdate.setIdTipoCliente(1L);
         dtoToUpdate.setIdQueso(1L);
 
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.put(dtoToUpdate)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Update__Precio_Not_Exists_Conflict() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+        var dtoToUpdate = new PrecioUpdateDTO();
         dtoToUpdate.setId(9L);
         dtoToUpdate.setValor(371.00);
         dtoToUpdate.setIdTipoCliente(1L);
         dtoToUpdate.setIdQueso(1L);
 
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.put(dtoToUpdate)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Update__Queso_Not_Found_Conflict() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+        var dtoToUpdate = new PrecioUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setValor(371.00);
         dtoToUpdate.setIdTipoCliente(1L);
         dtoToUpdate.setIdQueso(5L);
 
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.put(dtoToUpdate)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Update__Tipo_Cliente_Not_Found_Conflict() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+        var dtoToUpdate = new PrecioUpdateDTO();
         dtoToUpdate.setId(1L);
         dtoToUpdate.setValor(371.00);
         dtoToUpdate.setIdTipoCliente(4L);
         dtoToUpdate.setIdQueso(1L);
 
-        HttpClientErrorException.NotFound thrown = assertThrows(
-                HttpClientErrorException.NotFound.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.put(dtoToUpdate)
         );
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_PRECIO_NOT_FOUND, response.getMessage());
-        assertEquals(path, response.getPath());
     }
 
     @Test
     void Update__Invalid_Fields__Fields_Not_Found() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+        var dtoToUpdate = new PrecioUpdateDTO();
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.put(dtoToUpdate)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(4, response.getErrors().size());
@@ -361,18 +325,17 @@ public class PrecioControllerIntegrationTest {
 
     @Test
     void Update__Invalid_Fields__Other_Validations() throws JsonProcessingException {
-        PrecioUpdateDTO dtoToUpdate = new PrecioUpdateDTO();
+        var dtoToUpdate = new PrecioUpdateDTO();
         dtoToUpdate.setId(0L);
         dtoToUpdate.setValor(0D);
         dtoToUpdate.setIdTipoCliente(0L);
         dtoToUpdate.setIdQueso(0L);
 
-        HttpClientErrorException.BadRequest thrown = assertThrows(
-                HttpClientErrorException.BadRequest.class, () -> putForEntity(baseUrl, dtoToUpdate, SuccessfulResponse.class)
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.put(dtoToUpdate)
         );
 
-        var response = mapper.readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
-        assertEquals(path, response.getPath());
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
         assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
         assertEquals(ErrorMessages.MSG_INVALID_BODY, response.getMessage());
         assertEquals(4, response.getErrors().size());

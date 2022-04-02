@@ -22,16 +22,6 @@ public class Privilege implements GrantedAuthority {
     @ManyToMany(mappedBy = "privileges")
     private Collection<Role> roles;
 
-    public Privilege(String name, String path) {
-        this.name = name;
-        this.path = path;
-    }
-
-    @Override
-    public String toString() {
-        return path;
-    }
-
     @Override
     public String getAuthority() {
         return path;

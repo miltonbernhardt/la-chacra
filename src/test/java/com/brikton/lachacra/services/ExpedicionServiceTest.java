@@ -365,19 +365,27 @@ public class ExpedicionServiceTest {
 
     @Test
     void Set_On_Remito_True__OK(){
-        when(repository.saveAll(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        var expWithRemito = mockExpedicion();
+        expWithRemito.setOnRemito(true);
+        when(repository.saveAll(any())).thenReturn(List.of(expWithRemito));
+
         var exp = mockExpedicion();
         exp.setOnRemito(false);
         var result = service.setOnRemitoTrue(List.of(exp));
+
         assertTrue(result.get(0).getOnRemito());
     }
 
     @Test
     void Set_On_Remito_False__OK(){
-        when(repository.saveAll(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
+        var expWithRemito = mockExpedicion();
+        expWithRemito.setOnRemito(true);
+        when(repository.saveAll(any())).thenReturn(List.of(expWithRemito));
+
         var exp = mockExpedicion();
         exp.setOnRemito(true);
         var result = service.setOnRemitoFalse(List.of(exp));
+
         assertTrue(result.get(0).getOnRemito());
     }
 

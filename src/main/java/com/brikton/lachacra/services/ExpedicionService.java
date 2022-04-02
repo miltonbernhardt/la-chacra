@@ -160,6 +160,7 @@ public class ExpedicionService {
         return repository.saveAll(expediciones);
     }
 
+    //todo esto no se usa
     public List<Expedicion> setOnRemitoFalse(List<Expedicion> expediciones) {
         expediciones.forEach(e -> e.setOnRemito(false));
         return repository.saveAll(expediciones);

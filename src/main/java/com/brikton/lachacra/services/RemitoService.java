@@ -80,7 +80,7 @@ public class RemitoService {
 
             itemRemito.setCantidad(cantidad);
             itemRemito.setImporte(importe.doubleValue());
-            itemRemito.setPeso(importe.doubleValue());
+            itemRemito.setPeso(peso.doubleValue());
         }
     }
 

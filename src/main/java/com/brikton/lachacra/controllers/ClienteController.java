@@ -22,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping(Path.API_CLIENTES)
 @Slf4j
+@Validated
 @HasClienteAuthority
 public class ClienteController {
 

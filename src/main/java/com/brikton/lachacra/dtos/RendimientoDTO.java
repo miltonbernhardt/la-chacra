@@ -1,4 +1,4 @@
-package com.brikton.lachacra.dtos.rendimiento;
+package com.brikton.lachacra.dtos;
 
 import lombok.Data;
 
