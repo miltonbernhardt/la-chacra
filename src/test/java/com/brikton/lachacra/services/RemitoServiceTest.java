@@ -27,10 +27,13 @@ public class RemitoServiceTest {
 
     @MockBean
     PrecioService precioService;
+
     @MockBean
     ClienteService clienteService;
+
     @MockBean
     ExpedicionService expedicionService;
+
     @MockBean
     RemitoRepository repository;
 

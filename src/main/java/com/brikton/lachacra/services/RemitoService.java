@@ -13,12 +13,10 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -62,14 +60,14 @@ public class RemitoService {
                 mapItems.putIfAbsent(quesoExpedicion.getTipoQueso(), newItem);
             } else {
                 var item = mapItems.get(quesoExpedicion.getTipoQueso());
-                updateItemRemito(item,e);
+                updateItemRemito(item, e);
             }
         });
         List<ItemRemito> items = new ArrayList<>(mapItems.values());
         remito.setItemsRemito(items);
     }
 
-    public void updateItemRemito(ItemRemito itemRemito, Expedicion expedicion){
+    public void updateItemRemito(ItemRemito itemRemito, Expedicion expedicion) {
         var quesoExpedicion = expedicion.getLote().getQueso();
         var quesoRemito = itemRemito.getQueso();
         if (quesoExpedicion.getTipoQueso().equals(quesoRemito.getTipoQueso())) {
@@ -109,7 +107,7 @@ public class RemitoService {
     public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) {
         var remito = generateRemito(idCliente, fecha);
         if (remito.getExpediciones() == null ||
-        remito.getExpediciones().isEmpty()) throw new ExpedicionNotFoundException();
+                remito.getExpediciones().isEmpty()) throw new ExpedicionNotFoundException();
         expedicionService.setOnRemitoTrue(remito.getExpediciones());
         return new RemitoDTO(repository.save(remito));
     }
@@ -156,8 +154,8 @@ public class RemitoService {
     }
 
     public List<Remito> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
-       var remitos = repository.findAllByFechaBetween(fechaDesde,fechaHasta);
-       remitos.forEach(remito->generateItemsRemito(remito));
-       return remitos;
+        var remitos = repository.findAllByFechaBetween(fechaDesde, fechaHasta);
+        remitos.forEach(remito -> generateItemsRemito(remito));
+        return remitos;
     }
 }
