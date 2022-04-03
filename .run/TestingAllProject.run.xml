@@ -1,0 +1,30 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TestingAllProject" type="JUnit" factoryName="JUnit">
+    <module name="la-chacra" />
+    <extension name="coverage" track_test_folders="true">
+      <pattern>
+        <option name="PATTERN" value="com.brikton.lachacra.crons.*" />
+        <option name="ENABLED" value="true" />
+        <option name="INCLUDE" value="false" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="com.brikton.lachacra.configs.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="com.brikton.lachacra.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="package" />
+    <option name="TEST_SEARCH_SCOPE">
+      <value defaultName="wholeProject" />
+    </option>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
