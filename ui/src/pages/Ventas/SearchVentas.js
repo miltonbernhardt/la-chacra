@@ -1,14 +1,15 @@
 import { Button, Grid, Paper, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Input from "../../components/Input";
-import Select from "../../components/Select";
+import { Input } from "../../components/Input";
+import { Select } from "../../components/Select";
 import * as field from "../../resources/fields";
 import { useRef, useCallback } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import * as validation from "../../resources/validations";
 import * as message from "../../resources/messages";
+import * as React from 'react';
 
-const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
+export const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
 
     const refFecha = useRef(null);
     const refMeses = useRef(null);
@@ -84,5 +85,3 @@ const SearchVentas = ({ fechaInicial, meses, onSearch }) => {
         </Grid>
     );
 }
-
-export default SearchVentas;

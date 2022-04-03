@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+import * as React from 'react';
 
 export const backID = "id"
 export const backFechaElaboracion = "fechaElaboracion"
@@ -44,6 +45,8 @@ export const backStockLote = "stockLote"
 export const backRendimientoLote = "rendimiento"
 export const backFechaRemito = "fecha"
 export const backImporteTotal = "importeTotal"
+export const backUsername = "username"
+export const backPassword = "password"
 
 export const ID = "ID"
 
@@ -105,6 +108,10 @@ export const importeTotal = "Importe total"
 export const cantidadMeses = "Cantidad de meses"
 export const backCantidadMeses = "cantidadMeses"
 
+//login
+export const username = "Nombre de usuario"
+export const password = "Contraseña"
+
 const backendFields = () => {
     const fields = new Map()
     fields.set(backID, ID)
@@ -150,6 +157,8 @@ const backendFields = () => {
     fields.set(backFechaRemito, fechaRemito)
     fields.set(backImporteTotal, importeTotal)
     fields.set(backCantidadMeses, cantidadMeses)
+    fields.set(backUsername, username)
+    fields.set(backPassword, password)
     return fields
 }
 
@@ -157,9 +166,13 @@ export const toastValidationErrors = (errors) => {
     if (errors == null && !errors instanceof Map)
         return
     toast.dismiss()
+    console.log({errors})
     let mapFields = backendFields()
     errors.forEach(function (msg, field) {
+        console.log({msg})
+        console.log({field})
         let realField = mapFields.get(field)
+        console.log({realField})
         realField = realField ?? field
         toast.error(<>
             <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>

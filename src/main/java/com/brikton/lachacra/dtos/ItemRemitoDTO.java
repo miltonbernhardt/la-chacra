@@ -10,7 +10,7 @@ public class ItemRemitoDTO {
     private String tipoQueso;
     private Double peso, precio, importe;
 
-    public ItemRemitoDTO(ItemRemito itemRemito){
+    public ItemRemitoDTO(ItemRemito itemRemito) {
         this.cantidad = itemRemito.getCantidad();
         this.tipoQueso = itemRemito.getQueso().getTipoQueso();
         this.peso = itemRemito.getPeso();

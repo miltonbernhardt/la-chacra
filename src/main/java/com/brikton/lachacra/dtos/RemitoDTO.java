@@ -38,7 +38,7 @@ public class RemitoDTO {
     }
 
     private void loadItemsRemitoDTO(List<ItemRemito> items) {
-        List <ItemRemitoDTO> itemsList = new ArrayList<>();
+        List<ItemRemitoDTO> itemsList = new ArrayList<>();
         items.forEach(itemRemito -> itemsList.add(new ItemRemitoDTO(itemRemito)));
         itemsRemito = itemsList;
     }

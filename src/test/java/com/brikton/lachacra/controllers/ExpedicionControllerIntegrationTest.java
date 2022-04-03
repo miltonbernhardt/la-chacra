@@ -1,26 +1,17 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.configs.DatabaseTestConfig;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.brikton.lachacra.constants.Path;
+import com.brikton.lachacra.utils.Rest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RequestCallback;
-import org.springframework.web.client.ResponseExtractor;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
@@ -33,41 +24,16 @@ public class ExpedicionControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
-
-    private String baseUrl = "http://localhost";
-    private final String path = "/api/v1/expediciones/";
-
-    private static RestTemplate restTemplate = null;
-    private static ObjectMapper mapper = null;
-
-    <T> ResponseEntity<T> putForEntity(String url, @Nullable Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
-        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
-        return nonNull(restTemplate.execute(url, HttpMethod.PUT, requestCallback, responseExtractor, uriVariables));
-    }
-
-    <T> ResponseEntity<T> deleteForEntity(String url, Class<T> responseType, Object... uriVariables) throws RestClientException {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(null, responseType);
-        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
-        return nonNull(restTemplate.execute(url, HttpMethod.DELETE, requestCallback, responseExtractor, uriVariables));
-    }
-
-    static <T> T nonNull(@Nullable T result) {
-        Assert.state(result != null, "No result");
-        return result;
-    }
+    private static Rest rest = null;
 
     @BeforeAll
     static void init() {
-        restTemplate = new RestTemplate();
+        rest = new Rest(Path.API_EXPEDICIONES);
     }
 
     @BeforeEach
     void setUp() {
-        baseUrl = baseUrl.concat(":").concat(port + "").concat(path);
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        rest.setPort(port);
     }
 
     @Test

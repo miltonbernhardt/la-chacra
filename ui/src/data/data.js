@@ -77,12 +77,12 @@ export const tiposDeQueso = [
     }
 ]
 export const tiposDeCliente = [
-    {id: 1, label: 'Mayorista'},
-    {id: 2, label: 'Minorista'},
-    {id: 3, label: 'Particular'},
-    {id: 4, label: 'Mayorista NOA'},
-    {id: 5, label: 'Kosher'},
-    {id: 6, label: 'Paraguay'},
+    { id: 1, label: 'Mayorista' },
+    { id: 2, label: 'Minorista' },
+    { id: 3, label: 'Particular' },
+    { id: 4, label: 'Mayorista NOA' },
+    { id: 5, label: 'Kosher' },
+    { id: 6, label: 'Paraguay' },
 ]
 export const precios = [
     {

@@ -1,5 +1,7 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasCargarExpedicionAuthority;
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ExpedicionDTO;
@@ -18,10 +20,9 @@ import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/expediciones")
+@RequestMapping(Path.API_EXPEDICIONES)
 @Slf4j
-@Validated
-@CrossOrigin(origins = "**")
+@HasCargarExpedicionAuthority
 public class ExpedicionController {
 
     private final ExpedicionService service;
@@ -30,16 +31,15 @@ public class ExpedicionController {
         this.service = service;
     }
 
+    @HasCargarExpedicionAuthority
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 
     @GetMapping(value = "/lote")
     public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAllByLote(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
-                                                                                    @PathParam("idLote") String idLote) {
-        log.info("API::getAllByLote - idLote = {}",idLote);
+                                                                                @PathParam("idLote") String idLote) {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllByLote(idLote)));
     }
 
