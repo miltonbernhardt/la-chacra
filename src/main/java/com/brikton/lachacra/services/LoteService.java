@@ -3,9 +3,9 @@ package com.brikton.lachacra.services;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
 import com.brikton.lachacra.dtos.QuesoDTO;
-import com.brikton.lachacra.dtos.RendimientoDTO;
-import com.brikton.lachacra.dtos.RendimientoDiaDTO;
-import com.brikton.lachacra.dtos.RendimientoQuesoDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
 import com.brikton.lachacra.entities.Lote;
 import com.brikton.lachacra.entities.Queso;
 import com.brikton.lachacra.exceptions.LoteAlreadyExistsException;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -275,4 +276,49 @@ public class LoteService {
         dto.setRendimiento(rendimientoAvg.doubleValue());
     }
 
+    public List<LitrosElaboradosDiaDTO> getLitrosElaborados(LocalDate fechaDesde, LocalDate fechaHasta) {
+        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
+        Map<LocalDate, LitrosElaboradosDia> litrosElaborados = new HashMap<>();
+        lotes.forEach(lote -> {
+            var fecha = lote.getFechaElaboracion();
+            if (litrosElaborados.containsKey(fecha)) {
+                updateLitros(litrosElaborados.get(fecha),lote);
+            } else {
+                var litros = new LitrosElaboradosDia();
+                litros.setFecha(fecha);
+                litros.setTotal(0d);
+                updateLitros(litros,lote);
+                litrosElaborados.put(fecha,litros);
+            }
+        });
+
+        List<LitrosElaboradosDia> listaLitros = new ArrayList<>(litrosElaborados.values());
+        List<LitrosElaboradosDiaDTO> dtos = new ArrayList<>();
+        listaLitros.forEach(litros -> dtos.add(new LitrosElaboradosDiaDTO(litros)));
+        dtos.sort(new DateComparator());
+
+        return dtos;
+    }
+
+    private LitrosElaboradosDia updateLitros(LitrosElaboradosDia litros, Lote lote){
+        var litrosElaborados = litros.getLitrosElaborados();
+            var codigoQueso = lote.getQueso().getCodigo();
+            var cantidad = BigDecimal.valueOf(lote.getLitrosLeche());
+
+        var total = BigDecimal.valueOf(litros.getTotal());
+        total = total.add(cantidad);
+        litros.setTotal(total.doubleValue());
+
+            if (litrosElaborados.containsKey(codigoQueso)){
+                var aux = litrosElaborados.get(codigoQueso);
+                cantidad = cantidad.add(BigDecimal.valueOf(aux.getCantidad()));
+                aux.setCantidad(cantidad.doubleValue());
+            } else {
+                var aux = new LitrosElaborados();
+                aux.setCodigoQueso(codigoQueso);
+                aux.setCantidad(cantidad.doubleValue());
+                litrosElaborados.put(codigoQueso,aux);
+            }
+        return litros;
+    }
 }

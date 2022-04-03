@@ -20,10 +20,11 @@ export const Rendimiento = () => {
     const fetchRendimientos = useCallback((fechaHasta, meses) => {
         //TODO: mover conversion de fechas a un archivo aparte como funcion
         const currentDate = new Date(fechaHasta);
-        currentDate.setMonth(currentDate.getMonth() - meses);
+        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        const date = currentDate.getDate();
+        var date = currentDate.getDate();
+        if (month === 1 && date === 28) date = 27;
         const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {

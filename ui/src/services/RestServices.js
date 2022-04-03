@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { toastValidationErrors } from "../resources/fields";
 import * as paths from "../resources/paths";
 
-//todo usar env
+//TODO: usar env
 const PUERTO = '8000';
 const RAIZ_URL = `http://localhost:${PUERTO}`;
 
@@ -14,11 +14,13 @@ const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
 const API_PRECIO = '/api/v1/precios/'
 const API_EXPEDICION = '/api/v1/expediciones/'
 const API_REMITO = '/api/v1/remitos/'
+const API_VENTAS = '/api/v1/ventas/'
 const API_LOGIN = '/api/v1/login'
 const API_LOGOUT = '/logout'
 const API_PERMISOS = '/api/v1/permisos'
 
 const headers = {
+    'Access-Control-Allow-Origin': "*",
     'Access-Control-Allow-Methods': "GET, POST, PATCH, PUT, DELETE, OPTIONS",
     'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept"
 }
@@ -104,6 +106,7 @@ export const getLotesBetweenDates = async (fechaDesde, fechaHasta) => await GET(
 export const getLotesByQuesoWithStock = async (codigoQueso) => await GET(`${API_LOTE}queso?codigoQueso=${codigoQueso}`);
 export const getRendimientoByDia = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}rendimiento/dia?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 export const getRendimientoByQueso = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}rendimiento/queso?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+export const getLitros = async (fechaDesde, fechaHasta) => await GET(`${API_LOTE}litros_elaborados?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 
 // --- QUESO METHODS ---
 export const getAllQuesos = async () => await GET(`${API_QUESO}`);
@@ -136,6 +139,9 @@ export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICI
 export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}/generate?id_cliente=${idCliente}&fecha=${fecha}`);
 export const postRemito = async (idCliente, fecha) => await POST(`${API_REMITO}?id_cliente=${idCliente}&fecha=${fecha}`);
 
+// --- VENTAS METHODS ---
+export const getVentas = async (fechaDesde, fechaHasta) => await GET(`${API_VENTAS}?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+
 // --- GENERAL METHODS ---
 const GET = async (postfixUrl) => {
     const URL = `${RAIZ_URL}${postfixUrl}`;
@@ -145,7 +151,7 @@ const GET = async (postfixUrl) => {
     return await axios.get(URL, { headers: getNewHeader() })
         .then(response => {
             const { data } = response
-            console.debug({ response: data })
+            console.info({ response: data })
             return { data: data.data }
         })
         .catch(err => processResponseError(err))

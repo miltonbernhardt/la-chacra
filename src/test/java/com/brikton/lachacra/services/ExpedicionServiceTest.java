@@ -363,7 +363,7 @@ public class ExpedicionServiceTest {
         assertEquals(1,result.size());
     }
 
-    @Test
+    @Test//TODO wrong test
     void Set_On_Remito_True__OK(){
         var expWithRemito = mockExpedicion();
         expWithRemito.setOnRemito(true);
@@ -376,7 +376,7 @@ public class ExpedicionServiceTest {
         assertTrue(result.get(0).getOnRemito());
     }
 
-    @Test
+    @Test//TODO wrong test
     void Set_On_Remito_False__OK(){
         var expWithRemito = mockExpedicion();
         expWithRemito.setOnRemito(true);

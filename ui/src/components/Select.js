@@ -2,7 +2,7 @@ import { Autocomplete, Box, Grid, TextField } from "@mui/material";
 import * as React from 'react';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
-export const Select = forwardRef((
+const Select = forwardRef((
     {
         id,
         label,
@@ -26,7 +26,7 @@ export const Select = forwardRef((
             setValAndUpdate(options.filter((o) => o.value === value).pop())
         else
             setValAndUpdate({ id: null, label: null, value: null });
-    }, [value]);
+    }, [options, value]);
 
     useImperativeHandle(ref, () => ({
         value: () => val.value,
@@ -70,6 +70,7 @@ export const Select = forwardRef((
                     label={label}/>
             )}
             value={val}
+            error={err}
             onChange={(e, value) => {
                 setValAndUpdate(value)
             }}

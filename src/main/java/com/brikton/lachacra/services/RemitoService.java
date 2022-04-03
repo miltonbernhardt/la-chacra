@@ -154,4 +154,10 @@ public class RemitoService {
 
         return JasperExportManager.exportReportToPdf(empReport);
     }
+
+    public List<Remito> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
+       var remitos = repository.findAllByFechaBetween(fechaDesde,fechaHasta);
+       remitos.forEach(remito->generateItemsRemito(remito));
+       return remitos;
+    }
 }
