@@ -14,7 +14,7 @@ export const RendimientoQuesoCard = ({ queso, rendimiento }) => {
             alignItems: 'center'
         }}
     >
-        <CardActionArea onClick={() => alert('queso')}>
+        <CardActionArea>
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: queso.color }}>

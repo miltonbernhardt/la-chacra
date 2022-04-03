@@ -1,152 +1,164 @@
-import { Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
-import { DataGrid } from '@mui/x-data-grid';
+import { Grid } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Loading } from "../../components/Loading";
+import { getVentas, getAllQuesos } from "../../services/RestServices";
+import { ChartVentas } from "./ChartVentas";
+import { GridVentas } from "./GridVentas";
+import { SearchVentas } from "./SearchVentas";
+import { VentasByQueso } from "./VentasByQueso";
 import * as React from 'react';
-import { Chart } from '../../components/Chart';
-import { quesos, ventas } from "../../data/data";
-
-const columns1 = quesos.map((queso, index) => {
-    return {
-        field: queso.nomenclatura,
-        headerName: queso.nomenclatura,
-        type: 'number',
-        flex: 0.7,
-        minWidth: 80
-    }
-})
-
-const columns = [{
-    field: "semana",
-    headerName: "Semana",
-    type: 'date',
-    flex: 1,
-    minWidth: 100
-},
-    {
-        field: "total",
-        headerName: "Total",
-        type: 'number',
-        flex: 1,
-        minWidth: 100
-    },
-    ...columns1
-];
 
 export const VerVentas = () => {
-    return <>
-        <Container maxWidth="sm">
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    mt: 1
-                }}
-            >
-                <Paper sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}>
-                    <Grid container spacing={2}>
-                        <Typography variant="h6" paddingLeft={2} paddingTop={1}>
-                            Ventas
-                        </Typography>
-                        <Grid item xs={12}>
-                            <Typography variant="h7" color="GrayText">
-                                Rango de fechas
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                id="fechaDesde"
-                                name="fechaDesde"
-                                label="Desde"
-                                fullWidth
-                                type="date"
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}/>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                id="fechaHasta"
-                                name="fechaHasta"
-                                label="Hasta"
-                                type="date"
-                                fullWidth
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}/>
-                        </Grid>
-                        <Grid item xs={12} sm={4} alignSelf="center" mb={0.5}>
-                            <Button variant="contained" fullWidth>Buscar</Button>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </Box>
-        </Container>
-        <Box
-            sx={{
-                marginTop: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                mt: 1,
-                padding: 1
-            }}
-        >
-            <Grid container spacing={2}>
-                {/* Chart */}
-                <Grid item xs={12}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            height: 280,
-                        }}
-                    >
-                        <Chart
-                            title="Ventas"
-                            yLabel="Cantidad"
-                            data={ventas}
-                            xDataKey="semana"
-                            dataKey="C"
-                            dataKey1="B"
-                            dataKey2="S"
-                        />
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Box>
-        <Box height={600}
-             sx={{
-                 padding: 1,
-                 flexDirection: 'column',
-                 alignItems: 'center',
 
-             }}>
-            <Grid item xs={12}>
-                <Paper
-                    sx={{
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 600,
-                    }}
-                >
-                    <DataGrid
-                        rows={ventas}
-                        columns={columns}
-                        pageSize={20}
-                        rowsPerPageOptions={[20]}
-                        hideFooterPagination
-                    />
-                </Paper>
+    const [listaVentas, setListaVentas] = useState([]);
+    const [listaQuesos, setListaQuesos] = useState([]);
+
+    const [isLoadingVentas, setLoadingVentas] = useState(true);
+    const [isLoadingQuesos, setLoadingQuesos] = useState(true)
+
+    const fetchQuesos = () => {
+        getAllQuesos()
+            .then(quesos => {
+                const listaAux = quesos.data.map((q) => {
+                    return {
+                        id: q.id,
+                        codigo: q.codigo,
+                        nomenclatura: q.nomenclatura,
+                        tipoQueso: q.tipoQueso,
+                        color: q.color
+                    }
+                })
+                setListaQuesos(listaAux)
+            })
+            .catch(() => toast.error("No se pudo cargar quesos"))
+            .finally(() => setLoadingQuesos(false));
+    }
+
+    const fetchVentas = useCallback((fechaHasta, meses) => {
+        //TODO: move to its own file
+        const currentDate = new Date(fechaHasta);
+        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        let date = currentDate.getDate();
+        if (month === 1 && date === 28) date = 27;
+        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+        getVentas(fechaDesde, fechaHasta)
+            .then(({ data }) => {
+                setListaVentas(data)
+                if (data.length < 16) toast.error('No se poseen suficientes datos');
+            })
+            .catch(() => toast.error('No se pudo cargar ventas'))
+            .finally(() => setLoadingVentas(false));
+    }, [])
+
+    const padTo2Digits = (num) => {
+        return num.toString().padStart(2, '0');
+    }
+
+    const fechaInicial = useMemo(() => {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
+    }, [])
+
+    useEffect(() => {
+        fetchVentas(fechaInicial, 1);
+        fetchQuesos();
+    }, [fechaInicial, fetchVentas])
+
+    const handleSearch = useCallback((fechaHasta, meses) => {
+        fetchVentas(fechaHasta, meses);
+    }, [fetchVentas])
+
+    // --- Variables ---
+    const ventasFormatted = useMemo(() => {
+        if (isLoadingQuesos || isLoadingVentas) return [];
+        return listaVentas.map((dia, index) => {
+            const ventas = dia.ventas;
+            const ventasAsList = ventas.map((v) => {
+                const tipoQueso = listaQuesos.filter(q => q.codigo === v.codigoQueso).pop().tipoQueso;
+                return [tipoQueso, v.cantidad]
+            });
+            const ventasAsProps = Object.fromEntries(ventasAsList);
+            return {
+                id: index,
+                fecha: dia.fecha.at(8) + dia.fecha.at(9) + '-' +
+                    dia.fecha.at(5) + dia.fecha.at(6),
+                total: dia.total,
+                ...ventasAsProps
+            }
+        })
+    }, [isLoadingQuesos, isLoadingVentas, listaQuesos, listaVentas])
+
+    const quesosFormatted = useMemo(() =>
+        listaQuesos.map((q) => {
+            return {
+                id: q.id,
+                label: q.codigo + ' - ' + q.tipoQueso + ' - ' + q.nomenclatura,
+                value: q.tipoQueso
+            }
+        }), [listaQuesos]);
+
+    const ventasMultilineFormatted = useMemo(() => {
+        if (listaVentas.length < 16) return [];
+        const semana1 = listaVentas.slice(-16, -10);
+        const semana2 = listaVentas.slice(-11, -5)
+        const ultimaSemana = listaVentas.slice(-6);
+        return ultimaSemana.map((value, index) => {
+            return {
+                dia: index,
+                "10 dias anteriores": semana1.at(index).total,
+                "5 dias anteriores": semana2.at(index).total,
+                "Últimos 5 dias": value.total
+            }
+        })
+    }, [listaVentas]);
+
+    return (
+        isLoadingVentas || isLoadingQuesos ? <Loading /> :
+            <Grid container
+                direction="row"
+                spacing={1.5}
+                paddingRight={2}
+                style={{
+                    minHeight: "92%",
+                    maxWidth: "98%",
+                    margin: "1%",
+                    boxSizing: "border-box",
+                }}>
+                <Grid item container spacing={2}>
+                    <SearchVentas
+                        fechaInicial={fechaInicial}
+                        meses={1}
+                        onSearch={handleSearch} />
+                    <ChartVentas
+                        md={5}
+                        title="Ventas totales"
+                        data={ventasFormatted}
+                        xDataKey="fecha"
+                        dataKey="total" />
+                    <ChartVentas
+                        md={5}
+                        title="Ventas totales"
+                        data={ventasMultilineFormatted}
+                        xDataKey="fecha"
+                        dataKey="Últimos 5 dias"
+                        dataKey1="5 dias anteriores"
+                        dataKey2="10 dias anteriores"
+                        legend={true} />
+                </Grid>
+                <Grid item container spacing={2}>
+                    <VentasByQueso
+                        listaVentas={ventasFormatted}
+                        quesosSelect={quesosFormatted} />
+                </Grid>
+                <GridVentas
+                    quesos={listaQuesos}
+                    data={ventasFormatted} />
             </Grid>
-        </Box>
-    </>
+    );
 }

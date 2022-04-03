@@ -37,7 +37,7 @@ public class Rest {
     /* ---- POST ---- */
 
     public ResponseEntity<SuccessfulResponse> postUnauthorized(String url, @Nullable Object body) throws RestClientException {
-        return post(url, body, "");
+        return post(url, body, null);
     }
 
     public ResponseEntity<SuccessfulResponse> post(@Nullable Object body) throws RestClientException {
@@ -108,12 +108,12 @@ public class Rest {
     }
 
     public ResponseEntity<SuccessfulResponse> getUnauthorized(String path) throws RestClientException {
-        return get(path, "");
+        return get(path, null);
     }
 
     private ResponseEntity<SuccessfulResponse> get(String path, String token) throws RestClientException {
         var headers = new HttpHeaders();
-        headers.add("Cookie", "authorizationToken=".concat(token));
+        headers.add("Cookie", token != null ? "authorizationToken=".concat(token) : null);
         return restTemplate.exchange(url.concat(path), HttpMethod.GET, new HttpEntity<String>(headers), SuccessfulResponse.class);
     }
 }

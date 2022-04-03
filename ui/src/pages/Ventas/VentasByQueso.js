@@ -1,9 +1,10 @@
 import { Grid, Paper } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
-import ChartVentas from "./ChartVentas";
-import SelectVentasByQueso from "./SelectVentasByQueso";
+import { ChartVentas } from "./ChartVentas";
+import { SelectVentasByQueso } from "./SelectVentasByQueso";
+import * as React from 'react';
 
-const VentasByQueso = ({ listaVentas, quesosSelect }) => {
+export const VentasByQueso = ({ listaVentas, quesosSelect }) => {
 
     const dataKeysInit = useMemo(() => {
         return {
@@ -49,5 +50,3 @@ const VentasByQueso = ({ listaVentas, quesosSelect }) => {
         </Grid>
     );
 }
-
-export default VentasByQueso;

@@ -2,7 +2,7 @@ import { Autocomplete, Box, Grid, TextField } from "@mui/material";
 import * as React from 'react';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
-const Select = forwardRef((
+export const Select = forwardRef((
     {
         id,
         label,

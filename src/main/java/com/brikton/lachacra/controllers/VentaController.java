@@ -1,6 +1,5 @@
 package com.brikton.lachacra.controllers;
 
-import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
 import com.brikton.lachacra.dtos.ventas.VentaDiaDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.VentaService;
@@ -28,10 +27,10 @@ public class VentaController {
 
     @GetMapping(value = "/")
     public ResponseEntity<SuccessfulResponse<List<VentaDiaDTO>>> getVentas(@RequestParam("fecha_desde")
-                                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-                                                                                     @RequestParam("fecha_hasta")
-                                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
-        log.info("API::getVentas - fecha_desde: {} - fecha_hasta: {} ", fechaDesde,fechaHasta);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getVentas(fechaDesde,fechaHasta)));
+                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+                                                                           @RequestParam("fecha_hasta")
+                                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+        log.info("API::getVentas - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getVentas(fechaDesde, fechaHasta)));
     }
 }

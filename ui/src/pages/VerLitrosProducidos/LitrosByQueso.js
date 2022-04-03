@@ -1,9 +1,10 @@
 import { Grid, Paper } from "@mui/material";
 import { useCallback, useMemo, useState } from "react";
-import ChartLitros from "./ChartLitros";
-import SelectLitrosByQueso from "./SelectLitrosByQueso";
+import { ChartLitros } from "./ChartLitros";
+import { SelectLitrosByQueso } from "./SelectLitrosByQueso";
+import * as React from 'react';
 
-const LitrosByQueso = ({ listaLitros, quesosSelect }) => {
+export const LitrosByQueso = ({ listaLitros, quesosSelect }) => {
 
     const dataKeysInit = useMemo(() => {
         return {
@@ -30,7 +31,7 @@ const LitrosByQueso = ({ listaLitros, quesosSelect }) => {
                 dataKey={dataKeys.dataKey ? dataKeys.dataKey.value : ''}
                 dataKey1={dataKeys.dataKey1 ? dataKeys.dataKey1.value : ''}
                 dataKey2={dataKeys.dataKey2 ? dataKeys.dataKey2.value : ''}
-                dot={true} />
+                dot={true}/>
             <Grid item xs={12} md={4}>
                 <Paper
                     sx={{
@@ -44,11 +45,9 @@ const LitrosByQueso = ({ listaLitros, quesosSelect }) => {
                     <SelectLitrosByQueso
                         data={dataKeys}
                         quesos={quesosSelect}
-                        onChange={handleChange} />
+                        onChange={handleChange}/>
                 </Paper>
             </Grid>
         </Grid>
     );
 }
-
-export default LitrosByQueso;
