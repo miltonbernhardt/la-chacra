@@ -1,5 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import * as paths from '../resources/paths'
 import { toastValidationErrors } from "../resources/fields";
 
 const PUERTO = '8000';

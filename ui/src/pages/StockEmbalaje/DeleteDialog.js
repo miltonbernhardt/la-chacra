@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import * as React from 'react';
 
-const DeleteDialog = ({ onDelete, open, onClose }) => {
+export const DeleteDialog = ({ onDelete, open, onClose }) => {
     return (
         <>
             <Dialog open={open} onClose={onClose} scroll="body">
@@ -18,5 +19,3 @@ const DeleteDialog = ({ onDelete, open, onClose }) => {
         </>
     );
 }
-
-export default DeleteDialog;

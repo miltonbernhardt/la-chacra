@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import toast from "react-hot-toast";
 import { Loading } from '../../components/Loading';
 import { PageFormTable } from "../../components/PageFormTable";
@@ -68,7 +68,7 @@ export const CargarProduccion = () => {
         setLote(loteSubmit);
         if (isEditingLote) {
             putLote(loteSubmit)
-                .then(({data}) => {
+                .then(({ data }) => {
                     const newList = listaLotes.filter((item) => item.id !== lote.id);
                     setListaLotes([...newList, data]);
                     setLote(loteInicial);
@@ -77,7 +77,7 @@ export const CargarProduccion = () => {
             setEditingLote(false);
         } else {
             postLote(loteSubmit)
-                .then(({data}) => {
+                .then(({ data }) => {
                     setLote(loteInicial);
                     setListaLotes([...listaLotes, data]);
                 })
@@ -121,7 +121,7 @@ export const CargarProduccion = () => {
     });
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
     return (
         <PageFormTable
@@ -134,13 +134,13 @@ export const CargarProduccion = () => {
                     isEditingLote={isEditingLote}
                     cancelEditing={cancelEditing}
                     deleteLote={eliminarLote}
-                    handleSubmit={handleSubmit}/>
+                    handleSubmit={handleSubmit} />
             }
             table={
                 <GridLotes
                     quesos={listaQuesos}
                     produccion={listaLotes}
-                    setSelection={setSelection}/>
+                    setSelection={setSelection} />
             }
             titleTable="Producción ingresada"
             titleForm="Ingreso de producción"
@@ -149,7 +149,7 @@ export const CargarProduccion = () => {
                 open={eliminarDialog}
                 lote={lote}
                 onClose={cancelEliminar}
-                onSubmit={handleEliminar}/>
+                onSubmit={handleEliminar} />
         </PageFormTable>
     )
 }

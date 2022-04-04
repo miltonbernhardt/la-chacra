@@ -1,5 +1,7 @@
-package com.brikton.lachacra.dtos;
+package com.brikton.lachacra.dtos.rendimiento;
 
+import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDTO;
 import com.brikton.lachacra.entities.Lote;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

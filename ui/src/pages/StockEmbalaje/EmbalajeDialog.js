@@ -11,15 +11,16 @@ import {
     Typography
 } from "@mui/material";
 import { createRef, useEffect, useState, useMemo, useCallback } from 'react';
-import Input from "../../components/Input";
+import { Input } from "../../components/Input";
 import * as field from "../../resources/fields";
 import { toastValidationErrors } from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
-import Select from "../../components/Select";
+import { Select } from "../../components/Select";
 import DeleteIcon from '@mui/icons-material/Delete';
+import * as React from 'react';
 
-const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, isNewEmbalaje, onAgregarStock }) => {
+export const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, isNewEmbalaje, onAgregarStock }) => {
 
     const [embalajeForm, setEmbalajeForm] = useState(embalaje)
 
@@ -244,5 +245,3 @@ const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDelete, i
         </>
     );
 }
-
-export default EmbalajeDialog;
