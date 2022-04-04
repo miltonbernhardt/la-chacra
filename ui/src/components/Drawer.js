@@ -39,15 +39,15 @@ const DrawerButton = ({ label, path, action, icon }) => {
         <ListItemIcon>
             {icon}
         </ListItemIcon>
-        <ListItemText primary={label} onClick={() => action()}/>
+        <ListItemText primary={label} onClick={() => action()} />
     </ListItem>
 }
 
 const HomeSection = ({ closeDrawer }) => {
     return <>
-        <Divider/>
+        <Divider />
         <List>
-            <DrawerButton label="Inicio" path={paths.home} icon={<HomeIcon/>} action={closeDrawer}/>
+            <DrawerButton label="Inicio" path={paths.home} icon={<HomeIcon />} />
         </List>
     </>
 }
@@ -62,21 +62,21 @@ const LoadUpSection = ({ closeDrawer, permisos }) => {
         return <></>
 
     return <>
-        <Divider/>
+        <Divider />
         <List>
             {enableCargarLotes
-                ? <DrawerButton label="Cargar Producción" path={paths.cargarLotes} action={closeDrawer}
-                                icon={<AddIcon/>}/>
+                ? <DrawerButton label="Cargar Producción" path={paths.cargarLotes}
+                    icon={<AddIcon />} />
                 : undefined
             }
             {enableCargarExpedicion
-                ? <DrawerButton label="Cargar Expediciones" path={paths.cargarExpedicion} action={closeDrawer}
-                                icon={<LocalShippingIcon/>}/>
+                ? <DrawerButton label="Cargar Expediciones" path={paths.cargarExpedicion}
+                    icon={<LocalShippingIcon />} />
                 : undefined
             }
             {enableEmitirRemitos
-                ? <DrawerButton label="Emitir Remito" path={paths.emitirRemito} action={closeDrawer}
-                                icon={<PointOfSaleIcon/>}/>
+                ? <DrawerButton label="Emitir Remito" path={paths.emitirRemito}
+                    icon={<PointOfSaleIcon />} />
                 : undefined
             }
         </List>
@@ -93,21 +93,21 @@ const BusinessSection = ({ closeDrawer, permisos }) => {
         return <></>
 
     return <>
-        <Divider/>
+        <Divider />
         <List>
             {enableCargarQuesos
-                ? <DrawerButton label="Productos" path={paths.cargarQuesos} action={closeDrawer}
-                                icon={<MenuBookIcon/>}/>
+                ? <DrawerButton label="Productos" path={paths.cargarQuesos}
+                    icon={<MenuBookIcon />} />
                 : undefined
             }
             {enableCargarPrecios
-                ? <DrawerButton label="Precios" path={paths.cargarPrecios} action={closeDrawer}
-                                icon={<AttachMoneyIcon/>}/>
+                ? <DrawerButton label="Precios" path={paths.cargarPrecios}
+                    icon={<AttachMoneyIcon />} />
                 : undefined
             }
             {enableCargarClientes
-                ? <DrawerButton label="Clientes" path={paths.clientes} action={closeDrawer}
-                                icon={<PersonIcon/>}/>
+                ? <DrawerButton label="Clientes" path={paths.clientes}
+                    icon={<PersonIcon />} />
                 : undefined
             }
         </List>
@@ -126,31 +126,31 @@ const StatsSection = ({ closeDrawer, permisos }) => {
         return <></>
 
     return <>
-        <Divider/>
+        <Divider />
         <List>
             {enableVerProduccion
-                ? <DrawerButton label="Producción" path={paths.verProduccion} action={closeDrawer}
-                                icon={<TimelineIcon/>}/>
+                ? <DrawerButton label="Producción" path={paths.verProduccion}
+                    icon={<TimelineIcon />} />
                 : undefined
             }
             {enableVerLitros
-                ? <DrawerButton label="Litros Elaborados" path={paths.verLitros} action={closeDrawer}
-                                icon={<PercentIcon/>}/>
+                ? <DrawerButton label="Litros Elaborados" path={paths.verLitros}
+                    icon={<PercentIcon />} />
                 : undefined
             }
             {enableStockProductos
-                ? <DrawerButton label="Stock Productos" path={paths.stockProductos} action={closeDrawer}
-                                icon={<DashboardIcon/>}/>
+                ? <DrawerButton label="Stock Productos" path={paths.stockProductos}
+                    icon={<DashboardIcon />} />
                 : undefined
             }
             {enableRendimiento
-                ? <DrawerButton label="Rendimiento" path={paths.rendimiento} action={closeDrawer}
-                                icon={<AnalyticsIcon/>}/>
+                ? <DrawerButton label="Rendimiento" path={paths.rendimiento}
+                    icon={<AnalyticsIcon />} />
                 : undefined
             }
             {enableVerVentas
-                ? <DrawerButton label="Ventas" path={paths.verVentas} action={closeDrawer}
-                                icon={<BalanceIcon/>}/>
+                ? <DrawerButton label="Ventas" path={paths.verVentas}
+                    icon={<BalanceIcon />} />
                 : undefined
             }
         </List>
@@ -167,21 +167,21 @@ const BackgroundSection = ({ closeDrawer, permisos }) => {
         return <></>
 
     return <>
-        <Divider/>
+        <Divider />
         <List>
             {enableStockEmbalaje
-                ? <DrawerButton label="Stock Embalaje" path={paths.stockEmbalaje} action={closeDrawer}
-                                icon={<Inventory2Icon/>}/>
+                ? <DrawerButton label="Stock Embalaje" path={paths.stockEmbalaje}
+                    icon={<Inventory2Icon />} />
                 : undefined
             }
             {enableMantenimiento
-                ? <DrawerButton label="Mantenimiento" path={paths.mantenimiento} action={closeDrawer}
-                                icon={<SellIcon/>}/>
+                ? <DrawerButton label="Mantenimiento" path={paths.mantenimiento}
+                    icon={<SellIcon />} />
                 : undefined
             }
             {enableTrazabilidad
-                ? <DrawerButton label="Trazabilidad" path={paths.verTrazabilidad} action={closeDrawer}
-                                icon={<HistoryIcon/>}/>
+                ? <DrawerButton label="Trazabilidad" path={paths.verTrazabilidad}
+                    icon={<HistoryIcon />} />
                 : undefined
             }
         </List>
@@ -190,13 +190,13 @@ const BackgroundSection = ({ closeDrawer, permisos }) => {
 
 const LogoutSection = ({ logout }) => {
     return <>
-        <Divider/>
+        <Divider />
         <List>
             <ListItem button>
                 <ListItemIcon>
-                    <LogoutIcon/>
+                    <LogoutIcon />
                 </ListItemIcon>
-                <ListItemText primary="Cerrar sesión" onClick={() => logout()}/>
+                <ListItemText primary="Cerrar sesión" onClick={() => logout()} />
             </ListItem>
         </List>
     </>
@@ -221,17 +221,17 @@ export const Drawer = ({ drawerWidth, open, handleDrawerClose, theme, permisos }
     >
         <DrawerHeader>
             <IconButton onClick={handleDrawerClose} style={{ color: "white" }}>
-                {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
         </DrawerHeader>
-        <HomeSection closeDrawer={handleDrawerClose}/>
-        <LoadUpSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-        <BusinessSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-        <StatsSection closeDrawer={handleDrawerClose} permisos={permisos}/>
-        <BackgroundSection closeDrawer={handleDrawerClose} permisos={permisos}/>
+        <HomeSection closeDrawer={handleDrawerClose} />
+        <LoadUpSection closeDrawer={handleDrawerClose} permisos={permisos} />
+        <BusinessSection closeDrawer={handleDrawerClose} permisos={permisos} />
+        <StatsSection closeDrawer={handleDrawerClose} permisos={permisos} />
+        <BackgroundSection closeDrawer={handleDrawerClose} permisos={permisos} />
         <LogoutSection logout={() => {
             auth.signout()
             history.push(paths.login)
-        }}/>
+        }} />
     </DrawerMU>
 }
