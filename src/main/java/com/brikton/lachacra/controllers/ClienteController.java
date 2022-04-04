@@ -1,5 +1,8 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasClienteAuthority;
+import com.brikton.lachacra.annotations.HasEmitirRemitoAuthority;
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ClienteDTO;
@@ -7,6 +10,7 @@ import com.brikton.lachacra.dtos.ClienteUpdateDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ClienteService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +20,10 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/clientes")
+@RequestMapping(Path.API_CLIENTES)
 @Slf4j
 @Validated
-@CrossOrigin(origins = "**")
+@HasClienteAuthority
 public class ClienteController {
 
     private final ClienteService service;
@@ -28,9 +32,9 @@ public class ClienteController {
         this.service = service;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @HasEmitirRemitoAuthority
     public ResponseEntity<SuccessfulResponse<List<ClienteDTO>>> getAll() {
-        log.info("API::getAll");
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAll()));
     }
 

@@ -71,7 +71,6 @@ public class LoteService {
     public LoteDTO getDTOById(String id){
         return new LoteDTO(get(id));
     }
-
     public Lote decreaseStock(Lote lote, Integer cantidad) {
         var oldStock = lote.getStockLote();
         var actualStock = oldStock - cantidad;
@@ -237,63 +236,63 @@ public class LoteService {
 
     public List<LoteDTO> getByQuesoAndWithStock(String codigoQueso) {
         var queso = getQueso(codigoQueso);
-        var lista = repository.findAllByQuesoAndStockLoteGreaterThan(queso,0);
+        var lista = repository.findAllByQuesoAndStockLoteGreaterThan(queso, 0);
         List<LoteDTO> response = new ArrayList<>();
         lista.forEach(lote -> response.add(new LoteDTO(lote)));
         return response;
     }
 
     public List<RendimientoDiaDTO> getRendimientoByDia(LocalDate fechaDesde, LocalDate fechaHasta) {
-        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
-        Map<LocalDate,List<Lote>> mapRendimientos = new HashMap<>();
+        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null, fechaDesde, fechaHasta);
+        Map<LocalDate, List<Lote>> mapRendimientos = new HashMap<>();
         for (Lote lote : lotes) {
             var fecha = lote.getFechaElaboracion();
-            addToMapRendimiento(mapRendimientos,fecha,lote);
+            addToMapRendimiento(mapRendimientos, fecha, lote);
         }
         var auxList = new ArrayList<>(mapRendimientos.values());
         ArrayList<RendimientoDiaDTO> rendimientos = new ArrayList<>();
         auxList.forEach(list -> {
             var dto = new RendimientoDiaDTO();
             dto.setFecha(list.get(0).getFechaElaboracion());
-            updateRendimiento(dto,list);
+            updateRendimiento(dto, list);
             rendimientos.add(dto);
         });
-        Collections.sort(rendimientos, new DateComparator());
+        rendimientos.sort(new DateComparator());
         return rendimientos;
     }
 
     public List<RendimientoQuesoDTO> getRendimientoByQueso(LocalDate fechaDesde, LocalDate fechaHasta) {
-        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
-        Map<String,List<Lote>> mapRendimientos = new HashMap<>();
+        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null, fechaDesde, fechaHasta);
+        Map<String, List<Lote>> mapRendimientos = new HashMap<>();
         for (Lote lote : lotes) {
             var queso = lote.getQueso().getTipoQueso();
-            addToMapRendimiento(mapRendimientos,queso,lote);
+            addToMapRendimiento(mapRendimientos, queso, lote);
         }
         var auxList = new ArrayList<>(mapRendimientos.values());
         ArrayList<RendimientoQuesoDTO> rendimientos = new ArrayList<>();
         auxList.forEach(list -> {
             var dto = new RendimientoQuesoDTO();
             dto.setQueso(new QuesoDTO(list.get(0).getQueso()));
-            updateRendimiento(dto,list);
+            updateRendimiento(dto, list);
             rendimientos.add(dto);
         });
         return rendimientos;
     }
 
-    private <K,V> void addToMapRendimiento(Map<K,List<V>> map, K key, V value){
+    private <K, V> void addToMapRendimiento(Map<K, List<V>> map, K key, V value) {
         if (map.containsKey(key)) {
             var list = map.get(key);
             list.add(value);
         } else {
             var list = new ArrayList<V>();
             list.add(value);
-            map.put(key,list);
+            map.put(key, list);
         }
     }
 
-    private void updateRendimiento(RendimientoDTO dto, List<Lote> lotes){
+    private void updateRendimiento(RendimientoDTO dto, List<Lote> lotes) {
         BigDecimal rendimientoAvg = BigDecimal.ZERO;
-        for(Lote lote : lotes){
+        for (Lote lote : lotes) {
             rendimientoAvg = rendimientoAvg.add(BigDecimal.valueOf(lote.getRendimiento()));
         };
         rendimientoAvg = rendimientoAvg.divide(BigDecimal.valueOf(lotes.size()),MathContext.DECIMAL32);
@@ -301,18 +300,18 @@ public class LoteService {
     }
 
     public List<LitrosElaboradosDiaDTO> getLitrosElaborados(LocalDate fechaDesde, LocalDate fechaHasta) {
-        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
+        var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null, fechaDesde, fechaHasta);
         Map<LocalDate, LitrosElaboradosDia> litrosElaborados = new HashMap<>();
         lotes.forEach(lote -> {
             var fecha = lote.getFechaElaboracion();
             if (litrosElaborados.containsKey(fecha)) {
-                updateLitros(litrosElaborados.get(fecha),lote);
+                updateLitros(litrosElaborados.get(fecha), lote);
             } else {
                 var litros = new LitrosElaboradosDia();
                 litros.setFecha(fecha);
                 litros.setTotal(0d);
-                updateLitros(litros,lote);
-                litrosElaborados.put(fecha,litros);
+                updateLitros(litros, lote);
+                litrosElaborados.put(fecha, litros);
             }
         });
 
@@ -324,25 +323,25 @@ public class LoteService {
         return dtos;
     }
 
-    private LitrosElaboradosDia updateLitros(LitrosElaboradosDia litros, Lote lote){
+    private LitrosElaboradosDia updateLitros(LitrosElaboradosDia litros, Lote lote) {
         var litrosElaborados = litros.getLitrosElaborados();
-            var codigoQueso = lote.getQueso().getCodigo();
-            var cantidad = BigDecimal.valueOf(lote.getLitrosLeche());
+        var codigoQueso = lote.getQueso().getCodigo();
+        var cantidad = BigDecimal.valueOf(lote.getLitrosLeche());
 
         var total = BigDecimal.valueOf(litros.getTotal());
         total = total.add(cantidad);
         litros.setTotal(total.doubleValue());
 
-            if (litrosElaborados.containsKey(codigoQueso)){
-                var aux = litrosElaborados.get(codigoQueso);
-                cantidad = cantidad.add(BigDecimal.valueOf(aux.getCantidad()));
-                aux.setCantidad(cantidad.doubleValue());
-            } else {
-                var aux = new LitrosElaborados();
-                aux.setCodigoQueso(codigoQueso);
-                aux.setCantidad(cantidad.doubleValue());
-                litrosElaborados.put(codigoQueso,aux);
-            }
+        if (litrosElaborados.containsKey(codigoQueso)) {
+            var aux = litrosElaborados.get(codigoQueso);
+            cantidad = cantidad.add(BigDecimal.valueOf(aux.getCantidad()));
+            aux.setCantidad(cantidad.doubleValue());
+        } else {
+            var aux = new LitrosElaborados();
+            aux.setCodigoQueso(codigoQueso);
+            aux.setCantidad(cantidad.doubleValue());
+            litrosElaborados.put(codigoQueso, aux);
+        }
         return litros;
     }
 }

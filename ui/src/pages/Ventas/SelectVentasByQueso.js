@@ -1,6 +1,7 @@
 import { Autocomplete, Box, Grid, TextField, Typography } from "@mui/material";
+import * as React from 'react';
 
-const SelectVentasByQueso = ({ data, quesos, onChange }) => {
+export const SelectVentasByQueso = ({ data, quesos, onChange }) => {
 
     return (
         <Grid container spacing={2}>
@@ -94,5 +95,3 @@ const SelectVentasByQueso = ({ data, quesos, onChange }) => {
         </Grid >
     );
 }
-
-export default SelectVentasByQueso;

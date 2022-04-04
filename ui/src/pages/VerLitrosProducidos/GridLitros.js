@@ -1,7 +1,8 @@
 import { Grid, Paper } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
+import * as React from 'react';
 
-const GridLitros = ({ data, quesos }) => {
+export const GridLitros = ({ data, quesos }) => {
 
     const columnsQueso = quesos.map((queso) => {
         return {
@@ -45,5 +46,3 @@ const GridLitros = ({ data, quesos }) => {
         </Grid>
     );
 }
-
-export default GridLitros;

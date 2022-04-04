@@ -65,8 +65,7 @@ public class RemitoService {
                 updateItemRemito(item,e);
             }
         });
-        List<ItemRemito> items = new ArrayList<>();
-        items.addAll(mapItems.values());
+        List<ItemRemito> items = new ArrayList<>(mapItems.values());
         remito.setItemsRemito(items);
     }
 
@@ -81,7 +80,7 @@ public class RemitoService {
 
             itemRemito.setCantidad(cantidad);
             itemRemito.setImporte(importe.doubleValue());
-            itemRemito.setPeso(importe.doubleValue());
+            itemRemito.setPeso(peso.doubleValue());
         }
     }
 
