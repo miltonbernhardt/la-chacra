@@ -42,10 +42,10 @@ VALUES (1, 1, 1, 371.00),
        (1, 3, 7, 431.00),
        (2, 3, 8, 850.00);
 
-INSERT INTO expedicion (id, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote)
-VALUES (1, '2021-11-08', 100, 600.3, 62658.00, 1, '221020210011'),
-       (2, '2021-11-09', 150, 700.4, 62658.00, 2, '231020210022'),
-       (3, '2021-11-10', 200, 800.5, 62658.00, 3, '241020210033');
+INSERT INTO expedicion (id, fecha_expedicion, cantidad, peso, importe, nro_cliente, id_lote, on_remito)
+VALUES (1, '2021-11-08', 100, 600.3, 62658.00, 1, '221020210011', false),
+       (2, '2021-11-09', 150, 700.4, 62658.00, 2, '231020210022', false),
+       (3, '2021-11-10', 200, 800.5, 62658.00, 3, '241020210033', false);
 
 INSERT INTO public.user_details (id, username, enabled, firstname, lastname, password, token_expired)
 VALUES (1, 'admin', true, 'admin', 'admin', '$2a$10$T1Abj2rU26bFckix86rrqO312ZaiSnUZRCfTthk7g8zn/dx7UKqaa', true),

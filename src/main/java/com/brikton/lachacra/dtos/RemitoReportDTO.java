@@ -12,6 +12,7 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
+//TODO esto no es un dto
 @Data
 @NoArgsConstructor
 public class RemitoReportDTO {
