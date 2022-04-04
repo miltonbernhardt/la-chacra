@@ -10,7 +10,6 @@ import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ExpedicionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,8 +37,9 @@ public class ExpedicionController {
     }
 
     @GetMapping(value = "/lote")
-    public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAllByLote(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
-                                                                                @PathParam("idLote") String idLote) {
+    public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getAllByLote(
+            @PathParam("idLote") @Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT) String idLote
+    ) {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllByLote(idLote)));
     }
 
@@ -55,8 +55,9 @@ public class ExpedicionController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<String>> delete(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
-                                                             @PathVariable("id") Long id) {
+    public ResponseEntity<SuccessfulResponse<String>> delete(
+            @PathVariable("id") @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) Long id
+    ) {
         log.info("API::delete - id: {}", id);
         service.delete(id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_DELETED));

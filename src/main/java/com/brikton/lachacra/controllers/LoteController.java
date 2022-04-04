@@ -1,5 +1,6 @@
 package com.brikton.lachacra.controllers;
 
+import com.brikton.lachacra.annotations.HasCargarLotesAuthority;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
@@ -28,6 +29,7 @@ import java.util.List;
 @RequestMapping("/api/v1/lotes")
 @Slf4j
 @Validated
+@HasCargarLotesAuthority
 @CrossOrigin(origins = "**")
 public class LoteController {
 
@@ -43,8 +45,9 @@ public class LoteController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<SuccessfulResponse<LoteDTO>> getById(@Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
-                                                               @PathVariable("id") String id) {
+    public ResponseEntity<SuccessfulResponse<LoteDTO>> getById(
+            @PathVariable("id") @Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT) String id
+    ) {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getDTOById(id)));
     }
 
@@ -59,20 +62,18 @@ public class LoteController {
 
     @GetMapping(value = "/produccion", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getBetweenDates(
-            @RequestParam("fecha_desde")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam("fecha_hasta")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+            @RequestParam("fecha_desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @RequestParam("fecha_hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta
+    ) {
         log.info("API::getBetweenDates - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getBetweenDates(fechaDesde, fechaHasta)));
     }
 
     @GetMapping(value = "/rendimiento/dia", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<RendimientoDiaDTO>>> getRendimientoByDia(
-            @RequestParam("fecha_desde")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam("fecha_hasta")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+            @RequestParam("fecha_desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @RequestParam("fecha_hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta
+    ) {
         log.info("API::getRendimientoByDia - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByDia(fechaDesde, fechaHasta)));
     }
@@ -80,20 +81,18 @@ public class LoteController {
     //TODO mover a queso controller
     @GetMapping(value = "/rendimiento/queso", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<RendimientoQuesoDTO>>> getRendimientoByQueso(
-            @RequestParam("fecha_desde")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam("fecha_hasta")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+            @RequestParam("fecha_desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @RequestParam("fecha_hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta
+    ) {
         log.info("API::getRendimientoByQueso - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getRendimientoByQueso(fechaDesde, fechaHasta)));
     }
 
     @GetMapping(value = "/litros_elaborados", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<List<LitrosElaboradosDiaDTO>>> getLitrosElaborados(
-            @RequestParam("fecha_desde")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-            @RequestParam("fecha_hasta")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
+            @RequestParam("fecha_desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @RequestParam("fecha_hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta
+    ) {
         log.info("API::getLitrosElaborados - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getLitrosElaborados(fechaDesde, fechaHasta)));
     }
@@ -112,8 +111,8 @@ public class LoteController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<String>> delete(
-            @Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT)
-            @PathVariable("id") String id) {
+            @PathVariable("id") @Pattern(regexp = "^[0-9]{12,14}$", message = ValidationMessages.INVALID_FORMAT) String id
+    ) {
         log.info("API::delete - id: {}", id);
         service.delete(id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_LOTE_DELETED));
