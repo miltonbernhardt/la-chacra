@@ -11,9 +11,9 @@ public class LitrosElaboradosDia {
 
     private LocalDate fecha;
     private Double total;
-    private Map<String,LitrosElaborados> litrosElaborados;
+    private Map<String, LitrosElaborados> litrosElaborados;
 
-    public LitrosElaboradosDia(){
+    public LitrosElaboradosDia() {
         litrosElaborados = new HashMap<>();
     }
 }

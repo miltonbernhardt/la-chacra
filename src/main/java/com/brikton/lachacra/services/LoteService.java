@@ -2,6 +2,9 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.dtos.*;
 import com.brikton.lachacra.dtos.litrosElaborados.LitrosElaboradosDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
 import com.brikton.lachacra.entities.LitrosElaborados;
 import com.brikton.lachacra.entities.LitrosElaboradosDia;
 import com.brikton.lachacra.entities.Lote;
@@ -241,13 +244,13 @@ public class LoteService {
 
     public List<RendimientoQuesoDTO> getRendimientoByQueso(LocalDate fechaDesde, LocalDate fechaHasta) {
         var lotes = repository.findAllByFechaBajaAndFechaElaboracionBetween(null, fechaDesde, fechaHasta);
-        Map<String, List<Lote>> mapRendimientos = new HashMap<>();
+        var mapRendimientos = new HashMap<String, List<Lote>>();
         for (Lote lote : lotes) {
             var queso = lote.getQueso().getTipoQueso();
             addToMapRendimiento(mapRendimientos, queso, lote);
         }
         var auxList = new ArrayList<>(mapRendimientos.values());
-        ArrayList<RendimientoQuesoDTO> rendimientos = new ArrayList<>();
+        var rendimientos = new ArrayList<RendimientoQuesoDTO>();
         auxList.forEach(list -> {
             var dto = new RendimientoQuesoDTO();
             dto.setQueso(new QuesoDTO(list.get(0).getQueso()));

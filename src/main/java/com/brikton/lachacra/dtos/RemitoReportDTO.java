@@ -3,6 +3,7 @@ package com.brikton.lachacra.dtos;
 import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.entities.Remito;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Data
+@NoArgsConstructor
 public class RemitoReportDTO {
 
     private LocalDate fecha;
@@ -19,9 +21,6 @@ public class RemitoReportDTO {
     private List<ItemRemitoReportDTO> itemsRemito;
 
     private Long id;
-
-    public RemitoReportDTO() {
-    }
 
     public RemitoReportDTO(Remito remito) {
         this.setId(remito.getId());
