@@ -7,6 +7,7 @@ import { Input } from "../../components/Input";
 import { Select } from "../../components/Select";
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
+import { todayDateISO } from '../../resources/utils';
 import * as validation from "../../resources/validations";
 
 export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) => {
@@ -57,6 +58,9 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
         onEmitir(values.idCliente, values.fecha)
     }, [onEmitir, refFechaRemito, refSelectCliente]);
 
+    // --- Variables ---
+    const fechaInicial = React.useMemo(() => { return todayDateISO() }, [])
+
     return <Grid container spacing={1.5}>
         <Grid item xs={12}>
             <Typography variant="h7" color="GrayText">
@@ -64,26 +68,27 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
             </Typography>
         </Grid>
         <Input ref={refFechaRemito}
-               id={field.backFechaRemito}
-               label={field.fechaRemito}
-               type="date"
-               required/>
+            id={field.backFechaRemito}
+            label={field.fechaRemito}
+            value={fechaInicial}
+            type="date"
+            required />
         <Select
             ref={refSelectCliente}
             id={field.backIdCliente}
             label={field.cliente}
             options={clientes}
-            required/>
+            required />
         <Input
             id={field.backImporteTotal}
             label={field.importeTotal}
-            value={importe}/>
+            value={importe} />
         <Grid item xs={12} alignSelf="center" mb={0.5}>
             <ButtonGroup variant="contained" fullWidth>
-                <Button color="info" onClick={handleCargar} startIcon={<FileOpenIcon/>}>
+                <Button color="info" onClick={handleCargar} startIcon={<FileOpenIcon />}>
                     Cargar Datos
                 </Button>
-                <Button startIcon={<ReceiptIcon/>} onClick={handleEmitir} disabled={!emitible}>
+                <Button startIcon={<ReceiptIcon />} onClick={handleEmitir} disabled={!emitible}>
                     Emitir Remito
                 </Button>
             </ButtonGroup>

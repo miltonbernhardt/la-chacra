@@ -4,22 +4,28 @@ import toast from "react-hot-toast";
 import { Loading } from "../../components/Loading";
 import { PageFormTable } from "../../components/PageFormTable";
 import * as field from "../../resources/fields";
+import { todayDateISO } from '../../resources/utils';
 import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from '../../services/RestServices';
 import { DialogEliminarExpedicion } from './DialogEliminarExpedicion'
 import { FormExpedicion } from "./FormExpedicion";
 import { GridExpedicion } from "./GridExpedicion";
 
-const expedicionInicial = {
-    id: '',
-    idLote: '',
-    idCliente: '',
-    fechaExpedicion: '',
-    cantidad: '',
-    peso: '',
-    importe: ''
-}
 
 export const CargarExpedicion = () => {
+
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
+
+    const expedicionInicial = useMemo(() => {
+        return {
+            id: '',
+            idLote: '',
+            idCliente: '',
+            fechaExpedicion: fechaInicial,
+            cantidad: '',
+            peso: '',
+            importe: ''
+        }
+    }, [fechaInicial]);
 
     const [expedicion, setExpedicion] = useState(expedicionInicial);
     const [listaClientes, setListaClientes] = useState([]);
@@ -112,7 +118,7 @@ export const CargarExpedicion = () => {
     }), [listaClientes, listaExpediciones]);
 
     if (isLoadingClientes)
-        return <Loading/>
+        return <Loading />
 
     return <PageFormTable
         form={
@@ -122,18 +128,18 @@ export const CargarExpedicion = () => {
                 clientes={clientesFormatted}
                 handleSubmit={handleSubmit}
                 handleCancelar={handleCancelar}
-                handleDelete={handleDelete}/>
+                handleDelete={handleDelete} />
         }
         table={
             <GridExpedicion
                 expediciones={expedicionesFormatted}
-                setSelection={handleSelect}/>
+                setSelection={handleSelect} />
         }
         titleTable="Expediciones"
         titleForm="Ingreso de expediciones">
         <DialogEliminarExpedicion
             open={openDialogEliminar}
             onClose={cancelDelete}
-            onSubmit={submitDelete}/>
+            onSubmit={submitDelete} />
     </PageFormTable>
 }
