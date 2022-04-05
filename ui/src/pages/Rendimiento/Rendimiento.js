@@ -8,7 +8,7 @@ import { RendimientoCard } from "./RendimientoCard";
 import { RendimientoChart } from "./RendimientoChart";
 import { RendimientoQuesoCard } from "./RendimientoQuesoCard";
 import { RendimientoSearch } from "./RendimientoSearch";
-import { getValidDate } from "../../resources/utils";
+import { todayDateISO, dateMinusMonths } from "../../resources/utils";
 
 export const Rendimiento = () => {
 
@@ -19,16 +19,9 @@ export const Rendimiento = () => {
     const [isLoadingRendimientoQueso, setLoadingRendimientoQueso] = useState(true)
 
     const fetchRendimientos = useCallback((fechaHasta, meses) => {
-        //TODO: mover conversion de fechas a un archivo aparte como funcion
-        const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        var date = currentDate.getDate();
 
-        date = getValidDate(date, month, year);
+        const fechaDesde = dateMinusMonths(fechaHasta, meses);
 
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 data.length > 16 ? setListaRendimientos(data) :
@@ -44,17 +37,7 @@ export const Rendimiento = () => {
             .finally(() => setLoadingRendimientoQueso(false));
     }, [])
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-    }
-
-    const fechaInicial = useMemo(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
-        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
-    }, [])
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
 
     useEffect(() => {
         fetchRendimientos(fechaInicial, 1);
@@ -163,7 +146,7 @@ export const Rendimiento = () => {
                         xLabel="Dias"
                         data={rendimientoMultilineFormatted}
                         xDataKey="dia"
-                        dataKey="Ultimos 5 dias"
+                        dataKey="Últimos 5 dias"
                         dataKey1="5 dias anteriores"
                         dataKey2="10 dias anteriores"
                         domain={domain}

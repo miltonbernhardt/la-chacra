@@ -1,14 +1,14 @@
 import { Grid } from "@mui/material";
+import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loading } from "../../components/Loading";
+import { dateMinusMonths, todayDateISO } from "../../resources/utils";
 import { getAllQuesos, getLitros } from "../../services/RestServices";
 import { ChartLitros } from "./ChartLitros";
 import { GridLitros } from "./GridLitros";
 import { LitrosByQueso } from "./LitrosByQueso";
 import { SearchLitros } from "./SearchLitros";
-import * as React from 'react';
-import { getValidDate } from "../../resources/utils";
 
 export const VerLitrosElaborados = () => {
 
@@ -37,16 +37,9 @@ export const VerLitrosElaborados = () => {
     }
 
     const fetchLitros = useCallback((fechaHasta, meses) => {
-        //TODO: move to its own file
-        const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        var date = currentDate.getDate();
 
-        date = getValidDate(date, month, year);
+        const fechaDesde = dateMinusMonths(fechaHasta, meses);
 
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
         getLitros(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaLitros(data)
@@ -56,17 +49,7 @@ export const VerLitrosElaborados = () => {
             .finally(() => setLoadingLitros(false));
     }, [])
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-    }
-
-    const fechaInicial = useMemo(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
-        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
-    }, [])
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
 
     useEffect(() => {
         fetchLitros(fechaInicial, 1);

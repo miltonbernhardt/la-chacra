@@ -1,14 +1,14 @@
 import { Grid } from "@mui/material";
+import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loading } from "../../components/Loading";
-import { getVentas, getAllQuesos } from "../../services/RestServices";
+import { dateMinusMonths, todayDateISO } from "../../resources/utils";
+import { getAllQuesos, getVentas } from "../../services/RestServices";
 import { ChartVentas } from "./ChartVentas";
 import { GridVentas } from "./GridVentas";
 import { SearchVentas } from "./SearchVentas";
 import { VentasByQueso } from "./VentasByQueso";
-import * as React from 'react';
-import { getValidDate } from "../../resources/utils";
 
 export const VerVentas = () => {
 
@@ -37,16 +37,9 @@ export const VerVentas = () => {
     }
 
     const fetchVentas = useCallback((fechaHasta, meses) => {
-        //TODO: move to its own file
-        const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        var date = currentDate.getDate();
 
-        date = getValidDate(date, month, year);
+        const fechaDesde = dateMinusMonths(fechaHasta, meses);
 
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
         getVentas(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaVentas(data)
@@ -56,17 +49,7 @@ export const VerVentas = () => {
             .finally(() => setLoadingVentas(false));
     }, [])
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-    }
-
-    const fechaInicial = useMemo(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
-        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
-    }, [])
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
 
     useEffect(() => {
         fetchVentas(fechaInicial, 1);
