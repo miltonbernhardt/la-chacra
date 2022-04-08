@@ -69,7 +69,7 @@ export const CargarExpedicion = () => {
                 })
                 .catch(() => toast.error('No se pudo cargar la expedicion'))
                 .finally()
-    }, [expedicion, isEditing, listaExpediciones])
+    }, [expedicion.id, expedicionInicial, isEditing, listaExpediciones])
 
     const submitDelete = useCallback(() => {
         deleteExpedicion(expedicion.id)
@@ -81,7 +81,7 @@ export const CargarExpedicion = () => {
             })
             .catch(() => null)
             .finally(() => setOpenDialogEliminar(false))
-    }, [expedicion.id, listaExpediciones]);
+    }, [expedicion.id, expedicionInicial, listaExpediciones]);
 
     const handleDelete = useCallback(() => setOpenDialogEliminar(true), [])
 
@@ -93,7 +93,7 @@ export const CargarExpedicion = () => {
     const handleCancelar = useCallback(() => {
         setEditing(false);
         setExpedicion(expedicionInicial);
-    }, []);
+    }, [expedicionInicial]);
 
     const cancelDelete = useCallback(() => setOpenDialogEliminar(false), [])
 

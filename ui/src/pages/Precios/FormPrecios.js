@@ -6,6 +6,9 @@ import { Select } from '../../components/Select';
 import * as field from '../../resources/fields';
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import CancelIcon from '@mui/icons-material/Cancel';
+import AddIcon from '@mui/icons-material/Add';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 
 const precioInicial = {
     id: '',
@@ -52,32 +55,34 @@ export const FormPrecios = ({ precio, quesos, clientes, handleSubmit, handleCanc
     }, [handleSubmit, precioForm.id]);
 
     // --- Variables
+
     const labelCargar = useMemo(() => isEditing ? 'Actualizar Precio' : 'Cargar Precio', [isEditing]);
+    const iconCargar = useMemo(() => isEditing ? <AutorenewIcon /> : <AddIcon />, [isEditing])
 
     return <Grid container spacing={1.5}>
         <Select ref={refSelectQueso}
-                value={precioForm.idQueso}
-                id={field.backIdQueso}
-                label={field.queso}
-                options={quesos}
-                disabled={isEditing}
-                required/>
+            value={precioForm.idQueso}
+            id={field.backIdQueso}
+            label={field.queso}
+            options={quesos}
+            disabled={isEditing}
+            required />
         <Select ref={refSelectCliente}
-                value={precioForm.idTipoCliente}
-                id={field.backIdTipoCliente}
-                label={field.idTipoCliente}
-                options={clientes}
-                disabled={isEditing}
-                required/>
+            value={precioForm.idTipoCliente}
+            id={field.backIdTipoCliente}
+            label={field.idTipoCliente}
+            options={clientes}
+            disabled={isEditing}
+            required />
         <Input ref={refPrecio}
-               id={field.backPrecio}
-               label={field.precio}
-               value={precioForm.valor}
-               required/>
+            id={field.backPrecio}
+            label={field.precio}
+            value={precioForm.valor}
+            required />
         <Grid item xs={12} alignSelf="right" mb={0.5}>
             <ButtonGroup fullWidth variant="contained">
-                <Button onClick={handleCancelar} disabled={!isEditing} color="info">Cancelar</Button>
-                <Button onClick={handleCargar} color="primary">{labelCargar}</Button>
+                <Button onClick={handleCancelar} disabled={!isEditing} color="info" startIcon={<CancelIcon />}>Cancelar</Button>
+                <Button onClick={handleCargar} color="primary" startIcon={iconCargar}>{labelCargar}</Button>
             </ButtonGroup>
         </Grid>
     </Grid>

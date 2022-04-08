@@ -19,6 +19,8 @@ const API_LOGIN = '/api/v1/login'
 const API_LOGOUT = '/logout'
 const API_PERMISOS = '/api/v1/permisos'
 
+export const PDF_REMITO = `${RAIZ_URL}${API_REMITO}pdf/`
+
 const headers = {
     'Access-Control-Allow-Origin': "*",
     'Access-Control-Allow-Methods': "GET, POST, PATCH, PUT, DELETE, OPTIONS",

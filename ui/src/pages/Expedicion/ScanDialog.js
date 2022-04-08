@@ -26,6 +26,7 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
 
     const [listaLecturas, setListaLecturas] = useState([]);
     const [pesoExpedicion, setPesoExpedicion] = useState(0);
+    const [cantidadLecturas, setCantidadLecturas] = useState(1);
 
     const refCantidad = createRef()
     const refSelectCliente = createRef()
@@ -39,16 +40,18 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
             toast.error('Se leyeron etiquetas de lotes distintos');
             return
         }
+        const lecturas = cantidadLecturas + 1;
+        setCantidadLecturas(lecturas);
         let result1 = scan.substring(14, 20);
         let result2 = scan.substring(20, 23);
         let result3 = `${result1}.${result2}`;
         let peso = parseFloat(result3);
         setListaLecturas([...listaLecturas,
-            {
-                id: listaLecturas.length,
-                lote: lote,
-                peso: peso
-            }])
+        {
+            id: listaLecturas.length,
+            lote: lote,
+            peso: peso
+        }])
         setPesoExpedicion(Math.round((pesoExpedicion + peso) * 100) / 100);
     }
 
@@ -105,11 +108,11 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
         <>
             <BarcodeReader
                 onScan={handleScan}
-                onError={handleError}/>
+                onError={handleError} />
             <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>
                     <Stack direction="row" spacing={2}>
-                        <QrCodeScannerIcon variant="outlined" fontSize='large'/>
+                        <QrCodeScannerIcon variant="outlined" fontSize='large' />
                         <Typography variant="h6">
                             Escanear etiquetas
                         </Typography>
@@ -128,19 +131,19 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                         >
                             <Grid container spacing={2}>
                                 <Input ref={refFechaExpedicion}
-                                       id={field.backFechaExpedicion}
-                                       label={field.fechaExpedicion}
-                                       value={fechaExpedicion}
-                                       type="date"
-                                       required/>
+                                    id={field.backFechaExpedicion}
+                                    label={field.fechaExpedicion}
+                                    value={fechaExpedicion}
+                                    type="date"
+                                    required />
                                 <Select ref={refSelectCliente}
-                                        id={field.backIdCliente}
-                                        label={field.cliente}
-                                        value={cliente}
-                                        options={clientes}
-                                        required/>
+                                    id={field.backIdCliente}
+                                    label={field.cliente}
+                                    value={cliente}
+                                    options={clientes}
+                                    required />
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
-                                    Códigos escaneados
+                                    Códigos escaneados: {cantidadLecturas}
                                 </Typography>
                                 <Grid item xs={12}>
                                     <Stack direction="column">
@@ -164,7 +167,7 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                                                         {lote.peso}
                                                     </Typography>
                                                     <Button onClick={() => handleDeleteRow(lote)}>
-                                                        <DeleteIcon/>
+                                                        <DeleteIcon />
                                                         quitar
                                                     </Button>
                                                 </Stack>)
@@ -172,16 +175,16 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                                     </Stack>
                                 </Grid>
                                 <Input ref={refCantidad}
-                                       id={field.backCantidad}
-                                       label={field.cantidad}
-                                       sm={6}
-                                       required/>
+                                    id={field.backCantidad}
+                                    label={field.cantidad}
+                                    sm={6}
+                                    required />
                                 <Input
                                     id={field.backPesoExpedicion}
                                     label={field.pesoExpedicion}
                                     value={pesoExpedicion}
                                     sm={6}
-                                    contentEditable={false}/>
+                                    contentEditable={false} />
                             </Grid>
                         </Box>
                     </Container>

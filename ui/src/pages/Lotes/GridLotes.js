@@ -43,7 +43,7 @@ export const GridLotes = ({ produccion, quesos, setSelection }) => {
             },
             {
                 field: 'litrosLeche',
-                headerName: 'Litros procesados',
+                headerName: 'Litros',
                 type: 'number',
                 flex: 0.5,
                 minWidth: 50,

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from "react-hot-toast";
 import { Loading } from "../../components/Loading";
 import { PageFormTable } from '../../components/PageFormTable';
-import { getAllClientes, getRemito, postRemito } from '../../services/RestServices';
+import { getAllClientes, getRemito, postRemito, PDF_REMITO } from '../../services/RestServices';
 import { GridRemito } from './GridRemito';
 import { RemitoForm } from "./RemitoForm";
 
@@ -45,7 +45,7 @@ export const EmitirRemito = () => {
     const handleEmitir = useCallback((cliente, fecha) => {
         postRemito(cliente, fecha)
             .then(({ data }) => {
-                window.open(`http://localhost:8000/api/v1/remitos/pdf/${data.id}`, '_blank').focus();
+                window.open(`${PDF_REMITO}${data.id}`, '_blank').focus();
             })
             .catch(() => {
                 toast.error('No se pudo generar el remito')
@@ -63,13 +63,13 @@ export const EmitirRemito = () => {
     }), [listaClientes])
 
     const itemsFormatted = useMemo(() =>
-            listaItems.map(i => {
-                return { ...i, id: i.tipoQueso }
-            })
+        listaItems.map(i => {
+            return { ...i, id: i.tipoQueso }
+        })
         , [listaItems]);
 
     if (isLoading)
-        return <Loading/>
+        return <Loading />
 
     return <PageFormTable
         titleForm="Emitir Remito"
@@ -80,9 +80,9 @@ export const EmitirRemito = () => {
                 onEmitir={handleEmitir}
                 clientes={clientesFormatted}
                 importe={importeTotal}
-                emitible={emitible}/>}
+                emitible={emitible} />}
         table={
             <GridRemito
-                data={itemsFormatted}/>}>
+                data={itemsFormatted} />}>
     </PageFormTable>
 }
