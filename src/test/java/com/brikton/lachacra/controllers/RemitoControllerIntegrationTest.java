@@ -122,7 +122,7 @@ public class RemitoControllerIntegrationTest {
         expectedRemito.setFecha(LocalDate.of(2021, 11, 10));
         expectedRemito.setImporteTotal(62658.0);
         expectedRemito.setItemsRemito(List.of(itemRemito));
-        expectedRemito.setId(1L);
+        expectedRemito.setId(2L);
 
          var response = rest.post("?id_cliente=1&fecha=2021-11-10", null);
         assertNotNull(response.getBody());
