@@ -1,6 +1,5 @@
 package com.brikton.lachacra.controllers;
 
-import com.brikton.lachacra.annotations.HasCargarPreciosAuthority;
 import com.brikton.lachacra.annotations.HasEmitirRemitoAuthority;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
@@ -55,7 +54,7 @@ public class RemitoController {
         return new ResponseEntity<>(service.getPdf(id), headers, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<RemitoDTO>> generateAndSave(
             @RequestParam("id_cliente") @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) Long idCliente,
             @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha

@@ -3,8 +3,11 @@ package com.brikton.lachacra.controllers;
 import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.Path;
+import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
+import com.brikton.lachacra.dtos.ItemRemitoDTO;
 import com.brikton.lachacra.dtos.RemitoDTO;
+import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.utils.Rest;
@@ -17,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -24,6 +28,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
@@ -51,11 +56,17 @@ public class RemitoControllerIntegrationTest {
 
     @Test
     void Generate_Remito__OK() {
-        //TODO: generate items remito etc
+        var itemRemito = new ItemRemitoDTO();
+        itemRemito.setCantidad(100);
+        itemRemito.setTipoQueso("Cremoso");
+        itemRemito.setPeso(600.3);
+        itemRemito.setPrecio(486.0);
+        itemRemito.setImporte(62658.0);
+
         var expectedRemito = new RemitoDTO();
         expectedRemito.setFecha(LocalDate.of(2021, 11, 8));
-        expectedRemito.setImporteTotal(0.0);
-        expectedRemito.setItemsRemito(new ArrayList<>());
+        expectedRemito.setImporteTotal(62658.0);
+        expectedRemito.setItemsRemito(List.of(itemRemito));
 
         var response = rest.get("/generate?id_cliente=1&fecha=2021-11-08");
         assertNotNull(response.getBody());
@@ -99,25 +110,27 @@ public class RemitoControllerIntegrationTest {
     }
 
     @Test
-    void Get_Pdf__OK() {
-        //TODO: test
-    }
-
-    @Test
     void Generate_And_Save__OK() {
-        var expectedRemito = new RemitoDTO();
-        expectedRemito.setFecha(LocalDate.of(2021, 11, 8));
-        expectedRemito.setImporteTotal(0.0);
-        expectedRemito.setItemsRemito(new ArrayList<>());
+        var itemRemito = new ItemRemitoDTO();
+        itemRemito.setCantidad(100);
+        itemRemito.setTipoQueso("Cremoso");
+        itemRemito.setPeso(600.3);
+        itemRemito.setPrecio(486.0);
+        itemRemito.setImporte(62658.0);
 
-        var response = rest.post("?id_cliente=3&fecha=2021-11-10", null);
+        var expectedRemito = new RemitoDTO();
+        expectedRemito.setFecha(LocalDate.of(2021, 11, 10));
+        expectedRemito.setImporteTotal(62658.0);
+        expectedRemito.setItemsRemito(List.of(itemRemito));
+        expectedRemito.setId(1L);
+
+         var response = rest.post("?id_cliente=1&fecha=2021-11-10", null);
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
-
         var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<RemitoDTO>>() {
         });
 
-        assertEquals("", successfulResponse.getMessage());
+        assertEquals(SuccessfulMessages.MSG_REMITO_CREATED, successfulResponse.getMessage());
         assertEquals(expectedRemito, successfulResponse.getData());
     }
 }

@@ -54,7 +54,7 @@ public class Rest {
 
     private ResponseEntity<SuccessfulResponse> post(String url, @Nullable Object body, String token) throws RestClientException {
         var headers = new HttpHeaders();
-        headers.add("Cookie", "authorizationToken=".concat(token));
+        headers.add("Cookie", token == null ? "" :"authorizationToken=".concat(token));
         headers.setContentType(MediaType.APPLICATION_JSON);
         var entity = new HttpEntity<>(body, headers);
         return restTemplate.postForEntity(this.url.concat(url), entity, SuccessfulResponse.class);

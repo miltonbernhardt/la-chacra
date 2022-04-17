@@ -1,7 +1,7 @@
 package com.brikton.lachacra.services;
 
+import com.brikton.lachacra.dtos.ItemRemitoReportDTO;
 import com.brikton.lachacra.dtos.RemitoDTO;
-import com.brikton.lachacra.dtos.RemitoReportDTO;
 import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
 import com.brikton.lachacra.entities.ItemRemito;
@@ -18,11 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -48,20 +47,7 @@ public class RemitoService {
         this.resourceLoader = resourceLoader;
     }
 
-    public void updateItemRemito(ItemRemito itemRemito, Expedicion expedicion) {
-        var quesoExpedicion = expedicion.getLote().getQueso();
-        var quesoRemito = itemRemito.getQueso();
-        if (quesoExpedicion.getTipoQueso().equals(quesoRemito.getTipoQueso())) {
-            var cantidad = itemRemito.getCantidad() + expedicion.getCantidad();
-            var peso = BigDecimal.valueOf(itemRemito.getPeso()).add(BigDecimal.valueOf(expedicion.getPeso()));
-            var importe = BigDecimal.valueOf(itemRemito.getImporte()).add(BigDecimal.valueOf(expedicion.getImporte()));
-            itemRemito.setCantidad(cantidad);
-            itemRemito.setImporte(importe.doubleValue());
-            itemRemito.setPeso(peso.doubleValue());
-        }
-    }
-
-    public Remito generateRemito(Long idCliente, LocalDate fecha) {
+    private Remito generateRemito(Long idCliente, LocalDate fecha) {
         var cliente = clienteService.get(idCliente);
         var expediciones = expedicionService.getForRemito(cliente);
         var items = generateItemsRemito(expediciones);
@@ -90,13 +76,6 @@ public class RemitoService {
         return new RemitoDTO(repository.save(remito));
     }
 
-    private Remito getRemito(Long id) {
-        var remito = repository.findById(id);
-        if (remito.isEmpty())
-            throw new RemitoNotFoundException();
-        return remito.get();
-    }
-
     public byte[] getPdf(Long id) throws JRException, IOException {
         var remito = getRemito(id);
 
@@ -109,10 +88,18 @@ public class RemitoService {
         return generatePDF(remitoParams);
     }
 
+    protected Remito getRemito(Long id) {
+        var remito = repository.findById(id);
+        if (remito.isEmpty())
+            throw new RemitoNotFoundException();
+        return remito.get();
+    }
+
     private HashMap<String, Object> generateRemitoParams(Cliente cliente, Remito remito) {
-        var dto = new RemitoReportDTO(remito);
         var remitoParams = new HashMap<String, Object>();
-        remitoParams.put("importeTotal", dto.getImporteTotal());
+        var importeTotal = NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(remito.getImporteTotal());
+
+        remitoParams.put("importeTotal", importeTotal);
         remitoParams.put("nombreCliente", cliente.getRazonSocial());
         remitoParams.put("domicilio", cliente.getDomicilio());
         remitoParams.put("localidad", cliente.getLocalidad() + ", " + cliente.getProvincia());
@@ -120,9 +107,15 @@ public class RemitoService {
         remitoParams.put("transporte", cliente.getTransporte());
         remitoParams.put("senasaUta", cliente.getSenasaUta());
         remitoParams.put("cajas", 10);
-        remitoParams.put("fecha", dto.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        remitoParams.put("ds", new JRBeanCollectionDataSource(dto.getItemsRemito()));
+        remitoParams.put("fecha", remito.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        remitoParams.put("ds", new JRBeanCollectionDataSource(loadItemsRemitoReportDTO(remito.getItemsRemito())));
         return remitoParams;
+    }
+
+    private List<ItemRemitoReportDTO> loadItemsRemitoReportDTO(List<ItemRemito> items) {
+        var itemsList = new ArrayList<ItemRemitoReportDTO>();
+        items.forEach(itemRemito -> itemsList.add(new ItemRemitoReportDTO(itemRemito)));
+        return itemsList;
     }
 
     private byte[] generatePDF(HashMap<String, Object> remitoParams) throws JRException, IOException {
@@ -150,19 +143,32 @@ public class RemitoService {
         var mapItems = new HashMap<String, ItemRemito>();
         expediciones.forEach(expedicion -> {
             var quesoExpedicion = expedicion.getLote().getQueso();
-            if (!mapItems.containsKey(quesoExpedicion.getTipoQueso())) {
+            if (mapItems.containsKey(quesoExpedicion.getTipoQueso())) {
+                var item = mapItems.get(quesoExpedicion.getTipoQueso());
+                updateItemRemito(item, expedicion);
+            } else {
                 var newItem = new ItemRemito();
                 newItem.setQueso(quesoExpedicion);
                 newItem.setPrecio(precioService.getPrecioValue(quesoExpedicion, expedicion.getCliente().getTipoCliente()));
                 newItem.setCantidad(expedicion.getCantidad());
                 newItem.setImporte(expedicion.getImporte());
                 newItem.setPeso(expedicion.getPeso());
-                mapItems.putIfAbsent(quesoExpedicion.getTipoQueso(), newItem);
-            } else {
-                var item = mapItems.get(quesoExpedicion.getTipoQueso());
-                updateItemRemito(item, expedicion);
+                mapItems.put(quesoExpedicion.getTipoQueso(), newItem);
             }
         });
         return new ArrayList<>(mapItems.values());
+    }
+
+    private void updateItemRemito(ItemRemito itemRemito, Expedicion expedicion) {
+        var quesoExpedicion = expedicion.getLote().getQueso();
+        var quesoRemito = itemRemito.getQueso();
+        if (quesoExpedicion.getTipoQueso().equals(quesoRemito.getTipoQueso())) {
+            var cantidad = itemRemito.getCantidad() + expedicion.getCantidad();
+            var peso = BigDecimal.valueOf(itemRemito.getPeso()).add(BigDecimal.valueOf(expedicion.getPeso()));
+            var importe = BigDecimal.valueOf(itemRemito.getImporte()).add(BigDecimal.valueOf(expedicion.getImporte()));
+            itemRemito.setCantidad(cantidad);
+            itemRemito.setImporte(importe.doubleValue());
+            itemRemito.setPeso(peso.doubleValue());
+        }
     }
 }

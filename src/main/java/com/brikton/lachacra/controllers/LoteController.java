@@ -1,6 +1,8 @@
 package com.brikton.lachacra.controllers;
 
 import com.brikton.lachacra.annotations.HasCargarLotesAuthority;
+import com.brikton.lachacra.annotations.HasRendimientoAuthority;
+import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
@@ -26,7 +28,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/lotes")
+@RequestMapping(Path.API_LOTES)
 @Slf4j
 @Validated
 @HasCargarLotesAuthority
@@ -52,6 +54,7 @@ public class LoteController {
     }
 
     @GetMapping(value = "/queso", produces = MediaType.APPLICATION_JSON_VALUE)
+    @HasRendimientoAuthority
     public ResponseEntity<SuccessfulResponse<List<LoteDTO>>> getByQuesoAndWithStock(
             @NotBlank(message = ValidationMessages.NOT_FOUND)
             @Length(min = 3, max = 3, message = ValidationMessages.MUST_HAVE_3_CHARACTERS)

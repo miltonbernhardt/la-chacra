@@ -41,5 +41,4 @@ public class RemitoDTO {
         items.forEach(itemRemito -> itemsList.add(new ItemRemitoDTO(itemRemito)));
         itemsRemito = itemsList;
     }
-
 }
