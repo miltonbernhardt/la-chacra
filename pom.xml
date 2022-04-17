@@ -14,15 +14,23 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <apache-commons.version>3.12.0</apache-commons.version>
+        <apache-maven.version>3.1.0</apache-maven.version>
+        <frontend-plugin.version>1.12.1</frontend-plugin.version>
         <h2-database.version>2.1.210</h2-database.version>
-        <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.1.7.Final</hibernate-validator.version>
+        <jackson.version>2.13.2</jackson.version>
+        <jasper.version>6.19.0</jasper.version>
+        <java.version>11</java.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <lombok.version>1.18.22</lombok.version>
         <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <node.version>v16.14.0</node.version>
+        <npm.version>8.3.1</npm.version>
         <postgresql.version>42.3.3</postgresql.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wagon-maven-plugin.version>2.0.2</wagon-maven-plugin.version>
         <wagon-ssh.version>3.4.3</wagon-ssh.version>
     </properties>
@@ -43,18 +51,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.13.2</version>
+            <version>${jackson.version}</version>
         </dependency>
         <!-- DEVTOOL -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
-        <!-- ACTUATOR -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <!-- LOMBOK -->
         <dependency>
@@ -66,6 +70,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -86,25 +95,25 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.2</version>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.2</version>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.2</version>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
         <!-- REPORTS -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.19.0</version>
+            <version>${jasper.version}</version>
         </dependency>
         <!-- TEST -->
         <dependency>
@@ -138,24 +147,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>${apache-commons.version}</version>
             <scope>test</scope>
-        </dependency>
-        <!-- HIBERNATE VALIDATOR -->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.1.2.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.0</version>
         </dependency>
     </dependencies>
 
     <repositories>
-        <!-- JasperSoft, they modified a standard library for their own special needs -->
         <repository>
             <id>jaspersoft-third-party</id>
             <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
@@ -163,7 +160,6 @@
     </repositories>
 
     <pluginRepositories>
-        <!-- JasperSoft, they modified a standard library for their own special needs -->
         <pluginRepository>
             <id>jaspersoft-third-party</id>
             <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
@@ -188,13 +184,6 @@
         </profile>
     </profiles>
 
-    <scm>
-        <url>https://github.com/miltonbernhardt/la-chacra</url>
-        <connection>scm:git:ssh://git@github.com:miltonbernhardt/la-chacra.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:miltonbernhardt/la-chacra.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
     <build>
         <plugins>
             <plugin>
@@ -208,7 +197,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${apache-maven.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -251,7 +240,7 @@
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.12.1</version>
+                    <version>${frontend-plugin.version}</version>
                     <configuration>
                         <installDirectory>target</installDirectory>
                     </configuration>
@@ -262,8 +251,8 @@
                                 <goal>install-node-and-npm</goal>
                             </goals>
                             <configuration>
-                                <nodeVersion>v16.14.0</nodeVersion>
-                                <npmVersion>8.3.1</npmVersion>
+                                <nodeVersion>${node.version}</nodeVersion>
+                                <npmVersion>${npm.version}</npmVersion>
                             </configuration>
                         </execution>
                         <execution>
