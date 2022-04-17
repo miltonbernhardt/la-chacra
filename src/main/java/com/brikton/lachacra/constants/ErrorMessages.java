@@ -8,7 +8,7 @@ public class ErrorMessages {
     public static final String MSG_EXPEDICION_NOT_FOUND = "Expedición no encontrada";
     public static final String MSG_INTERNAL_SERVER_ERROR = "Ocurrió un error interno";
     public static final String MSG_INVALID_BODY = "Datos inválidos";
-    public static final String MSG_INVALID_PARAMS = "Parámetros inválidoS";
+    public static final String MSG_INVALID_PARAMS = "Parámetros inválidos";
     public static final String MSG_INVALID_USER = "Usuario no válido. Verifique nombre de usuario y/o contraseña";
     public static final String MSG_LOTE_ALREADY_EXIST = "Ya existe el lote";
     public static final String MSG_LOTE_NOT_FOUND = "Lote no encontrado";
