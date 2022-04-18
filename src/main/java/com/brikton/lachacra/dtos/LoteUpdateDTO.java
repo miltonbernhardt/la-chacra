@@ -57,6 +57,4 @@ public class LoteUpdateDTO {
     private Integer stockLote;
     private Double peso;
 
-    public LoteUpdateDTO() {
-    }
 }
