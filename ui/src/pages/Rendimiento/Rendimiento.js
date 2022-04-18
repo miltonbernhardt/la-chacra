@@ -8,7 +8,7 @@ import { RendimientoCard } from "./RendimientoCard";
 import { RendimientoChart } from "./RendimientoChart";
 import { RendimientoQuesoCard } from "./RendimientoQuesoCard";
 import { RendimientoSearch } from "./RendimientoSearch";
-import { todayDateISO, dateMinusMonths } from "../../resources/utils";
+import { todayDateISO, dateMinusWeeks } from "../../resources/utils";
 
 export const Rendimiento = () => {
 
@@ -18,9 +18,9 @@ export const Rendimiento = () => {
     const [isLoadingRendimientos, setLoadingRendimientos] = useState(true);
     const [isLoadingRendimientoQueso, setLoadingRendimientoQueso] = useState(true)
 
-    const fetchRendimientos = useCallback((fechaHasta, meses) => {
+    const fetchRendimientos = useCallback((fechaHasta, semanas) => {
 
-        const fechaDesde = dateMinusMonths(fechaHasta, meses);
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
 
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {

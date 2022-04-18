@@ -9,16 +9,16 @@ import * as validation from "../resources/validations";
 import { Input } from "./Input";
 import { Select } from "./Select";
 
-export const SearchByMonths = ({ fechaInicial, meses, onSearch, title }) => {
+export const SearchByWeeks = ({ fechaInicial, semanas, onSearch, title }) => {
 
     const refFecha = useRef(null);
-    const refMeses = useRef(null);
+    const refSemanas = useRef(null);
 
     const handleSearch = useCallback(() => {
         const errors = new Map();
         const values = {};
 
-        refMeses.current.validate(errors, values, [
+        refSemanas.current.validate(errors, values, [
             { func: validation.emptySelect, msg: message.valEmptyField }
         ])
 
@@ -33,16 +33,18 @@ export const SearchByMonths = ({ fechaInicial, meses, onSearch, title }) => {
             return
         }
 
-        onSearch(values.toDate, values.cantidadMeses)
+        onSearch(values.toDate, values.cantidadSemanas)
     }, [onSearch])
 
     //--- Variables ---
-    const mesesOptions = [
-        { id: 1, value: 1, label: '1' },
-        { id: 2, value: 2, label: '2' },
-        { id: 3, value: 3, label: '3' },
-        { id: 6, value: 6, label: '6' },
-        { id: 12, value: 12, label: '12' },
+    const semanasOptions = [
+        { id: 1, value: 1, label: '1 Semana' },
+        { id: 2, value: 2, label: '2 Semanas' },
+        { id: 4, value: 4, label: '1 Mes' },
+        { id: 8, value: 8, label: '2 Meses' },
+        { id: 16, value: 16, label: '4 Meses' },
+        { id: 24, value: 24, label: '6 Meses' },
+        { id: 48, value: 48, label: '1 Año' },
     ]
 
     return (
@@ -56,11 +58,11 @@ export const SearchByMonths = ({ fechaInicial, meses, onSearch, title }) => {
                 type="date"
                 required />
             <Select
-                ref={refMeses}
-                value={meses}
-                id={field.backCantidadMeses}
-                label={field.cantidadMeses}
-                options={mesesOptions}
+                ref={refSemanas}
+                value={semanas}
+                id={field.backCantidadSemanas}
+                label={field.cantidadSemanas}
+                options={semanasOptions}
                 required />
             <Grid item xs={12}>
                 <Button

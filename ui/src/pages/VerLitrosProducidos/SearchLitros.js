@@ -1,7 +1,7 @@
 import { Grid, Paper, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { SearchByMonths } from '../../components/SearchByMonths';
+import { SearchByWeeks } from '../../components/SearchByWeeks';
 
 export const SearchLitros = ({ fechaInicial, meses, onSearch }) => {
     return (
@@ -16,7 +16,7 @@ export const SearchLitros = ({ fechaInicial, meses, onSearch }) => {
                 }}            >
                 <Stack minHeight={300} sx={{ height: '100%' }} direction="column" justifyContent="space-evenly">
                     <Typography variant='h6'>Consultar litros</Typography>
-                    <SearchByMonths
+                    <SearchByWeeks
                         fechaInicial={fechaInicial}
                         meses={meses}
                         onSearch={onSearch} />

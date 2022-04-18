@@ -10,9 +10,9 @@ export const todayDateISO = () => {
     return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date)}`;
 }
 
-export const dateMinusMonths = (fechaHasta, meses) => {
+export const dateMinusWeeks = (fechaHasta, semanas) => {
     const currentDate = new Date(fechaHasta);
-    currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
+    currentDate.setDate(currentDate.getDate() - Math.floor(7 * semanas));
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     var date = currentDate.getDate();
@@ -39,7 +39,7 @@ export const getValidDate = (date, month, year) => {
     if (month === 0 || month > 1) {
         if (date > ListofDays[month]) {
             return ListofDays[month];
-        } else  return date ;
+        } else return date;
     }
     if (month === 1) {
         var isLeapYear = false;

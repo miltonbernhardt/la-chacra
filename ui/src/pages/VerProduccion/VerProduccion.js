@@ -3,9 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from "react-hot-toast";
 import { Loading } from '../../components/Loading';
 import { PageFormTable } from "../../components/PageFormTable";
-import { SearchByMonths } from '../../components/SearchByMonths';
+import { SearchByWeeks } from '../../components/SearchByWeeks';
 import * as field from "../../resources/fields";
-import { dateMinusMonths, todayDateISO } from '../../resources/utils';
+import { dateMinusWeeks, todayDateISO } from '../../resources/utils';
 import { deleteLote, getAllQuesos, getLotesBetweenDates, putLote } from "../../services/RestServices";
 import { DialogEliminarLote } from "../Lotes/DialogEliminarLote";
 import { EditLoteDialog } from './EditLoteDialog';
@@ -23,8 +23,8 @@ export const VerProduccion = () => {
     const [isLoading, setLoading] = useState(true);
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
-    const fetchLotes = (fechaHasta, meses) => {
-        const fechaDesde = dateMinusMonths(fechaHasta, meses);
+    const fetchLotes = (fechaHasta, semanas) => {
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
 
         getLotesBetweenDates(fechaDesde, fechaHasta)
             .then(({ data }) => setListaLotes(data))
@@ -117,7 +117,7 @@ export const VerProduccion = () => {
                 lgForm={2}
                 titleForm={"Producción"}
                 form={
-                    <SearchByMonths
+                    <SearchByWeeks
                         fechaInicial={today}
                         meses={1}
                         onSearch={handleBuscar} />

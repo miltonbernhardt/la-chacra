@@ -106,9 +106,9 @@ export const fechaHasta = "Hasta"
 export const fechaRemito = "Fecha de remito"
 export const importeTotal = "Importe total"
 
-// rendimiento
-export const cantidadMeses = "Cantidad de meses"
-export const backCantidadMeses = "cantidadMeses"
+// busqueda por semanas
+export const cantidadSemanas = "Cantidad de semanas"
+export const backCantidadSemanas = "cantidadSemanas"
 
 // embalaje
 export const tipoEmbalaje = "Tipo de embalaje"
@@ -162,7 +162,7 @@ const backendFields = () => {
     fields.set(backFechaHasta, fechaHasta)
     fields.set(backFechaRemito, fechaRemito)
     fields.set(backImporteTotal, importeTotal)
-    fields.set(backCantidadMeses, cantidadMeses)
+    fields.set(backCantidadSemanas, cantidadSemanas)
     fields.set(backStockEmbalaje, stockEmbalaje)
     fields.set(backTipoEmbalaje, tipoEmbalaje)
     fields.set(backUsername, username)
@@ -174,13 +174,13 @@ export const toastValidationErrors = (errors) => {
     if (errors == null && !errors instanceof Map)
         return
     toast.dismiss()
-    console.log({errors})
+    console.log({ errors })
     let mapFields = backendFields()
     errors.forEach(function (msg, field) {
-        console.log({msg})
-        console.log({field})
+        console.log({ msg })
+        console.log({ field })
         let realField = mapFields.get(field)
-        console.log({realField})
+        console.log({ realField })
         realField = realField ?? field
         toast.error(<>
             <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>

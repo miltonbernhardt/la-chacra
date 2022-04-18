@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loading } from "../../components/Loading";
-import { dateMinusMonths, todayDateISO } from "../../resources/utils";
+import { dateMinusWeeks, todayDateISO } from "../../resources/utils";
 import { getAllQuesos, getVentas } from "../../services/RestServices";
 import { ChartVentas } from "./ChartVentas";
 import { GridVentas } from "./GridVentas";
@@ -36,9 +36,9 @@ export const VerVentas = () => {
             .finally(() => setLoadingQuesos(false));
     }
 
-    const fetchVentas = useCallback((fechaHasta, meses) => {
+    const fetchVentas = useCallback((fechaHasta, semanas) => {
 
-        const fechaDesde = dateMinusMonths(fechaHasta, meses);
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
 
         getVentas(fechaDesde, fechaHasta)
             .then(({ data }) => {

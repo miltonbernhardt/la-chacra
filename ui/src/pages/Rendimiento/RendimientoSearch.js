@@ -1,7 +1,7 @@
 import { Grid, Paper, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { SearchByMonths } from '../../components/SearchByMonths';
+import { SearchByWeeks } from '../../components/SearchByWeeks';
 
 export const RendimientoSearch = ({ fechaInicial, meses, onSearch }) => {
     return (
@@ -16,7 +16,7 @@ export const RendimientoSearch = ({ fechaInicial, meses, onSearch }) => {
                 }}            >
                 <Stack sx={{ height: '100%' }} direction="column" justifyContent="space-evenly">
                     <Typography variant='h6'>Consultar produccion</Typography>
-                    <SearchByMonths
+                    <SearchByWeeks
                         fechaInicial={fechaInicial}
                         meses={meses}
                         onSearch={onSearch} />

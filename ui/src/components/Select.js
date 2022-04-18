@@ -9,7 +9,7 @@ export const Select = forwardRef((
         value,
         required = false,
         options = { id: null, label: null, value: null },
-        disabled = false
+        disabled = false,
     }, ref) => {
 
     const [val, setVal] = useState(value);
@@ -67,7 +67,7 @@ export const Select = forwardRef((
                     error={err}
                     required={required}
                     {...params}
-                    label={label}/>
+                    label={label} />
             )}
             value={val}
             error={err}
@@ -77,7 +77,6 @@ export const Select = forwardRef((
             isOptionEqualToValue={(option, value) => {
                 return value.value ? option.value === value.value : option.value === value
             }}
-            disabled={disabled}
-        />
+            disabled={disabled} />
     </Grid>
 })
