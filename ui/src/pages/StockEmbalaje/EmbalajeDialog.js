@@ -40,6 +40,11 @@ export const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDe
         setDeleteEnabled(evt.target.checked);
     }
 
+    const setListaQuesos = useCallback((lista) => {
+        const embalaje = { ...embalajeForm, listaQuesos: lista }
+        setEmbalajeForm(embalaje);
+    }, [embalajeForm])
+
     const submitEmbalaje = useCallback(() => {
         const errors = new Map();
         const values = {};
@@ -66,15 +71,10 @@ export const EmbalajeDialog = ({ embalaje, quesos, open, onClose, onSubmit, onDe
             [field.backStockEmbalaje]: values.stock,
             [field.backTipoEmbalaje]: values.tipoEmbalaje
         }
-        console.log(embalajeSubmit)
-
+        setListaQuesos([]);
         onSubmit(embalajeSubmit)
-    }, [embalajeForm, onSubmit, refSelectTipoEmbalaje, refStock])
+    }, [embalajeForm, onSubmit, refSelectTipoEmbalaje, refStock, setListaQuesos])
 
-    const setListaQuesos = useCallback((lista) => {
-        const embalaje = { ...embalajeForm, listaQuesos: lista }
-        setEmbalajeForm(embalaje);
-    }, [embalajeForm])
 
     const handleDeleteRow = (queso) => {
         const newList = embalajeForm.listaQuesos.filter(item => item.id !== queso.id);

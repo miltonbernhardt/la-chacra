@@ -12,7 +12,7 @@ const API_CLIENTE = '/api/v1/clientes/'
 const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
 const API_PRECIO = '/api/v1/precios/'
 const API_EXPEDICION = '/api/v1/expediciones/'
-const API_REMITO = '/api/v1/remitos'
+const API_REMITO = '/api/v1/remitos/'
 const API_VENTAS = '/api/v1/ventas/'
 const API_EMBALAJE = '/api/v1/embalajes/'
 const API_LOGIN = '/api/v1/login'
@@ -138,7 +138,7 @@ export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${i
 export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICION}lote?idLote=${idLote}`);
 
 // --- REMITO METHODS ---
-export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}/generate?id_cliente=${idCliente}&fecha=${fecha}`);
+export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}generate?id_cliente=${idCliente}&fecha=${fecha}`);
 export const postRemito = async (idCliente, fecha) => await POST(`${API_REMITO}?id_cliente=${idCliente}&fecha=${fecha}`);
 
 // --- VENTAS METHODS ---

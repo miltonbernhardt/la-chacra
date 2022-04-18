@@ -51,7 +51,10 @@ export const StockEmbalaje = () => {
         fetchQuesos();
     }, [fetchEmbalajes, fetchQuesos]);
 
-    const handleNewEmbalaje = useCallback(() => { setDialogOpen(true) }, []);
+    const handleNewEmbalaje = useCallback(() => {
+        setEmbalaje(embalajeInicial);
+        setDialogOpen(true)
+    }, []);
 
     const handleCardClick = useCallback((id) => {
         setNewEmbalaje(false);
