@@ -3,11 +3,13 @@ package com.brikton.lachacra.dtos;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.Queso;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
 public class QuesoDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
@@ -25,9 +27,6 @@ public class QuesoDTO {
     private Long id;
     private Integer stock;
     private String color;
-
-    public QuesoDTO() {
-    }
 
     public QuesoDTO(Queso queso) {
         this.setId(queso.getId());

@@ -80,6 +80,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /.idea/
+/Remito.jasper
+/employeeReport.jasper
 /package-lock.json
 /src/main/resources/static/built/
 /log/

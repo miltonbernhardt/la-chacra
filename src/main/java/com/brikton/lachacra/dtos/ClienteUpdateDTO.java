@@ -2,6 +2,7 @@ package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
+@NoArgsConstructor
 public class ClienteUpdateDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -59,7 +61,4 @@ public class ClienteUpdateDTO {
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Long idTipoCliente;
-
-    public ClienteUpdateDTO() {
-    }
 }

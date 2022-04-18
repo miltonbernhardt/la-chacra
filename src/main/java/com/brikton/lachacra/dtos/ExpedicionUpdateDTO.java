@@ -2,6 +2,7 @@ package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -11,6 +12,7 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class ExpedicionUpdateDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -38,7 +40,4 @@ public class ExpedicionUpdateDTO {
     private String idLote;
 
     private Double importe;
-
-    public ExpedicionUpdateDTO() {
-    }
 }
