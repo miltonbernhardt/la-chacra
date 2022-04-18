@@ -23,6 +23,7 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
         refSelectCliente.current.validate(errors, values, [
             { func: validation.emptySelect, msg: message.valEmptyField }
         ])
+
         refFechaRemito.current.validate(errors, values, [
             { func: validation.empty, msg: message.valEmptyFecha },
             { func: validation.olderDate, msg: message.valOlderDate }

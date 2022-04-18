@@ -4,6 +4,7 @@ import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.entities.Remito;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class RemitoDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -27,9 +29,6 @@ public class RemitoDTO {
 
     private Long id;
 
-    public RemitoDTO() {
-    }
-
     public RemitoDTO(Remito remito) {
         this.setId(remito.getId());
         this.setFecha(remito.getFecha());
@@ -42,5 +41,4 @@ public class RemitoDTO {
         items.forEach(itemRemito -> itemsList.add(new ItemRemitoDTO(itemRemito)));
         itemsRemito = itemsList;
     }
-
 }

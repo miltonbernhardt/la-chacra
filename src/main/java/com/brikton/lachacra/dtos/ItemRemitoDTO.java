@@ -2,8 +2,10 @@ package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.ItemRemito;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ItemRemitoDTO {
 
     private Integer cantidad;

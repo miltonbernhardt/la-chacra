@@ -3,11 +3,13 @@ package com.brikton.lachacra.dtos;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.TipoCliente;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
 public class TipoClienteDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
@@ -15,9 +17,6 @@ public class TipoClienteDTO {
     private String tipo;
 
     private Long id;
-
-    public TipoClienteDTO() {
-    }
 
     public TipoClienteDTO(TipoCliente tipoCliente) {
         this.setId(tipoCliente.getId());

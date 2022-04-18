@@ -3,12 +3,14 @@ package com.brikton.lachacra.dtos;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.Lote;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class LoteDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -52,9 +54,6 @@ public class LoteDTO {
     private Double rendimiento;
     private Integer stockLote;
     private Double peso;
-
-    public LoteDTO() {
-    }
 
     public LoteDTO(Lote lote) {
         this.setId(lote.getId());

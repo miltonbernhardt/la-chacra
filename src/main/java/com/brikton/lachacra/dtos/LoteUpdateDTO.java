@@ -2,12 +2,14 @@ package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class LoteUpdateDTO {
 
     @NotBlank(message = ValidationMessages.NOT_FOUND)
