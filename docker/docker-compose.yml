@@ -11,7 +11,7 @@ services:
       - ../log/:/log/
     container_name: la-chacra-app
     ports:
-      - "8000:80"
+      - "80:80"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_USERNAME=$DB_USER

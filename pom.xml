@@ -33,6 +33,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wagon-maven-plugin.version>2.0.2</wagon-maven-plugin.version>
         <wagon-ssh.version>3.4.3</wagon-ssh.version>
+
+        <port-url>80</port-url>
+        <domain-url>localhost</domain-url>
     </properties>
 
     <dependencies>
@@ -269,6 +272,9 @@
                             <goals>
                                 <goal>webpack</goal>
                             </goals>
+                            <configuration>
+                                <arguments>--mode production --env.DOMAIN=localhost --env.PORT=80</arguments>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>

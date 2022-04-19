@@ -9,14 +9,4 @@
     <envs />
     <method v="2" />
   </configuration>
-  <configuration default="false" name="watch" type="js.build_tools.npm" nameIsGenerated="true">
-    <package-json value="$PROJECT_DIR$/package.json" />
-    <command value="run" />
-    <scripts>
-      <script value="watch" />
-    </scripts>
-    <node-interpreter value="/usr/local/bin/node" />
-    <envs />
-    <method v="2" />
-  </configuration>
 </component>

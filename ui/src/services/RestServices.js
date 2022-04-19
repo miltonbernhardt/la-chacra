@@ -3,9 +3,10 @@ import toast from 'react-hot-toast';
 import { toastValidationErrors } from "../resources/fields";
 import * as paths from "../resources/paths";
 
-//TODO: usar env
-const PUERTO = '8000';
-const RAIZ_URL = `http://localhost:${PUERTO}`;
+console.log({env: process.env})
+const PORT = process.env.REACT_APP_PORT ?? '80'
+const DOMAIN = process.env.REACT_APP_DOMAIN ?? 'localhost'
+const RAIZ_URL = `http://${DOMAIN}:${PORT}`;
 
 const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'
@@ -44,7 +45,6 @@ export const signupApi = async ({ username, password }) => {
     //todo signUp
 }
 
-
 export const signoutApi = async () => {
     const URL = `${RAIZ_URL}${API_LOGOUT}`;
     return await axios.post(URL, {}, { headers: getNewHeader() })
@@ -54,8 +54,11 @@ export const signoutApi = async () => {
 
 export const permisos = async () => {
     const URL = `${RAIZ_URL}${API_PERMISOS}`;
+    console.log(URL)
     return await axios.get(URL, { headers: getNewHeader() })
-        .then(response => response.data)
+        .then(response => {
+            console.log(response)
+        })
         .catch(err => processResponseError(err))
 }
 

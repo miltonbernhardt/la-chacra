@@ -6,7 +6,7 @@
     </springProfile>
     <springProfile name="prod">
         <!-- ToDo: mirar cuando se haga deploy -->
-        <property name="dir" value="/log/"/>
+        <property name="dir" value="./log/"/>
     </springProfile>
 
     <appender name="Console"
