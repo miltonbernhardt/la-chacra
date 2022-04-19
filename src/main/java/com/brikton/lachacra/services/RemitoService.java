@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -68,8 +69,10 @@ public class RemitoService {
         return new RemitoDTO(generateRemito(idCliente, fecha));
     }
 
-    public RemitoDTO generateAndSave(Long idCliente, LocalDate fecha) {
-        var remito = generateRemito(idCliente, fecha);
+    public RemitoDTO generateAndSave(RemitoDTO dto, Long idCliente) {
+        var remito = generateRemito(idCliente, dto.getFecha());
+        remito.setCantCajas(dto.getCantCajas());
+        remito.setCantPallets(dto.getCantPallets());
         if (remito.getExpediciones() == null || remito.getExpediciones().isEmpty())
             throw new ExpedicionNotFoundException();
         expedicionService.setOnRemitoTrue(remito.getExpediciones());
@@ -99,6 +102,7 @@ public class RemitoService {
         var remitoParams = new HashMap<String, Object>();
         var importeTotal = NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(remito.getImporteTotal());
 
+        remitoParams.put("nroRemito", remito.getId());
         remitoParams.put("importeTotal", importeTotal);
         remitoParams.put("nombreCliente", cliente.getRazonSocial());
         remitoParams.put("domicilio", cliente.getDomicilio());
@@ -106,7 +110,8 @@ public class RemitoService {
         remitoParams.put("cuit", cliente.getCuit());
         remitoParams.put("transporte", cliente.getTransporte());
         remitoParams.put("senasaUta", cliente.getSenasaUta());
-        remitoParams.put("cajas", 10);
+        remitoParams.put("cajas", remito.getCantCajas());
+        remitoParams.put("pallets", remito.getCantPallets());
         remitoParams.put("fecha", remito.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         remitoParams.put("ds", new JRBeanCollectionDataSource(loadItemsRemitoReportDTO(remito.getItemsRemito())));
         return remitoParams;
@@ -119,9 +124,12 @@ public class RemitoService {
     }
 
     private byte[] generatePDF(HashMap<String, Object> remitoParams) throws JRException, IOException {
-        var remitoTemplate = resourceLoader.getResource("classpath:Remito.jrxml");
-        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
-
+//        var remitoTemplate = resourceLoader.getResource("classpath:Remito.jrxml");
+        var remitoTemplate = new ClassPathResource("/Remito.jrxml");
+//        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
+        JasperReport jasperReport
+                = JasperCompileManager.compileReport(
+                "/home/elias/Development/la-chacra/src/main/resources/Remito.jrxml");
         JRSaver.saveObject(jasperReport, "Remito.jasper");
 
         var empReport = JasperFillManager.fillReport(jasperReport, remitoParams, new JREmptyDataSource());

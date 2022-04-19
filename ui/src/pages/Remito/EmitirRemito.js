@@ -42,8 +42,8 @@ export const EmitirRemito = () => {
             .catch(() => toast.error('No se pudieron cargar los datos'))
     }, []);
 
-    const handleEmitir = useCallback((cliente, fecha) => {
-        postRemito(cliente, fecha)
+    const handleEmitir = useCallback((idCliente, remito) => {
+        postRemito(idCliente, remito)
             .then(({ data }) => {
                 window.open(`${PDF_REMITO}${data.id}`, '_blank').focus();
             })

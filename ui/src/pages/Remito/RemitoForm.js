@@ -14,6 +14,8 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
 
     const refFechaRemito = createRef()
     const refSelectCliente = createRef()
+    const refCantCajas = createRef()
+    const refCantPallets = createRef()
 
     const handleCargar = useCallback(() => {
         //TODO: codigo duplicado
@@ -56,8 +58,11 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
             return
         }
 
-        onEmitir(values.idCliente, values.fecha)
-    }, [onEmitir, refFechaRemito, refSelectCliente]);
+        refCantCajas.current.setValue(values);
+        refCantPallets.current.setValue(values);
+
+        onEmitir(values.idCliente, values)
+    }, [onEmitir, refCantCajas, refCantPallets, refFechaRemito, refSelectCliente]);
 
     // --- Variables ---
     const fechaInicial = React.useMemo(() => { return todayDateISO() }, [])
@@ -84,6 +89,14 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
             id={field.backImporteTotal}
             label={field.importeTotal}
             value={importe} />
+        <Input ref={refCantCajas}
+            id={field.backCantCajas}
+            label={field.cantCajas}
+            sm={6} />
+        <Input ref={refCantPallets}
+            id={field.backCantPallets}
+            label={field.cantPallets}
+            sm={6} />
         <Grid item xs={12} alignSelf="center" mb={0.5}>
             <ButtonGroup variant="contained" fullWidth>
                 <Button color="info" onClick={handleCargar} startIcon={<FileOpenIcon />}>

@@ -21,9 +21,9 @@ public class RemitoDTO {
     @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
     private LocalDate fecha;
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double importeTotal;
+    private Integer cantCajas;
+    private Integer cantPallets;
 
     private List<ItemRemitoDTO> itemsRemito;
 
@@ -33,6 +33,8 @@ public class RemitoDTO {
         this.setId(remito.getId());
         this.setFecha(remito.getFecha());
         this.setImporteTotal(remito.getImporteTotal());
+        this.setCantCajas(remito.getCantCajas());
+        this.setCantPallets(remito.getCantPallets());
         loadItemsRemitoDTO(remito.getItemsRemito());
     }
 

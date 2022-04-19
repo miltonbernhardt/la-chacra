@@ -29,7 +29,7 @@ export const backSenasaUta = "senasaUta"
 export const backEmail = "email"
 export const backTelefono = "telefono"
 export const backFax = "fax"
-export const backCelular = "celuluar"
+export const backCelular = "celular"
 export const backIdTipoCliente = "idTipoCliente"
 export const backIdCliente = "idCliente"
 export const backIdLote = "idLote"
@@ -49,7 +49,7 @@ export const backStockEmbalaje = "stock"
 export const backTipoEmbalaje = "tipoEmbalaje"
 export const backUsername = "username"
 export const backPassword = "password"
-
+export const backCantPallets = "cantPallets"
 export const ID = "ID"
 
 // produccion
@@ -105,6 +105,7 @@ export const fechaHasta = "Hasta"
 // remito
 export const fechaRemito = "Fecha de remito"
 export const importeTotal = "Importe total"
+export const cantPallets = "Cantidad de pallets"
 
 // busqueda por semanas
 export const cantidadSemanas = "Cantidad de semanas"

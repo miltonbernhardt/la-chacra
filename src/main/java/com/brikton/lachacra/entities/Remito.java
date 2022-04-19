@@ -24,6 +24,8 @@ public class Remito {
     private Long id;
     private LocalDate fecha;
     private Double importeTotal;
+    private Integer cantCajas;
+    private Integer cantPallets;
 
     @OneToMany
     @ToString.Exclude
