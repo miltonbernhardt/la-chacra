@@ -2,7 +2,7 @@ import FileOpenIcon from '@mui/icons-material/FileOpen';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import { Button, ButtonGroup, Grid, Typography } from "@mui/material";
 import * as React from "react";
-import { createRef, useCallback } from "react";
+import { createRef, useCallback, useState, useEffect } from "react";
 import { Input } from "../../components/Input";
 import { Select } from "../../components/Select";
 import * as field from "../../resources/fields";
@@ -10,7 +10,11 @@ import * as message from "../../resources/messages";
 import { todayDateISO } from '../../resources/utils';
 import * as validation from "../../resources/validations";
 
-export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) => {
+export const RemitoForm = ({ remitoInicial, importe, clientes, onCargar, onEmitir, emitible }) => {
+
+    const [remito, setRemito] = useState(remitoInicial);
+
+    useEffect(() => { setRemito(remitoInicial) }, [remitoInicial])
 
     const refFechaRemito = createRef()
     const refSelectCliente = createRef()
@@ -88,14 +92,16 @@ export const RemitoForm = ({ importe, clientes, onCargar, onEmitir, emitible }) 
         <Input
             id={field.backImporteTotal}
             label={field.importeTotal}
-            value={importe} />
+            value={remito.importeTotal} />
         <Input ref={refCantCajas}
             id={field.backCantCajas}
             label={field.cantCajas}
+            value={remito.cantCajas}
             sm={6} />
         <Input ref={refCantPallets}
             id={field.backCantPallets}
             label={field.cantPallets}
+            value={remito.cantPallets}
             sm={6} />
         <Grid item xs={12} alignSelf="center" mb={0.5}>
             <ButtonGroup variant="contained" fullWidth>

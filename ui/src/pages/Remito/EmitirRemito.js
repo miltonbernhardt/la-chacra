@@ -6,10 +6,18 @@ import { PageFormTable } from '../../components/PageFormTable';
 import { getAllClientes, getRemito, postRemito, PDF_REMITO } from '../../services/RestServices';
 import { GridRemito } from './GridRemito';
 import { RemitoForm } from "./RemitoForm";
+import * as field from "../../resources/fields";
+
+const remitoInicial = {
+    [field.backImporteTotal]: 0.0,
+    [field.backCantCajas]: '',
+    [field.backCantPallets]: ''
+}
 
 export const EmitirRemito = () => {
 
-    const [importeTotal, setImporteTotal] = useState(0.0);
+    // const [importeTotal, setImporteTotal] = useState(0.0);
+    const [remito, setRemito] = useState(remitoInicial);
     const [listaItems, setListaItems] = useState([]);
     const [listaClientes, setListaClientes] = useState([]);
     const [emitible, setEmitible] = useState(false);
@@ -32,7 +40,9 @@ export const EmitirRemito = () => {
     const handleCargar = useCallback((cliente, fecha) => {
         getRemito(cliente, fecha)
             .then(({ data }) => {
-                setImporteTotal(data.importeTotal);
+                // setImporteTotal(data.importeTotal);
+                // setRemito({ ...remito, [field.backImporteTotal]: data.backImporteTotal })
+                setRemito(data);
                 setListaItems(data.itemsRemito);
                 if (data.itemsRemito.length === 0) {
                     toast.success('El cliente no posee expediciones para remito');
@@ -51,13 +61,15 @@ export const EmitirRemito = () => {
                 toast.error('No se pudo generar el remito')
             })
             .finally(() => {
-                setImporteTotal(0.0);
+                // setImporteTotal(0.0);
+                setRemito(remitoInicial);
                 setListaItems([]);
                 setEmitible(false);
             })
     }, [])
 
     //--- Variables ---
+
     const clientesFormatted = useMemo(() => listaClientes.map((c) => {
         return { id: c.id, value: c.id, label: c.razonSocial }
     }), [listaClientes])
@@ -79,7 +91,8 @@ export const EmitirRemito = () => {
                 onCargar={handleCargar}
                 onEmitir={handleEmitir}
                 clientes={clientesFormatted}
-                importe={importeTotal}
+                // importe={importeTotal}
+                remitoInicial={remito}
                 emitible={emitible} />}
         table={
             <GridRemito
