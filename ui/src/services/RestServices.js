@@ -140,6 +140,7 @@ export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICI
 // --- REMITO METHODS ---
 export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}generate?id_cliente=${idCliente}&fecha=${fecha}`);
 export const postRemito = async (idCliente, remito) => await POST(`${API_REMITO}?id_cliente=${idCliente}`, remito);
+export const getRemitosBetweenDates = async (fechaDesde, fechaHasta) => await GET(`${API_REMITO}?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 
 // --- VENTAS METHODS ---
 

@@ -14,6 +14,7 @@ import { StockProductos } from "../pages/StockProductos/StockProductos";
 import { VerVentas } from "../pages/Ventas/VerVentas";
 import { VerLitrosElaborados } from "../pages/VerLitrosProducidos/VerLitrosElaborados";
 import { VerProduccion } from "../pages/VerProduccion/VerProduccion";
+import { VerRemitos } from "../pages/VerRemitos/VerRemitos";
 import { VerTrazabilidad } from "../pages/VerTrazabilidad/VerTrazabilidad";
 import * as paths from "../resources/paths";
 
@@ -26,27 +27,28 @@ const ToNotFoundPage = () => {
 
 const Ruta = ({ permisos, path, component }) => {
     return Array.isArray(permisos) && permisos.includes(path)
-        ? <Route exact path={path} component={component}/>
+        ? <Route exact path={path} component={component} />
         : <></>
 }
 
 export const Routes = ({ permisos }) => {
     return <Switch>
-        <Ruta permisos={permisos} path={paths.clientes} component={CargarClientes}/>
-        <Ruta permisos={permisos} path={paths.cargarLotes} component={CargarProduccion}/>
-        <Ruta permisos={permisos} path={paths.cargarExpedicion} component={CargarExpedicion}/>
-        <Ruta permisos={permisos} path={paths.cargarQuesos} component={CargarQuesos}/>
-        <Ruta permisos={permisos} path={paths.cargarPrecios} component={CargarPrecios}/>
-        <Ruta permisos={permisos} path={paths.verLitros} component={VerLitrosElaborados}/>
-        <Ruta permisos={permisos} path={paths.verProduccion} component={VerProduccion}/>
-        <Ruta permisos={permisos} path={paths.verVentas} component={VerVentas}/>
-        <Ruta permisos={permisos} path={paths.verTrazabilidad} component={VerTrazabilidad}/>
-        <Ruta permisos={permisos} path={paths.emitirRemito} component={EmitirRemito}/>
-        <Ruta permisos={permisos} path={paths.stockProductos} component={StockProductos}/>
-        <Ruta permisos={permisos} path={paths.stockEmbalaje} component={StockEmbalaje}/>
-        <Ruta permisos={permisos} path={paths.mantenimiento} component={Mantenimiento}/>
-        <Ruta permisos={permisos} path={paths.rendimiento} component={Rendimiento}/>
-        <Route exact path={paths.home} component={HomePage}/>
-        <Route path={paths.home} component={ToNotFoundPage}/>
+        <Ruta permisos={permisos} path={paths.clientes} component={CargarClientes} />
+        <Ruta permisos={permisos} path={paths.cargarLotes} component={CargarProduccion} />
+        <Ruta permisos={permisos} path={paths.cargarExpedicion} component={CargarExpedicion} />
+        <Ruta permisos={permisos} path={paths.cargarQuesos} component={CargarQuesos} />
+        <Ruta permisos={permisos} path={paths.cargarPrecios} component={CargarPrecios} />
+        <Ruta permisos={permisos} path={paths.verLitros} component={VerLitrosElaborados} />
+        <Ruta permisos={permisos} path={paths.verProduccion} component={VerProduccion} />
+        <Ruta permisos={permisos} path={paths.verVentas} component={VerVentas} />
+        <Ruta permisos={permisos} path={paths.verRemitos} component={VerRemitos} />
+        <Ruta permisos={permisos} path={paths.verTrazabilidad} component={VerTrazabilidad} />
+        <Ruta permisos={permisos} path={paths.emitirRemito} component={EmitirRemito} />
+        <Ruta permisos={permisos} path={paths.stockProductos} component={StockProductos} />
+        <Ruta permisos={permisos} path={paths.stockEmbalaje} component={StockEmbalaje} />
+        <Ruta permisos={permisos} path={paths.mantenimiento} component={Mantenimiento} />
+        <Ruta permisos={permisos} path={paths.rendimiento} component={Rendimiento} />
+        <Route exact path={paths.home} component={HomePage} />
+        <Route path={paths.home} component={ToNotFoundPage} />
     </Switch>
 }

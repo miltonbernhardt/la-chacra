@@ -24,6 +24,7 @@ public class RemitoDTO {
     private Double importeTotal;
     private Integer cantCajas;
     private Integer cantPallets;
+    private Long idCliente;
 
     private List<ItemRemitoDTO> itemsRemito;
 
@@ -35,6 +36,7 @@ public class RemitoDTO {
         this.setImporteTotal(remito.getImporteTotal());
         this.setCantCajas(remito.getCantCajas());
         this.setCantPallets(remito.getCantPallets());
+        this.setIdCliente(remito.getExpediciones().get(0).getCliente().getId());
         loadItemsRemitoDTO(remito.getItemsRemito());
     }
 

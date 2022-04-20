@@ -12,8 +12,8 @@ export const GridLotes = ({ produccion, quesos, setSelection }) => {
                 type: 'date',
                 valueFormatter: (params) => {
                     const valueFormatted =
-                        params.value.at(8) + params.value.at(9) + '-' +
-                        params.value.at(5) + params.value.at(6) + '-' +
+                        params.value.at(8) + params.value.at(9) + '/' +
+                        params.value.at(5) + params.value.at(6) + '/' +
                         params.value.at(0) + params.value.at(1) +
                         params.value.at(2) + params.value.at(3);
                     return `${valueFormatted}`;

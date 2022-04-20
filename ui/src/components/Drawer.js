@@ -16,6 +16,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import SellIcon from '@mui/icons-material/Sell';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import { Divider, Drawer as DrawerMU, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -151,6 +152,11 @@ const StatsSection = ({ closeDrawer, permisos }) => {
             {enableVerVentas
                 ? <DrawerButton label="Ventas" path={paths.verVentas}
                     icon={<BalanceIcon />} />
+                : undefined
+            }
+            {enableVerVentas
+                ? <DrawerButton label="Remitos" path={paths.verRemitos}
+                    icon={<ReceiptIcon />} />
                 : undefined
             }
         </List>

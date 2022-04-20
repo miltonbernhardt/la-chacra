@@ -147,6 +147,13 @@ public class RemitoService {
         return remitos;
     }
 
+    public List<RemitoDTO> getBetweenDatesDTO(LocalDate fechaDesde,LocalDate fechaHasta){
+        var remitos = getBetweenDates(fechaDesde,fechaHasta);
+        ArrayList<RemitoDTO> dtos = new ArrayList<>();
+        remitos.forEach(remito -> dtos.add(new RemitoDTO(remito)));
+        return dtos;
+    }
+
     private List<ItemRemito> generateItemsRemito(List<Expedicion> expediciones) {
         var mapItems = new HashMap<String, ItemRemito>();
         expediciones.forEach(expedicion -> {
