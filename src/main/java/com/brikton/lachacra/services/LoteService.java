@@ -71,6 +71,7 @@ public class LoteService {
     public LoteDTO getDTOById(String id){
         return new LoteDTO(get(id));
     }
+
     public Lote decreaseStock(Lote lote, Integer cantidad) {
         var oldStock = lote.getStockLote();
         var actualStock = oldStock - cantidad;
@@ -159,6 +160,7 @@ public class LoteService {
         lote.setLoteCalcio(dto.getLoteCalcio());
         lote.setLoteCuajo(dto.getLoteCuajo());
         lote.setCantCajas(dto.getCantCajas());
+        lote.setPesoNoConfiable(dto.getPesoNoConfiable());
         return lote;
     }
 

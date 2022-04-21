@@ -16,7 +16,6 @@ const remitoInicial = {
 
 export const EmitirRemito = () => {
 
-    // const [importeTotal, setImporteTotal] = useState(0.0);
     const [remito, setRemito] = useState(remitoInicial);
     const [listaItems, setListaItems] = useState([]);
     const [listaClientes, setListaClientes] = useState([]);

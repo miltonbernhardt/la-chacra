@@ -54,6 +54,7 @@ public class LoteDTO {
     private Double rendimiento;
     private Integer stockLote;
     private Double peso;
+    private Boolean pesoNoConfiable;
 
     public LoteDTO(Lote lote) {
         this.setId(lote.getId());
@@ -70,6 +71,7 @@ public class LoteDTO {
         this.setLoteCuajo(lote.getLoteCuajo());
         this.setCodigoQueso(lote.getQueso().getCodigo());
         this.setCantCajas(lote.getCantCajas());
+        this.setPesoNoConfiable(lote.getPesoNoConfiable());
     }
 
     public LoteDTO(LoteUpdateDTO dto) {
@@ -87,6 +89,7 @@ public class LoteDTO {
         this.setLoteCuajo(dto.getLoteCuajo());
         this.setCodigoQueso(dto.getCodigoQueso());
         this.setCantCajas(dto.getCantCajas());
+        this.setPesoNoConfiable(dto.getPesoNoConfiable());
     }
 
     public String getCodigoQueso() {

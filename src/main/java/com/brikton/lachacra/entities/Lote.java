@@ -30,6 +30,7 @@ public class Lote {
     private String loteCalcio;
     private String loteCuajo;
     private LocalDate fechaBaja;
+    private Boolean pesoNoConfiable;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_queso")

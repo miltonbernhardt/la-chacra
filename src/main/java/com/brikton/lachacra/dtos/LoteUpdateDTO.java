@@ -56,5 +56,5 @@ public class LoteUpdateDTO {
     private Double rendimiento;
     private Integer stockLote;
     private Double peso;
-
+    private Boolean pesoNoConfiable;
 }

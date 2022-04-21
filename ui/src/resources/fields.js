@@ -50,6 +50,7 @@ export const backTipoEmbalaje = "tipoEmbalaje"
 export const backUsername = "username"
 export const backPassword = "password"
 export const backCantPallets = "cantPallets"
+export const backPesoNoConfiable = "pesoNoConfiable"
 export const ID = "ID"
 
 // produccion
