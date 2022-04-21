@@ -133,7 +133,7 @@ export const putPrecio = async (precio) => await PUT(`${API_PRECIO}`, precio);
 // --- EXPEDICION METHODS ---
 export const getAllExpediciones = async () => await GET(`${API_EXPEDICION}`);
 export const postExpedicion = async (expedicion) => await POST(`${API_EXPEDICION}`, expedicion);
-export const postExpedicionLoteCompleto = async (idLote, idCliente) => await POST(`${API_EXPEDICION}lote?id_lote=${idLote}&id_cliente=${idCliente}`);
+export const postExpedicionLoteCompleto = async (expedicion) => await POST(`${API_EXPEDICION}lote`, expedicion);
 export const putExpedicion = async (expedicion) => await PUT(`${API_EXPEDICION}`, expedicion);
 export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${id}`);
 export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICION}lote?idLote=${idLote}`);

@@ -160,7 +160,10 @@ public class LoteService {
         lote.setLoteCalcio(dto.getLoteCalcio());
         lote.setLoteCuajo(dto.getLoteCuajo());
         lote.setCantCajas(dto.getCantCajas());
-        lote.setPesoNoConfiable(dto.getPesoNoConfiable());
+        if (dto.getPesoNoConfiable() == null)
+            lote.setPesoNoConfiable(false);
+        else
+            lote.setPesoNoConfiable(dto.getPesoNoConfiable());
         return lote;
     }
 

@@ -69,12 +69,15 @@ export const CargarExpedicion = () => {
                 .finally()
         else {
             if (isLoteCompleto)
-                postExpedicionLoteCompleto(expedicionForm.idLote, expedicionForm.idCliente)
+                postExpedicionLoteCompleto(expedicionForm)
                     .then(({ data }) => {
                         setExpedicion(expedicionInicial);
                         setListaExpediciones([...listaExpediciones, data]);
                     })
-                    .catch(() => toast.error('No se pudo cargar la expedicion'))
+                    .catch(() => {
+                        toast.error('No se pudo cargar la expedicion')
+                        setExpedicion(expedicionInicial);
+                    })
                     .finally()
             else postExpedicion(expedicionForm)
                 .then(({ data }) => {

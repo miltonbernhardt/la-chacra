@@ -20,4 +20,5 @@ public class ErrorMessages {
     public static final String MSG_USER_NOT_REGISTERED = "Usuario no registrado";
     public static final String MSG_EMBALAJE_NOT_FOUND = "Embalaje no encontrado";
     public static final String MSG_EMBALAJE_ALREADY_EXISTS = "Ya existe el embalaje";
+    public static final String MSG_PESO_NO_CONFIABLE = "El peso del lote no es confiable";
 }

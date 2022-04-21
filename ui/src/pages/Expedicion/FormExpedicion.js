@@ -58,7 +58,10 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
             { func: validation.olderDate, msg: message.valOlderDate }
         ])
 
-        if (!isLoteCompleto) {
+        if (isLoteCompleto) {
+            values[field.backPesoExpedicion] = 1;
+            values[field.backCantidad] = 1;
+        } else {
 
             refCantidad.current.validate(errors, values, [
                 { func: validation.minorToOne, msg: message.valZeroValue }])
@@ -73,7 +76,10 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
             return
         }
 
-        handleSubmit(values, isLoteCompleto)
+        const loteCompleto = isLoteCompleto;
+        setLoteCompleto(false);
+
+        handleSubmit(values, loteCompleto)
     }, [expedicionForm.id, handleSubmit, isLoteCompleto, refCantidad, refFechaExpedicion, refIdLote, refPeso, refSelectCliente]);
 
     const submitScan = useCallback((values) => {

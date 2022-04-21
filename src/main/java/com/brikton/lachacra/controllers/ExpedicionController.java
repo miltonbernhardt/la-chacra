@@ -53,6 +53,12 @@ public class ExpedicionController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_CREATED, service.save(dto)));
     }
 
+    @PostMapping(value = "/lote", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessfulResponse<ExpedicionDTO>> saveExpedicionLoteCompleto(@RequestBody @Valid ExpedicionDTO dto) {
+        log.info("API::saveExpedicionLoteCompleto - dto: {}", dto);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_CREATED, service.saveExpedicionLoteCompleto(dto)));
+    }
+
     @PutMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<ExpedicionDTO>> update(@RequestBody @Valid ExpedicionUpdateDTO dto) {
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_UPDATED, service.update(dto)));
