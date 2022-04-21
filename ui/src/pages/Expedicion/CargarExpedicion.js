@@ -5,7 +5,13 @@ import { Loading } from "../../components/Loading";
 import { PageFormTable } from "../../components/PageFormTable";
 import * as field from "../../resources/fields";
 import { todayDateISO } from '../../resources/utils';
-import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from '../../services/RestServices';
+import {
+    deleteExpedicion,
+    getAllClientes,
+    postExpedicion,
+    postExpedicionLoteCompleto,
+    putExpedicion,
+} from '../../services/RestServices';
 import { DialogEliminarExpedicion } from './DialogEliminarExpedicion'
 import { FormExpedicion } from "./FormExpedicion";
 import { GridExpedicion } from "./GridExpedicion";
@@ -49,7 +55,7 @@ export const CargarExpedicion = () => {
             .finally(() => setLoadingClientes(false));
     }
 
-    const handleSubmit = useCallback((expedicionForm) => {
+    const handleSubmit = useCallback((expedicionForm, isLoteCompleto) => {
         setExpedicion(expedicionForm);
         if (isEditing)
             putExpedicion(expedicionForm)
@@ -61,14 +67,23 @@ export const CargarExpedicion = () => {
                 })
                 .catch(() => toast.error('No se pudo actualizar la expedicion'))
                 .finally()
-        else
-            postExpedicion(expedicionForm)
+        else {
+            if (isLoteCompleto)
+                postExpedicionLoteCompleto(expedicionForm.idLote, expedicionForm.idCliente)
+                    .then(({ data }) => {
+                        setExpedicion(expedicionInicial);
+                        setListaExpediciones([...listaExpediciones, data]);
+                    })
+                    .catch(() => toast.error('No se pudo cargar la expedicion'))
+                    .finally()
+            else postExpedicion(expedicionForm)
                 .then(({ data }) => {
                     setExpedicion(expedicionInicial);
                     setListaExpediciones([...listaExpediciones, data]);
                 })
                 .catch(() => toast.error('No se pudo cargar la expedicion'))
                 .finally()
+        }
     }, [expedicion.id, expedicionInicial, isEditing, listaExpediciones])
 
     const submitDelete = useCallback(() => {

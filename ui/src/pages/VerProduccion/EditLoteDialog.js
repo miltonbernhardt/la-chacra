@@ -163,8 +163,7 @@ export const EditLoteDialog = ({ lote, open, onClose, onSubmit, onDelete }) => {
                             control={
                                 <Checkbox
                                     checked={pesoNoConfiable}
-                                    onChange={() => changePesoNoConfiable()} />}
-                        />
+                                    onChange={() => changePesoNoConfiable()} />} />
                     </Grid>
                 </Grid>
             </Container>
