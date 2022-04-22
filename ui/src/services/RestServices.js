@@ -4,7 +4,7 @@ import * as paths from '../resources/paths'
 import { toastValidationErrors } from "../resources/fields";
 
 const PUERTO = '8000';
-const RAIZ_URL = `http://localhost:${PUERTO}`;
+const RAIZ_URL = `http://192.168.88.246:${PUERTO}`;
 
 const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'

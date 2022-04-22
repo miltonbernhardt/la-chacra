@@ -8,7 +8,7 @@ export const PageFormTable = ({ form, table, titleTable, children, titleForm, md
             spacing={2}
             paddingRight={2}
             style={{
-                minHeight: "92%",
+                minHeight: "89vh",
                 maxWidth: "98%",
                 backgroundColor: "white",
                 margin: "1%",

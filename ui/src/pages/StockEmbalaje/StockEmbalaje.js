@@ -137,7 +137,8 @@ export const StockEmbalaje = () => {
                         spacing={2}
                         paddingRight={2}
                         style={{
-                            minHeight: "92%",
+                            // minHeight: "92%",
+                            height: '89vh',
                             maxWidth: "98%",
                             backgroundColor: "white",
                             margin: "1%",
@@ -146,11 +147,12 @@ export const StockEmbalaje = () => {
                             boxSizing: "border-box",
                         }}>
 
-                        <Grid container
+                        <Grid container item xs={12}
                             style={{
-                                justifyContent: "center",
-                                alignItems: "center",
-                                padding: 10
+                                // height: '10%',
+                                // justifyContent: "center",
+                                // alignItems: "center",
+                                // padding: 10
                             }}
                             spacing={2}>
                             <Grid item xs={12} sm={2}>
@@ -164,9 +166,13 @@ export const StockEmbalaje = () => {
                                 </ButtonGroup>
                             </Grid>
                         </Grid>
-                        <Grid item xs={12} alignSelf={"center"}>
-
-                            <Box sx={{ overflowY: 'auto', maxHeight: 800, padding: 2, }}>
+                        <Grid item xs={12} sm={6} alignSelf={"center"}>
+                            <Box sx={{
+                                overflowY: 'auto',
+                                // maxHeight: 800, 
+                                height: '80vh',
+                                padding: 2,
+                            }}>
 
                                 <Container sx={{ py: 8 }} style={{
                                     backgroundColor: "#fafafa",
@@ -174,11 +180,35 @@ export const StockEmbalaje = () => {
                                     {/* End hero unit */}
                                     <Grid container spacing={2}>
                                         {listaEmbalajesFormatted.map((card) => (
-                                            <Grid item key={card.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                                            card.tipoEmbalaje === 'CAJA' ? <Grid item key={card.id} xs={12} sm={12} md={6} lg={4} xl={4} >
                                                 <StockEmbalajeCard
                                                     onClick={handleCardClick}
                                                     item={card} />
-                                            </Grid>
+                                            </Grid> : <></>
+                                        ))}
+                                    </Grid>
+                                </Container>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} sm={6} alignSelf={"center"}>
+                            <Box sx={{
+                                overflowY: 'auto',
+                                // maxHeight: 800, 
+                                height: '80vh',
+                                padding: 2,
+                            }} >
+
+                                <Container sx={{ py: 8 }} style={{
+                                    backgroundColor: "#fafafa",
+                                }} maxWidth="xl">
+                                    {/* End hero unit */}
+                                    <Grid container spacing={2}>
+                                        {listaEmbalajesFormatted.map((card) => (
+                                            card.tipoEmbalaje === 'BOLSA' ? <Grid item key={card.id} xs={12} sm={12} md={6} lg={4} xl={4}>
+                                                <StockEmbalajeCard
+                                                    onClick={handleCardClick}
+                                                    item={card} />
+                                            </Grid> : <></>
                                         ))}
                                     </Grid>
                                 </Container>
