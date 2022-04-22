@@ -112,6 +112,7 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
         onClose();
     }, [onClose])
 
+    //TODO test with scanner
     return (
         <>
             <BarcodeReader
@@ -182,6 +183,8 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                                         })}
                                     </Stack>
                                 </Grid>
+
+                                {/* //TODO test with scanner */}
                                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <FormControlLabel
                                         label="Lote Completo"
