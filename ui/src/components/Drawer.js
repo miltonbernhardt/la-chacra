@@ -117,23 +117,18 @@ const BusinessSection = ({ closeDrawer, permisos }) => {
 
 //todo naming
 const StatsSection = ({ closeDrawer, permisos }) => {
-    const enableVerProduccion = Array.isArray(permisos) && permisos.includes(paths.verProduccion)
     const enableVerLitros = Array.isArray(permisos) && permisos.includes(paths.verLitros)
     const enableStockProductos = Array.isArray(permisos) && permisos.includes(paths.stockProductos)
     const enableRendimiento = Array.isArray(permisos) && permisos.includes(paths.rendimiento)
     const enableVerVentas = Array.isArray(permisos) && permisos.includes(paths.verVentas)
+    const enableStockEmbalaje = Array.isArray(permisos) && permisos.includes(paths.stockEmbalaje)
 
-    if (!(enableVerProduccion || enableVerLitros || enableStockProductos || enableRendimiento || enableVerVentas))
+    if (!(enableVerLitros || enableStockProductos || enableRendimiento || enableVerVentas || enableStockEmbalaje))
         return <></>
 
     return <>
         <Divider />
         <List>
-            {enableVerProduccion
-                ? <DrawerButton label="Producción" path={paths.verProduccion}
-                    icon={<TimelineIcon />} />
-                : undefined
-            }
             {enableVerLitros
                 ? <DrawerButton label="Litros Elaborados" path={paths.verLitros}
                     icon={<PercentIcon />} />
@@ -142,6 +137,11 @@ const StatsSection = ({ closeDrawer, permisos }) => {
             {enableStockProductos
                 ? <DrawerButton label="Stock Productos" path={paths.stockProductos}
                     icon={<DashboardIcon />} />
+                : undefined
+            }
+            {enableStockEmbalaje
+                ? <DrawerButton label="Stock Embalaje" path={paths.stockEmbalaje}
+                    icon={<Inventory2Icon />} />
                 : undefined
             }
             {enableRendimiento
@@ -154,40 +154,35 @@ const StatsSection = ({ closeDrawer, permisos }) => {
                     icon={<BalanceIcon />} />
                 : undefined
             }
-            {enableVerVentas
-                ? <DrawerButton label="Remitos" path={paths.verRemitos}
-                    icon={<ReceiptIcon />} />
-                : undefined
-            }
         </List>
     </>
 }
 
 //todo naming
 const BackgroundSection = ({ closeDrawer, permisos }) => {
-    const enableStockEmbalaje = Array.isArray(permisos) && permisos.includes(paths.stockEmbalaje)
-    const enableMantenimiento = Array.isArray(permisos) && permisos.includes(paths.mantenimiento)
     const enableTrazabilidad = Array.isArray(permisos) && permisos.includes(paths.verTrazabilidad)
+    const enableVerProduccion = Array.isArray(permisos) && permisos.includes(paths.verProduccion)
+    const enableVerRemitos = Array.isArray(permisos) && permisos.includes(paths.verRemitos)
 
-    if (!(enableStockEmbalaje || enableMantenimiento || enableTrazabilidad))
+    if (!(enableVerProduccion || enableTrazabilidad || enableVerRemitos))
         return <></>
 
     return <>
         <Divider />
         <List>
-            {enableStockEmbalaje
-                ? <DrawerButton label="Stock Embalaje" path={paths.stockEmbalaje}
-                    icon={<Inventory2Icon />} />
-                : undefined
-            }
-            {enableMantenimiento
-                ? <DrawerButton label="Mantenimiento" path={paths.mantenimiento}
-                    icon={<SellIcon />} />
+            {enableVerProduccion
+                ? <DrawerButton label="Producción" path={paths.verProduccion}
+                    icon={<TimelineIcon />} />
                 : undefined
             }
             {enableTrazabilidad
                 ? <DrawerButton label="Trazabilidad" path={paths.verTrazabilidad}
                     icon={<HistoryIcon />} />
+                : undefined
+            }
+            {enableVerRemitos
+                ? <DrawerButton label="Remitos" path={paths.verRemitos}
+                    icon={<ReceiptIcon />} />
                 : undefined
             }
         </List>
@@ -233,8 +228,8 @@ export const Drawer = ({ drawerWidth, open, handleDrawerClose, theme, permisos }
         <HomeSection closeDrawer={handleDrawerClose} />
         <LoadUpSection closeDrawer={handleDrawerClose} permisos={permisos} />
         <BusinessSection closeDrawer={handleDrawerClose} permisos={permisos} />
-        <StatsSection closeDrawer={handleDrawerClose} permisos={permisos} />
         <BackgroundSection closeDrawer={handleDrawerClose} permisos={permisos} />
+        <StatsSection closeDrawer={handleDrawerClose} permisos={permisos} />
         <LogoutSection logout={() => {
             auth.signout()
             history.push(paths.login)

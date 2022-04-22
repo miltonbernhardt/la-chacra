@@ -49,8 +49,11 @@ public class RemitoService {
     }
 
     private Remito generateRemito(Long idCliente, LocalDate fecha) {
+
         var cliente = clienteService.get(idCliente);
+
         var expediciones = expedicionService.getForRemito(cliente);
+
         var items = generateItemsRemito(expediciones);
 
         var importe = BigDecimal.valueOf(0d);
@@ -62,6 +65,7 @@ public class RemitoService {
         remito.setFecha(fecha);
         remito.setImporteTotal(importe.doubleValue());
         remito.setItemsRemito(items);
+
         return remito;
     }
 

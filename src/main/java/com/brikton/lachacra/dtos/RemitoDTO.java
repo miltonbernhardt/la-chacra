@@ -36,7 +36,8 @@ public class RemitoDTO {
         this.setImporteTotal(remito.getImporteTotal());
         this.setCantCajas(remito.getCantCajas());
         this.setCantPallets(remito.getCantPallets());
-        this.setIdCliente(remito.getExpediciones().get(0).getCliente().getId());
+        if (!remito.getExpediciones().isEmpty())
+            this.setIdCliente(remito.getExpediciones().get(0).getCliente().getId());
         loadItemsRemitoDTO(remito.getItemsRemito());
     }
 
