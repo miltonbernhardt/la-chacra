@@ -157,7 +157,6 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
                         <Button onClick={handleCancelar} disabled={!isEditing} color="info" startIcon={<CancelIcon />}>Cancelar</Button>
                         <Button onClick={handleDelete} disabled={!isEditing} color="error" startIcon={<DeleteIcon />}>Borrar</Button>
                         <Button onClick={handleCargar} color={colorCargar} startIcon={iconCargar}>{labelCargar}</Button>
-                        <Button onClick={() => handleFirstScan("000000000000000000000000")} color="info" startIcon={iconCargar}>camion</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>
