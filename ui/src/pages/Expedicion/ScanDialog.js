@@ -10,7 +10,8 @@ import {
     DialogTitle,
     Grid,
     Stack,
-    Typography
+    Typography,
+    Checkbox,
 } from '@mui/material';
 import * as React from 'react';
 import { createRef, useCallback, useState } from 'react';
@@ -21,8 +22,9 @@ import { Select } from "../../components/Select";
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicion }) => {
+export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicion, isLoteCompleto, changeLoteCompleto }) => {
 
     const [listaLecturas, setListaLecturas] = useState([]);
     const [pesoExpedicion, setPesoExpedicion] = useState(0);
@@ -73,13 +75,20 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
             { func: validation.emptySelect, msg: message.valEmptyField }
         ])
 
-        refCantidad.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
-
         refFechaExpedicion.current.validate(errors, values, [
             { func: validation.empty, msg: message.valEmptyFecha },
             { func: validation.olderDate, msg: message.valOlderDate }
         ])
+
+        if (isLoteCompleto) {
+            values[field.backPesoExpedicion] = 1;
+            values[field.backCantidad] = 1;
+        }
+        else {
+            refCantidad.current.validate(errors, values, [
+                { func: validation.minorToOne, msg: message.valZeroValue }])
+            values[field.backPesoExpedicion] = pesoExpedicion;
+        }
 
         if (listaLecturas.length === 0) {
             toast.error('No hay etiquetas para cargar');
@@ -93,11 +102,10 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
         }
 
         values[field.backIdLote] = listaLecturas.at(0).lote;
-        values[field.backPesoExpedicion] = pesoExpedicion;
 
-        onSubmit(values)
+        onSubmit(values, isLoteCompleto)
         setListaLecturas([]);
-    }, [listaLecturas, onSubmit, pesoExpedicion, refCantidad, refFechaExpedicion, refSelectCliente]);
+    }, [isLoteCompleto, listaLecturas, onSubmit, pesoExpedicion, refCantidad, refFechaExpedicion, refSelectCliente]);
 
     const handleCancelar = useCallback(() => {
         setListaLecturas([]);
@@ -173,6 +181,14 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                                                 </Stack>)
                                         })}
                                     </Stack>
+                                </Grid>
+                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <FormControlLabel
+                                        label="Lote Completo"
+                                        control={
+                                            <Checkbox
+                                                checked={isLoteCompleto}
+                                                onChange={() => changeLoteCompleto()} />} />
                                 </Grid>
                                 <Input ref={refCantidad}
                                     id={field.backCantidad}

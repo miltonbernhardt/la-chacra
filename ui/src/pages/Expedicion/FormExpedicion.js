@@ -157,6 +157,7 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
                         <Button onClick={handleCancelar} disabled={!isEditing} color="info" startIcon={<CancelIcon />}>Cancelar</Button>
                         <Button onClick={handleDelete} disabled={!isEditing} color="error" startIcon={<DeleteIcon />}>Borrar</Button>
                         <Button onClick={handleCargar} color={colorCargar} startIcon={iconCargar}>{labelCargar}</Button>
+                        <Button onClick={() => handleFirstScan("000000000000000000000000")} color="info" startIcon={iconCargar}>camion</Button>
                     </ButtonGroup>
                 </Grid>
             </Grid>
@@ -167,7 +168,9 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
                 clientes={clientes}
                 cliente={cliente}
                 fechaExpedicion={fechaExpedicion}
-                firstScan={firstScan} />
+                firstScan={firstScan}
+                isLoteCompleto={isLoteCompleto}
+                changeLoteCompleto={changeLoteCompleto} />
             {!openScanDialog ? <BarcodeReader
                 onScan={handleFirstScan}
                 onError={handleScanError} /> : <></>}
