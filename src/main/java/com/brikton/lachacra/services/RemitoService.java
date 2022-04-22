@@ -128,12 +128,12 @@ public class RemitoService {
     }
 
     private byte[] generatePDF(HashMap<String, Object> remitoParams) throws JRException, IOException {
-//        var remitoTemplate = resourceLoader.getResource("classpath:Remito.jrxml");
-        var remitoTemplate = new ClassPathResource("/Remito.jrxml");
-//        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
-        JasperReport jasperReport
-                = JasperCompileManager.compileReport(
-                "/home/elias/Development/la-chacra/src/main/resources/Remito.jrxml");
+        var remitoTemplate = resourceLoader.getResource("classpath:Remito.jrxml");
+//        var remitoTemplate = new ClassPathResource("/Remito.jrxml");
+        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
+//        JasperReport jasperReport
+//                = JasperCompileManager.compileReport(
+//                "/home/elias/Development/la-chacra/src/main/resources/Remito.jrxml");
         JRSaver.saveObject(jasperReport, "Remito.jasper");
 
         var empReport = JasperFillManager.fillReport(jasperReport, remitoParams, new JREmptyDataSource());

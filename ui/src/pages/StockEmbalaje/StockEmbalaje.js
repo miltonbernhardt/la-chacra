@@ -75,6 +75,7 @@ export const StockEmbalaje = () => {
                 fetchEmbalajes();
                 setDialogOpen(false);
                 setEmbalaje(embalajeInicial);
+                setNewEmbalaje(true);
             })
             .catch(() => toast.error('No se pudo crear embalaje'))
         else putEmbalaje(embalajeSubmmit)
@@ -82,6 +83,7 @@ export const StockEmbalaje = () => {
                 fetchEmbalajes();
                 setDialogOpen(false);
                 setEmbalaje(embalajeInicial);
+                setNewEmbalaje(true);
             })
             .catch(() => toast.error('No se pudo actualizar embalaje'))
     }, [fetchEmbalajes, isNewEmbalaje])
