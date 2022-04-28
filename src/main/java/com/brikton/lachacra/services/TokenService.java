@@ -19,13 +19,10 @@ import java.util.Date;
 @Service
 @Slf4j
 public class TokenService {
-
-    //private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-
-    @Value("${auth.secretKey}")
+    @Value("${auth.secret.key}")
     private String secreKey;
 
-    @Value("${auth.tokenExpirationMsec}")
+    @Value("${auth.token.expiration.msec}")
     private Long expirationToken;
 
     public Token generateAccessToken(String subject) {
