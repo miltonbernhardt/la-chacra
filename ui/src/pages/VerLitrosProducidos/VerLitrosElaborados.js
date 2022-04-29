@@ -43,7 +43,7 @@ export const VerLitrosElaborados = () => {
         getLitros(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaLitros(data)
-                if (data.length < 16) toast.error('No se poseen suficientes datos');
+                if (data.length < 15) toast.error('No se poseen suficientes datos');
             })
             .catch(() => toast.error('No se pudo cargar litros'))
             .finally(() => setLoadingLitros(false));
@@ -91,9 +91,9 @@ export const VerLitrosElaborados = () => {
 
     const litrosMultilineFormatted = useMemo(() => {
         if (listaLitros.length < 16) return [];
-        const semana1 = listaLitros.slice(-16, -10);
-        const semana2 = listaLitros.slice(-11, -5)
-        const ultimaSemana = listaLitros.slice(-6);
+        const semana1 = listaLitros.slice(-15, -10);
+        const semana2 = listaLitros.slice(-10, -5)
+        const ultimaSemana = listaLitros.slice(-5);
         return ultimaSemana.map((value, index) => {
             return {
                 dia: index,
@@ -131,6 +131,8 @@ export const VerLitrosElaborados = () => {
                         md={5}
                         title="Litros totales"
                         data={litrosMultilineFormatted}
+                        yLabel="Litros"
+                        xLabel="Fecha"
                         xDataKey="fecha"
                         dataKey="Ultimos 5 dias"
                         dataKey1="5 dias anteriores"
