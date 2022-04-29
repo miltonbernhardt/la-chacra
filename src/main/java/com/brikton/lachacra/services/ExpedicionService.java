@@ -47,6 +47,13 @@ public class ExpedicionService {
         return response;
     }
 
+    public List<ExpedicionDTO> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
+        var expediciones =  repository.findAllByFechaExpedicionBetween(fechaDesde,fechaHasta);
+        List<ExpedicionDTO> dtos = new ArrayList<>();
+        expediciones.forEach(exp -> dtos.add(new ExpedicionDTO(exp)));
+        return dtos;
+    }
+
     public ExpedicionDTO save(ExpedicionDTO dto) throws ClienteNotFoundException, LoteNotFoundException {
         var expedicion = expedicionFromDTO(dto);
 

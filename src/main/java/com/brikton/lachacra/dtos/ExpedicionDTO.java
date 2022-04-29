@@ -38,6 +38,7 @@ public class ExpedicionDTO {
 
     private Double importe;
     private Long id;
+    private Boolean onRemito;
 
     public ExpedicionDTO(Expedicion expedicion) {
         this.setId(expedicion.getId());
@@ -47,6 +48,7 @@ public class ExpedicionDTO {
         this.setImporte(expedicion.getImporte());
         this.setIdCliente(expedicion.getCliente().getId());
         this.setIdLote(expedicion.getLote().getId());
+        this.setOnRemito(expedicion.getOnRemito());
     }
 
     public ExpedicionDTO(ExpedicionUpdateDTO expedicion) {

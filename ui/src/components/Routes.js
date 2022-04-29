@@ -12,6 +12,7 @@ import { Rendimiento } from "../pages/Rendimiento/Rendimiento";
 import { StockEmbalaje } from "../pages/StockEmbalaje/StockEmbalaje";
 import { StockProductos } from "../pages/StockProductos/StockProductos";
 import { VerVentas } from "../pages/Ventas/VerVentas";
+import { VerExpediciones } from "../pages/VerExpediciones/VerExpediciones";
 import { VerLitrosElaborados } from "../pages/VerLitrosProducidos/VerLitrosElaborados";
 import { VerProduccion } from "../pages/VerProduccion/VerProduccion";
 import { VerRemitos } from "../pages/VerRemitos/VerRemitos";
@@ -48,6 +49,7 @@ export const Routes = ({ permisos }) => {
         <Ruta permisos={permisos} path={paths.stockEmbalaje} component={StockEmbalaje} />
         <Ruta permisos={permisos} path={paths.mantenimiento} component={Mantenimiento} />
         <Ruta permisos={permisos} path={paths.rendimiento} component={Rendimiento} />
+        <Ruta permisos={permisos} path={paths.verExpediciones} component={VerExpediciones} />
         <Route exact path={paths.home} component={HomePage} />
         <Route path={paths.home} component={ToNotFoundPage} />
     </Switch>

@@ -21,4 +21,5 @@ public interface ExpedicionRepository extends JpaRepository<Expedicion, Long> {
 
     List<Expedicion> findAllByClienteAndOnRemito(Cliente cliente, Boolean onRemito);
 
+    List<Expedicion> findAllByFechaExpedicionBetween(LocalDate fechaExpedicion, LocalDate fechaExpedicion2);
 }

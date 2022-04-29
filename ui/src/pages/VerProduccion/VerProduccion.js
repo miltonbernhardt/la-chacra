@@ -48,8 +48,6 @@ export const VerProduccion = () => {
     // --- Functions ---
 
     const handleBuscar = useCallback((fechaHasta, meses) => {
-
-
         fetchLotes(fechaHasta, meses);
     }, []);
 

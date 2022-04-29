@@ -163,8 +163,9 @@ const BackgroundSection = ({ closeDrawer, permisos }) => {
     const enableTrazabilidad = Array.isArray(permisos) && permisos.includes(paths.verTrazabilidad)
     const enableVerProduccion = Array.isArray(permisos) && permisos.includes(paths.verProduccion)
     const enableVerRemitos = Array.isArray(permisos) && permisos.includes(paths.verRemitos)
+    const enableVerExpediciones = Array.isArray(permisos) && permisos.includes(paths.verExpediciones)
 
-    if (!(enableVerProduccion || enableTrazabilidad || enableVerRemitos))
+    if (!(enableVerProduccion || enableTrazabilidad || enableVerRemitos || enableVerExpediciones))
         return <></>
 
     return <>
@@ -175,14 +176,19 @@ const BackgroundSection = ({ closeDrawer, permisos }) => {
                     icon={<TimelineIcon />} />
                 : undefined
             }
-            {enableTrazabilidad
-                ? <DrawerButton label="Trazabilidad" path={paths.verTrazabilidad}
-                    icon={<HistoryIcon />} />
+            {enableVerExpediciones
+                ? <DrawerButton label="Expediciones" path={paths.verExpediciones}
+                    icon={<LocalShippingIcon />} />
                 : undefined
             }
             {enableVerRemitos
                 ? <DrawerButton label="Remitos" path={paths.verRemitos}
                     icon={<ReceiptIcon />} />
+                : undefined
+            }
+            {enableTrazabilidad
+                ? <DrawerButton label="Trazabilidad" path={paths.verTrazabilidad}
+                    icon={<HistoryIcon />} />
                 : undefined
             }
         </List>

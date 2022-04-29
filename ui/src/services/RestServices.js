@@ -137,7 +137,7 @@ export const postExpedicionLoteCompleto = async (expedicion) => await POST(`${AP
 export const putExpedicion = async (expedicion) => await PUT(`${API_EXPEDICION}`, expedicion);
 export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${id}`);
 export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICION}lote?idLote=${idLote}`);
-export const getExpedicionesBetweenDates = async (fechaDesde, fechaHasta) => await GET(`${API_EXPEDICION}?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+export const getExpedicionesBetweenDates = async (fechaDesde, fechaHasta) => await GET(`${API_EXPEDICION}between?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 
 // --- REMITO METHODS ---
 export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}generate?id_cliente=${idCliente}&fecha=${fecha}`);

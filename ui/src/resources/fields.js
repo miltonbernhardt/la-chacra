@@ -51,6 +51,7 @@ export const backUsername = "username"
 export const backPassword = "password"
 export const backCantPallets = "cantPallets"
 export const backPesoNoConfiable = "pesoNoConfiable"
+export const backOnRemito = "onRemito"
 export const ID = "ID"
 
 // produccion
@@ -98,6 +99,7 @@ export const cantidad = "Cantidad"
 export const pesoExpedicion = "Peso"
 export const importe = "Importe"
 export const fechaExpedicion = "Fecha de expedición"
+export const onRemito = "Remito"
 
 // consulta produccion
 export const fechaDesde = "Desde"
@@ -169,6 +171,7 @@ const backendFields = () => {
     fields.set(backTipoEmbalaje, tipoEmbalaje)
     fields.set(backUsername, username)
     fields.set(backPassword, password)
+    fields.set(backOnRemito, onRemito)
     return fields
 }
 
