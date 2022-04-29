@@ -14,7 +14,7 @@ import {
     Checkbox,
 } from '@mui/material';
 import * as React from 'react';
-import { createRef, useCallback, useState } from 'react';
+import { createRef, useCallback, useState , useEffect} from 'react';
 import BarcodeReader from 'react-barcode-reader';
 import toast from 'react-hot-toast';
 import { Input } from '../../components/Input';
@@ -33,6 +33,10 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
     const refCantidad = createRef()
     const refSelectCliente = createRef()
     const refFechaExpedicion = createRef()
+
+    useEffect(()=>{
+        if (open) setCantidadLecturas(1);
+    },[open])
 
     const handleScan = (scan) => {
         let lote;

@@ -18,6 +18,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AddIcon from '@mui/icons-material/Add';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DeleteIcon from '@mui/icons-material/Delete';
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, handleCancelar, handleDelete }) => {
@@ -26,8 +27,7 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
     const [fechaExpedicion, setFechaExpedicion] = useState('');
     const [isLoteCompleto, setLoteCompleto] = useState(false);
 
-    const [openScanDialog, setOpenScanDialog] = useState(false);
-    const [firstScan, setFirstScan] = useState('');
+    const [isOpenScanDialog, setOpenScanDialog] = useState(false);
     const [cliente, setCliente] = useState({});
 
     const refIdLote = createRef()
@@ -82,9 +82,10 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
         handleSubmit(values, loteCompleto)
     }, [expedicionForm.id, handleSubmit, isLoteCompleto, refCantidad, refFechaExpedicion, refIdLote, refPeso, refSelectCliente]);
 
-    const submitScan = useCallback((values) => {
+    const submitScan = useCallback((values, loteCompleto) => {
         setOpenScanDialog(false);
-        handleSubmit(values);
+        setLoteCompleto(false);
+        handleSubmit(values, loteCompleto);
     }, [handleSubmit])
 
     // --- Scan methods ---
@@ -94,7 +95,6 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
         refSelectCliente.current.validate({}, values, []);
         setCliente(values.idCliente);
         setOpenScanDialog(true);
-        setFirstScan(firstScan);
     }, [refSelectCliente])
 
     const handleScanError = useCallback(() => toast.error('Error en la lectura'), []);
@@ -161,16 +161,15 @@ export const FormExpedicion = ({ expedicion, isEditing, clientes, handleSubmit, 
                 </Grid>
             </Grid>
             <ScanDialog
-                open={openScanDialog}
+                open={isOpenScanDialog}
                 onClose={closeScanDialog}
                 onSubmit={submitScan}
                 clientes={clientes}
                 cliente={cliente}
                 fechaExpedicion={fechaExpedicion}
-                firstScan={firstScan}
                 isLoteCompleto={isLoteCompleto}
                 changeLoteCompleto={changeLoteCompleto} />
-            {!openScanDialog ? <BarcodeReader
+            {!isOpenScanDialog ? <BarcodeReader
                 onScan={handleFirstScan}
                 onError={handleScanError} /> : <></>}
         </>
