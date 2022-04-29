@@ -24,7 +24,9 @@ public class ViewController {
             Path.VER_LITROS,
             Path.VER_PRODUCCION,
             Path.VER_TRAZABILIDAD,
-            Path.VER_VENTAS
+            Path.VER_VENTAS,
+            Path.VER_REMITOS,
+            Path.VER_EXPEDICIONES
     })
     public String getIndex() {
         return "index.html";
