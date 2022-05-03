@@ -1,29 +1,36 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import toast from "react-hot-toast";
 import { Loading } from '../../components/Loading';
 import { PageFormTable } from "../../components/PageFormTable";
+import { yesterdayDateISO } from '../../resources/utils';
 import { deleteLote, getAllQuesos, postLote, putLote } from "../../services/RestServices";
 import { DialogEliminarLote } from "./DialogEliminarLote";
 import { FormLote } from "./FormLote";
 import { GridLotes } from "./GridLotes";
 
-const loteInicial = {
-    id: '',
-    fechaElaboracion: '',
-    numeroTina: '',
-    litrosLeche: '',
-    cantHormas: '',
-    peso: '',
-    loteCultivo: '',
-    loteColorante: '',
-    loteCalcio: '',
-    loteCuajo: '',
-    codigoQueso: '',
-    cantCajas: ''
-}
 
 export const CargarProduccion = () => {
+
+    const fechaInicial = useMemo(() => { return yesterdayDateISO() }, [])
+
+    const loteInicial = useMemo(() => {
+        return {
+            id: '',
+            fechaElaboracion: fechaInicial,
+            numeroTina: '',
+            litrosLeche: '',
+            cantHormas: '',
+            cantCajas: '',
+            peso: '',
+            loteCultivo: '',
+            loteColorante: '',
+            loteCalcio: '',
+            loteCuajo: '',
+            codigoQueso: ''
+        }
+    }, [fechaInicial])
+
     const [lote, setLote] = useState(loteInicial);
     const [listaLotes, setListaLotes] = useState([]);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -77,7 +84,7 @@ export const CargarProduccion = () => {
     const cancelEditing = useCallback(() => {
         setEditingLote(false);
         setLote(loteInicial);
-    }, []);
+    }, [loteInicial]);
 
     const eliminarLote = useCallback(() => setEliminarDialog(true), [])
 
@@ -92,7 +99,7 @@ export const CargarProduccion = () => {
         setEliminarDialog(false);
         setLote(loteInicial);
         setEditingLote(false);
-    }, [lote.id, listaLotes]);
+    }, [lote.id, loteInicial, listaLotes]);
 
     const cancelEliminar = useCallback(() => setEliminarDialog(false), []);
 
@@ -105,33 +112,35 @@ export const CargarProduccion = () => {
     });
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
-    return <PageFormTable
-        form={
-            <FormLote
-                quesos={quesosAutocomplete}
+    return (
+        <PageFormTable
+            form={
+                <FormLote
+                    quesos={quesosAutocomplete}
+                    lote={lote}
+                    updateStateLote={updateStateLote}
+                    setLote={setLote}
+                    isEditingLote={isEditingLote}
+                    cancelEditing={cancelEditing}
+                    deleteLote={eliminarLote}
+                    handleSubmit={handleSubmit} />
+            }
+            table={
+                <GridLotes
+                    quesos={listaQuesos}
+                    produccion={listaLotes}
+                    setSelection={setSelection} />
+            }
+            titleTable="Producción ingresada"
+            titleForm="Ingreso de producción"
+        >
+            <DialogEliminarLote
+                open={eliminarDialog}
                 lote={lote}
-                updateStateLote={updateStateLote}
-                setLote={setLote}
-                isEditingLote={isEditingLote}
-                cancelEditing={cancelEditing}
-                deleteLote={eliminarLote}
-                handleSubmit={handleSubmit}/>
-        }
-        table={
-            <GridLotes
-                quesos={listaQuesos}
-                produccion={listaLotes}
-                setSelection={setSelection}/>
-        }
-        titleTable="Producción ingresada"
-        titleForm="Ingreso de producción"
-    >
-        <DialogEliminarLote
-            open={eliminarDialog}
-            lote={lote}
-            onClose={cancelEliminar}
-            onSubmit={handleEliminar}/>
-    </PageFormTable>
+                onClose={cancelEliminar}
+                onSubmit={handleEliminar} />
+        </PageFormTable>
+    )
 }

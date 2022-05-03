@@ -35,13 +35,15 @@ export const GridLitros = ({ data, quesos }) => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 600,
+                    height: '100%',
+                    minHeight: 800
+
                 }}>
                 <DataGrid
                     rows={data}
                     columns={columns}
-                    pageSize={20}
-                    rowsPerPageOptions={[20]} />
+                    pageSize={13}
+                    rowsPerPageOptions={[13]} />
             </Paper>
         </Grid>
     );

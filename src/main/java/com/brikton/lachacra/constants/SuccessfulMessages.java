@@ -17,4 +17,7 @@ public class SuccessfulMessages {
     public static final String MSG_QUESO_UPDATED = "Se actualizó el queso correctamente";
     public static final String MSG_REMITO_CREATED = "Se creó el remito correctamente";
     public static final String MSG_USER_LOGGED = "Usuario logueado correctamente";
+    public static final String MSG_EMBALAJE_CREATED = "Se creó el embalaje correctamente";
+    public static final String MSG_EMBALAJE_DELETED = "Se borró el embalaje correctamente";
+    public static final String MSG_EMBALAJE_UPDATED = "Se actualizó el embalaje correctamente";
 }

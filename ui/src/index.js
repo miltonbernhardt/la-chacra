@@ -21,23 +21,23 @@ export const App = () => {
                 <ThemeProvider theme={Theme}>
                     <Router>
                         <Switch>
-                            <Route exact path={paths.login} component={LoginPage}/>
-                            <Route exact path={paths.forbidden} component={ForbiddenPage}/>
-                            <Route exact path={paths.notFound} component={NotFoundPage}/>
+                            <Route exact path={paths.login} component={LoginPage} />
+                            <Route exact path={paths.forbidden} component={ForbiddenPage} />
+                            <Route exact path={paths.notFound} component={NotFoundPage} />
                             <PrivateRoute path={paths.home}>
-                                <MainPage theme={Theme}/>
+                                <MainPage theme={Theme} />
                             </PrivateRoute>
-                            <Redirect from="*" to={paths.home}/>
+                            <Redirect from="*" to={paths.home} />
                         </Switch>
                     </Router>
                 </ThemeProvider>
             </ProvideAuth>
-            <Toast/>
+            <Toast />
         </>
     );
 }
 
 ReactDOM.render(
-    <App/>,
+    <App />,
     document.getElementById('react')
 )

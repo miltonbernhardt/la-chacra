@@ -31,4 +31,6 @@ public class Path {
     public static final String VER_PRODUCCION = "/ver/produccion";
     public static final String VER_TRAZABILIDAD = "/ver/trazabilidad";
     public static final String VER_VENTAS = "/ver/ventas";
+    public static final String VER_REMITOS = "/ver/remitos";
+    public static final String VER_EXPEDICIONES = "/ver/expediciones";
 }

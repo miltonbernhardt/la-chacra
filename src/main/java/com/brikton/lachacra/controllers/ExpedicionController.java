@@ -6,9 +6,11 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
+import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ExpedicionService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.websocket.server.PathParam;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -47,10 +50,25 @@ public class ExpedicionController {
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.getAllByLote(idLote)));
     }
 
+    @GetMapping(value = "/between", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessfulResponse<List<ExpedicionDTO>>> getBetweenDates(
+            @RequestParam("fecha_desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @RequestParam("fecha_hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta
+    ) {
+        log.info("API::getBetweenDates - fecha_desde: {} - fecha_hasta: {} ", fechaDesde, fechaHasta);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(service.getBetweenDates(fechaDesde, fechaHasta)));
+    }
+
     @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuccessfulResponse<ExpedicionDTO>> save(@RequestBody @Valid ExpedicionDTO dto) {
         log.info("API::save - dto: {}", dto);
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_CREATED, service.save(dto)));
+    }
+
+    @PostMapping(value = "/lote", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SuccessfulResponse<ExpedicionDTO>> saveExpedicionLoteCompleto(@RequestBody @Valid ExpedicionDTO dto) {
+        log.info("API::saveExpedicionLoteCompleto - dto: {}", dto);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EXPEDICION_CREATED, service.saveExpedicionLoteCompleto(dto)));
     }
 
     @PutMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)

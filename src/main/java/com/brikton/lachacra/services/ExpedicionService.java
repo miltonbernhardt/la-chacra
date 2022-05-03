@@ -4,10 +4,7 @@ import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
 import com.brikton.lachacra.entities.Cliente;
 import com.brikton.lachacra.entities.Expedicion;
-import com.brikton.lachacra.exceptions.ClienteNotFoundException;
-import com.brikton.lachacra.exceptions.ExpedicionCannotDeleteException;
-import com.brikton.lachacra.exceptions.ExpedicionNotFoundException;
-import com.brikton.lachacra.exceptions.LoteNotFoundException;
+import com.brikton.lachacra.exceptions.*;
 import com.brikton.lachacra.repositories.ExpedicionRepository;
 import com.brikton.lachacra.repositories.RemitoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -50,13 +47,38 @@ public class ExpedicionService {
         return response;
     }
 
+    public List<ExpedicionDTO> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
+        var expediciones =  repository.findAllByFechaExpedicionBetween(fechaDesde,fechaHasta);
+        List<ExpedicionDTO> dtos = new ArrayList<>();
+        expediciones.forEach(exp -> dtos.add(new ExpedicionDTO(exp)));
+        return dtos;
+    }
+
     public ExpedicionDTO save(ExpedicionDTO dto) throws ClienteNotFoundException, LoteNotFoundException {
         var expedicion = expedicionFromDTO(dto);
 
         loteService.decreaseStock(expedicion.getLote(), expedicion.getCantidad());
         quesoService.decreaseStock(expedicion.getLote().getQueso(), expedicion.getCantidad());
 
-        double importe = getImporte(dto, expedicion);
+        double importe = getImporte(expedicion);
+        expedicion.setImporte(importe);
+        expedicion.setOnRemito(false);
+        expedicion = repository.save(expedicion);
+        return new ExpedicionDTO(expedicion);
+    }
+
+    public ExpedicionDTO saveExpedicionLoteCompleto(ExpedicionDTO dto){
+        var expedicion = expedicionFromDTO(dto);
+
+        var loteExp = expedicion.getLote();
+        if(loteExp.getPesoNoConfiable()) throw new PesoNoConfiableException();
+        expedicion.setCantidad(loteExp.getCantHormas());
+        expedicion.setPeso(loteExp.getPeso());
+
+        loteService.decreaseStock(loteExp, expedicion.getCantidad());
+        quesoService.decreaseStock(loteExp.getQueso(), expedicion.getCantidad());
+
+        double importe = getImporte(expedicion);
         expedicion.setImporte(importe);
         expedicion.setOnRemito(false);
         expedicion = repository.save(expedicion);
@@ -73,13 +95,12 @@ public class ExpedicionService {
         updateStockQuesos(expedicion, expedicionUpdated);
 
         expedicionUpdated.setOnRemito(expedicion.getOnRemito());
-        var importe = getImporte(dto, expedicionUpdated);
+        var importe = getImporte(expedicionUpdated);
         expedicionUpdated.setImporte(importe);
 
         expedicionUpdated = repository.save(expedicionUpdated);
         return new ExpedicionDTO(expedicionUpdated);
     }
-
 
     private Expedicion expedicionFromDTO(ExpedicionDTO dto) {
         var expedicion = new Expedicion();
@@ -121,9 +142,9 @@ public class ExpedicionService {
         return !expedicion.getLote().getId().equals(expedicionUpdated.getLote().getId());
     }
 
-    private double getImporte(ExpedicionDTO dto, Expedicion expedicion) {
+    private double getImporte(Expedicion expedicion) {
         var precio = BigDecimal.valueOf(precioService.getPrecioValue(expedicion.getLote().getQueso(), expedicion.getCliente().getTipoCliente()));
-        var peso = BigDecimal.valueOf(dto.getPeso());
+        var peso = BigDecimal.valueOf(expedicion.getPeso());
         return precio.multiply(peso).doubleValue();
     }
 

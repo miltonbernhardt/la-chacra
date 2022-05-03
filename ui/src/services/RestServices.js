@@ -1,11 +1,10 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import * as paths from '../resources/paths'
 import { toastValidationErrors } from "../resources/fields";
-import * as paths from "../resources/paths";
 
-//TODO: usar env
 const PUERTO = '8000';
-const RAIZ_URL = `http://localhost:${PUERTO}`;
+const RAIZ_URL = `http://192.168.88.246:${PUERTO}`;
 
 const API_LOTE = '/api/v1/lotes/'
 const API_QUESO = '/api/v1/quesos/'
@@ -13,11 +12,14 @@ const API_CLIENTE = '/api/v1/clientes/'
 const API_TIPO_CLIENTE = '/api/v1/tipos_cliente/'
 const API_PRECIO = '/api/v1/precios/'
 const API_EXPEDICION = '/api/v1/expediciones/'
-const API_REMITO = '/api/v1/remitos'
+const API_REMITO = '/api/v1/remitos/'
 const API_VENTAS = '/api/v1/ventas/'
+const API_EMBALAJE = '/api/v1/embalajes/'
 const API_LOGIN = '/api/v1/login'
 const API_LOGOUT = '/logout'
 const API_PERMISOS = '/api/v1/permisos'
+
+export const PDF_REMITO = `${RAIZ_URL}${API_REMITO}pdf/`
 
 const headers = {
     'Access-Control-Allow-Origin': "*",
@@ -131,16 +133,27 @@ export const putPrecio = async (precio) => await PUT(`${API_PRECIO}`, precio);
 // --- EXPEDICION METHODS ---
 export const getAllExpediciones = async () => await GET(`${API_EXPEDICION}`);
 export const postExpedicion = async (expedicion) => await POST(`${API_EXPEDICION}`, expedicion);
+export const postExpedicionLoteCompleto = async (expedicion) => await POST(`${API_EXPEDICION}lote`, expedicion);
 export const putExpedicion = async (expedicion) => await PUT(`${API_EXPEDICION}`, expedicion);
 export const deleteExpedicion = async (id) => await DELETE(`${API_EXPEDICION}${id}`);
 export const getExpedicionesByLote = async (idLote) => await GET(`${API_EXPEDICION}lote?idLote=${idLote}`);
+export const getExpedicionesBetweenDates = async (fechaDesde, fechaHasta) => await GET(`${API_EXPEDICION}between?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 
 // --- REMITO METHODS ---
-export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}/generate?id_cliente=${idCliente}&fecha=${fecha}`);
-export const postRemito = async (idCliente, fecha) => await POST(`${API_REMITO}?id_cliente=${idCliente}&fecha=${fecha}`);
+export const getRemito = async (idCliente, fecha) => await GET(`${API_REMITO}generate?id_cliente=${idCliente}&fecha=${fecha}`);
+export const postRemito = async (idCliente, remito) => await POST(`${API_REMITO}?id_cliente=${idCliente}`, remito);
+export const getRemitosBetweenDates = async (fechaDesde, fechaHasta) => await GET(`${API_REMITO}?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
 
 // --- VENTAS METHODS ---
+
 export const getVentas = async (fechaDesde, fechaHasta) => await GET(`${API_VENTAS}?fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`);
+
+// --- EMBALAJE METHODS ---
+export const getAllEmbalajes = async () => await GET(`${API_EMBALAJE}`);
+export const postEmbalaje = async (embalaje) => await POST(`${API_EMBALAJE}`, embalaje);
+export const putEmbalaje = async (embalaje) => await PUT(`${API_EMBALAJE}`, embalaje);
+export const updateStockEmbalaje = async (id, stock) => await PUT(`${API_EMBALAJE}agregar_stock?id=${id}&stock=${stock}`, null);
+export const deleteEmbalaje = async (id) => await DELETE(`${API_EMBALAJE}${id}`);
 
 // --- GENERAL METHODS ---
 const GET = async (postfixUrl) => {

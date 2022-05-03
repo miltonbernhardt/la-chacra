@@ -14,6 +14,9 @@ import {
 import { DialogAltaCliente } from './DialogAltaCliente';
 import { DialogBajaCliente } from './DialogBajaCliente';
 import { GridClientes } from "./GridClientes";
+import AddIcon from '@mui/icons-material/Add';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const clienteInicial = {
     id: '',
@@ -129,15 +132,15 @@ export const CargarClientes = () => {
         }), [tiposClientes])
 
     if (isLoadingClientes || isLoadingTipoClientes)
-        return (<Loading/>)
+        return (<Loading />)
 
     return (
         <PageTableButtonPane
             title="Clientes"
             buttons={<>
-                <Button color="warning" onClick={onOpenBaja}>Dar de baja</Button>
-                <Button color="info" onClick={onOpenActualizar}>Actualizar</Button>
-                <Button onClick={onOpenAlta}>Dar de alta</Button>
+                <Button color="warning" onClick={onOpenBaja} startIcon={<DeleteIcon />}>Dar de baja</Button>
+                <Button color="info" onClick={onOpenActualizar} startIcon={<AutorenewIcon />}>Actualizar</Button>
+                <Button onClick={onOpenAlta} startIcon={<AddIcon />}>Dar de alta</Button>
             </>}
             grid={<GridClientes
                 clientes={listaClientes}
@@ -150,12 +153,12 @@ export const CargarClientes = () => {
                 onSubmit={onSubmit}
                 open={openDialogAlta}
                 isEditing={isEditing}
-                tiposCliente={valoresTiposClientes}/>
+                tiposCliente={valoresTiposClientes} />
             <DialogBajaCliente
                 cliente={cliente}
                 onClose={onCloseDialog}
                 open={openDialogBaja}
-                onSubmit={onDelete}/>
+                onSubmit={onDelete} />
         </PageTableButtonPane>
     );
 }

@@ -445,8 +445,8 @@ public class LoteServiceTest {
         lote.setLoteCuajo("cuajo1, cuajo2");
 
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
-        when(devolucionRepository.existsByIdLote("101020210011")).thenReturn(false);
-        when(expedicionRepository.existsByIdLote("101020210011")).thenReturn(false);
+        when(devolucionRepository.existsByLote(lote)).thenReturn(false);
+        when(expedicionRepository.existsByLote(lote)).thenReturn(false);
 
         service.delete("101020210011");
 
@@ -459,8 +459,8 @@ public class LoteServiceTest {
     void Delete_With_Devolucion_Dependency__OK() throws LoteNotFoundException {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionRepository.existsByIdLote("101020210011")).thenReturn(true);
-        when(expedicionRepository.existsByIdLote("101020210011")).thenReturn(false);
+        when(devolucionRepository.existsByLote(any(Lote.class))).thenReturn(true);
+        when(expedicionRepository.existsByLote(any(Lote.class))).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
 
         service.delete("101020210011");
@@ -474,8 +474,8 @@ public class LoteServiceTest {
     void Delete_With_Expedicion_Dependency__OK() throws LoteNotFoundException {
         when(repository.existsByIdNotFechaBaja("101020210011")).thenReturn(true);
         when(repository.getById("101020210011")).thenReturn(mockLote());
-        when(devolucionRepository.existsByIdLote("101020210011")).thenReturn(false);
-        when(expedicionRepository.existsByIdLote("101020210011")).thenReturn(true);
+        when(devolucionRepository.existsByLote(any(Lote.class))).thenReturn(false);
+        when(expedicionRepository.existsByLote(any(Lote.class))).thenReturn(true);
         when(dateUtil.now()).thenReturn(LocalDate.of(2021, 10, 10));
 
         service.delete("101020210011");

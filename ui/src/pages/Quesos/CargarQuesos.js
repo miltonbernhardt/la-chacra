@@ -9,6 +9,9 @@ import { deleteQueso, getAllQuesos, postQueso, putQueso } from "../../services/R
 import { DialogCargarQueso } from './DialogCargarQueso';
 import { DialogEliminarQueso } from './DialogEliminarQueso';
 import { GridQuesos } from './GridQuesos';
+import AddIcon from '@mui/icons-material/Add';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const quesoInicial = {
     id: '',
@@ -110,19 +113,19 @@ export const CargarQuesos = () => {
     }
 
     if (isLoading)
-        return (<Loading/>)
+        return (<Loading />)
 
     return <PageTableButtonPane
         title="Productos"
         buttons={<>
-            <Button onClick={openEliminarDialog} color="warning">Borrar Producto</Button>
-            <Button onClick={openEditarDialog} color="info">Editar Producto</Button>
-            <Button onClick={openCargarDialog}>Cargar Producto</Button>
+            <Button onClick={openEliminarDialog} color="warning" startIcon={<DeleteIcon />}>Borrar Producto</Button>
+            <Button onClick={openEditarDialog} color="info" startIcon={<AutorenewIcon />}>Editar Producto</Button>
+            <Button onClick={openCargarDialog} startIcon={<AddIcon />}>Cargar Producto</Button>
         </>}
         grid={
             <GridQuesos
                 listaQuesos={listaQuesos}
-                setSelection={setSelection}/>
+                setSelection={setSelection} />
         }
     >
         <DialogCargarQueso
@@ -136,6 +139,6 @@ export const CargarQuesos = () => {
             open={isOpenEliminarProducto}
             onClose={() => setOpenEliminarProducto(false)}
             queso={queso}
-            onBorrar={onDelete}/>
+            onBorrar={onDelete} />
     </PageTableButtonPane>
 }
