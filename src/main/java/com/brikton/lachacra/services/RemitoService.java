@@ -83,6 +83,14 @@ public class RemitoService {
         return new RemitoDTO(repository.save(remito));
     }
 
+    public void deleteRemito(Long id){
+        var remito = getRemito(id);
+        List<Long> idExpedicionesRemito = new ArrayList<>();
+        remito.getExpediciones().forEach(expedicion -> idExpedicionesRemito.add(expedicion.getId()));
+        repository.delete(remito);
+        idExpedicionesRemito.forEach(idExp -> expedicionService.delete(idExp));
+    }
+
     public byte[] getPdf(Long id) throws JRException, IOException {
         var remito = getRemito(id);
 
@@ -130,14 +138,14 @@ public class RemitoService {
     private byte[] generatePDF(HashMap<String, Object> remitoParams) throws JRException, IOException {
         var remitoTemplate = resourceLoader.getResource("classpath:Remito.jrxml");
 //        var remitoTemplate = new ClassPathResource("/Remito.jrxml");
-        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
+//        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getFile().getAbsolutePath());
+        var jasperReport = JasperCompileManager.compileReport(remitoTemplate.getInputStream());
 //        JasperReport jasperReport
 //                = JasperCompileManager.compileReport(
-//                "/home/elias/Development/la-chacra/src/main/resources/Remito.jrxml");
+//                "/Remito.jrxml");
         JRSaver.saveObject(jasperReport, "Remito.jasper");
 
         var empReport = JasperFillManager.fillReport(jasperReport, remitoParams, new JREmptyDataSource());
-
         return JasperExportManager.exportReportToPdf(empReport);
     }
 

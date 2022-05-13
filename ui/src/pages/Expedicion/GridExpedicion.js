@@ -51,13 +51,6 @@ export const GridExpedicion = ({ expediciones, setSelection }) => {
                 flex: 0.5,
                 minWidth: 50,
             },
-            {
-                field: field.backImporte,
-                headerName: field.importe,
-                type: 'number',
-                flex: 0.5,
-                minWidth: 50,
-            },
         ]
     }, []);
 

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from "react-hot-toast";
 import { Loading } from "../../components/Loading";
 import { PageFormTable } from '../../components/PageFormTable';
-import { getAllClientes, getRemito, postRemito, PDF_REMITO } from '../../services/RestServices';
+import { getAllClientes, getRemito, postRemito } from '../../services/RestServices';
 import { GridRemito } from './GridRemito';
 import { RemitoForm } from "./RemitoForm";
 import * as field from "../../resources/fields";
@@ -39,8 +39,6 @@ export const EmitirRemito = () => {
     const handleCargar = useCallback((cliente, fecha) => {
         getRemito(cliente, fecha)
             .then(({ data }) => {
-                // setImporteTotal(data.importeTotal);
-                // setRemito({ ...remito, [field.backImporteTotal]: data.backImporteTotal })
                 setRemito(data);
                 setListaItems(data.itemsRemito);
                 if (data.itemsRemito.length === 0) {
@@ -54,13 +52,11 @@ export const EmitirRemito = () => {
     const handleEmitir = useCallback((idCliente, remito) => {
         postRemito(idCliente, remito)
             .then(({ data }) => {
-                window.open(`${PDF_REMITO}${data.id}`, '_blank').focus();
             })
             .catch(() => {
                 toast.error('No se pudo generar el remito')
             })
             .finally(() => {
-                // setImporteTotal(0.0);
                 setRemito(remitoInicial);
                 setListaItems([]);
                 setEmitible(false);
@@ -90,7 +86,6 @@ export const EmitirRemito = () => {
                 onCargar={handleCargar}
                 onEmitir={handleEmitir}
                 clientes={clientesFormatted}
-                // importe={importeTotal}
                 remitoInicial={remito}
                 emitible={emitible} />}
         table={

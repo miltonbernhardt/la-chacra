@@ -61,7 +61,8 @@ export const CargarExpedicion = () => {
             putExpedicion(expedicionForm)
                 .then(({ data }) => {
                     setEditing(false);
-                    setExpedicion(expedicionInicial);
+                    const cliente = expedicionForm.idCliente;
+                    setExpedicion({ ...expedicionInicial, idCliente: cliente });
                     const newList = listaExpediciones.filter((item) => item.id !== expedicion.id);
                     setListaExpediciones([...newList, data]);
                 })
@@ -71,17 +72,22 @@ export const CargarExpedicion = () => {
             if (isLoteCompleto)
                 postExpedicionLoteCompleto(expedicionForm)
                     .then(({ data }) => {
-                        setExpedicion(expedicionInicial);
+                        const cliente = expedicionForm.idCliente;
+                        setExpedicion({ ...expedicionInicial, idCliente: cliente });
                         setListaExpediciones([...listaExpediciones, data]);
                     })
                     .catch(() => {
                         toast.error('No se pudo cargar la expedicion')
-                        setExpedicion(expedicionInicial);
+
+                        const cliente = expedicionForm.idCliente;
+                        setExpedicion({ ...expedicionInicial, idCliente: cliente });
                     })
                     .finally()
             else postExpedicion(expedicionForm)
                 .then(({ data }) => {
-                    setExpedicion(expedicionInicial);
+
+                    const cliente = expedicionForm.idCliente;
+                    setExpedicion({ ...expedicionInicial, idCliente: cliente });
                     setListaExpediciones([...listaExpediciones, data]);
                 })
                 .catch(() => toast.error('No se pudo cargar la expedicion'))
@@ -110,8 +116,9 @@ export const CargarExpedicion = () => {
 
     const handleCancelar = useCallback(() => {
         setEditing(false);
-        setExpedicion(expedicionInicial);
-    }, [expedicionInicial]);
+        const cliente = expedicion.idCliente;
+        setExpedicion({ ...expedicionInicial, idCliente: cliente });
+    }, [expedicion.idCliente, expedicionInicial]);
 
     const cancelDelete = useCallback(() => setOpenDialogEliminar(false), [])
 

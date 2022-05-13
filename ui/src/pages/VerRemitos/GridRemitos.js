@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import * as field from "../../resources/fields";
 
-export const GridRemitos = ({ data, setSelection, verRemito }) => {
+export const GridRemitos = ({ data, setSelection, anularRemito }) => {
 
     const columns = useMemo(() => {
         return [
@@ -32,13 +32,13 @@ export const GridRemitos = ({ data, setSelection, verRemito }) => {
             {
                 field: field.backCantCajas,
                 headerName: 'Cajas',
-                flex: 0.5,
+                flex: 0.25,
                 minWidth: 50,
             },
             {
                 field: field.backCantPallets,
                 headerName: 'Pallets',
-                flex: 0.5,
+                flex: 0.25,
                 minWidth: 50
             },
             {
@@ -57,12 +57,19 @@ export const GridRemitos = ({ data, setSelection, verRemito }) => {
                     return (
                         <Stack sx={{ width: '100%' }}
                             direction="row"
-                            justifyContent="center">
+                            justifyContent="space-around">
                             <Button
                                 variant="outlined"
                                 size="small"
-                                onClick={() => setSelection(value)}>
-                                Ver Remito
+                                onClick={() => setSelection(value)}
+                                color="info" >
+                                Ver
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={() => anularRemito(value)}>
+                                Anular
                             </Button>
                         </Stack>
                     );
@@ -79,7 +86,6 @@ export const GridRemitos = ({ data, setSelection, verRemito }) => {
             columns={columns}
             rowHeight={42}
             pageSize={15}
-            rowsPerPageOptions={[15]}
-            onCellDoubleClick={(params) => setSelection(params.id)} />
+            rowsPerPageOptions={[15]} />
     </>
 }

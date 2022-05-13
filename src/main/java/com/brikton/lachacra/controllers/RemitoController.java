@@ -76,4 +76,14 @@ public class RemitoController {
 
         return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_REMITO_CREATED, service.generateAndSave(dto, idCliente)));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SuccessfulResponse<?>> delete(
+            @PathVariable("id")
+            @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) Long id
+    ) {
+        log.info("API::delete- id: {}", id);
+        service.deleteRemito(id);
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_REMITO_DELETED));
+    }
 }

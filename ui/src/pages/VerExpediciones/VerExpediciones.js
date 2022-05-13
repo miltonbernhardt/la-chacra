@@ -91,19 +91,21 @@ export const VerExpediciones = () => {
 
     // --- Variables --- 
 
-    const expedicionesFormatted = useMemo(() => listaExpediciones.map((e) => {
-        return {
-            'id': e.id,
-            [field.backIdLote]: e.idLote,
-            [field.backRazonSocial]: listaClientes
-                .filter(c => c.id === e.idCliente).pop().razonSocial,
-            [field.backFechaExpedicion]: e.fechaExpedicion,
-            [field.backCantidad]: e.cantidad,
-            [field.backPesoExpedicion]: e.peso,
-            [field.backImporte]: e.importe,
-            [field.backOnRemito]: e.onRemito
-        }
-    }), [listaClientes, listaExpediciones]);
+    const expedicionesFormatted = useMemo(() =>
+        (isLoadingClientes || isLoadingExpediciones) ? [] :
+            listaExpediciones.map((e) => {
+                return {
+                    'id': e.id,
+                    [field.backIdLote]: e.idLote,
+                    [field.backRazonSocial]: listaClientes
+                        .filter(c => c.id === e.idCliente).pop().razonSocial,
+                    [field.backFechaExpedicion]: e.fechaExpedicion,
+                    [field.backCantidad]: e.cantidad,
+                    [field.backPesoExpedicion]: e.peso,
+                    [field.backImporte]: e.importe,
+                    [field.backOnRemito]: e.onRemito
+                }
+            }), [isLoadingClientes, isLoadingExpediciones, listaClientes, listaExpediciones]);
 
     const clientesFormatted = useMemo(() => listaClientes.map((c) => {
         return { id: c.id, value: c.id, label: c.razonSocial }
