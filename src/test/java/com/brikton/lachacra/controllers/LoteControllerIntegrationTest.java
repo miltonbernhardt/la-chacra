@@ -7,6 +7,11 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.dtos.LoteUpdateDTO;
+import com.brikton.lachacra.dtos.QuesoDTO;
+import com.brikton.lachacra.dtos.litrosElaborados.LitrosElaboradosDTO;
+import com.brikton.lachacra.dtos.litrosElaborados.LitrosElaboradosDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoQuesoDTO;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.utils.Rest;
@@ -102,6 +107,173 @@ public class LoteControllerIntegrationTest {
         });
         assertEquals("", successfulResponse.getMessage());
         assertEquals(expectedLotes, successfulResponse.getData());
+    }
+
+    @Test
+    void Get_All_By_Queso__OK() {
+        var dto1 = new LoteDTO();
+        dto1.setId("221020210011");
+        dto1.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dto1.setNumeroTina(1);
+        dto1.setLitrosLeche(4900D);
+        dto1.setCantHormas(124);
+        dto1.setStockLote(20);
+        dto1.setPeso(526.7);
+        dto1.setRendimiento(10.75);
+        dto1.setLoteCultivo("cultivo1, cultivo2");
+        dto1.setLoteColorante("colorante1, colorante2");
+        dto1.setLoteCalcio("calcio1, calcio2");
+        dto1.setLoteCuajo("cuajo1, cuajo2");
+        dto1.setCodigoQueso("001");
+
+        var dto2 = new LoteDTO();
+        dto2.setId("231020210022");
+        dto2.setFechaElaboracion(LocalDate.of(2021, 10, 23));
+        dto2.setNumeroTina(2);
+        dto2.setLitrosLeche(6500D);
+        dto2.setCantHormas(228);
+        dto2.setStockLote(25);
+        dto2.setPeso(842.5);
+        dto2.setRendimiento(12.96);
+        dto2.setCodigoQueso("001");
+
+        var expectedLotes = List.of(dto1, dto2);
+        var response = rest.get("/queso?codigoQueso=001");
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<LoteDTO>>>() {
+        });
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedLotes, successfulResponse.getData());
+    }
+
+    @Test
+    void Get_All_By_Queso__Bad_Codigo__Missing_Codigo() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get("/queso")
+        );
+
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.NOT_FOUND, response.getErrors().get("codigoQueso"));
+        assertEquals(Path.API_LOTES.concat("/queso"), response.getPath());
+    }
+
+    @Test
+    void Get_All_By_Queso__Queso_Not_Found() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.Conflict.class, () -> rest.get("/queso?codigoQueso=101")
+        );
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.CONFLICT, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_QUESO_NOT_FOUND, response.getMessage());
+        assertEquals(Path.API_LOTES.concat("/queso"), response.getPath());
+    }
+
+    @Test
+    void Get_All_By_Queso__Bad_Codigo__Short_Codigo() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get("/queso?codigoQueso=01")
+        );
+
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigoQueso"));
+        assertEquals(Path.API_LOTES.concat("/queso"), response.getPath());
+    }
+
+    @Test
+    void Get_All_By_Queso__Bad_Codigo__Long_Codigo() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get("/queso?codigoQueso=0101")
+        );
+
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.MUST_HAVE_3_CHARACTERS, response.getErrors().get("codigoQueso"));
+        assertEquals(Path.API_LOTES.concat("/queso"), response.getPath());
+    }
+
+    @Test
+    void Get_By_Id__OK() {
+        var expectedDTO = new LoteDTO();
+        expectedDTO.setId("221020210011");
+        expectedDTO.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        expectedDTO.setNumeroTina(1);
+        expectedDTO.setLitrosLeche(4900D);
+        expectedDTO.setCantHormas(124);
+        expectedDTO.setStockLote(20);
+        expectedDTO.setPeso(526.7);
+        expectedDTO.setRendimiento(10.75);
+        expectedDTO.setLoteCultivo("cultivo1, cultivo2");
+        expectedDTO.setLoteColorante("colorante1, colorante2");
+        expectedDTO.setLoteCalcio("calcio1, calcio2");
+        expectedDTO.setLoteCuajo("cuajo1, cuajo2");
+        expectedDTO.setCodigoQueso("001");
+
+        var response = rest.get("/221020210011");
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<LoteDTO>>() {
+        });
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedDTO, successfulResponse.getData());
+
+    }
+
+    @Test
+    void Get_By_Id__Lote_Not_Found() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.NotFound.class, () -> rest.get("/221023310011")
+        );
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_LOTE_NOT_FOUND, response.getMessage());
+        assertEquals(Path.API_LOTES.concat("/221023310011"), response.getPath());
+    }
+
+    @Test
+    void Get_By_Id__Bad_ID__Short_ID() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get("/22102021001")
+        );
+
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
+        assertEquals(Path.API_LOTES.concat("/22102021001"), response.getPath());
+    }
+
+    @Test
+    void Get_By_Id__Bad_ID__Long_ID() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get("/221020210012222")
+        );
+
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
+        assertEquals(Path.API_LOTES.concat("/221020210012222"), response.getPath());
+    }
+
+    @Test
+    void Get_By_Id__Bad_ID__Use_Letters() throws JsonProcessingException {
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get("/aaaaaaaaaaaa")
+        );
+
+        var response = rest.mapper().readValue(thrown.getResponseBodyAsString(), ErrorResponse.class);
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+        assertEquals(ErrorMessages.MSG_INVALID_PARAMS, response.getMessage());
+        assertEquals(ValidationMessages.INVALID_FORMAT, response.getErrors().get("id"));
+        assertEquals(Path.API_LOTES.concat("/aaaaaaaaaaaa"), response.getPath());
     }
 
     @Test
@@ -639,10 +811,37 @@ public class LoteControllerIntegrationTest {
         assertEquals(expectedLotes, successfulResponse.getData());
     }
 
-    //TODO: test bad params
     @Test
     void Get_Between_Dates__OK() {
-        String query = "/produccion?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
+        var dto1 = new LoteDTO();
+        dto1.setId("221020210011");
+        dto1.setFechaElaboracion(LocalDate.of(2021, 10, 22));
+        dto1.setNumeroTina(1);
+        dto1.setLitrosLeche(4900D);
+        dto1.setCantHormas(124);
+        dto1.setPeso(526.7);
+        dto1.setCodigoQueso("001");
+        dto1.setLoteColorante("colorante1, colorante2");
+        dto1.setLoteCultivo("cultivo1, cultivo2");
+        dto1.setLoteCalcio("calcio1, calcio2");
+        dto1.setLoteCuajo("cuajo1, cuajo2");
+        dto1.setRendimiento(10.75);
+        dto1.setStockLote(20);
+
+        var dto2 = new LoteDTO();
+        dto2.setId("231020210022");
+        dto2.setFechaElaboracion(LocalDate.of(2021, 10, 23));
+        dto2.setNumeroTina(2);
+        dto2.setLitrosLeche(6500D);
+        dto2.setCantHormas(228);
+        dto2.setPeso(842.5);
+        dto2.setCodigoQueso("001");
+        dto2.setRendimiento(12.96);
+        dto2.setStockLote(25);
+
+        var expectedLotes = List.of(dto1, dto2);
+
+        var query = "/produccion?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
         var response = rest.get(query);
 
         assertNotNull(response.getBody());
@@ -652,6 +851,175 @@ public class LoteControllerIntegrationTest {
         });
 
         assertEquals("", successfulResponse.getMessage());
-        assertEquals(2, successfulResponse.getData().size());
+        assertEquals(expectedLotes, successfulResponse.getData());
+    }
+
+    @Test
+    void Get_Between_Dates__Bad_Request__Missing_Param() {
+        var query = "/produccion?fecha_desde=2021-10-22";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Between_Dates__Bad_Request__Bad_Date_Format() {
+        var query = "/produccion?fecha_desde=22-11-2021&fecha_hasta=23-10-2021";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Rendimiento_Por_Dia__OK() {
+        var dto1 = new RendimientoDiaDTO();
+        dto1.setRendimiento(10.75);
+        dto1.setFecha(LocalDate.of(2021, 10, 22));
+
+        var dto2 = new RendimientoDiaDTO();
+        dto2.setRendimiento(12.96);
+        dto2.setFecha(LocalDate.of(2021, 10, 23));
+
+        var expectedRendimientos = List.of(dto1, dto2);
+
+        var query = "/rendimiento/dia?fecha_desde=2021-10-22&fecha_hasta=2021-10-23";
+        var response = rest.get(query);
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<RendimientoDiaDTO>>>() {
+        });
+
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedRendimientos, successfulResponse.getData());
+    }
+
+    @Test
+    void Get_Rendimiento_Por_Dia__Bad_Request__Missing_Param() {
+        var query = "/rendimiento/dia?fecha_desde=2021-10-22";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Rendimiento_Por_Dia__Bad_Request__Bad_Date_Format() {
+        var query = "/rendimiento/dia?fecha_desde=22-11-2021&fecha_hasta=23-10-2021";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Rendimiento_Por_Queso__OK() {
+        var queso1 = new QuesoDTO();
+        queso1.setCodigo("001");
+        queso1.setTipoQueso("CREMOSO");
+        queso1.setNomenclatura("C");
+        queso1.setId(2L);
+        queso1.setStock(70);
+
+        var dto1 = new RendimientoQuesoDTO();
+        dto1.setRendimiento(11.855);
+        dto1.setQueso(queso1);
+
+        var queso2 = new QuesoDTO();
+        queso2.setCodigo("002");
+        queso2.setTipoQueso("BARRA");
+        queso2.setNomenclatura("B");
+        queso2.setId(3L);
+        queso2.setStock(20);
+
+        var dto2 = new RendimientoQuesoDTO();
+        dto2.setRendimiento(14.36);
+        dto2.setQueso(queso2);
+
+        var expectedRendimientos = List.of(dto1, dto2);
+
+        var query = "/rendimiento/queso?fecha_desde=2021-10-22&fecha_hasta=2021-10-25";
+        var response = rest.get(query);
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<RendimientoQuesoDTO>>>() {
+        });
+
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedRendimientos, successfulResponse.getData());
+    }
+
+    @Test
+    void Get_Rendimiento_Por_Queso__Bad_Request__Missing_Param() {
+        var query = "/rendimiento/queso?fecha_desde=2021-10-22";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Rendimiento_Por_Queso__Bad_Request__Bad_Date_Format() {
+        var query = "/rendimiento/queso?fecha_desde=22-11-2021&fecha_hasta=23-10-2021";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Litros_Elaborados__OK() {
+        var dto1 = new LitrosElaboradosDiaDTO();
+        dto1.setFecha(LocalDate.of(2021, 10, 22));
+        dto1.setTotal(4900.0);
+        dto1.setLitrosElaborados(List.of(new LitrosElaboradosDTO(4900.0, "001")));
+
+        var dto2 = new LitrosElaboradosDiaDTO();
+        dto2.setFecha(LocalDate.of(2021, 10, 23));
+        dto2.setTotal(6500.0);
+        dto2.setLitrosElaborados(List.of(new LitrosElaboradosDTO(6500.0, "001")));
+
+        var dto3 = new LitrosElaboradosDiaDTO();
+        dto3.setFecha(LocalDate.of(2021, 10, 24));
+        dto3.setTotal(6537.0);
+        dto3.setLitrosElaborados(List.of(new LitrosElaboradosDTO(6537.0, "002")));
+
+
+        var expectedLitros = List.of(dto1, dto2, dto3);
+
+        var query = "/litros_elaborados?fecha_desde=2021-10-22&fecha_hasta=2021-10-25";
+        var response = rest.get(query);
+
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<List<LitrosElaboradosDiaDTO>>>() {
+        });
+
+        assertEquals("", successfulResponse.getMessage());
+        assertEquals(expectedLitros, successfulResponse.getData());
+    }
+
+    @Test
+    void Get_Litros_Elaborados__Bad_Request__Missing_Param() {
+        var query = "/litros_elaborados?fecha_desde=2021-10-22";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
+    }
+
+    @Test
+    void Get_Litros_Elaborados__Bad_Request__Bad_Date_Format() {
+        var query = "/litros_elaborados?fecha_desde=22-11-2021&fecha_hasta=23-10-2021";
+        var thrown = assertThrows(
+                HttpClientErrorException.BadRequest.class, () -> rest.get(query)
+        );
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatusCode());
     }
 }

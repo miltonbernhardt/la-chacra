@@ -92,7 +92,8 @@ public class ClienteService {
 
     public void delete(Long id) throws ClienteNotFoundException {
         existsCliente(id);
-        if (expedicionRepository.existsByIdCliente(id))
+        var cliente = repository.getById(id);
+        if (expedicionRepository.existsByCliente(cliente))
             darBajaCliente(id);
         else
             repository.deleteById(id);

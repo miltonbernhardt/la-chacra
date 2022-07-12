@@ -8,6 +8,7 @@ import { RendimientoCard } from "./RendimientoCard";
 import { RendimientoChart } from "./RendimientoChart";
 import { RendimientoQuesoCard } from "./RendimientoQuesoCard";
 import { RendimientoSearch } from "./RendimientoSearch";
+import { todayDateISO, dateMinusWeeks } from "../../resources/utils";
 
 export const Rendimiento = () => {
 
@@ -17,18 +18,13 @@ export const Rendimiento = () => {
     const [isLoadingRendimientos, setLoadingRendimientos] = useState(true);
     const [isLoadingRendimientoQueso, setLoadingRendimientoQueso] = useState(true)
 
-    const fetchRendimientos = useCallback((fechaHasta, meses) => {
-        //TODO: mover conversion de fechas a un archivo aparte como funcion
-        const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        var date = currentDate.getDate();
-        if (month === 1 && date === 28) date = 27;
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+    const fetchRendimientos = useCallback((fechaHasta, semanas) => {
+
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
+
         getRendimientoByDia(fechaDesde, fechaHasta)
             .then(({ data }) => {
-                data.length > 16 ? setListaRendimientos(data) :
+                data.length > 15 ? setListaRendimientos(data) :
                     toast.error('No se poseen suficientes datos');
             })
             .catch(() => toast.error('No se pudo cargar rendimientos'))
@@ -41,17 +37,7 @@ export const Rendimiento = () => {
             .finally(() => setLoadingRendimientoQueso(false));
     }, [])
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-    }
-
-    const fechaInicial = useMemo(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
-        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
-    }, [])
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
 
     useEffect(() => {
         fetchRendimientos(fechaInicial, 1);
@@ -62,6 +48,7 @@ export const Rendimiento = () => {
     }, [fetchRendimientos])
 
     // --- Variables ---
+
     const rendimientoPromedio = useMemo(() => {
         var sum = 0.0;
         for (var i in listaRendimientos) {
@@ -88,9 +75,9 @@ export const Rendimiento = () => {
         })
 
     const rendimientoMultilineFormatted = useMemo(() => {
-        const semana1 = listaRendimientos.slice(-16, -10);
-        const semana2 = listaRendimientos.slice(-11, -5)
-        const ultimaSemana = listaRendimientos.slice(-6);
+        const semana1 = listaRendimientos.slice(-15, -10);
+        const semana2 = listaRendimientos.slice(-10, -5)
+        const ultimaSemana = listaRendimientos.slice(-5);
         return ultimaSemana.map((value, index) => {
             return {
                 dia: index,
@@ -124,61 +111,63 @@ export const Rendimiento = () => {
         return [bottom, top];
     }, [listaRendimientos])
 
-    return isLoadingRendimientoQueso ||
-    isLoadingRendimientos ? <Loading/> :
-        <Grid container
-              direction="row"
-              spacing={2}
-              paddingRight={2}
-              style={{
-                  minHeight: "92%",
-                  maxWidth: "98%",
-                  margin: "1%",
-                  boxSizing: "border-box",
-              }}>
-            <Grid item container spacing={2}>
-                <RendimientoSearch
-                    fechaInicial={fechaInicial}
-                    meses={1}
-                    onSearch={handleSearch}/>
-                <RendimientoCard
-                    titulo="rendimiento"
-                    valor={ultimoRendimientoPromedio}
-                    descripcion="Rendimiento promedio de la semana"/>
-                <RendimientoCard
-                    titulo="rendimiento"
-                    valor={rendimientoPromedio}
-                    descripcion="Rendimiento promedio del período"/>
+    return (
+        isLoadingRendimientoQueso ||
+            isLoadingRendimientos ? <Loading /> :
+            <Grid container
+                direction="row"
+                spacing={2}
+                paddingRight={2}
+                style={{
+                    minHeight: "92%",
+                    maxWidth: "98%",
+                    margin: "1%",
+                    boxSizing: "border-box",
+                }}>
+                <Grid item container spacing={2}>
+                    <RendimientoSearch
+                        fechaInicial={fechaInicial}
+                        meses={1}
+                        onSearch={handleSearch} />
+                    <RendimientoCard
+                        titulo="rendimiento"
+                        valor={ultimoRendimientoPromedio}
+                        descripcion="Rendimiento promedio de la semana" />
+                    <RendimientoCard
+                        titulo="rendimiento"
+                        valor={rendimientoPromedio}
+                        descripcion="Rendimiento promedio del período" />
+                </Grid>
+                {/*Chart*/}
+                <Grid item container spacing={2}>
+                    <RendimientoChart
+                        title="Rendimiento"
+                        yLabel="Rendimiento"
+                        xLabel="Dias"
+                        data={rendimientoMultilineFormatted}
+                        xDataKey="dia"
+                        dataKey="Últimos 5 dias"
+                        dataKey1="5 dias anteriores"
+                        dataKey2="10 dias anteriores"
+                        domain={domain}
+                        legend={true} />
+                    <RendimientoChart
+                        title="Rendimiento"
+                        yLabel="Rendimiento"
+                        xLabel="Fecha"
+                        data={rendimientoFormatted}
+                        xDataKey="fecha"
+                        dataKey="rendimiento"
+                        domain={domain} />
+                </Grid>
+                <Grid item container spacing={2}>
+                    {listaByQuesoFormatted.map((rendimiento) => (
+                        <Grid item key={rendimiento.queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
+                            <RendimientoQuesoCard queso={rendimiento.queso}
+                                rendimiento={rendimiento.rendimiento} />
+                        </Grid>
+                    ))}
+                </Grid>
             </Grid>
-            {/*Chart*/}
-            <Grid item container spacing={2}>
-                <RendimientoChart
-                    title="Rendimiento"
-                    yLabel="Rendimiento"
-                    xLabel="Dias"
-                    data={rendimientoMultilineFormatted}
-                    xDataKey="dia"
-                    dataKey="Ultimos 5 dias"
-                    dataKey1="5 dias anteriores"
-                    dataKey2="10 dias anteriores"
-                    domain={domain}
-                    legend={true}/>
-                <RendimientoChart
-                    title="Rendimiento"
-                    yLabel="Rendimiento"
-                    xLabel="Fecha"
-                    data={rendimientoFormatted}
-                    xDataKey="fecha"
-                    dataKey="rendimiento"
-                    domain={domain}/>
-            </Grid>
-            <Grid item container spacing={2}>
-                {listaByQuesoFormatted.map((rendimiento) => (
-                    <Grid item key={rendimiento.queso.id} xs={12} sm={6} md={4} lg={3} xl={2}>
-                        <RendimientoQuesoCard queso={rendimiento.queso}
-                                              rendimiento={rendimiento.rendimiento}/>
-                    </Grid>
-                ))}
-            </Grid>
-        </Grid>
+    );
 }

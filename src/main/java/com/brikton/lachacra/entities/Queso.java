@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -39,5 +40,16 @@ public class Queso {
     @Override
     public int hashCode() {
         return Objects.hash(id, codigo, tipoQueso, nomenclatura, stock, fechaBaja, color);
+    }
+
+    @ManyToMany(mappedBy = "listaQuesos")
+    private Collection<Embalaje> embalajes;
+
+    public Collection<Embalaje> getEmbalajes() {
+        return embalajes;
+    }
+
+    public void setEmbalajes(Collection<Embalaje> embalajes) {
+        this.embalajes = embalajes;
     }
 }

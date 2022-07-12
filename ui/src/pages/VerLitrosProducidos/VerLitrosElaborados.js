@@ -1,13 +1,14 @@
 import { Grid } from "@mui/material";
+import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loading } from "../../components/Loading";
+import { dateMinusWeeks, todayDateISO } from "../../resources/utils";
 import { getAllQuesos, getLitros } from "../../services/RestServices";
 import { ChartLitros } from "./ChartLitros";
 import { GridLitros } from "./GridLitros";
 import { LitrosByQueso } from "./LitrosByQueso";
 import { SearchLitros } from "./SearchLitros";
-import * as React from 'react';
 
 export const VerLitrosElaborados = () => {
 
@@ -35,35 +36,20 @@ export const VerLitrosElaborados = () => {
             .finally(() => setLoadingQuesos(false));
     }
 
-    const fetchLitros = useCallback((fechaHasta, meses) => {
-        //TODO: move to its own file
-        const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        let date = currentDate.getDate();
-        if (month === 1 && date === 28) date = 27;
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+    const fetchLitros = useCallback((fechaHasta, semanas) => {
+
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
+
         getLitros(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaLitros(data)
-                if (data.length < 16) toast.error('No se poseen suficientes datos');
+                if (data.length < 15) toast.error('No se poseen suficientes datos');
             })
             .catch(() => toast.error('No se pudo cargar litros'))
             .finally(() => setLoadingLitros(false));
     }, [])
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-    }
-
-    const fechaInicial = useMemo(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
-        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
-    }, [])
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
 
     useEffect(() => {
         fetchLitros(fechaInicial, 1);
@@ -105,9 +91,9 @@ export const VerLitrosElaborados = () => {
 
     const litrosMultilineFormatted = useMemo(() => {
         if (listaLitros.length < 16) return [];
-        const semana1 = listaLitros.slice(-16, -10);
-        const semana2 = listaLitros.slice(-11, -5)
-        const ultimaSemana = listaLitros.slice(-6);
+        const semana1 = listaLitros.slice(-15, -10);
+        const semana2 = listaLitros.slice(-10, -5)
+        const ultimaSemana = listaLitros.slice(-5);
         return ultimaSemana.map((value, index) => {
             return {
                 dia: index,
@@ -145,6 +131,8 @@ export const VerLitrosElaborados = () => {
                         md={5}
                         title="Litros totales"
                         data={litrosMultilineFormatted}
+                        yLabel="Litros"
+                        xLabel="Fecha"
                         xDataKey="fecha"
                         dataKey="Ultimos 5 dias"
                         dataKey1="5 dias anteriores"

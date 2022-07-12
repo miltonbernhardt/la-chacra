@@ -4,22 +4,34 @@ import toast from "react-hot-toast";
 import { Loading } from "../../components/Loading";
 import { PageFormTable } from "../../components/PageFormTable";
 import * as field from "../../resources/fields";
-import { deleteExpedicion, getAllClientes, postExpedicion, putExpedicion } from '../../services/RestServices';
+import { todayDateISO } from '../../resources/utils';
+import {
+    deleteExpedicion,
+    getAllClientes,
+    postExpedicion,
+    postExpedicionLoteCompleto,
+    putExpedicion,
+} from '../../services/RestServices';
 import { DialogEliminarExpedicion } from './DialogEliminarExpedicion'
 import { FormExpedicion } from "./FormExpedicion";
 import { GridExpedicion } from "./GridExpedicion";
 
-const expedicionInicial = {
-    id: '',
-    idLote: '',
-    idCliente: '',
-    fechaExpedicion: '',
-    cantidad: '',
-    peso: '',
-    importe: ''
-}
 
 export const CargarExpedicion = () => {
+
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
+
+    const expedicionInicial = useMemo(() => {
+        return {
+            id: '',
+            idLote: '',
+            idCliente: '',
+            fechaExpedicion: fechaInicial,
+            cantidad: '',
+            peso: '',
+            importe: ''
+        }
+    }, [fechaInicial]);
 
     const [expedicion, setExpedicion] = useState(expedicionInicial);
     const [listaClientes, setListaClientes] = useState([]);
@@ -43,27 +55,45 @@ export const CargarExpedicion = () => {
             .finally(() => setLoadingClientes(false));
     }
 
-    const handleSubmit = useCallback((expedicionForm) => {
+    const handleSubmit = useCallback((expedicionForm, isLoteCompleto) => {
         setExpedicion(expedicionForm);
         if (isEditing)
             putExpedicion(expedicionForm)
                 .then(({ data }) => {
                     setEditing(false);
-                    setExpedicion(expedicionInicial);
+                    const cliente = expedicionForm.idCliente;
+                    setExpedicion({ ...expedicionInicial, idCliente: cliente });
                     const newList = listaExpediciones.filter((item) => item.id !== expedicion.id);
                     setListaExpediciones([...newList, data]);
                 })
                 .catch(() => toast.error('No se pudo actualizar la expedicion'))
                 .finally()
-        else
-            postExpedicion(expedicionForm)
+        else {
+            if (isLoteCompleto)
+                postExpedicionLoteCompleto(expedicionForm)
+                    .then(({ data }) => {
+                        const cliente = expedicionForm.idCliente;
+                        setExpedicion({ ...expedicionInicial, idCliente: cliente });
+                        setListaExpediciones([...listaExpediciones, data]);
+                    })
+                    .catch(() => {
+                        toast.error('No se pudo cargar la expedicion')
+
+                        const cliente = expedicionForm.idCliente;
+                        setExpedicion({ ...expedicionInicial, idCliente: cliente });
+                    })
+                    .finally()
+            else postExpedicion(expedicionForm)
                 .then(({ data }) => {
-                    setExpedicion(expedicionInicial);
+
+                    const cliente = expedicionForm.idCliente;
+                    setExpedicion({ ...expedicionInicial, idCliente: cliente });
                     setListaExpediciones([...listaExpediciones, data]);
                 })
                 .catch(() => toast.error('No se pudo cargar la expedicion'))
                 .finally()
-    }, [expedicion, isEditing, listaExpediciones])
+        }
+    }, [expedicion.id, expedicionInicial, isEditing, listaExpediciones])
 
     const submitDelete = useCallback(() => {
         deleteExpedicion(expedicion.id)
@@ -75,7 +105,7 @@ export const CargarExpedicion = () => {
             })
             .catch(() => null)
             .finally(() => setOpenDialogEliminar(false))
-    }, [expedicion.id, listaExpediciones]);
+    }, [expedicion.id, expedicionInicial, listaExpediciones]);
 
     const handleDelete = useCallback(() => setOpenDialogEliminar(true), [])
 
@@ -86,8 +116,9 @@ export const CargarExpedicion = () => {
 
     const handleCancelar = useCallback(() => {
         setEditing(false);
-        setExpedicion(expedicionInicial);
-    }, []);
+        const cliente = expedicion.idCliente;
+        setExpedicion({ ...expedicionInicial, idCliente: cliente });
+    }, [expedicion.idCliente, expedicionInicial]);
 
     const cancelDelete = useCallback(() => setOpenDialogEliminar(false), [])
 
@@ -112,7 +143,7 @@ export const CargarExpedicion = () => {
     }), [listaClientes, listaExpediciones]);
 
     if (isLoadingClientes)
-        return <Loading/>
+        return <Loading />
 
     return <PageFormTable
         form={
@@ -122,18 +153,18 @@ export const CargarExpedicion = () => {
                 clientes={clientesFormatted}
                 handleSubmit={handleSubmit}
                 handleCancelar={handleCancelar}
-                handleDelete={handleDelete}/>
+                handleDelete={handleDelete} />
         }
         table={
             <GridExpedicion
                 expediciones={expedicionesFormatted}
-                setSelection={handleSelect}/>
+                setSelection={handleSelect} />
         }
         titleTable="Expediciones"
         titleForm="Ingreso de expediciones">
         <DialogEliminarExpedicion
             open={openDialogEliminar}
             onClose={cancelDelete}
-            onSubmit={submitDelete}/>
+            onSubmit={submitDelete} />
     </PageFormTable>
 }

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,14 +28,17 @@ public class UserController {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final BCryptPasswordEncoder encoder;
 
-    public UserController(AuthenticationManager authenticationManager, UserService userService) {
+    public UserController(AuthenticationManager authenticationManager, UserService userService, BCryptPasswordEncoder encoder) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.encoder = encoder;
     }
 
     @PostMapping(value = Path.API_LOGIN)
     public ResponseEntity<SuccessfulResponse<String>> login(@Valid @RequestBody UserLoginDTO loginDTO) {
+        System.out.println(encoder.encode(loginDTO.getPassword()));
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
         );

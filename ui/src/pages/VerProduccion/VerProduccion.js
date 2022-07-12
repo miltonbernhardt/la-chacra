@@ -3,14 +3,17 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from "react-hot-toast";
 import { Loading } from '../../components/Loading';
 import { PageFormTable } from "../../components/PageFormTable";
+import { SearchByWeeks } from '../../components/SearchByWeeks';
 import * as field from "../../resources/fields";
+import { dateMinusWeeks, todayDateISO } from '../../resources/utils';
 import { deleteLote, getAllQuesos, getLotesBetweenDates, putLote } from "../../services/RestServices";
 import { DialogEliminarLote } from "../Lotes/DialogEliminarLote";
 import { EditLoteDialog } from './EditLoteDialog';
-import { FormProduccion } from "./FormProduccion";
 import { GridProduccion } from "./GridProduccion";
 
 export const VerProduccion = () => {
+
+    const today = useMemo(() => { return todayDateISO() }, []);
 
     const [listaLotes, setListaLotes] = useState([]);
     const [listaQuesos, setListaQuesos] = useState([]);
@@ -20,7 +23,9 @@ export const VerProduccion = () => {
     const [isLoading, setLoading] = useState(true);
     const [eliminarDialog, setEliminarDialog] = useState(false);
 
-    const fetchLotes = (fechaDesde, fechaHasta) => {
+    const fetchLotes = (fechaHasta, semanas) => {
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
+
         getLotesBetweenDates(fechaDesde, fechaHasta)
             .then(({ data }) => setListaLotes(data))
             .catch(() => toast.error('No se pudieron cargar los lotes'))
@@ -35,12 +40,15 @@ export const VerProduccion = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    useEffect(() => fetchQuesos(), [fetchQuesos])
+    useEffect(() => {
+        fetchQuesos();
+        fetchLotes(today, 1)
+    }, [fetchQuesos, today])
 
     // --- Functions ---
 
-    const handleBuscar = useCallback((fechaDesde, fechaHasta) => {
-        fetchLotes(fechaDesde, fechaHasta);
+    const handleBuscar = useCallback((fechaHasta, meses) => {
+        fetchLotes(fechaHasta, meses);
     }, []);
 
     const setSelection = useCallback((id) => {
@@ -78,12 +86,9 @@ export const VerProduccion = () => {
     }, [lote.id, listaLotes]);
 
     const cancelEliminar = useCallback(() => setEliminarDialog(false), []);
+
     // --- Variables ---
 
-    const today = useMemo(() => {
-        const currentDate = new Date();
-        return `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`
-    }, []);
 
     const listaLotesFormatted = listaLotes.map((lote) => {
         let colorStock = lote.cantHormas === lote.stockLote ? 'info' : 'default';
@@ -103,30 +108,33 @@ export const VerProduccion = () => {
         }
     });
 
-    if (isLoading) return (<Loading/>)
-
-    return <PageFormTable
-        mdForm={2}
-        lgForm={2}
-        titleForm={"Producción"}
-        form={<FormProduccion
-            onBuscar={handleBuscar}
-            initialDate={today}/>}
-        sizeForm={3}
-        table={<GridProduccion
-            quesos={listaQuesos}
-            data={listaLotesFormatted}
-            setSelection={setSelection}/>}>
-        <EditLoteDialog
-            lote={lote}
-            open={isEditing}
-            onClose={closeDialog}
-            onSubmit={handleSubmit}
-            onDelete={eliminarLote}/>
-        <DialogEliminarLote
-            open={eliminarDialog}
-            lote={lote}
-            onClose={cancelEliminar}
-            onSubmit={handleEliminar}/>
-    </PageFormTable>
+    return (
+        isLoading ? <Loading /> :
+            <PageFormTable
+                mdForm={2}
+                lgForm={2}
+                titleForm={"Producción"}
+                form={
+                    <SearchByWeeks
+                        fechaInicial={today}
+                        meses={1}
+                        onSearch={handleBuscar} />
+                }
+                sizeForm={3}
+                table={<GridProduccion
+                    quesos={listaQuesos}
+                    data={listaLotesFormatted}
+                    setSelection={setSelection} />}>
+                <EditLoteDialog
+                    lote={lote}
+                    open={isEditing}
+                    onClose={closeDialog}
+                    onSubmit={handleSubmit}
+                    onDelete={eliminarLote} />
+                <DialogEliminarLote
+                    open={eliminarDialog}
+                    lote={lote}
+                    onClose={cancelEliminar}
+                    onSubmit={handleEliminar} />
+            </PageFormTable>)
 }

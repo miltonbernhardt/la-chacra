@@ -3,6 +3,7 @@ package com.brikton.lachacra.dtos;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.Devolucion;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class DevolucionDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -40,9 +42,6 @@ public class DevolucionDTO {
     private String idLoteProducto;
 
     private Long id;
-
-    public DevolucionDTO() {
-    }
 
     public DevolucionDTO(Devolucion devolucion) {
         this.setId(devolucion.getId());

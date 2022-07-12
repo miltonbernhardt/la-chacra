@@ -387,7 +387,7 @@ public class ClienteServiceTest {
         mockCliente.setRazonSocial("Razon social 1");
 
         when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(true);
-        when(expedicionRepository.existsByIdCliente(1L)).thenReturn(true);
+        when(expedicionRepository.existsByCliente(mockCliente)).thenReturn(true);
         when(repository.getById(1L)).thenReturn(mockCliente);
         when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
         when(repository.save(mockDeleted)).thenReturn(mockDeleted);
@@ -417,7 +417,7 @@ public class ClienteServiceTest {
 
         when(repository.existsByIdAndNotDadoBaja(1L)).thenReturn(true);
         when(repository.getById(1L)).thenReturn(mockCliente);
-        when(expedicionRepository.existsByIdCliente(1L)).thenReturn(false);
+        when(expedicionRepository.existsByCliente(mockCliente)).thenReturn(false);
         when(dateUtil.now()).thenReturn(LocalDate.of(2020, 10, 10));
 
         service.delete(1L);

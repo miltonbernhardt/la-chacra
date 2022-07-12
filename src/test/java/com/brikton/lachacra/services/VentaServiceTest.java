@@ -25,9 +25,7 @@ public class VentaServiceTest {
     @Test
     public void Get_Ventas__OK(){
         var remito = mockRemito();
-        remitoService.generateItemsRemito(remito);
-        when(remitoService.getBetweenDates(any(LocalDate.class),any(LocalDate.class)))
-                .thenReturn(List.of(remito));
+        when(remitoService.getBetweenDates(any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(remito));
 
         var result = service.getVentas(LocalDate.of(2021, 10, 11),LocalDate.of(2021, 10, 11));
         assertEquals(1,result.size());

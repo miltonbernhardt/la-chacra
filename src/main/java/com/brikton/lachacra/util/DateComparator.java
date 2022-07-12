@@ -1,6 +1,6 @@
 package com.brikton.lachacra.util;
 
-import com.brikton.lachacra.dtos.RendimientoDiaDTO;
+import com.brikton.lachacra.dtos.rendimiento.RendimientoDiaDTO;
 import com.brikton.lachacra.dtos.litrosElaborados.LitrosElaboradosDiaDTO;
 import com.brikton.lachacra.dtos.ventas.VentaDiaDTO;
 

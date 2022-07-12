@@ -2,12 +2,13 @@ package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.entities.ItemRemito;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.Locale;
 
 @Data
+@NoArgsConstructor
 public class ItemRemitoReportDTO {
 
     private Integer cantidad;
@@ -20,7 +21,6 @@ public class ItemRemitoReportDTO {
         this.peso = itemRemito.getPeso();
 
         Locale arg = new Locale("es", "AR");
-        Currency peso = Currency.getInstance(arg);
         NumberFormat pesoFormat = NumberFormat.getCurrencyInstance(arg);
 
         this.precio = pesoFormat.format(itemRemito.getPrecio());

@@ -3,6 +3,7 @@ package com.brikton.lachacra.dtos;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.Expedicion;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -12,6 +13,7 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class ExpedicionDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -36,9 +38,7 @@ public class ExpedicionDTO {
 
     private Double importe;
     private Long id;
-
-    public ExpedicionDTO() {
-    }
+    private Boolean onRemito;
 
     public ExpedicionDTO(Expedicion expedicion) {
         this.setId(expedicion.getId());
@@ -48,6 +48,7 @@ public class ExpedicionDTO {
         this.setImporte(expedicion.getImporte());
         this.setIdCliente(expedicion.getCliente().getId());
         this.setIdLote(expedicion.getLote().getId());
+        this.setOnRemito(expedicion.getOnRemito());
     }
 
     public ExpedicionDTO(ExpedicionUpdateDTO expedicion) {

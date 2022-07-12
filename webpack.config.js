@@ -4,8 +4,8 @@ module.exports = {
     entry: ['babel-polyfill', './ui/src/index.js'],
     devtool: 'source-map',
     cache: true,
-    mode: 'development',
-    // mode: 'production',
+    //mode: 'development',
+     mode: 'production',
     output: {
         path: __dirname,
         filename: './src/main/resources/static/built/bundle.js',

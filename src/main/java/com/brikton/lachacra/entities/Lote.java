@@ -22,6 +22,7 @@ public class Lote {
     private Double litrosLeche;
     private Integer cantHormas;
     private Integer stockLote;
+    private Integer cantCajas;
     private Double peso;
     private Double rendimiento;
     private String loteCultivo;
@@ -29,6 +30,7 @@ public class Lote {
     private String loteCalcio;
     private String loteCuajo;
     private LocalDate fechaBaja;
+    private Boolean pesoNoConfiable;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_queso")

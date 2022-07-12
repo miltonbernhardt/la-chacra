@@ -2,6 +2,7 @@ package com.brikton.lachacra.dtos;
 
 import com.brikton.lachacra.constants.ValidationMessages;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
+@NoArgsConstructor
 public class QuesoUpdateDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
@@ -29,9 +31,6 @@ public class QuesoUpdateDTO {
 
     private Integer stock;
     private String color;
-
-    public QuesoUpdateDTO() {
-    }
 
     public String getCodigo() {
         return codigo != null ? codigo.toUpperCase() : null;

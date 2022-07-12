@@ -10,10 +10,11 @@ import {
     DialogTitle,
     Grid,
     Stack,
-    Typography
+    Typography,
+    Checkbox,
 } from '@mui/material';
 import * as React from 'react';
-import { createRef, useCallback, useState } from 'react';
+import { createRef, useCallback, useState, useEffect } from 'react';
 import BarcodeReader from 'react-barcode-reader';
 import toast from 'react-hot-toast';
 import { Input } from '../../components/Input';
@@ -21,15 +22,25 @@ import { Select } from "../../components/Select";
 import * as field from "../../resources/fields";
 import * as message from "../../resources/messages";
 import * as validation from "../../resources/validations";
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicion }) => {
+export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaExpedicion, isLoteCompleto, changeLoteCompleto }) => {
 
     const [listaLecturas, setListaLecturas] = useState([]);
     const [pesoExpedicion, setPesoExpedicion] = useState(0);
+    const [cantidadLecturas, setCantidadLecturas] = useState(1);
 
     const refCantidad = createRef()
     const refSelectCliente = createRef()
     const refFechaExpedicion = createRef()
+
+    useEffect(() => {
+        if (open) setCantidadLecturas(1);
+        if (!open) {
+            setListaLecturas([]);
+            setPesoExpedicion(0);
+        }
+    }, [open])
 
     const handleScan = (scan) => {
         let lote;
@@ -39,16 +50,18 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
             toast.error('Se leyeron etiquetas de lotes distintos');
             return
         }
+        const lecturas = cantidadLecturas + 1;
+        setCantidadLecturas(lecturas);
         let result1 = scan.substring(14, 20);
         let result2 = scan.substring(20, 23);
         let result3 = `${result1}.${result2}`;
         let peso = parseFloat(result3);
         setListaLecturas([...listaLecturas,
-            {
-                id: listaLecturas.length,
-                lote: lote,
-                peso: peso
-            }])
+        {
+            id: listaLecturas.length,
+            lote: lote,
+            peso: peso
+        }])
         setPesoExpedicion(Math.round((pesoExpedicion + peso) * 100) / 100);
     }
 
@@ -60,6 +73,7 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
         setPesoExpedicion(Math.round((pesoExpedicion - lote.peso) * 100) / 100);
         const newList = listaLecturas.filter(item => item.id !== lote.id);
         setListaLecturas(newList);
+        setCantidadLecturas(newList.length);
     }
 
     const handleCargar = useCallback(() => {
@@ -70,13 +84,20 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
             { func: validation.emptySelect, msg: message.valEmptyField }
         ])
 
-        refCantidad.current.validate(errors, values, [
-            { func: validation.minorToOne, msg: message.valZeroValue }])
-
         refFechaExpedicion.current.validate(errors, values, [
             { func: validation.empty, msg: message.valEmptyFecha },
             { func: validation.olderDate, msg: message.valOlderDate }
         ])
+
+        if (isLoteCompleto) {
+            values[field.backPesoExpedicion] = 1;
+            values[field.backCantidad] = 1;
+        }
+        else {
+            refCantidad.current.validate(errors, values, [
+                { func: validation.minorToOne, msg: message.valZeroValue }])
+            values[field.backPesoExpedicion] = pesoExpedicion;
+        }
 
         if (listaLecturas.length === 0) {
             toast.error('No hay etiquetas para cargar');
@@ -90,11 +111,10 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
         }
 
         values[field.backIdLote] = listaLecturas.at(0).lote;
-        values[field.backPesoExpedicion] = pesoExpedicion;
 
-        onSubmit(values)
+        onSubmit(values, isLoteCompleto)
         setListaLecturas([]);
-    }, [listaLecturas, onSubmit, pesoExpedicion, refCantidad, refFechaExpedicion, refSelectCliente]);
+    }, [isLoteCompleto, listaLecturas, onSubmit, pesoExpedicion, refCantidad, refFechaExpedicion, refSelectCliente]);
 
     const handleCancelar = useCallback(() => {
         setListaLecturas([]);
@@ -105,11 +125,11 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
         <>
             <BarcodeReader
                 onScan={handleScan}
-                onError={handleError}/>
+                onError={handleError} />
             <Dialog open={open} onClose={onClose} scroll="body">
                 <DialogTitle>
                     <Stack direction="row" spacing={2}>
-                        <QrCodeScannerIcon variant="outlined" fontSize='large'/>
+                        <QrCodeScannerIcon variant="outlined" fontSize='large' />
                         <Typography variant="h6">
                             Escanear etiquetas
                         </Typography>
@@ -128,19 +148,19 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                         >
                             <Grid container spacing={2}>
                                 <Input ref={refFechaExpedicion}
-                                       id={field.backFechaExpedicion}
-                                       label={field.fechaExpedicion}
-                                       value={fechaExpedicion}
-                                       type="date"
-                                       required/>
+                                    id={field.backFechaExpedicion}
+                                    label={field.fechaExpedicion}
+                                    value={fechaExpedicion}
+                                    type="date"
+                                    required />
                                 <Select ref={refSelectCliente}
-                                        id={field.backIdCliente}
-                                        label={field.cliente}
-                                        value={cliente}
-                                        options={clientes}
-                                        required/>
+                                    id={field.backIdCliente}
+                                    label={field.cliente}
+                                    value={cliente}
+                                    options={clientes}
+                                    required />
                                 <Typography variant="h6" paddingLeft={2} mt={2}>
-                                    Códigos escaneados
+                                    Códigos escaneados: {cantidadLecturas}
                                 </Typography>
                                 <Grid item xs={12}>
                                     <Stack direction="column">
@@ -164,24 +184,32 @@ export const ScanDialog = ({ open, onClose, onSubmit, clientes, cliente, fechaEx
                                                         {lote.peso}
                                                     </Typography>
                                                     <Button onClick={() => handleDeleteRow(lote)}>
-                                                        <DeleteIcon/>
+                                                        <DeleteIcon />
                                                         quitar
                                                     </Button>
                                                 </Stack>)
                                         })}
                                     </Stack>
                                 </Grid>
+                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <FormControlLabel
+                                        label="Lote Completo"
+                                        control={
+                                            <Checkbox
+                                                checked={isLoteCompleto}
+                                                onChange={() => changeLoteCompleto()} />} />
+                                </Grid>
                                 <Input ref={refCantidad}
-                                       id={field.backCantidad}
-                                       label={field.cantidad}
-                                       sm={6}
-                                       required/>
+                                    id={field.backCantidad}
+                                    label={field.cantidad}
+                                    sm={6}
+                                    required />
                                 <Input
                                     id={field.backPesoExpedicion}
                                     label={field.pesoExpedicion}
                                     value={pesoExpedicion}
                                     sm={6}
-                                    contentEditable={false}/>
+                                    contentEditable={false} />
                             </Grid>
                         </Box>
                     </Container>

@@ -4,6 +4,7 @@ import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.entities.Remito;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,27 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class RemitoDTO {
 
     @NotNull(message = ValidationMessages.NOT_FOUND)
     @PastOrPresent(message = ValidationMessages.CANT_BE_LATER_THAN_TODAY)
     private LocalDate fecha;
 
-    @NotNull(message = ValidationMessages.NOT_FOUND)
-    @Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1)
     private Double importeTotal;
+    private Integer cantCajas;
+    private Integer cantPallets;
+    private Long idCliente;
 
     private List<ItemRemitoDTO> itemsRemito;
 
     private Long id;
 
-    public RemitoDTO() {
-    }
-
     public RemitoDTO(Remito remito) {
         this.setId(remito.getId());
         this.setFecha(remito.getFecha());
         this.setImporteTotal(remito.getImporteTotal());
+        this.setCantCajas(remito.getCantCajas());
+        this.setCantPallets(remito.getCantPallets());
+        if (!remito.getExpediciones().isEmpty())
+            this.setIdCliente(remito.getExpediciones().get(0).getCliente().getId());
         loadItemsRemitoDTO(remito.getItemsRemito());
     }
 
@@ -42,5 +46,4 @@ public class RemitoDTO {
         items.forEach(itemRemito -> itemsList.add(new ItemRemitoDTO(itemRemito)));
         itemsRemito = itemsList;
     }
-
 }

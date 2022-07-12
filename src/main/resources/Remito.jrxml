@@ -82,6 +82,8 @@
 	<parameter name="senasaUta" class="java.lang.String"/>
 	<parameter name="cajas" class="java.lang.Integer"/>
 	<parameter name="fecha" class="java.lang.String"/>
+	<parameter name="pallets" class="java.lang.Integer"/>
+	<parameter name="nroRemito" class="java.lang.Long"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -89,7 +91,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="49" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="120" height="48" forecolor="#030303" uuid="229c6864-5276-4de2-ba29-1ba70c6718ee"/>
 				<box>
@@ -144,7 +146,7 @@ Familia Noroña S.A.]]></text>
 				<text><![CDATA[ familianor_lachacra@hotmail.com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="80" height="48" uuid="42dd078f-a206-4408-ba2e-682275465e8e"/>
+				<reportElement x="300" y="0" width="70" height="48" uuid="42dd078f-a206-4408-ba2e-682275465e8e"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -155,9 +157,11 @@ Familia Noroña S.A.]]></text>
 				<text><![CDATA[X]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="380" y="0" width="70" height="48" uuid="41dcbe62-59aa-4fdb-a4f4-53bebfc15836"/>
+				<reportElement x="370" y="24" width="90" height="24" uuid="41dcbe62-59aa-4fdb-a4f4-53bebfc15836">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -165,17 +169,40 @@ Familia Noroña S.A.]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Fecha]]></text>
+				<text><![CDATA[Fecha:]]></text>
 			</staticText>
 			<textField pattern="d/MM/yyyy">
-				<reportElement x="450" y="0" width="104" height="48" uuid="f8a0a6d0-47ce-44f5-81ae-a8c8dc2fe6bc"/>
+				<reportElement x="460" y="24" width="94" height="24" uuid="f8a0a6d0-47ce-44f5-81ae-a8c8dc2fe6bc"/>
 				<box>
-					<topPen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None"/>
 				<textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="370" y="0" width="90" height="24" uuid="d547e374-3c96-4ba8-8859-e3f1f3c4088e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remito N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="460" y="0" width="94" height="24" uuid="5666abe7-e73d-4388-abe6-5218b3038b72"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{nroRemito}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -217,14 +244,16 @@ Familia Noroña S.A.]]></text>
 				<text><![CDATA[Transporte:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="40" width="80" height="20" uuid="4de3f47b-41c9-49f9-9f00-fc2802729d20"/>
+				<reportElement x="300" y="30" width="80" height="20" uuid="4de3f47b-41c9-49f9-9f00-fc2802729d20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SENASA/UTA:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="70" width="80" height="20" uuid="4ebfdd94-27d3-4a5d-8428-a92963bf94b8"/>
+				<reportElement x="300" y="50" width="80" height="20" uuid="4ebfdd94-27d3-4a5d-8428-a92963bf94b8">
+					<printWhenExpression><![CDATA[$P{cajas}>0]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
@@ -256,14 +285,32 @@ Familia Noroña S.A.]]></text>
 				<textFieldExpression><![CDATA[$P{transporte}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="390" y="40" width="164" height="20" uuid="0d0602d8-2180-4939-980f-0568ba483cc4"/>
+				<reportElement x="390" y="30" width="164" height="20" uuid="0d0602d8-2180-4939-980f-0568ba483cc4"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{senasaUta}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="390" y="70" width="164" height="20" uuid="567cabde-f231-42a1-927e-2e9d2b0c19a9"/>
+				<reportElement x="390" y="50" width="164" height="20" uuid="567cabde-f231-42a1-927e-2e9d2b0c19a9">
+					<printWhenExpression><![CDATA[$P{cajas}>0]]></printWhenExpression>
+				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{cajas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="70" width="80" height="20" uuid="f573d802-0c94-4fe2-816e-e9cb756f8a59">
+					<printWhenExpression><![CDATA[$P{pallets}>0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° de pallets:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="390" y="70" width="164" height="20" uuid="9cb03147-e135-4bf1-ab2e-bfd16e5e9f6e">
+					<printWhenExpression><![CDATA[$P{pallets}>0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{pallets}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

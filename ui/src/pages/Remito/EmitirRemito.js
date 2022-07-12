@@ -6,10 +6,17 @@ import { PageFormTable } from '../../components/PageFormTable';
 import { getAllClientes, getRemito, postRemito } from '../../services/RestServices';
 import { GridRemito } from './GridRemito';
 import { RemitoForm } from "./RemitoForm";
+import * as field from "../../resources/fields";
+
+const remitoInicial = {
+    [field.backImporteTotal]: 0.0,
+    [field.backCantCajas]: '',
+    [field.backCantPallets]: ''
+}
 
 export const EmitirRemito = () => {
 
-    const [importeTotal, setImporteTotal] = useState(0.0);
+    const [remito, setRemito] = useState(remitoInicial);
     const [listaItems, setListaItems] = useState([]);
     const [listaClientes, setListaClientes] = useState([]);
     const [emitible, setEmitible] = useState(false);
@@ -32,7 +39,7 @@ export const EmitirRemito = () => {
     const handleCargar = useCallback((cliente, fecha) => {
         getRemito(cliente, fecha)
             .then(({ data }) => {
-                setImporteTotal(data.importeTotal);
+                setRemito(data);
                 setListaItems(data.itemsRemito);
                 if (data.itemsRemito.length === 0) {
                     toast.success('El cliente no posee expediciones para remito');
@@ -42,34 +49,34 @@ export const EmitirRemito = () => {
             .catch(() => toast.error('No se pudieron cargar los datos'))
     }, []);
 
-    const handleEmitir = useCallback((cliente, fecha) => {
-        postRemito(cliente, fecha)
+    const handleEmitir = useCallback((idCliente, remito) => {
+        postRemito(idCliente, remito)
             .then(({ data }) => {
-                window.open(`http://localhost:8000/api/v1/remitos/pdf/${data.id}`, '_blank').focus();
             })
             .catch(() => {
                 toast.error('No se pudo generar el remito')
             })
             .finally(() => {
-                setImporteTotal(0.0);
+                setRemito(remitoInicial);
                 setListaItems([]);
                 setEmitible(false);
             })
     }, [])
 
     //--- Variables ---
+
     const clientesFormatted = useMemo(() => listaClientes.map((c) => {
         return { id: c.id, value: c.id, label: c.razonSocial }
     }), [listaClientes])
 
     const itemsFormatted = useMemo(() =>
-            listaItems.map(i => {
-                return { ...i, id: i.tipoQueso }
-            })
+        listaItems.map(i => {
+            return { ...i, id: i.tipoQueso }
+        })
         , [listaItems]);
 
     if (isLoading)
-        return <Loading/>
+        return <Loading />
 
     return <PageFormTable
         titleForm="Emitir Remito"
@@ -79,10 +86,10 @@ export const EmitirRemito = () => {
                 onCargar={handleCargar}
                 onEmitir={handleEmitir}
                 clientes={clientesFormatted}
-                importe={importeTotal}
-                emitible={emitible}/>}
+                remitoInicial={remito}
+                emitible={emitible} />}
         table={
             <GridRemito
-                data={itemsFormatted}/>}>
+                data={itemsFormatted} />}>
     </PageFormTable>
 }

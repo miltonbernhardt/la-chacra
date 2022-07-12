@@ -16,6 +16,7 @@ public class Path {
     public static final String API_QUESOS = "/api/v1/quesos";
     public static final String API_REMITOS = "/api/v1/remitos";
     public static final String API_TIPOS_CLIENTE = "/api/v1/tipos_cliente";
+    public static final String API_VENTAS = "/api/v1/ventas";
     public static final String CARGAR_EXPEDICIONES = "/cargar/expedicion";
     public static final String CARGAR_LOTES = "/cargar/lotes";
     public static final String CARGAR_PRECIOS = "/cargar/precios";
@@ -30,4 +31,6 @@ public class Path {
     public static final String VER_PRODUCCION = "/ver/produccion";
     public static final String VER_TRAZABILIDAD = "/ver/trazabilidad";
     public static final String VER_VENTAS = "/ver/ventas";
+    public static final String VER_REMITOS = "/ver/remitos";
+    public static final String VER_EXPEDICIONES = "/ver/expediciones";
 }

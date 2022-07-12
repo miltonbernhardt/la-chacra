@@ -29,7 +29,7 @@ export const backSenasaUta = "senasaUta"
 export const backEmail = "email"
 export const backTelefono = "telefono"
 export const backFax = "fax"
-export const backCelular = "celuluar"
+export const backCelular = "celular"
 export const backIdTipoCliente = "idTipoCliente"
 export const backIdCliente = "idCliente"
 export const backIdLote = "idLote"
@@ -45,9 +45,13 @@ export const backStockLote = "stockLote"
 export const backRendimientoLote = "rendimiento"
 export const backFechaRemito = "fecha"
 export const backImporteTotal = "importeTotal"
+export const backStockEmbalaje = "stock"
+export const backTipoEmbalaje = "tipoEmbalaje"
 export const backUsername = "username"
 export const backPassword = "password"
-
+export const backCantPallets = "cantPallets"
+export const backPesoNoConfiable = "pesoNoConfiable"
+export const backOnRemito = "onRemito"
 export const ID = "ID"
 
 // produccion
@@ -95,6 +99,7 @@ export const cantidad = "Cantidad"
 export const pesoExpedicion = "Peso"
 export const importe = "Importe"
 export const fechaExpedicion = "Fecha de expedición"
+export const onRemito = "Remito"
 
 // consulta produccion
 export const fechaDesde = "Desde"
@@ -103,10 +108,15 @@ export const fechaHasta = "Hasta"
 // remito
 export const fechaRemito = "Fecha de remito"
 export const importeTotal = "Importe total"
+export const cantPallets = "Cantidad de pallets"
 
-// rendimiento
-export const cantidadMeses = "Cantidad de meses"
-export const backCantidadMeses = "cantidadMeses"
+// busqueda por semanas
+export const cantidadSemanas = "Cantidad de semanas"
+export const backCantidadSemanas = "cantidadSemanas"
+
+// embalaje
+export const tipoEmbalaje = "Tipo de embalaje"
+export const stockEmbalaje = "Stock"
 
 //login
 export const username = "Nombre de usuario"
@@ -156,9 +166,12 @@ const backendFields = () => {
     fields.set(backFechaHasta, fechaHasta)
     fields.set(backFechaRemito, fechaRemito)
     fields.set(backImporteTotal, importeTotal)
-    fields.set(backCantidadMeses, cantidadMeses)
+    fields.set(backCantidadSemanas, cantidadSemanas)
+    fields.set(backStockEmbalaje, stockEmbalaje)
+    fields.set(backTipoEmbalaje, tipoEmbalaje)
     fields.set(backUsername, username)
     fields.set(backPassword, password)
+    fields.set(backOnRemito, onRemito)
     return fields
 }
 
@@ -166,13 +179,13 @@ export const toastValidationErrors = (errors) => {
     if (errors == null && !errors instanceof Map)
         return
     toast.dismiss()
-    console.log({errors})
+    console.log({ errors })
     let mapFields = backendFields()
     errors.forEach(function (msg, field) {
-        console.log({msg})
-        console.log({field})
+        console.log({ msg })
+        console.log({ field })
         let realField = mapFields.get(field)
-        console.log({realField})
+        console.log({ realField })
         realField = realField ?? field
         toast.error(<>
             <div style={{ width: "100%" }}><b>{realField}</b>: {msg}</div>

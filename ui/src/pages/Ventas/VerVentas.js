@@ -1,13 +1,14 @@
 import { Grid } from "@mui/material";
+import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Loading } from "../../components/Loading";
-import { getVentas, getAllQuesos } from "../../services/RestServices";
+import { dateMinusWeeks, todayDateISO } from "../../resources/utils";
+import { getAllQuesos, getVentas } from "../../services/RestServices";
 import { ChartVentas } from "./ChartVentas";
 import { GridVentas } from "./GridVentas";
 import { SearchVentas } from "./SearchVentas";
 import { VentasByQueso } from "./VentasByQueso";
-import * as React from 'react';
 
 export const VerVentas = () => {
 
@@ -35,35 +36,20 @@ export const VerVentas = () => {
             .finally(() => setLoadingQuesos(false));
     }
 
-    const fetchVentas = useCallback((fechaHasta, meses) => {
-        //TODO: move to its own file
-        const currentDate = new Date(fechaHasta);
-        currentDate.setDate(currentDate.getDate() - Math.floor(30.5 * meses));
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        let date = currentDate.getDate();
-        if (month === 1 && date === 28) date = 27;
-        const fechaDesde = `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date + 1)}`;
+    const fetchVentas = useCallback((fechaHasta, semanas) => {
+
+        const fechaDesde = dateMinusWeeks(fechaHasta, semanas);
+
         getVentas(fechaDesde, fechaHasta)
             .then(({ data }) => {
                 setListaVentas(data)
-                if (data.length < 16) toast.error('No se poseen suficientes datos');
+                if (data.length < 15) toast.error('No se poseen suficientes datos');
             })
             .catch(() => toast.error('No se pudo cargar ventas'))
             .finally(() => setLoadingVentas(false));
     }, [])
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-    }
-
-    const fechaInicial = useMemo(() => {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
-        return `${year}-${padTo2Digits(month + 1)}-${padTo2Digits(date,)}`;
-    }, [])
+    const fechaInicial = useMemo(() => { return todayDateISO() }, [])
 
     useEffect(() => {
         fetchVentas(fechaInicial, 1);
@@ -105,9 +91,9 @@ export const VerVentas = () => {
 
     const ventasMultilineFormatted = useMemo(() => {
         if (listaVentas.length < 16) return [];
-        const semana1 = listaVentas.slice(-16, -10);
-        const semana2 = listaVentas.slice(-11, -5)
-        const ultimaSemana = listaVentas.slice(-6);
+        const semana1 = listaVentas.slice(-15, -10);
+        const semana2 = listaVentas.slice(-10, -5)
+        const ultimaSemana = listaVentas.slice(-5);
         return ultimaSemana.map((value, index) => {
             return {
                 dia: index,
@@ -145,6 +131,8 @@ export const VerVentas = () => {
                         md={5}
                         title="Ventas totales"
                         data={ventasMultilineFormatted}
+                        yLabel="Ventas"
+                        xLabel="Fecha"
                         xDataKey="fecha"
                         dataKey="Últimos 5 dias"
                         dataKey1="5 dias anteriores"
