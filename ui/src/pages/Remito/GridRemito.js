@@ -20,18 +20,6 @@ const columns = [
         type: 'number',
         flex: 1,
         minWidth: 100
-    }, {
-        field: "precio",
-        headerName: "Precio Unitario",
-        type: 'number',
-        flex: 1,
-        minWidth: 100
-    }, {
-        field: "importe",
-        headerName: "Importe",
-        type: 'number',
-        flex: 1,
-        minWidth: 100
     },
 ]
 

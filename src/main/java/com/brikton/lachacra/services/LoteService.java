@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -133,8 +134,7 @@ public class LoteService {
         if (pesoD == null || pesoD.equals(0d)) return 0d;
         var peso = BigDecimal.valueOf(pesoD);
         var litrosLeche = BigDecimal.valueOf(litrosLecheD);
-        var mc = new MathContext(2);
-        var rendimiento = peso.divide(litrosLeche, mc);
+        var rendimiento = peso.divide(litrosLeche, 4, RoundingMode.CEILING);
 
         rendimiento = rendimiento.multiply(BigDecimal.valueOf(100));
 

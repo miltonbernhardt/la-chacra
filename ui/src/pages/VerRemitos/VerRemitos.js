@@ -3,11 +3,12 @@ import { PageFormTable } from '../../components/PageFormTable';
 import { GridRemitos } from './GridRemitos';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { dateMinusWeeks, todayDateISO } from '../../resources/utils';
-import { getRemitosBetweenDates, getAllClientes, PDF_REMITO } from '../../services/RestServices';
+import { getRemitosBetweenDates, getAllClientes, PDF_REMITO, deleteRemito } from '../../services/RestServices';
 import { Loading } from '../../components/Loading';
 import toast from 'react-hot-toast';
 import * as field from "../../resources/fields";
 import { SearchByWeeks } from '../../components/SearchByWeeks'
+import { DialogAnularRemito } from './DialogAnularRemito';
 
 export const VerRemitos = () => {
 
@@ -15,6 +16,9 @@ export const VerRemitos = () => {
 
     const [listaRemitos, setListaRemitos] = useState([]);
     const [listaClientes, setListaClientes] = useState([]);
+    const [idRemito, setIdRemito] = useState('');
+
+    const [isOpenDialogAnular, setOpenDialogAnular] = useState(false);
 
     const [isLoadingRemitos, setLoadingRemitos] = useState(true);
     const [isLoadingClientes, setLoadingClientes] = useState(true);
@@ -46,14 +50,38 @@ export const VerRemitos = () => {
         window.open(`${PDF_REMITO}${idRemito}`, '_blank').focus();
     }, [])
 
+
+    const openDialogAnular = useCallback((id) => {
+        setIdRemito(id);
+        setOpenDialogAnular(true);
+    }, [])
+
+    const closeDialog = useCallback(() => {
+        setOpenDialogAnular(false)
+        setIdRemito('');
+    }, [])
+
+    const anularRemito = useCallback(() => {
+        deleteRemito(idRemito)
+            .then(() => {
+                const newList = listaRemitos.filter((item) => item.id !== idRemito);
+                setListaRemitos(newList);
+            })
+            .catch(() => null)
+            .finally(() => closeDialog());
+    }, [closeDialog, idRemito, listaRemitos])
+
     //--- Variables
 
-    const listaRemitosFormatted = listaRemitos.map(remito => {
-        return {
-            ...remito,
-            [field.backRazonSocial]: listaClientes.filter(c => { return c.id === remito.idCliente }).pop().razonSocial
-        }
-    })
+    const listaRemitosFormatted =
+        (isLoadingClientes || isLoadingRemitos) ? [] :
+            listaRemitos.map(remito => {
+                return {
+                    ...remito,
+                    [field.backRazonSocial]: listaClientes.filter(c => { return c.id === remito.idCliente }).pop().razonSocial
+                }
+            })
+
 
     return (
         isLoadingClientes || isLoadingRemitos ? <Loading /> :
@@ -61,14 +89,20 @@ export const VerRemitos = () => {
                 mdForm={2}
                 lgForm={2}
                 titleForm={"Remitos"}
-                form={<SearchByWeeks
-                    fechaInicial={today}
-                    semanas={1}
-                    onSearch={fetchRemitos}
-                />}
-                table={<GridRemitos
-                    data={listaRemitosFormatted}
-                    setSelection={pdfRemito}
-                />} />
+                form={
+                    <SearchByWeeks
+                        fechaInicial={today}
+                        semanas={1}
+                        onSearch={fetchRemitos} />}
+                table={
+                    <GridRemitos
+                        data={listaRemitosFormatted}
+                        setSelection={pdfRemito}
+                        anularRemito={openDialogAnular} />} >
+                <DialogAnularRemito
+                    open={isOpenDialogAnular}
+                    onClose={closeDialog}
+                    onSubmit={anularRemito} />
+            </PageFormTable>
     );
 }
