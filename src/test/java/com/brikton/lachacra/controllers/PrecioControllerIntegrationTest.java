@@ -135,6 +135,19 @@ public class PrecioControllerIntegrationTest {
     }
 
     @Test
+    void Save__Unauthorized() {
+        var dtoToSave = new PrecioDTO();
+        dtoToSave.setValor(371.00);
+        dtoToSave.setIdTipoCliente(3L);
+        dtoToSave.setIdQueso(3L);
+
+        var thrown = assertThrows(
+                HttpClientErrorException.Unauthorized.class, () -> rest.postUnauthorized(dtoToSave)
+        );
+        assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatusCode());
+    }
+
+    @Test
     void Save__Queso_Not_Found_Conflict() throws JsonProcessingException {
         var dtoToSave = new PrecioDTO();
         dtoToSave.setValor(371.00);

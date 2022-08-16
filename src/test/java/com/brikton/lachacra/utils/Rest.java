@@ -40,6 +40,14 @@ public class Rest {
         return post(url, body, null);
     }
 
+    public ResponseEntity<SuccessfulResponse> postUnauthorized(@Nullable Object body) throws RestClientException {
+        try {
+            return post("/", mapper.writeValueAsString(body), null);
+        } catch (JsonProcessingException e) {
+            return post("/", body, null);
+        }
+    }
+
     public ResponseEntity<SuccessfulResponse> post(@Nullable Object body) throws RestClientException {
         try {
             return post("/", mapper.writeValueAsString(body), ADMIN_TOKEN);
