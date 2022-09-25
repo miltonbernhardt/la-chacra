@@ -282,17 +282,17 @@ public class QuesoServiceTest {
     }
 
     @Test
-    void Increase_Stock(){
+    void Increase_Stock() {
         when(repository.save(any(Queso.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
-        var result = quesoService.increaseStock(mockQueso(),1);
-        assertEquals(2,result.getStock());
+        var result = quesoService.increaseStock(mockQueso(), 1);
+        assertEquals(2, result.getStock());
     }
 
     @Test
-    void Decrease_Stock(){
+    void Decrease_Stock() {
         when(repository.save(any(Queso.class))).thenAnswer(AdditionalAnswers.returnsFirstArg());
-        var result = quesoService.decreaseStock(mockQueso(),1);
-        assertEquals(0,result.getStock());
+        var result = quesoService.decreaseStock(mockQueso(), 1);
+        assertEquals(0, result.getStock());
     }
 
     Queso mockQueso() {

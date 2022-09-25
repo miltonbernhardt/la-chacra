@@ -26,7 +26,7 @@ public class EmbalajeService {
         this.quesoService = quesoService;
     }
 
-    public List<EmbalajeDTO> getAll(){
+    public List<EmbalajeDTO> getAll() {
         var embalajes = repository.findAll();
         List<EmbalajeDTO> dtos = new ArrayList<>();
         embalajes.forEach(embalaje -> dtos.add(new EmbalajeDTO(embalaje)));
@@ -39,7 +39,7 @@ public class EmbalajeService {
         return new EmbalajeDTO(result.get());
     }
 
-    public EmbalajeDTO saveNew(EmbalajeDTO dto){
+    public EmbalajeDTO saveNew(EmbalajeDTO dto) {
         if (dto.getId() != null && repository.existsById(dto.getId())) {
             throw new EmbalajeAlreadyExistsException();
         }
@@ -53,20 +53,20 @@ public class EmbalajeService {
         return new EmbalajeDTO(result);
     }
 
-    public EmbalajeDTO update(EmbalajeUpdateDTO updateDTO){
+    public EmbalajeDTO update(EmbalajeUpdateDTO updateDTO) {
         var dto = new EmbalajeDTO(updateDTO);
         var update = embalajeFromDTO(dto);
         if (!repository.existsById(update.getId())) throw new EmbalajeNotFoundException();
-        update.getListaQuesos().forEach(queso ->{
+        update.getListaQuesos().forEach(queso -> {
             if (repository.existsByTipoEmbalajeAndListaQuesosContainsAndIdIsNot(
                     update.getTipoEmbalaje(), queso, update.getId()))
                 throw new EmbalajeAlreadyExistsException();
         });
-       var result = persist(update);
-       return new EmbalajeDTO(result);
+        var result = persist(update);
+        return new EmbalajeDTO(result);
     }
 
-    public EmbalajeDTO updateStock(Long id,Integer stock){
+    public EmbalajeDTO updateStock(Long id, Integer stock) {
         var embalajeOptional = repository.findById(id);
         if (embalajeOptional.isEmpty()) throw new EmbalajeNotFoundException();
         var embalaje = embalajeOptional.get();
@@ -75,41 +75,40 @@ public class EmbalajeService {
         return new EmbalajeDTO(persist(embalaje));
     }
 
-    private Embalaje persist(Embalaje embalaje){
+    private Embalaje persist(Embalaje embalaje) {
         return repository.save(embalaje);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         var embalaje = repository.findById(id);
         if (embalaje.isPresent()) {
             repository.delete(embalaje.get());
         } else throw new EmbalajeNotFoundException();
     }
 
-    public void decreaseStockCaja(Integer cantidad, Queso queso){
-        updateStockEmbalaje(TipoEmbalaje.CAJA,queso,cantidad,false);
+    public void decreaseStockCaja(Integer cantidad, Queso queso) {
+        updateStockEmbalaje(TipoEmbalaje.CAJA, queso, cantidad, false);
     }
 
-    public void increaseStockCaja(Integer cantidad, Queso queso){
-        updateStockEmbalaje(TipoEmbalaje.CAJA,queso,cantidad,true);
+    public void increaseStockCaja(Integer cantidad, Queso queso) {
+        updateStockEmbalaje(TipoEmbalaje.CAJA, queso, cantidad, true);
     }
 
-    public void decreaseStockBolsa(Integer cantidad, Queso queso){
-        updateStockEmbalaje(TipoEmbalaje.BOLSA,queso,cantidad,false);
+    public void decreaseStockBolsa(Integer cantidad, Queso queso) {
+        updateStockEmbalaje(TipoEmbalaje.BOLSA, queso, cantidad, false);
     }
 
-    public void increaseStockBolsa(Integer cantidad, Queso queso){
-        updateStockEmbalaje(TipoEmbalaje.BOLSA,queso,cantidad,true);
+    public void increaseStockBolsa(Integer cantidad, Queso queso) {
+        updateStockEmbalaje(TipoEmbalaje.BOLSA, queso, cantidad, true);
     }
 
     /**
-     *
      * @param tipoEmbalaje
      * @param queso
      * @param cantidad
-     * @param increment if true it will increment the stock, else will decrement
+     * @param increment    if true it will increment the stock, else will decrement
      */
-    private void updateStockEmbalaje(TipoEmbalaje tipoEmbalaje, Queso queso,Integer cantidad, Boolean increment){
+    private void updateStockEmbalaje(TipoEmbalaje tipoEmbalaje, Queso queso, Integer cantidad, Boolean increment) {
         var listaEmbalaje = repository
                 .findByTipoEmbalajeAndListaQuesosContains(tipoEmbalaje, queso);
         if (listaEmbalaje.isEmpty()) throw new EmbalajeNotFoundException(tipoEmbalaje, queso);
@@ -121,10 +120,10 @@ public class EmbalajeService {
         repository.save(embalaje);
     }
 
-    public Embalaje embalajeFromDTO(EmbalajeDTO dto){
+    public Embalaje embalajeFromDTO(EmbalajeDTO dto) {
         Embalaje embalaje = new Embalaje();
         embalaje.setStock(dto.getStock());
-        if (dto.getId()!=null)
+        if (dto.getId() != null)
             embalaje.setId(dto.getId());
         embalaje.setTipoEmbalaje(TipoEmbalaje.valueOf(dto.getTipoEmbalaje()));
         var quesosDTO = dto.getListaQuesos();

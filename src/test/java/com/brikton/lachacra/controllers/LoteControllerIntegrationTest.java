@@ -43,9 +43,9 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class LoteControllerIntegrationTest {
 
+    private static Rest rest = null;
     @LocalServerPort
     private int port;
-    private static Rest rest = null;
 
     @BeforeAll
     static void init() {

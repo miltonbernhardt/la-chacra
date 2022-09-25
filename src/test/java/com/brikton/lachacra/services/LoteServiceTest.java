@@ -23,7 +23,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -495,41 +496,41 @@ public class LoteServiceTest {
     }
 
     @Test
-    void Get_By_Queso_And_With_Stock__OK(){
+    void Get_By_Queso_And_With_Stock__OK() {
         when(quesoService.getByCodigo(any(String.class))).thenReturn(mockQueso());
-        when(repository.findAllByQuesoAndStockLoteGreaterThan(any(Queso.class),any(Integer.class))).thenReturn(List.of(mockLote()));
+        when(repository.findAllByQuesoAndStockLoteGreaterThan(any(Queso.class), any(Integer.class))).thenReturn(List.of(mockLote()));
         var result = service.getByQuesoAndWithStock("001");
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
-    void Get_Between_Dates__OK(){
-        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(),any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(mockLote()));
-        var result = service.getBetweenDates(LocalDate.now(),LocalDate.now());
-        assertEquals(1,result.size());
+    void Get_Between_Dates__OK() {
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(), any(LocalDate.class), any(LocalDate.class))).thenReturn(List.of(mockLote()));
+        var result = service.getBetweenDates(LocalDate.now(), LocalDate.now());
+        assertEquals(1, result.size());
     }
 
     @Test
-    void Get_DTO_By_Id_OK(){
+    void Get_DTO_By_Id_OK() {
         when(repository.findById(anyString())).thenReturn(Optional.of(mockLote()));
         var result = service.getDTOById("101020210011");
-        assertEquals("101020210011",result.getId());
-        assertEquals(LocalDate.of(2021, 10, 10),result.getFechaElaboracion());
-        assertEquals(1,result.getNumeroTina());
-        assertEquals(1D,result.getLitrosLeche());
-        assertEquals(1,result.getCantHormas());
-        assertEquals(1,result.getStockLote());
-        assertEquals(1D,result.getPeso());
-        assertEquals(1D,result.getRendimiento());
-        assertEquals("cultivo1, cultivo2",result.getLoteCultivo());
-        assertEquals("colorante1, colorante2",result.getLoteColorante());
-        assertEquals("calcio1, calcio2",result.getLoteCalcio());
-        assertEquals("cuajo1, cuajo2",result.getLoteCuajo());
-        assertEquals(mockQueso().getCodigo(),result.getCodigoQueso());
+        assertEquals("101020210011", result.getId());
+        assertEquals(LocalDate.of(2021, 10, 10), result.getFechaElaboracion());
+        assertEquals(1, result.getNumeroTina());
+        assertEquals(1D, result.getLitrosLeche());
+        assertEquals(1, result.getCantHormas());
+        assertEquals(1, result.getStockLote());
+        assertEquals(1D, result.getPeso());
+        assertEquals(1D, result.getRendimiento());
+        assertEquals("cultivo1, cultivo2", result.getLoteCultivo());
+        assertEquals("colorante1, colorante2", result.getLoteColorante());
+        assertEquals("calcio1, calcio2", result.getLoteCalcio());
+        assertEquals("cuajo1, cuajo2", result.getLoteCuajo());
+        assertEquals(mockQueso().getCodigo(), result.getCodigoQueso());
     }
 
     @Test
-    void Get_Rendimiento_By_Dia__OK(){
+    void Get_Rendimiento_By_Dia__OK() {
         var lote1 = mockLote();
         var lote2 = mockLote();
         var lote3 = mockLote();
@@ -537,15 +538,15 @@ public class LoteServiceTest {
         lote2.setFechaElaboracion(LocalDate.of(2021, 10, 11));
         lote3.setFechaElaboracion(LocalDate.of(2021, 10, 11));
 
-        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(),any(),any()))
-                .thenReturn(List.of(lote1,lote2,lote3));
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(), any(), any()))
+                .thenReturn(List.of(lote1, lote2, lote3));
 
-        var result = service.getRendimientoByDia(LocalDate.of(2021, 10, 10),LocalDate.of(2021, 10, 10));
-        assertEquals(2,result.size());
+        var result = service.getRendimientoByDia(LocalDate.of(2021, 10, 10), LocalDate.of(2021, 10, 10));
+        assertEquals(2, result.size());
     }
 
     @Test
-    void Get_Rendimiento_By_Queso__OK(){
+    void Get_Rendimiento_By_Queso__OK() {
         var lote1 = mockLote();
         var lote2 = mockLote();
         var lote3 = mockLote();
@@ -559,15 +560,15 @@ public class LoteServiceTest {
         lote2.setQueso(queso1);
         lote3.setQueso(queso2);
 
-        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(),any(),any()))
-                .thenReturn(List.of(lote1,lote2,lote3));
+        when(repository.findAllByFechaBajaAndFechaElaboracionBetween(any(), any(), any()))
+                .thenReturn(List.of(lote1, lote2, lote3));
 
-        var result = service.getRendimientoByQueso(LocalDate.of(2021, 10, 10),LocalDate.of(2021, 10, 10));
-        assertEquals(2,result.size());
+        var result = service.getRendimientoByQueso(LocalDate.of(2021, 10, 10), LocalDate.of(2021, 10, 10));
+        assertEquals(2, result.size());
     }
 
     @Test
-    void Get_Litros_Elaborados__OK(){
+    void Get_Litros_Elaborados__OK() {
         var loteA = mockLote();
         var loteB = mockLote();
         var loteC = mockLote();
@@ -586,16 +587,16 @@ public class LoteServiceTest {
         loteC.setQueso(quesoB);
 
         when(repository
-                .findAllByFechaBajaAndFechaElaboracionBetween(any(),any(LocalDate.class),any(LocalDate.class)))
-                .thenReturn(List.of(loteA,loteB,loteC));
+                .findAllByFechaBajaAndFechaElaboracionBetween(any(), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(List.of(loteA, loteB, loteC));
 
         var result = service.getLitrosElaborados(
                 LocalDate.of(2021, 10, 10),
                 LocalDate.of(2021, 10, 10));
-        assertEquals(1,result.size());
-        assertEquals(2,result.get(0).getLitrosElaborados().size());
-        assertEquals(300d,result.get(0).getLitrosElaborados().get(0).getCantidad());
-        assertEquals(300d,result.get(0).getLitrosElaborados().get(1).getCantidad());
+        assertEquals(1, result.size());
+        assertEquals(2, result.get(0).getLitrosElaborados().size());
+        assertEquals(300d, result.get(0).getLitrosElaborados().get(0).getCantidad());
+        assertEquals(300d, result.get(0).getLitrosElaborados().get(1).getCantidad());
 
     }
 

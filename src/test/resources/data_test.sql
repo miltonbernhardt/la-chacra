@@ -51,7 +51,7 @@ INSERT INTO remito (id_remito, fecha, importe_total)
 VALUES (1, '2022-04-17', 5800.0);
 
 INSERT INTO remito_expediciones (remito_id_remito, expediciones_id)
-VALUES(1, 3);
+VALUES (1, 3);
 
 INSERT INTO public.user_details (id, username, enabled, firstname, lastname, password, token_expired)
 VALUES (1, 'admin', true, 'admin', 'admin', '$2a$10$T1Abj2rU26bFckix86rrqO312ZaiSnUZRCfTthk7g8zn/dx7UKqaa', true),

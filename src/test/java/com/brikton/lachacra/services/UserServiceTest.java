@@ -6,7 +6,6 @@ import com.brikton.lachacra.entities.Privilege;
 import com.brikton.lachacra.entities.Role;
 import com.brikton.lachacra.entities.Token;
 import com.brikton.lachacra.entities.User;
-import com.brikton.lachacra.exceptions.QuesoNotFoundException;
 import com.brikton.lachacra.repositories.UserRepository;
 import com.brikton.lachacra.util.CookieUtil;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;

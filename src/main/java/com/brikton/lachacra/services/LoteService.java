@@ -69,7 +69,7 @@ public class LoteService {
         throw new LoteNotFoundException();
     }
 
-    public LoteDTO getDTOById(String id){
+    public LoteDTO getDTOById(String id) {
         return new LoteDTO(get(id));
     }
 
@@ -185,11 +185,10 @@ public class LoteService {
         var lote = repository.getById(id);
         if (expedicionRepository.existsByLote(lote) || devolucionRepository.existsByLote(lote)) {
             darBajaLote(id);
-        }
-        else {
-            quesoService.decreaseStock(lote.getQueso(),lote.getCantHormas());
-            embalajeService.increaseStockBolsa(lote.getCantHormas(),lote.getQueso());
-            embalajeService.increaseStockCaja(lote.getCantCajas(),lote.getQueso());
+        } else {
+            quesoService.decreaseStock(lote.getQueso(), lote.getCantHormas());
+            embalajeService.increaseStockBolsa(lote.getCantHormas(), lote.getQueso());
+            embalajeService.increaseStockCaja(lote.getCantCajas(), lote.getQueso());
             repository.deleteById(id);
         }
     }
@@ -208,29 +207,29 @@ public class LoteService {
 
     public List<LoteDTO> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
         List<LoteDTO> result = new ArrayList<>();
-        var list = repository.findAllByFechaBajaAndFechaElaboracionBetween(null,fechaDesde,fechaHasta);
+        var list = repository.findAllByFechaBajaAndFechaElaboracionBetween(null, fechaDesde, fechaHasta);
         list.forEach(lote -> result.add(new LoteDTO(lote)));
         return result;
     }
 
-    private void updateStockQueso(LoteDTO dto){
+    private void updateStockQueso(LoteDTO dto) {
         var queso = getQueso(dto.getCodigoQueso());
         if (repository.existsByIdNotFechaBaja(dto.getId())) {
             var oldLote = repository.getById(dto.getId());
-            quesoService.decreaseStock(oldLote.getQueso(),oldLote.getCantHormas());
+            quesoService.decreaseStock(oldLote.getQueso(), oldLote.getCantHormas());
         }
-        quesoService.increaseStock(queso,dto.getCantHormas());
+        quesoService.increaseStock(queso, dto.getCantHormas());
     }
 
-    private void updateStockEmbalaje(LoteDTO dto){
+    private void updateStockEmbalaje(LoteDTO dto) {
         var queso = getQueso(dto.getCodigoQueso());
         if (repository.existsByIdNotFechaBaja(dto.getId())) {
             var oldLote = repository.getById(dto.getId());
-            embalajeService.increaseStockBolsa(oldLote.getCantHormas(),oldLote.getQueso());
-            embalajeService.increaseStockCaja(oldLote.getCantCajas(),oldLote.getQueso());
+            embalajeService.increaseStockBolsa(oldLote.getCantHormas(), oldLote.getQueso());
+            embalajeService.increaseStockCaja(oldLote.getCantCajas(), oldLote.getQueso());
         }
-        embalajeService.decreaseStockBolsa(dto.getCantHormas(),queso);
-        embalajeService.decreaseStockCaja(dto.getCantCajas(),queso);
+        embalajeService.decreaseStockBolsa(dto.getCantHormas(), queso);
+        embalajeService.decreaseStockCaja(dto.getCantCajas(), queso);
     }
 
     private void updateStockLote(LoteDTO dto) {
@@ -299,8 +298,8 @@ public class LoteService {
         BigDecimal rendimientoAvg = BigDecimal.ZERO;
         for (Lote lote : lotes) {
             rendimientoAvg = rendimientoAvg.add(BigDecimal.valueOf(lote.getRendimiento()));
-        };
-        rendimientoAvg = rendimientoAvg.divide(BigDecimal.valueOf(lotes.size()),MathContext.DECIMAL32);
+        }
+        rendimientoAvg = rendimientoAvg.divide(BigDecimal.valueOf(lotes.size()), MathContext.DECIMAL32);
         dto.setRendimiento(rendimientoAvg.doubleValue());
     }
 

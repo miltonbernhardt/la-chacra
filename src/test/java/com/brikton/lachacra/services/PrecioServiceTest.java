@@ -78,22 +78,22 @@ public class PrecioServiceTest {
 
     @Test
     void Save__OK() {
-        PrecioDTO precioDTOToSave = new PrecioDTO();
+        var precioDTOToSave = new PrecioDTO();
         precioDTOToSave.setValor(1000D);
         precioDTOToSave.setIdTipoCliente(1L);
         precioDTOToSave.setIdQueso(1L);
 
-        TipoCliente tipoClienteMock = new TipoCliente();
+        var tipoClienteMock = new TipoCliente();
         tipoClienteMock.setTipo("tipo");
         tipoClienteMock.setId(1L);
 
-        Queso quesoMock = new Queso();
+        var quesoMock = new Queso();
         quesoMock.setId(1L);
         quesoMock.setTipoQueso("tipoQueso");
         quesoMock.setNomenclatura("nomenclatura");
         quesoMock.setCodigo("codigo");
 
-        Precio precioSaved = new Precio();
+        var precioSaved = new Precio();
         precioSaved.setId(1L);
         precioSaved.setValor(1000D);
         precioSaved.setQueso(quesoMock);

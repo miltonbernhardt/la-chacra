@@ -6,7 +6,6 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ExpedicionDTO;
 import com.brikton.lachacra.dtos.ExpedicionUpdateDTO;
-import com.brikton.lachacra.dtos.LoteDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.ExpedicionService;
 import lombok.extern.slf4j.Slf4j;

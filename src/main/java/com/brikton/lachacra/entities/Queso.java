@@ -28,6 +28,8 @@ public class Queso {
     private Integer stock;
     private LocalDate fechaBaja;
     private String color;
+    @ManyToMany(mappedBy = "listaQuesos")
+    private Collection<Embalaje> embalajes;
 
     @Override
     public boolean equals(Object o) {
@@ -41,9 +43,6 @@ public class Queso {
     public int hashCode() {
         return Objects.hash(id, codigo, tipoQueso, nomenclatura, stock, fechaBaja, color);
     }
-
-    @ManyToMany(mappedBy = "listaQuesos")
-    private Collection<Embalaje> embalajes;
 
     public Collection<Embalaje> getEmbalajes() {
         return embalajes;

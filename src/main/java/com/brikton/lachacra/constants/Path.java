@@ -6,7 +6,6 @@ public class Path {
     public static final String LOGOUT = "/logout";
     public static final String FORBIDDEN = "/prohibido";
     public static final String NOT_FOUND = "/no-encontrado";
-
     public static final String API_CLIENTES = "/api/v1/clientes";
     public static final String API_EXPEDICIONES = "/api/v1/expediciones";
     public static final String API_LOGIN = "/api/v1/login";

@@ -15,7 +15,7 @@
     <scripts>
       <script value="watch" />
     </scripts>
-    <node-interpreter value="/usr/local/lib/nodejs/node-v14.17.2-linux-x64/bin/node" />
+    <node-interpreter value="node" />
     <envs />
     <method v="2" />
   </configuration>

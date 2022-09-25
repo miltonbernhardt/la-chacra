@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration >
+<configuration>
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                %d{ISO8601} %highlight(%-5level) --- %boldMagenta([%thread]) %boldYellow([%logger{0}:%line]): %msg %ex{short}%n
+                %d{ISO8601} %highlight(%-5level) --- %boldMagenta([%thread]) %boldYellow([%logger{0}:%line]): %msg
+                %ex{short}%n
             </Pattern>
         </layout>
     </appender>

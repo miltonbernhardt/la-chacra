@@ -23,7 +23,7 @@ public class SuccessfulResponse<T> {
         this.message = message;
     }
 
-    public static <T> SuccessfulResponse<T> set( String message) {
+    public static <T> SuccessfulResponse<T> set(String message) {
         return new SuccessfulResponse<>(message, null);
     }
 

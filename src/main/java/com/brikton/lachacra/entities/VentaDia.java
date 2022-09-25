@@ -11,9 +11,9 @@ public class VentaDia {
 
     private LocalDate fecha;
     private Integer total;
-    private Map<String,Venta> ventas;
+    private Map<String, Venta> ventas;
 
-    public VentaDia(){
+    public VentaDia() {
         ventas = new HashMap<>();
     }
 }

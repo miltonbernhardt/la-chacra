@@ -4,10 +4,8 @@ import com.brikton.lachacra.configs.DatabaseTestConfig;
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.constants.Path;
 import com.brikton.lachacra.constants.SuccessfulMessages;
-import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.ItemRemitoDTO;
 import com.brikton.lachacra.dtos.RemitoDTO;
-import com.brikton.lachacra.entities.ItemRemito;
 import com.brikton.lachacra.responses.ErrorResponse;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.utils.Rest;
@@ -20,14 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,9 +36,9 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class RemitoControllerIntegrationTest {
 
+    private static Rest rest = null;
     @LocalServerPort
     private int port;
-    private static Rest rest = null;
 
     @BeforeAll
     static void init() {
@@ -124,7 +120,7 @@ public class RemitoControllerIntegrationTest {
         expectedRemito.setItemsRemito(List.of(itemRemito));
         expectedRemito.setId(2L);
 
-         var response = rest.post("?id_cliente=1&fecha=2021-11-10", null);
+        var response = rest.post("?id_cliente=1&fecha=2021-11-10", null);
         assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         var successfulResponse = rest.mapper().convertValue(response.getBody(), new TypeReference<SuccessfulResponse<RemitoDTO>>() {

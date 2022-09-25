@@ -9,9 +9,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {VentaService.class})
 public class VentaServiceTest {
@@ -23,22 +23,22 @@ public class VentaServiceTest {
     RemitoService remitoService;
 
     @Test
-    public void Get_Ventas__OK(){
+    public void Get_Ventas__OK() {
         var remito = mockRemito();
-        when(remitoService.getBetweenDates(any(LocalDate.class),any(LocalDate.class))).thenReturn(List.of(remito));
+        when(remitoService.getBetweenDates(any(LocalDate.class), any(LocalDate.class))).thenReturn(List.of(remito));
 
-        var result = service.getVentas(LocalDate.of(2021, 10, 11),LocalDate.of(2021, 10, 11));
-        assertEquals(1,result.size());
-        assertEquals(2,result.get(0).getVentas().size());
+        var result = service.getVentas(LocalDate.of(2021, 10, 11), LocalDate.of(2021, 10, 11));
+        assertEquals(1, result.size());
+        assertEquals(2, result.get(0).getVentas().size());
     }
 
-    Remito mockRemito(){
+    Remito mockRemito() {
         var remito = new Remito();
         remito.setId(1L);
-        remito.setExpediciones(List.of(mockExpedicionA(),mockExpedicionB()));
+        remito.setExpediciones(List.of(mockExpedicionA(), mockExpedicionB()));
         remito.setFecha(LocalDate.of(2021, 10, 11));
         remito.setImporteTotal(500d);
-        remito.setItemsRemito(List.of(mockItemRemitoA(),mockItemRemitoB(),mockItemRemitoC()));
+        remito.setItemsRemito(List.of(mockItemRemitoA(), mockItemRemitoB(), mockItemRemitoC()));
         return remito;
     }
 

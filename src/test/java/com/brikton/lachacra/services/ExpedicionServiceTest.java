@@ -356,15 +356,15 @@ public class ExpedicionServiceTest {
     }
 
     @Test
-    void Get_All_By_Lote__OK(){
+    void Get_All_By_Lote__OK() {
         when(loteService.get(anyString())).thenReturn(mockLote());
         when(repository.findAllByLote(any(Lote.class))).thenReturn(List.of(mockExpedicion()));
         var result = service.getAllByLote("101020210011");
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
-    void Set_On_Remito_True__OK(){
+    void Set_On_Remito_True__OK() {
         var expWithRemito = mockExpedicion();
         expWithRemito.setOnRemito(true);
         when(repository.saveAll(any())).thenReturn(List.of(expWithRemito));

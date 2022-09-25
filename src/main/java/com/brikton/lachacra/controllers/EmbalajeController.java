@@ -4,7 +4,6 @@ import com.brikton.lachacra.constants.SuccessfulMessages;
 import com.brikton.lachacra.constants.ValidationMessages;
 import com.brikton.lachacra.dtos.EmbalajeDTO;
 import com.brikton.lachacra.dtos.EmbalajeUpdateDTO;
-import com.brikton.lachacra.dtos.EmbalajeDTO;
 import com.brikton.lachacra.responses.SuccessfulResponse;
 import com.brikton.lachacra.services.EmbalajeService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +36,7 @@ public class EmbalajeController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<SuccessfulResponse<EmbalajeDTO>> getById(@Min(value = 1, message = ValidationMessages.CANNOT_BE_LESS_THAN_1) @PathVariable("id") Long id) {
-        log.info("API::getById - id: {}",id);
+        log.info("API::getById - id: {}", id);
         return ResponseEntity.ok().body(SuccessfulResponse.set(service.get(id)));
     }
 
@@ -54,9 +53,9 @@ public class EmbalajeController {
     }
 
     @PutMapping(value = "/agregar_stock")
-    public ResponseEntity<SuccessfulResponse<EmbalajeDTO>> updateStock(@RequestParam("id") Long id,@RequestParam("stock") Integer stock ) {
+    public ResponseEntity<SuccessfulResponse<EmbalajeDTO>> updateStock(@RequestParam("id") Long id, @RequestParam("stock") Integer stock) {
         log.info("API::updateStock - id: {} - stock: {}", id, stock);
-        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EMBALAJE_UPDATED, service.updateStock(id,stock)));
+        return ResponseEntity.ok().body(SuccessfulResponse.set(SuccessfulMessages.MSG_EMBALAJE_UPDATED, service.updateStock(id, stock)));
     }
 
     @DeleteMapping(value = "/{id}")

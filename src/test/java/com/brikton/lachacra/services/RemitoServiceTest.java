@@ -2,10 +2,8 @@ package com.brikton.lachacra.services;
 
 import com.brikton.lachacra.constants.ErrorMessages;
 import com.brikton.lachacra.entities.*;
-import com.brikton.lachacra.exceptions.ExpedicionNotFoundException;
 import com.brikton.lachacra.exceptions.RemitoNotFoundException;
 import com.brikton.lachacra.repositories.RemitoRepository;
-import net.sf.jasperreports.engine.JRException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +76,8 @@ public class RemitoServiceTest {
         assertEquals(2, result.getItemsRemito().size());
         assertEquals(2800D, result.getImporteTotal());
     }
-//TODO
+
+    //TODO
     @Test
     @Disabled
     void Generate_And_Save__OK() {

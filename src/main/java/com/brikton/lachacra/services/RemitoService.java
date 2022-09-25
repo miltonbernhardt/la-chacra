@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,10 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 @Slf4j
@@ -83,7 +85,7 @@ public class RemitoService {
         return new RemitoDTO(repository.save(remito));
     }
 
-    public void deleteRemito(Long id){
+    public void deleteRemito(Long id) {
         var remito = getRemito(id);
         List<Long> idExpedicionesRemito = new ArrayList<>();
         remito.getExpediciones().forEach(expedicion -> idExpedicionesRemito.add(expedicion.getId()));
@@ -159,8 +161,8 @@ public class RemitoService {
         return remitos;
     }
 
-    public List<RemitoDTO> getBetweenDatesDTO(LocalDate fechaDesde,LocalDate fechaHasta){
-        var remitos = getBetweenDates(fechaDesde,fechaHasta);
+    public List<RemitoDTO> getBetweenDatesDTO(LocalDate fechaDesde, LocalDate fechaHasta) {
+        var remitos = getBetweenDates(fechaDesde, fechaHasta);
         ArrayList<RemitoDTO> dtos = new ArrayList<>();
         remitos.forEach(remito -> dtos.add(new RemitoDTO(remito)));
         return dtos;

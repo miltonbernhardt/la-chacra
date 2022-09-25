@@ -48,7 +48,7 @@ public class ExpedicionService {
     }
 
     public List<ExpedicionDTO> getBetweenDates(LocalDate fechaDesde, LocalDate fechaHasta) {
-        var expediciones =  repository.findAllByFechaExpedicionBetween(fechaDesde,fechaHasta);
+        var expediciones = repository.findAllByFechaExpedicionBetween(fechaDesde, fechaHasta);
         List<ExpedicionDTO> dtos = new ArrayList<>();
         expediciones.forEach(exp -> dtos.add(new ExpedicionDTO(exp)));
         return dtos;
@@ -67,11 +67,11 @@ public class ExpedicionService {
         return new ExpedicionDTO(expedicion);
     }
 
-    public ExpedicionDTO saveExpedicionLoteCompleto(ExpedicionDTO dto){
+    public ExpedicionDTO saveExpedicionLoteCompleto(ExpedicionDTO dto) {
         var expedicion = expedicionFromDTO(dto);
 
         var loteExp = expedicion.getLote();
-        if(loteExp.getPesoNoConfiable()) throw new PesoNoConfiableException();
+        if (loteExp.getPesoNoConfiable()) throw new PesoNoConfiableException();
         expedicion.setCantidad(loteExp.getCantHormas());
         expedicion.setPeso(loteExp.getPeso());
 

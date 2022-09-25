@@ -21,7 +21,7 @@ public class Embalaje {
     @ManyToMany
     private List<Queso> listaQuesos;
 
-    public Embalaje(){
+    public Embalaje() {
         listaQuesos = new ArrayList<>();
     }
 
