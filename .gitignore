@@ -87,3 +87,4 @@ yarn-error.log*
 /log/
 /ui/package-lock.json
 /ui/node_modules/
+/ui/src/main/resources/static/
